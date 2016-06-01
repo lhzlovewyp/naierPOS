@@ -1,0 +1,23 @@
+<div>
+#set( $this = "Velocity")
+$this is great!  <br/>
+$name.msg  <br/>
+<a href="" >
+	$name.msg
+</a>
+hi  , i am letian
+#foreach($message in $list)
+	<h1>hello:$velocityCount: $message.msg</h1>
+#end
+#foreach($i in [0..5])
+	#if($velocityCount == 3)
+		#break
+	#else
+		<h1>你好$velocityCount</h1>
+	#end
+
+#end
+#foreach($i in [0..5])
+    <a href="#if($velocityCount==3) $!name.message #else http #end">$velocityCount</a>
+#end
+</div>

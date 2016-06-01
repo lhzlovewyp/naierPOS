@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.DictionaryMapper">
+
+	<insert id="add" parameterType="Dictionary" useGeneratedKeys="true" keyProperty="dictId">
+		INSERT  INTO dictionary <include refid="DictionarySet" />
+	</insert>
+
+	<sql id="DictionarySet">
+		<set >
+			<if test= "category != null">category=#{category,jdbcType=VARCHAR},</if >
+			<if test= "name != null">name=#{name,jdbcType=VARCHAR},</if >
+			<if test= "code != null">code=#{code,jdbcType=VARCHAR},</if >
+		</set>
+	</sql >
+
+</mapper>

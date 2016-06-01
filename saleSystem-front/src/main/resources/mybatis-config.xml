@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>  
+        <!--实体类别名 -->
+        <typeAlias type="com.joker.common.model.Business" alias="Business" />
+        <typeAlias type="com.joker.common.model.User" alias="User" />
+        <typeAlias type="com.joker.core.dto.Page" alias="Page" />
+        <typeAlias type="com.joker.common.model.Dictionary" alias="Dictionary" />
+    </typeAliases>
+
+    <plugins>
+        <plugin interceptor="com.joker.core.interceptor.PageInterceptor">
+            <property name="databaseType" value="mysql"/>
+        </plugin>
+    </plugins>
+    
+</configuration>

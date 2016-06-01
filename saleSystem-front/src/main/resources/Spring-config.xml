@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:task="http://www.springframework.org/schema/task" xmlns:cache="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task-4.0.xsd
+        http://www.springframework.org/schema/cache
+        http://www.springframework.org/schema/cache/spring-cache.xsd">
+    <!-- Activates annotation-based bean configuration -->
+    <context:annotation-config />
+
+    <!-- 扫描控制器类 -->
+    <context:component-scan base-package="com.joker.*" />
+
+    <aop:aspectj-autoproxy />
+
+    <!-- 启用缓存注解功能 -->
+    <cache:annotation-driven cache-manager="cacheManager" />
+
+    <!-- 数据库配置文件位置 -->
+    <context:property-placeholder location="classpath:jdbc.properties" />
+    <!-- 配置dbcp数据源 master -->
+    <bean id="masterdataSource" class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}" />
+        <property name="url" value="jdbc:mysql://123.57.156.4:3306/saleSystem" />
+        <property name="username" value="${jdbc.master_username}" />
+        <property name="password" value="${jdbc.master_password}" />
+        <property name="minIdle" value="${jdbc.minIdle}" />        <!-- 队列中的最小等待数 -->
+        <property name="maxIdle" value="${jdbc.maxIdle}" />        <!-- 队列中的最大等待数 -->
+        <property name="maxWait" value="${jdbc.maxWait}" />        <!-- 最长等待时间，单位毫秒 -->
+        <property name="maxActive" value="${jdbc.maxActive}" />    <!-- 最大活跃数 -->
+        <property name="initialSize" value="${jdbc.initialSize}" /><!--
+            初始大小 -->
+    </bean>
+    <!-- slave -->
+    <bean id="slavedataSource" class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}" />
+        <property name="url" value="${jdbc.slave_url}" />
+        <property name="username" value="${jdbc.slave_username}" />
+        <property name="password" value="${jdbc.slave_password}" />
+        <property name="minIdle" value="${jdbc.minIdle}" />        <!-- 队列中的最小等待数 -->
+        <property name="maxIdle" value="${jdbc.maxIdle}" />        <!-- 队列中的最大等待数 -->
+        <property name="maxWait" value="${jdbc.maxWait}" />        <!-- 最长等待时间，单位毫秒 -->
+        <property name="maxActive" value="${jdbc.maxActive}" />    <!-- 最大活跃数 -->
+        <property name="initialSize" value="${jdbc.initialSize}" /><!--
+            初始大小 -->
+    </bean>
+
+    <bean id="dataSource" class="com.joker.core.interceptor.DynamicDataSource">
+        <property name="targetDataSources">
+            <map key-type="java.lang.String">
+                <!-- write -->
+                <entry key="master" value-ref="masterdataSource"/>
+                <!-- read -->
+                <entry key="slave" value-ref="slavedataSource"/>
+            </map>
+
+        </property>
+        <property name="defaultTargetDataSource" ref="masterdataSource"/>
+    </bean>
+
+    <!-- 导入mongodb的配置文件 -->
+    <!-- <import resource="mongodb-config.xml"/> -->
+
+    <!-- spring缓存切换redis做缓存 -->
+    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+        <property name="caches">
+            <set>
+                <bean class="com.joker.core.interceptor.RedisCache">
+                    <property name="redisTemplate" ref="redisTemplate" />
+                    <property name="cacheTime" value="${redis.cache30m}"/>
+                    <property name="name" value="cache30m"/>
+                </bean>
+                <bean class="com.joker.core.interceptor.RedisCache">
+                    <property name="redisTemplate" ref="redisTemplate" />
+                    <property name="cacheTime" value="${redis.cache2h}"/>
+                    <property name="name" value="cache2h"/>
+                </bean>
+            </set>
+        </property>
+    </bean>
+
+    <!-- spring data redis -->
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="usePool" value="true"></property>
+        <property name="hostName" value="${redis.host}" />
+        <property name="port" value="${redis.port}" />
+        <property name="password" value="${redis.pass}" />
+        <!--<property name="timeout" value="${redis.timeout}" />-->
+        <!--<property name="database" value="${redis.default.db}"></property>-->
+        <constructor-arg name="poolConfig" ref="jedisPoolConfig" />
+    </bean>
+
+    <!-- jedis pool配置 -->
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="${redis.maxActive}" />
+        <property name="maxIdle" value="${redis.maxIdle}" />
+        <property name="maxWaitMillis" value="${redis.maxWait}" />
+        <property name="testOnBorrow" value="${redis.testOnBorrow}" />
+    </bean>
+
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+        <property name="connectionFactory" ref="jedisConnectionFactory" />
+        <property name="KeySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
+        </property>
+        <property name="ValueSerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
+        </property>
+        <property name="HashKeySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
+        </property>
+        <property name="HashValueSerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
+        </property>
+    </bean>
+
+    <!-- mybatis-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+        <property name="mapperLocations" value="classpath:mapper/*Mapper.xml"></property>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.joker.common.mapper" />
+    </bean>
+
+    <!-- 使用JDBC事物 -->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- 配置AOP切面 -->
+    <aop:config>
+    <aop:pointcut id="transactionPointcut" expression="execution(* com.joker.common.service.*.*(..))"/>
+    <aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice"/>
+    </aop:config>
+
+    <!-- AOP配置事物 -->
+    <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="query*" read-only="true"/>
+            <tx:method name="delete*"  propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="update*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="add*" propagation="REQUIRED" rollback-for="Exception"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 使用annotation注解方式配置事务 @Transactional
+    <tx:annotation-driven transaction-manager="transactionManager" /> -->
+
+    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <!-- 核心线程数 -->
+        <property name="corePoolSize" value="${task.core_pool_size}" />
+        <!-- 最大线程数 -->
+        <property name="maxPoolSize" value="${task.max_pool_size}" />
+        <!-- 队列最大长度 -->
+        <property name="queueCapacity" value="${task.queue_capacity}" />
+        <!-- 线程池维护线程所允许的空闲时间，默认为60s -->
+        <property name="keepAliveSeconds" value="${task.keep_alive_seconds}" />
+    </bean>
+    <!-- 注解式 -->
+    <task:annotation-driven />
+
+    <!--验证码配置-->
+    <bean id="captchaProducer" class="com.google.code.kaptcha.impl.DefaultKaptcha">
+        <property name="config">
+            <bean class="com.google.code.kaptcha.util.Config">
+                <constructor-arg>
+                    <props>
+                        <prop key="kaptcha.border">no</prop>
+                        <prop key="kaptcha.border.color">200,255,214</prop>
+                        <prop key="kaptcha.textproducer.font.color">red</prop>
+                        <prop key="kaptcha.image.width">250</prop>
+                        <prop key="kaptcha.textproducer.font.size">80</prop>
+                        <prop key="kaptcha.image.height">90</prop>
+                        <prop key="kaptcha.session.key">code</prop>
+                        <prop key="kaptcha.textproducer.char.length">4</prop>
+                        <prop key="kaptcha.textproducer.font.names">宋体,楷体,微软雅黑</prop>
+                        <prop key="kaptcha.background.clear.from">255,255,255</prop>
+                        <prop key="kaptcha.background.clear.to">255,255,255</prop>
+                        <prop key="kaptcha.noise.color">0,0,0</prop>
+                    </props>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+</beans>
