@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>登录</title>
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="statics/bootstrap/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="statics/dist/css/font-awesome.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="statics/dist/css/AdminLTE.min.css">
+  
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="statics/dist/js/html5shiv.min.js"></script>
+  <script src="statics/dist/js/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<body class="hold-transition login-page" ng-app="mainApp">
+<div class="login-box">
+  <div class="login-logo">
+    <a href="#">门店销售系统</a>
+  </div>
+  <!-- /.login-logo -->
+  <div class="login-box-body" ng-controller="loginCtrl">
+    <p class="login-box-msg">账号登录</p>
+
+    <form  role="form" method="post"  name="loginForm" id="loginForm" ng-submit="login(loginForm.$valid)" novalidate>
+      <div class="form-group has-feedback">
+        <input type="username" class="form-control" placeholder="用户名" autocomplete="off" ng-bind="form.userName" ng-model="form.userName" id="userName" name="userName" required autofocus>
+        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
+        <input type="password" class="form-control" placeholder="密码" autocomplete="off" ng-bind="form.password" id="password" name="password" ng-model="form.password" required autofocus>
+        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+      </div>
+      <div class="form-group input-group has-feedback verifyCode">
+        <input type="text" class="form-control" placeholder="验证码" autocomplete="off" ng-bind="form.verifyCode" ng-model="form.verifyCode" id="verifyCode" name="verifyCode" required autofocus> 
+        <img src="/rest/captcha-image" width="100" height="34" name="verifyCodeImg" id="verifyCodeImg" ng-bind="verifyCodeImg" ng-mode="verifyCodeImg"> <i class="fa fa-refresh" ng-click="flushVerifyCode()"></i>
+      </div>
+    
+      <div class="form-group has-feedback" role="alert">
+        <label for="inputError" class="control-label" ng-show="loginForm.userName.$dirty && loginForm.userName.$error.required">
+        	<i class="fa fa-times-circle-o">请输入用户名</i>
+        </label>
+        
+        <label for="inputError" class="control-label" ng-show="loginForm.password.$dirty && loginForm.password.$error.required">
+        	<i class="fa fa-times-circle-o">请输入密码</i>
+        </label>
+        
+        <label for="inputError" class="control-label" ng-show="loginForm.verifyCode.$dirty && loginForm.verifyCode.$error.required">
+        	<i class="fa fa-times-circle-o">请输入验证码</i>
+        </label>
+        
+        <label for="inputError" class="control-label" ng-show="loginInfo.loginerror">
+        	<i class="fa fa-times-circle-o">{{loginInfo.loginerroinfo}}</i>
+        </label>
+      </div>
+      <div class="box-body">
+        <button type="button" class="btn btn-primary btn-block" ng-click="login(loginForm.$valid)">登录</button>
+      </div>
+    </form>
+  </div>
+  <!-- /.login-box-body -->
+</div>
+<!-- /.login-box -->
+
+<script type="text/javascript" src="statics/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+<script type="text/javascript" src="statics/plugins/jQuery/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="statics/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="statics/plugins/angular/angular.js"></script>
+<script type="text/javascript" src="statics/plugins/angular/angular-route.js"></script>
+<script type="text/javascript" src="statics/dist/js/sale/Status.js"></script>
+<script type="text/javascript" src="statics/dist/js/sale/main.js"></script>
+<script type="text/javascript" src="statics/dist/js/sale/baseServices.js"></script>
+<script type="text/javascript" src="statics/dist/js/sale/services.js"></script>
+<script type="text/javascript" src="statics/dist/js/sale/controllers.js"></script>
+
+
+</body>
+</html>

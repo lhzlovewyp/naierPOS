@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.SaleUserMapper">
+     
+    
+    <resultMap type="saleUser" id="saleUser">
+		<result property="id" column="ID" />
+		<result property="userName" column="USER_NAME" />
+		<result property="nickName" column="MICK_NAME" />
+		<result property="password" column="PASSWORD" />
+		<result property="ip" column="IP" />
+		<result property="photo" column="PHOTO" />
+		<result property="tel" column="TEL" />
+		<result property="qq" column="QQ" />
+		<result property="org.orgId" column="ORG_ID"/>
+		<result property="org.orgCode" column="ORG_CODE"/>
+		<result property="org.orgName" column="ORG_NAME"/>
+		<result property="org.parentOrgId" column="PARENT_ID"/>
+		<result property="org.orgType" column="ORG_TYPE"/>
+	</resultMap>
+    
+    
+	<select id="getUserByName" parameterType="string" resultMap="saleUser">
+		SELECT  
+			u.ID,
+			u.USER_NAME,
+			u.NICK_NAME,
+			u.PASSWORD,
+			u.IP,
+			u.PHOTO,
+			u.TEL,
+			u.QQ,
+			u.ORG_ID AS ORG_ID,
+			org.ORG_NAME,
+			org.ORG_CODE,
+			org.ORG_TYPE,
+			org.PARENT_ID
+		FROM SALE_USER u LEFT JOIN SALE_ORG org ON org.ID=u.ORG_ID
+			WHERE u.USER_NAME=#{userName}
+	</select>
+	
+	<update id="setLoginInfo" parameterType="saleUser" >
+		update SALE_USER set IP=#{ip},LAST_LOGIN_DATE=#{lastLoginDate} where ID=#{id}
+	</update>
+
+</mapper>

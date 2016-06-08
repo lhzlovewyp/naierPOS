@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>主页面</title>
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="statics/bootstrap/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="statics/dist/css/font-awesome.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="statics/dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="statics/dist/css/skins/_all-skins.min.css">
+  
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="statics/dist/js/html5shiv.min.js"></script>
+  <script src="statics/dist/js/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini" ng-app="mainApp">
+<div class="wrapper">
+
+  <header class="main-header" ng-controller="headNavCtrl">
+    <!-- Logo -->
+    <a href="index2.html" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><b>古北</b></span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b>{{loginInfo.orgName}}</b></span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <!-- User Account: style can be found in dropdown.less -->
+          <li class="user user-menu">
+            <a href="#">
+              <span class="hidden-xs">当前登录：{{loginInfo.userName}}</span>
+            </a>
+          </li>
+          <!-- Control Sidebar Toggle Button -->
+          <li>
+            <a href="#" class="text-gray">退出 <i class="fa fa-sign-out"></i></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+      <!-- sidebar menu: : style can be found in sidebar.less -->
+      <ul class="sidebar-menu">
+        <li class="header">主导航</li>
+        <li class="active treeview">
+          <a href="/front/home.html">
+            <i class="fa fa-home"></i> <span>首页</span></i>
+          </a>
+        </li>
+        <li class="treeview">
+          <a href="/front/sale.html">
+            <i class="fa fa-inbox"></i>
+            <span>销售</span>
+          </a>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-truck"></i> <span>销退</span>
+          </a>
+        </li>
+        <li class="treeview">
+          <a href="page3.html">
+            <i class="fa fa-list-alt"></i>
+            <span>订单</span>
+          </a>
+        </li>
+        <li class="treeview">
+          <a href="page4.html">
+            <i class="fa fa-users"></i>
+            <span>会员</span>
+          </a>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-bar-chart"></i> <span>统计</span>
+            <i class="fa fa-angle-left pull-right"></i>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="page5.html"><i class="fa fa-circle-o"></i> 销售明细</a></li>
+            <li><a href="page6.html"><i class="fa fa-circle-o"></i> 销售汇总</a></li>
+            <li><a href="page7.html"><i class="fa fa-circle-o"></i> 收款汇总</a></li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper" >
+   		<div ng-view></div>
+  </div>
+  <!-- /.content-wrapper -->
+</div>
+
+
+<script type="text/javascript" src="statics/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+<script type="text/javascript" src="statics/plugins/jQuery/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="statics/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="statics/dist/js/app.min.js"></script>
+<script type="text/javascript" src="statics/plugins/angular/angular.js"></script>
+<script type="text/javascript" src="statics/plugins/angular/angular-route.js"></script>
+<script type="text/javascript" src="statics/dist/js/sale/Status.js"></script>
+<script type="text/javascript" src="statics/dist/js/sale/main.js"></script>
+<script type="text/javascript" src="statics/dist/js/sale/baseServices.js"></script>
+<script type="text/javascript" src="statics/dist/js/sale/services.js"></script>
+<script type="text/javascript" src="statics/dist/js/sale/controllers.js"></script>
+
+
+</body>
+</html>

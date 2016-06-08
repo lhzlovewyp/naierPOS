@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+	<bean id="globalCacheManager"
+		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<!-- 指定配置文件的位置 -->
+		<property name="configLocation" value="classpath:ehcache.xml" />
+		<!-- 指定新建的CacheManager的名称 -->
+		<property name="cacheManagerName" value="globalCacheManager" />
+	</bean>
+	
+	<!-- 定义一个Ehcache -->
+	<bean id="globalEHcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+		<property name="cacheName" value="globalEHcache" />
+		<property name="cacheManager" ref="globalCacheManager" />
+	</bean>
+</beans>
