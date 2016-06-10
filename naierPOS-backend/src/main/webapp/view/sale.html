@@ -1,0 +1,119 @@
+<!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>&nbsp;</h1>
+      <ol class="breadcrumb">
+        <li><a href="index.html"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li class="active">销售</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <!-- Small boxes (Stat box) -->
+      <div class="row">
+        <div class="col-xs-4">
+          <div class="box box-primary">
+          	<div class="box-header">
+              <h3 class="box-title">交易信息</h3>
+              <div class="box-tools">
+                <a id="btn1" href="#" class="btn btn-danger btn-flat" style="display:none">取消交易</a>
+              </div>
+            </div>
+            <div class="box-body">
+            	<ul class="list-group list-group-unbordered">
+                <li class="list-group-item">
+                  <b>营业日期</b> <a class="pull-right">2016年05月24日</a>
+                </li>
+                <li class="list-group-item">
+                  <b>会员</b> <a class="pull-right">-</a>
+                </li>
+                <li class="list-group-item">
+                  <b>导购</b> <a class="pull-right">-</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-xs-4">
+          <div class="box box-info">
+          	<div class="box-header">
+              <h3 class="box-title">结算信息</h3>
+              <div class="box-tools">
+                <a id="btn2" href="#" class="btn btn-info btn-flat" style="display:none">结算</a>
+              </div>
+            </div>
+            <div class="box-body">
+            	<ul class="list-group list-group-unbordered">
+                <li class="list-group-item">
+                  <b>总数量</b> <a class="pull-right text-black" id="quantity">0</a>
+                </li>
+                <li class="list-group-item">
+                  <b>总金额</b> <a class="pull-right text-black" id="total">¥0.00</a>
+                </li>
+                <li class="list-group-item">
+                  <b>总折扣</b> <a class="pull-right text-muted" id="discount">-¥0.00</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-xs-4">
+          <div class="box box-success">
+          	<div class="box-header">
+              <h3 class="box-title">付款信息</h3>
+            </div>
+            <div class="box-body">
+            	<ul class="list-group list-group-unbordered">
+                <li class="list-group-item">
+                  <b>应付金额</b> <a class="pull-right text-black" id="final_total">¥0.00</a>
+                </li>
+                <li class="list-group-item">
+                  <b>已付金额</b> <a class="pull-right text-green" id="already_pay">¥0.00</a>
+                </li>
+                <li class="list-group-item">
+                  <b>尚需付款</b> <a class="pull-right text-danger text-bold" id="need_pay">¥0.00</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- ./col -->
+      </div>
+      <!-- /.row -->
+      
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">销售明细</h3>
+          <div class="box-tools">
+            <a id="btn4" href="#" class="btn btn-info btn-flat">整单打折</a>
+          </div>
+        </div>
+        <div class="box-header">
+        	<div class="">
+            <div style="width:250px;" class="input-group input-group-sm">
+              <input id="input1" type="text" placeholder="搜索" class="form-control pull-right" name="table_search">
+              <div class="input-group-btn">
+                <button id="btn3" class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="box-body">
+        	<table id="table1" class="table table-bordered table-hover">
+            	<tr>
+                <th width="30">&nbsp;</th>
+                <th>货号</th>
+                <th>品名</th>
+                <th>属性</th>
+                <th>单价</th>
+                <th>数量</th>
+                <th>金额</th>
+                </tr>
+            </table>
+        </div>
+     </div>
+    </section>
+    <!-- /.content -->
+  </div>
