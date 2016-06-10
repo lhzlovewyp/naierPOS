@@ -58,7 +58,7 @@ public class LoginFilter implements Filter{
 				if(StringUtils.isNotBlank(token)){
 					ParamsBody params=new ParamsBody();
 					params.setToken(token);
-					body=RestUtil.post("/user/validToken", params);
+					body=RestUtil.post("/login/validToken", params);
 				}
 				if(body == null || body.getStatus() != ResponseState.SUCCESS){
 					response.sendRedirect("/front/login.html");

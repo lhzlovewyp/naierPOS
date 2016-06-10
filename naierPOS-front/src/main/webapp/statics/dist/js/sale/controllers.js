@@ -22,13 +22,19 @@ app.controller("loginCtrl",['$scope','$location','LoginService',function($scope,
 	
 	$scope.flushVerifyCode = function(){
 		document.getElementById("verifyCodeImg").src="/rest/captcha-image"
-	}
+	};
+	
+	
 }]);
 
 app.controller("headNavCtrl",['$scope','$location','LoginService',function($scope,$location,LoginService){
 	LoginService.validateToken().then(function(data){
 		$scope.loginInfo = data;
 	});
+	
+	$scope.logout = function(){
+		LoginService.logOff();
+	}
 }]);
 
 app.controller("routeMainCtl",['$scope','$location','LoginService',function($scope,$location,LoginService){

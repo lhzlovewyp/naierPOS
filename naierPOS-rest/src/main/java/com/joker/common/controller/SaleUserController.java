@@ -56,25 +56,5 @@ public class SaleUserController extends AbstractController{
         }
         return rbody;
     }
-    
-    
-    @RequestMapping(value = {"/user/validToken"},method = RequestMethod.POST)
-    @ResponseBody
-    @NotNull(value = "token")
-    public ReturnBody ValidToke(@RequestBody ParamsBody paramsBody,HttpServletRequest request, HttpServletResponse response){
-        ReturnBody rbody = new ReturnBody();
-        String token = paramsBody.getToken();
-        if(StringUtils.isNotBlank(token)){
-        	Object user = CacheFactory.getCache().get(token);
-        	if(user!=null){
-        		rbody.setData(user);
-        		rbody.setStatus(ResponseState.SUCCESS);
-        		return rbody;
-        	}
-        }
-        rbody.setStatus(ResponseState.INVALID_TOKEN);
-        return rbody;
-    }
-    
 	
 }

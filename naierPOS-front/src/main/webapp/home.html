@@ -27,7 +27,7 @@
     <!-- Logo -->
     <a href="index2.html" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>古北</b></span>
+      <span class="logo-mini"><b>{{loginInfo.orgName}}</b></span>
       <!-- logo for regular state and mobile devices -->
       <span class="logo-lg"><b>{{loginInfo.orgName}}</b></span>
     </a>
@@ -48,7 +48,7 @@
           </li>
           <!-- Control Sidebar Toggle Button -->
           <li>
-            <a href="#" class="text-gray">退出 <i class="fa fa-sign-out"></i></a>
+            <a href="javascript:;;" class="text-gray" ng-click="logout()">退出 <i class="fa fa-sign-out"></i></a>
           </li>
         </ul>
       </div>
@@ -73,18 +73,18 @@
           </a>
         </li>
         <li class="treeview">
-          <a href="#">
+          <a href="/front/pinBack.html">
             <i class="fa fa-truck"></i> <span>销退</span>
           </a>
         </li>
         <li class="treeview">
-          <a href="page3.html">
+          <a href="/front/order.html">
             <i class="fa fa-list-alt"></i>
             <span>订单</span>
           </a>
         </li>
         <li class="treeview">
-          <a href="page4.html">
+          <a href="/front/member.html">
             <i class="fa fa-users"></i>
             <span>会员</span>
           </a>
