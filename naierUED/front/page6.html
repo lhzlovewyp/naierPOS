@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>首页</title>
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="dist/css/font-awesome.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+  
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="dist/js/html5shiv.min.js"></script>
+  <script src="dist/js/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body class="skin-blue">
+<div class="wrapper">
+  <header class="main-header">
+    <!-- Logo -->
+    <a href="index.html" class="logo">
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b>上海古北一店</b></span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+	  <div class="collapse navbar-collapse pull-left">
+      <ul class="nav navbar-nav">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="page1.html">销售</a></li>
+        <li><a href="page2.html">销退</a></li>
+        <li><a href="page3.html">订单</a></li>
+        <li><a href="page4.html">会员</a></li>
+        <li class="active"><a href="page5.html">统计</a></li>
+      </ul>
+    </div>
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <!-- User Account: style can be found in dropdown.less -->
+          <li class="user user-menu">
+            <a href="#">
+              <img alt="User Image" class="user-image" src="dist/images/avatar.png">
+              <span class="hidden-xs">懒得想</span>
+            </a>
+          </li>
+          
+          <li>
+            <a href="login.html" class="text-gray">退出 <i class="fa fa-sign-out"></i></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+      	<div class="col-md-2">
+        	<div class="box">
+            	<div class="box-body">
+                	<ul class="nav nav-list">
+                    	<li><a href="page5.html">销售明细</a></li>
+                        <li class="active"><a href="page6.html">销售汇总</a></li>
+                        <li><a href="page7.html">收款汇总</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10">
+        	      <div class="box">
+        <div class="box-header">
+          <form>
+          	<ul class="search-inline">
+            	<li>销售日期: </li>
+                <li><input type="text" value="" data-provide="datepicker-inline" data-date-format="yyyy-mm-dd" class="form-control" placeholder="请输入起始日期" /></li>
+                <li>-</li>
+                <li><input type="text" value="" data-provide="datepicker-inline" data-date-format="yyyy-mm-dd" class="form-control" placeholder="请输入截止日期" /></li>
+                <li style="width:50px;"></li>
+                <li>商品: </li>
+                <li>
+                <div class="input-group input-group-sm" style="width:300px;">
+                  <input type="text" name="table_search" class="form-control pull-right" placeholder="请输入商品编码或名称">
+                  <div class="input-group-btn">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                  </div>
+                </div>
+               </li>
+            </ul>
+          </form>
+        </div>
+        <div class="box-body">
+        	<table class="table table-bordered table-hover cursor">
+                <tr>
+                <th>商品编号</th>
+                <th>品名</th>
+                <th>属性</th>
+                <th>数量</th>
+                <th>折扣</th>
+                <th>金额</th>
+                </tr>
+                <tr>
+                <td>33121-1</td>
+                <td>全棉提花女船袜</td>
+                <td>咖啡/22-24</td>
+                <td>20</td>
+                <td>20.00</td>
+                <td>120.00</td>
+                </tr>
+                <tr>
+                <td>33121-1</td>
+                <td>全棉提花女船袜</td>
+                <td>咖啡/22-24</td>
+                <td>20</td>
+                <td>20.00</td>
+                <td>120.00</td>
+                </tr>
+                <tr>
+                <td>33121-1</td>
+                <td>全棉提花女船袜</td>
+                <td>咖啡/22-24</td>
+                <td>20</td>
+                <td>20.00</td>
+                <td>120.00</td>
+                </tr>
+            </table>
+            <div class="pull-left"><div class="pagination">显示 第 1 到 3 笔，共 3 笔</div></div>
+            <div class="pull-right"><ul class="pagination"><li class="paginate_button previous disabled"><a href="#">上一页</a></li><li class="paginate_button active"><a href="#">1</a></li><li class="paginate_button "><a href="#">2</a></li><li class="paginate_button "><a href="#">3</a></li><li class="paginate_button "><a href="#">4</a></li><li class="paginate_button "><a href="#">5</a></li><li class="paginate_button "><a href="#">6</a></li><li class="paginate_button next"><a href="#">下一页</a></li></ul></div>
+            
+        </div>
+     </div>
+        </div>
+      </div>      
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+</div>
+<!-- ./wrapper -->
+<script src="plugins/jQuery/jQuery-2.2.0.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script> 
+<script src="dist/js/app.js"></script>
+<link rel="stylesheet" href="plugins/datepicker/datepicker3.css">
+<script src="plugins/datepicker/bootstrap-datepicker.js"></script>
+<script src="plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js" charset="UTF-8"></script> 
+<script>
+$(function(){
+	$('.content-wrapper').find('.box').css('min-height', $('.content-wrapper').height()-50);
+	$('.content-wrapper').find('.box').eq(0).height($('.content-wrapper').find('.box').eq(1).height());
+})
+</script>
+</body>
+</html>

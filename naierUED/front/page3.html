@@ -1,0 +1,205 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>首页</title>
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="dist/css/font-awesome.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+  
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="dist/js/html5shiv.min.js"></script>
+  <script src="dist/js/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body class="skin-blue">
+<div class="wrapper">
+  <header class="main-header">
+    <!-- Logo -->
+    <a href="index.html" class="logo">
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b>上海古北一店</b></span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+	  <div class="collapse navbar-collapse pull-left">
+      <ul class="nav navbar-nav">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="page1.html">销售</a></li>
+        <li><a href="page2.html">销退</a></li>
+        <li class="active"><a href="page3.html">订单</a></li>
+        <li><a href="page4.html">会员</a></li>
+        <li><a href="page5.html">统计</a></li>
+      </ul>
+    </div>
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <!-- User Account: style can be found in dropdown.less -->
+          <li class="user user-menu">
+            <a href="#">
+              <img alt="User Image" class="user-image" src="dist/images/avatar.png">
+              <span class="hidden-xs">懒得想</span>
+            </a>
+          </li>
+          
+          <li>
+            <a href="login.html" class="text-gray">退出 <i class="fa fa-sign-out"></i></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        订单查询
+      </h1>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">      
+      <div class="box">
+        <div class="box-header">
+          <div>
+            <div style="width:250px;" class="input-group input-group-sm">
+              <input type="text" placeholder="搜索" class="form-control pull-right" name="table_search">
+              <div class="input-group-btn">
+                <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="box-body">
+        	<table id="table1" class="table table-bordered table-hover cursor">
+            	<tr>
+                <th>订单单号</th>
+                <th>订单时间</th>
+                <th>状态</th>
+                <th>顾客手机号</th>
+                <th>总数量</th>
+                <th>总金额</th>
+                <th>操作</th>
+                </tr>
+                <tr data-toggle="modal" data-target="#myModal">
+                <td>30409583</td>
+                <td>2016-5-25 10:00:01</td>
+                <td><span class="label label-warning">未提货</span></td>
+                <td>13918888888</td>
+                <td>20</td>
+                <td>300</td>
+                <td><a class="btn btn-primary btn-flat" href="#">提货</a> <a class="btn btn-info btn-flat" href="#">配送</a></td>
+                </tr>
+                <tr data-toggle="modal" data-target="#myModal">
+                <td>30409583</td>
+                <td>2016-5-25 10:00:01</td>
+                <td><span class="label label-info">已付款</span></td>
+                <td>13918888888</td>
+                <td>20</td>
+                <td>300</td>
+                <td><a class="btn btn-primary btn-flat" href="#">提货</a> <a class="btn btn-info btn-flat" href="#">配送</a></td>
+                </tr>
+                <tr data-toggle="modal" data-target="#myModal">
+                <td>30409583</td>
+                <td>2016-5-25 10:00:01</td>
+                <td><span class="label label-success">已完成</span></td>
+                <td>13918888888</td>
+                <td>20</td>
+                <td>300</td>
+                <td><a class="btn btn-primary btn-flat" href="#">提货</a> <a class="btn btn-info btn-flat" href="#">配送</a></td>
+                </tr>
+            </table>
+            <div class="pull-right"><ul class="pagination"><li class="paginate_button previous disabled"><a href="#">上一页</a></li><li class="paginate_button active"><a href="#">1</a></li><li class="paginate_button "><a href="#">2</a></li><li class="paginate_button "><a href="#">3</a></li><li class="paginate_button "><a href="#">4</a></li><li class="paginate_button "><a href="#">5</a></li><li class="paginate_button "><a href="#">6</a></li><li class="paginate_button next"><a href="#">下一页</a></li></ul></div>
+        </div>
+     </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+</div>
+<!-- ./wrapper -->
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">订单详情</h4>
+      </div>
+      <div class="modal-body">
+        <div class="margin-bottom">
+        	<table class="table">
+            	<tr>
+                <th>订单编号</th><td><input type="text" class="form-control" value="30409583"></td>
+                <th>订单时间</th><td><input type="text" class="form-control" value="2016-5-25 10:00:01"></td>
+                </tr>
+                <tr>
+                <th>手机号</th><td><input type="text" class="form-control" value="139188888888"></td>
+                <th>&nbsp;</th><td>&nbsp;</td>
+                </tr>
+                <tr>
+                <th>总数量</th><td><input type="text" class="form-control" value="300"></td>
+                <th>总金额</th><td><input type="text" class="form-control" value="20"></td>
+                </tr>
+            </table>
+        </div>
+        <div>
+        	<table class="table table-bordered table-hover">
+            	<tr>
+                <th>货号</th>
+                <th>品名</th>
+                <th>属性</th>
+                <th>单价</th>
+                <th>数量</th>
+                <th>金额</th>
+                </tr>
+                <tr>
+                <td>33121-1</td>
+                <td>全棉提花女船袜</td>
+                <td class="editable">咖啡/22-24</td>
+                <td>¥7.00/双</td>
+                <td class="editable">3双</td>
+                <td class="editable">¥21.00</td>
+                </tr>
+                <tr>
+                <tr>
+                <td>33121-1</td>
+                <td>全棉提花女船袜</td>
+                <td class="editable">咖啡/22-24</td>
+                <td>¥7.00/双</td>
+                <td class="editable">3双</td>
+                <td class="editable">¥21.00</td>
+                </tr>
+                <tr>
+                <tr>
+                <td>33121-1</td>
+                <td>全棉提花女船袜</td>
+                <td class="editable">咖啡/22-24</td>
+                <td>¥7.00/双</td>
+                <td class="editable">3双</td>
+                <td class="editable">¥21.00</td>
+                </tr>
+                <tr>
+             </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default">提货</button>
+        <button type="button" class="btn btn-primary">配送</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="plugins/jQuery/jQuery-2.2.0.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script> 
+<script src="dist/js/app.js"></script>
+</body>
+</html>

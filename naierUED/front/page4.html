@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>首页</title>
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="dist/css/font-awesome.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+  
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="dist/js/html5shiv.min.js"></script>
+  <script src="dist/js/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body class="skin-blue">
+<div class="wrapper">
+  <header class="main-header">
+    <!-- Logo -->
+    <a href="index.html" class="logo">
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b>上海古北一店</b></span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+	  <div class="collapse navbar-collapse pull-left">
+      <ul class="nav navbar-nav">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="page1.html">销售</a></li>
+        <li><a href="page2.html">销退</a></li>
+        <li><a href="page3.html">订单</a></li>
+        <li class="active"><a href="page4.html">会员</a></li>
+        <li><a href="page5.html">统计</a></li>
+      </ul>
+    </div>
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <!-- User Account: style can be found in dropdown.less -->
+          <li class="user user-menu">
+            <a href="#">
+              <img alt="User Image" class="user-image" src="dist/images/avatar.png">
+              <span class="hidden-xs">懒得想</span>
+            </a>
+          </li>
+          
+          <li>
+            <a href="login.html" class="text-gray">退出 <i class="fa fa-sign-out"></i></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>会员查询</h1>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">      
+      <div class="box">
+        <div class="box-header">
+          <div style="width:250px;" class="input-group input-group-sm">
+              <input type="text" placeholder="搜索" class="form-control pull-right" name="table_search">
+              <div class="input-group-btn">
+                <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+              </div>
+            </div>
+          <div class="box-tools">
+            <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#myModal">新建会员</button>
+          </div>
+        </div>
+        <div class="box-body">
+        	<table id="table1" class="table table-bordered table-hover cursor">
+            	<tr>
+                <th>会员编号</th>
+                <th>姓名</th>
+                <th>性别</th>
+                <th>手机号</th>
+                <th>生日</th>
+                <th>等级</th>
+                <th>积分</th>
+                </tr>
+                <tr>
+                <td>30409583</td>
+                <td>懒得想</td>
+                <td>男</td>
+                <td>13918888888</td>
+                <td>1985-05-19</td>
+                <td>金牌会员</td>
+                <td>500</td>
+                </tr> 
+            </table>
+            <div class="pull-right"><ul class="pagination"><li class="paginate_button previous disabled"><a href="#">上一页</a></li><li class="paginate_button active"><a href="#">1</a></li><li class="paginate_button "><a href="#">2</a></li><li class="paginate_button "><a href="#">3</a></li><li class="paginate_button "><a href="#">4</a></li><li class="paginate_button "><a href="#">5</a></li><li class="paginate_button "><a href="#">6</a></li><li class="paginate_button next"><a href="#">下一页</a></li></ul></div>
+        </div>
+     </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+</div>
+<!-- ./wrapper -->
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document" style="width:400px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">新建会员</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal">
+          <div class="box-body">
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input1">会员编号</label>
+              <div class="col-sm-9">
+                <input type="text" id="input1" class="form-control">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input2">姓名</label>
+              <div class="col-sm-9">
+                <input type="text" id="input2" class="form-control">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input3">手机号</label>
+              <div class="col-sm-9">
+                <input type="text" id="input3" class="form-control">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input4">性别</label>
+              <div class="col-sm-9">
+                <select id="input4">
+                  <option>男</option>
+                  <option>女</option>
+                  <option>保密</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="input5">生日</label>
+              <div class="col-sm-9">
+                <input type="text" id="input5" class="form-control">
+              </div>
+            </div>
+          </div>
+          <!-- /.box-body -->
+        </form>
+      </div>
+      <div class="modal-footer">
+      	<button type="button" class="btn btn-default">取消</button>
+        <button type="button" class="btn btn-primary">提交</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="plugins/jQuery/jQuery-2.2.0.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script> 
+<script src="dist/js/app.js"></script>
+</body>
+</html>

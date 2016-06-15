@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>登录</title>
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="dist/css/font-awesome.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+  
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="dist/js/html5shiv.min.js"></script>
+  <script src="dist/js/respond.min.js"></script>
+  <![endif]-->
+<script src="dist/js/angular.min.js"></script>
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+  <div class="login-logo">
+    <a href="#">上海古北一店</a>
+  </div>
+  <!-- /.login-logo -->
+  <div class="login-box-body">
+    <p class="login-box-msg">账号登录</p>
+
+    <form action="index.html" method="post" ng-app="loginApp" name="loginForm" ng-controller="validateCtrl" novalidate>
+      <div class="form-group has-feedback" ng-class="{'has-error':loginForm.username.$dirty && loginForm.username.$invalid}">
+        <input type="text" class="form-control" placeholder="用户名" name="username" ng-model="username" ng-minlength="3" required>
+        <span class="glyphicon glyphicon-user form-control-feedback" ng-show="loginForm.username.$valid || loginForm.username.$pristine"></span>
+        <label for="inputError" class="control-label" ng-show="loginForm.username.$dirty && loginForm.username.$invalid">
+          <i class="fa fa-times-circle-o"></i> <span ng-show="loginForm.username.$error.required">用户名不能为空</span>  <span ng-show="loginForm.username.$error.minlength">用户名必须大于3个字符</span>
+        </label>
+      </div>
+      <div class="form-group has-feedback" ng-class="{'has-error':loginForm.password.$dirty && loginForm.password.$invalid}">
+        <input type="password" class="form-control" placeholder="密码" name="password" ng-model="password" ng-minlength="6" required>
+        <span class="glyphicon glyphicon-lock form-control-feedback" ng-show="loginForm.password.$valid || loginForm.password.$pristine"></span>
+        <label for="inputError" class="control-label" ng-show="loginForm.password.$dirty && loginForm.password.$invalid">
+          <i class="fa fa-times-circle-o"></i> <span ng-show="loginForm.password.$error.required">密码不能为空</span>  <span ng-show="loginForm.password.$error.minlength">密码必须大于6个字符</span>
+        </label>
+      </div>
+      <div class="form-group input-group has-feedback verifyCode" ng-class="{'has-error':loginForm.auth.$dirty && loginForm.auth.$invalid}">
+        <input type="text" class="form-control" placeholder="验证码" name="auth" ng-model="auth" ng-minlength="4" ng-maxlength="4" required> <img src="dist/images/authcode.png" width="100" height="34"> <i class="fa fa-refresh"></i>
+        <label for="inputError" class="control-label" ng-show="loginForm.auth.$dirty && loginForm.auth.$invalid">
+          <i class="fa fa-times-circle-o"></i> <span ng-show="loginForm.auth.$error.required">验证码不能为空</span>  <span ng-show="loginForm.auth.$error.minlength || loginForm.auth.$error.maxlength">验证码格式错误</span>
+        </label>
+      </div>
+      <div class="box-body">
+      	<p><a href="forget-password.html">忘记登录密码</a></p>
+        <button type="submit" class="btn btn-primary btn-block" ng-disabled="loginForm.$invalid">登录</button>
+      </div>
+    </form>
+  </div>
+  <!-- /.login-box-body -->
+</div> 
+<!-- /.login-box -->
+<script>
+var app = angular.module('loginApp', []);
+app.controller('validateCtrl', function($scope) {});
+</script>
+</body>
+</html>

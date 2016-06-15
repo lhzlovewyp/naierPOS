@@ -1,0 +1,347 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>首页</title>
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="dist/css/font-awesome.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+  
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="dist/js/html5shiv.min.js"></script>
+  <script src="dist/js/respond.min.js"></script>
+  <![endif]-->
+<script src="dist/js/angular.min.js"></script>
+</head>
+<body class="skin-blue">
+<div class="wrapper" ng-app="">
+  <header class="main-header">
+    <!-- Logo -->
+    <a href="index.html" class="logo">
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b>上海古北一店</b></span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+	  <div class="collapse navbar-collapse pull-left">
+      <ul class="nav navbar-nav">
+        <li><a href="index.html">首页</a></li>
+        <li class="active"><a href="page1.html">销售</a></li>
+        <li><a href="page2.html">销退</a></li>
+        <li><a href="page3.html">订单</a></li>
+        <li><a href="page4.html">会员</a></li>
+        <li><a href="page5.html">统计</a></li>
+      </ul>
+    </div>
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <!-- User Account: style can be found in dropdown.less -->
+          <li class="user user-menu">
+            <a href="#">
+              <img alt="User Image" class="user-image" src="dist/images/avatar.png">
+              <span class="hidden-xs">懒得想</span>
+            </a>
+          </li>
+          
+          <li>
+            <a href="login.html" class="text-gray">退出 <i class="fa fa-sign-out"></i></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+	<!-- Main content -->
+    <section class="content">
+      <!-- Small boxes (Stat box) -->
+      <div class="row">
+        <div class="col-xs-4">
+          <div class="box box-primary">
+          	<div class="box-header">
+              <h3 class="box-title">交易信息</h3>
+              <div class="box-tools">
+                <a id="btn1" href="#" class="btn btn-danger btn-flat" style="display:none">取消交易</a>
+              </div>
+            </div>
+            <div class="box-body">
+            	<ul class="list-group list-group-unbordered">
+                <li class="list-group-item">
+                  <b>营业日期</b> <a class="pull-right">2016年05月24日</a>
+                </li>
+                <li class="list-group-item">
+                  <b>会员</b> <a class="pull-right">-</a>
+                </li>
+                <li class="list-group-item">
+                  <b>导购</b> <a class="pull-right">-</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-xs-4">
+          <div class="box box-info">
+          	<div class="box-header">
+              <h3 class="box-title">结算信息</h3>
+              <div class="box-tools">
+                <a id="btn2" href="#" class="btn btn-info btn-flat" style="display:none">结算</a>
+              </div>
+            </div>
+            <div class="box-body">
+            	<ul class="list-group list-group-unbordered">
+                <li class="list-group-item">
+                  <b>总数量</b> <a class="pull-right text-black" id="quantity">0</a>
+                </li>
+                <li class="list-group-item">
+                  <b>总金额</b> <a class="pull-right text-black" id="total">¥0.00</a>
+                </li>
+                <li class="list-group-item">
+                  <b>总折扣</b> <a class="pull-right text-muted" id="discount">-¥0.00</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-xs-4">
+          <div class="box box-success">
+          	<div class="box-header">
+              <h3 class="box-title">付款信息</h3>
+            </div>
+            <div class="box-body">
+            	<ul class="list-group list-group-unbordered">
+                <li class="list-group-item">
+                  <b>应付金额</b> <a class="pull-right text-black" id="final_total">¥0.00</a>
+                </li>
+                <li class="list-group-item">
+                  <b>已付金额</b> <a class="pull-right text-green" id="already_pay">¥0.00</a>
+                </li>
+                <li class="list-group-item">
+                  <b>尚需付款</b> <a class="pull-right text-danger text-bold" id="need_pay">¥0.00</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- ./col -->
+      </div>
+      <!-- /.row -->
+      
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">销售明细</h3>
+          <div class="box-tools">
+            <a id="btn4" href="#" class="btn btn-info btn-flat">整单打折</a>
+          </div>
+        </div>
+        <div class="box-header">
+        	<div class="">
+            <div style="width:250px;" class="input-group input-group-sm">
+              <input id="input1" type="text" placeholder="搜索" class="form-control pull-right" name="table_search">
+              <div class="input-group-btn">
+                <button id="btn3" class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="box-body">
+        	<table id="table1" class="table table-bordered table-hover">
+            	<tr>
+                <th width="30">&nbsp;</th>
+                <th>货号</th>
+                <th>品名</th>
+                <th>属性</th>
+                <th>单价</th>
+                <th>数量</th>
+                <th>金额</th>
+                </tr>
+            </table>
+        </div>
+     </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+</div>
+<!-- ./wrapper -->
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+  	<div class="modal-content">
+    	<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default">取消</button>
+          <button type="submit" class="btn btn-primary">提交</button>
+        </div>
+   	</div>
+  </div>
+</div>
+<script src="plugins/jQuery/jQuery-2.2.0.min.js"></script>
+<script src="plugins/editable/mindmup-editabletable.js"></script> 
+<script src="bootstrap/js/bootstrap.min.js"></script> 
+<script src="dist/js/app.js"></script>
+<script src="dist/js/sell.js"></script>
+<script>
+//添加销售记录
+function modalSubmit1(obj, options){
+	var color = ($(options.selector+' .attribute-ul').eq(0).find('li:has(i)').length > 0) ? $(options.selector+' .attribute-ul').eq(0).find('li:has(i)').html().toString().replace('<i class="fa fa-check"></i>','') : $(options.selector+' .attribute-ul').eq(0).find('li').eq(1).html();
+	var size = ($(options.selector+' .attribute-ul').eq(1).find('li:has(i)').length > 0) ? $(options.selector+' .attribute-ul').eq(1).find('li:has(i)').html().toString().replace('<i class="fa fa-check"></i>','') : $(options.selector+' .attribute-ul').eq(1).find('li').eq(1).html();
+	if(obj.attr('id') == 'btn3'){
+		$('#table1').append('<tr>'
+		+'<td width="30"><button type="button" class="close">&times;</button></td>'
+		+'<td>33121-1</td>'
+		+'<td>'+options.productName+'</td>'
+		+'<td>'+color+'/'+size+'</td>'
+		+'<td>7.00</td>'
+		+'<td class="editable">1</td>'
+		+'<td class="sub-total">7.00</td>'
+		+'</tr>').editableTableWidget({selector:'.editable'}).initTable(options);
+		$('.editable').on('change', function(evt, newValue) {
+			$(this).parent().find('td').eq(6).html((Number(newValue)*Number($(this).parent().find('td').eq(4).html())).toFixed(2));
+			setDetails();
+		})
+	}else{
+		obj.html(color+'/'+size);
+	}
+	$(options.selector).modal('hide');
+	$('#btn1, #btn2').show();
+	setDetails();
+}
+
+//打折
+function modalSubmit2(obj, options){
+	var discount = '';
+	var discount_type = options.isAll ? '整单' : '单项';
+	var discount_str = '';
+	if($(options.selector + ' input[name="discount"]:checked').val() == '1'){
+		discount_str = '折扣';
+		if(options.isAll){
+			var total = 0;
+			$('.sub-total').each(function(index, element) {
+                total += Number($(this).html());
+            });
+			discount = (total*(1-Number($(options.selector + ' input[type="text"]').val())/100)).toFixed(2);
+		}else{
+			discount = (Number(options.total)*(1-Number($(options.selector + ' input[type="text"]').val())/100)).toFixed(2);
+		}
+	}else if($(options.selector + ' input[name="discount"]:checked').val() == '2'){
+		discount_str = '折让';
+		discount = (Number($(options.selector + ' input[type="text"]').val())).toFixed(2);
+	}
+	var html = '<tr>'
+	+'<td width="30"><button type="button" class="close">&times;</button></td>'
+	+'<td>'+discount_type+discount_str+'</td>'
+	+'<td>&nbsp;</td>'
+	+'<td>&nbsp;</td>'
+	+'<td>&nbsp;</td>'
+	+'<td>&nbsp;</td>'
+	+'<td>-<span class="discount">'+discount+'</span></td>'
+	+'</tr>';
+	options.isAll ? $('#table1').append(html) : obj.parent().after(html);
+	$('#table1').initTable();
+	$(options.selector).modal('hide');
+	setDetails();
+}
+
+//付款
+function modalSubmit3(obj, options){
+	$(obj).setModal({
+		selector:'#myModal',
+		modalTitle:'付款',
+		btnSubmitText:'完成付款',
+		btnCancelText:'取消付款',
+		type:'payment',
+		submitFuction:modalSubmit4
+	});
+}
+
+//完成付款
+function modalSubmit4(obj, options){
+	$(options.selector).modal('hide');
+	$('#btn1, #btn2').hide();
+	$('#table1 tr').each(function(index, element) {
+        (index > 0) && $(this).remove();
+    });
+}
+
+function setDetails(){
+	var quantity=0, total=0, discount=0, final_total=0;
+	$('#table1 .editable').each(function(index, element) {
+        quantity += Number($(this).html());
+    });
+	$('#table1 .sub-total').each(function(index, element) {
+        total += Number($(this).html());
+    });
+	$('#table1 .discount').each(function(index, element) {
+        discount += Number($(this).html());
+    });
+	final_total = total - discount;
+	
+	$('#quantity').html(quantity);
+	$('#total').html('¥'+total.toFixed(2));
+	$('#discount').html('-¥'+discount.toFixed(2));
+	$('#final_total').html('¥'+final_total.toFixed(2));
+	$('#need_pay').html('¥'+final_total.toFixed(2));
+}
+
+$(function(){
+	$('#btn1').click(function(){
+		$('#table1 tr').each(function(index, element) {
+            (index > 0) && $(this).remove();
+        });
+	});
+	
+	$('#btn2').bind('click', function(){
+		if($(this).hasClass('btn-danger')){
+			$(this).html('结算');
+			$(this).removeClass('btn-danger');
+			$('.modal').hide();
+		}else{
+			$(this).html('取消结算');
+			$(this).addClass('btn-danger');
+			$(this).setModal({
+				selector:'#myModal',
+				modalTitle:'可参加的促销活动',
+				btnSubmitText:'参加',
+				btnCancelText:'都不参加',
+				type:'coupon',
+				submitFuction:modalSubmit3
+			});
+		}
+	});
+	
+	$('#btn3').click(function(){
+		$(this).setModal({
+			selector:'#myModal',
+			modalTitle:'选择商品属性',
+			productName:'全棉提花女船袜',
+			submitFuction:modalSubmit1
+		});
+	});
+	
+	$('#btn4').click(function(){
+		$(this).setModal({
+			selector:'#myModal',
+			modalTitle:'整单打折',
+			type:'discount',
+			isAll:'all',
+			submitFuction:modalSubmit2
+		});
+	});
+})
+</script>
+</body>
+</html>
