@@ -30,6 +30,10 @@
 
     <form  role="form" method="post"  name="loginForm" id="loginForm" ng-submit="login(loginForm.$valid)" novalidate>
       <div class="form-group has-feedback">
+        <input type="clientCode" class="form-control" placeholder="商户编号"  ng-bind="form.clientCode" ng-model="form.clientCode" id="clientCode" name="clientCode" required autofocus>
+        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
         <input type="username" class="form-control" placeholder="用户名" autocomplete="off" ng-bind="form.userName" ng-model="form.userName" id="userName" name="userName" required autofocus>
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
@@ -43,6 +47,9 @@
       </div>
     
       <div class="form-group has-feedback" role="alert">
+      	<label for="inputError" class="control-label" ng-show="loginForm.clientCode.$dirty && loginForm.clientCode.$error.required">
+        	<i class="fa fa-times-circle-o">请输入商户编号</i>
+        </label>
         <label for="inputError" class="control-label" ng-show="loginForm.userName.$dirty && loginForm.userName.$error.required">
         	<i class="fa fa-times-circle-o">请输入用户名</i>
         </label>

@@ -11,12 +11,16 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
+import com.alibaba.fastjson.JSON;
 import com.joker.core.constant.Context;
 import com.joker.core.constant.ResponseState;
 import com.joker.core.dto.ParamsBody;
 import com.joker.core.dto.ReturnBody;
+import com.joker.core.model.Account;
+import com.joker.core.model.Role;
 import com.joker.core.util.CookieUtil;
 import com.joker.core.util.RestUtil;
 
@@ -62,6 +66,15 @@ public class LoginFilter implements Filter{
 				}
 				if(body == null || body.getStatus() != ResponseState.SUCCESS){
 					response.sendRedirect("/front/login.html");
+				}
+				
+				//判断当前用户所属的权限是否可以访问前台
+				if(body!=null && body.getData()!=null){
+					
+					Account account=JSON.parseObject(body.getData().toString(), Account.class);
+					if(!account.getLoginPOS().equals("1")){
+						response.sendRedirect("/front/authorize.html");
+					}
 				}
 			}
 		}

@@ -5,8 +5,11 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 <configuration>
 	<typeAliases>
 		<!--实体类别名 -->
-	     <typeAlias type="com.joker.common.model.SaleOrg" alias="saleOrg" />
-	     <typeAlias type="com.joker.common.model.SaleUser" alias="saleUser" />
+	     <typeAlias type="com.joker.common.model.Client" alias="client" />
+	     <typeAlias type="com.joker.common.model.Store" alias="store" />
+	     <typeAlias type="com.joker.common.model.Account" alias="account" />
+	     <typeAlias type="com.joker.common.model.Role" alias="role" />
+	     
 	</typeAliases>
 
     <plugins>

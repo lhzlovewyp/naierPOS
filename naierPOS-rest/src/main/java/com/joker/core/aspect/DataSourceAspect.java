@@ -25,7 +25,7 @@ public class DataSourceAspect {
 
     //定义切入点
     @SuppressWarnings("unused")
-    @Pointcut("execution(* com.crell.common.mapper.*.*(..))")
+    @Pointcut("execution(* com.joker.common.mapper.*.*(..))")
     private  void pointCut(){}
 
     @Before("pointCut()")

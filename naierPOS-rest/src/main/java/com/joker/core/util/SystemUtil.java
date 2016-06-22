@@ -3,14 +3,15 @@ package com.joker.core.util;
 
 import org.springframework.stereotype.Component;
 
-import com.joker.common.model.SaleUser;
+import com.joker.common.model.Account;
+
 
 @Component("SystemUtil")
 public class SystemUtil {
 	
-	private static ThreadLocal<SaleUser> local = new ThreadLocal<SaleUser>();
+	private static ThreadLocal<Account> local = new ThreadLocal<Account>();
 	
-	public static void setUser(SaleUser user){
+	public static void setUser(Account user){
         local.set(user);
     }
     
@@ -18,8 +19,8 @@ public class SystemUtil {
         local.remove();
     }
     
-    public static SaleUser getUser(){
-        return (SaleUser)local.get();
+    public static Account getUser(){
+        return (Account)local.get();
     }
     
 }

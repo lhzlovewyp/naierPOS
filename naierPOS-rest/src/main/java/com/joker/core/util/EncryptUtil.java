@@ -22,7 +22,7 @@ public class EncryptUtil {
      * @return encryption string
      */
     public static String doEncrypt(String pass) {
-        String keys = null;
+       /* String keys = null;
         try {
             MessageDigest md = MessageDigest.getInstance(ALGORITHM_MD5);
             if (pass == null) {
@@ -38,7 +38,8 @@ public class EncryptUtil {
         catch (java.io.UnsupportedEncodingException uex) {
             LogUtil.error("can not encode the password - " + uex.getMessage());
         }
-        return keys;
+        return keys;*/
+    	return pass;
     }
 
     /**

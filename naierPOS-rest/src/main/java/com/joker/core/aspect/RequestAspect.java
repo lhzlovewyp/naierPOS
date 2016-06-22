@@ -1,7 +1,9 @@
 package com.joker.core.aspect;
 
+import com.joker.common.model.Account;
 import com.joker.core.annotation.BodyFormat;
 import com.joker.core.annotation.NotNull;
+import com.joker.core.cache.CacheFactory;
 import com.joker.core.constant.ResponseState;
 import com.joker.core.dto.ParamsBody;
 import com.joker.core.dto.ReturnBody;
@@ -34,8 +36,6 @@ import java.util.Map;
 @Aspect
 public class RequestAspect {
 
-    @Autowired
-    RedisTemplate redis;
 
     //Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -89,23 +89,7 @@ public class RequestAspect {
                         LogUtil.error(method.getName() + "入参timestamp为空");
                         return returnbody;
                     }else{
-                        BoundHashOperations<String, String, String> userToken = redis.boundHashOps("userToken");
-                        String token = userToken.get(paramsBody.getToken());
-                        if(StringUtils.isEmpty(token)){
-                            returnbody.setStatus(ResponseState.INVALID_TOKEN);
-                            returnbody.setMsg( "无效token");
-                            LogUtil.error(method.getName() + "无效token");
-                            return returnbody;
-                        }else{
-                            long token_time = Long.parseLong(token.split(",")[1]);
-                            long timestamp = paramsBody.getTimestamp();
-                            if(timestamp > token_time){
-                                returnbody.setStatus(ResponseState.INVALID_TOKEN);
-                                returnbody.setMsg( "token过期");
-                                LogUtil.error(method.getName() + "token过期，失效");
-                                return returnbody;
-                            }
-                        }
+                        
                     }
                 }
 

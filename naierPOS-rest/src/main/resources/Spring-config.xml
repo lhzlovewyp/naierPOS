@@ -25,8 +25,8 @@
     <aop:aspectj-autoproxy />
 
     <!-- 启用缓存注解功能 -->
-    <cache:annotation-driven cache-manager="cacheManager" />
-
+<!--     <cache:annotation-driven cache-manager="cacheManager" />
+ -->
     <!-- 数据库配置文件位置 -->
     <context:property-placeholder location="classpath:jdbc.properties" />
     <!-- 配置dbcp数据源 master -->
@@ -75,7 +75,7 @@
     <!-- <import resource="mongodb-config.xml"/> -->
 
     <!-- spring缓存切换redis做缓存 -->
-    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+ <!--    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
         <property name="caches">
             <set>
                 <bean class="com.joker.core.interceptor.RedisCache">
@@ -90,42 +90,8 @@
                 </bean>
             </set>
         </property>
-    </bean>
+    </bean> -->
 
-    <!-- spring data redis -->
-    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
-        <property name="usePool" value="true"></property>
-        <property name="hostName" value="${redis.host}" />
-        <property name="port" value="${redis.port}" />
-        <property name="password" value="${redis.pass}" />
-        <!--<property name="timeout" value="${redis.timeout}" />-->
-        <!--<property name="database" value="${redis.default.db}"></property>-->
-        <constructor-arg name="poolConfig" ref="jedisPoolConfig" />
-    </bean>
-
-    <!-- jedis pool配置 -->
-    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
-        <property name="maxTotal" value="${redis.maxActive}" />
-        <property name="maxIdle" value="${redis.maxIdle}" />
-        <property name="maxWaitMillis" value="${redis.maxWait}" />
-        <property name="testOnBorrow" value="${redis.testOnBorrow}" />
-    </bean>
-
-    <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
-        <property name="connectionFactory" ref="jedisConnectionFactory" />
-        <property name="KeySerializer">
-            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
-        </property>
-        <property name="ValueSerializer">
-            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
-        </property>
-        <property name="HashKeySerializer">
-            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
-        </property>
-        <property name="HashValueSerializer">
-            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
-        </property>
-    </bean>
 
     <!-- mybatis-->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">

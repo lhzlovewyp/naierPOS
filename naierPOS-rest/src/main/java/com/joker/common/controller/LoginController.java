@@ -1,6 +1,5 @@
 package com.joker.common.controller;
 
-import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
@@ -16,22 +15,27 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.code.kaptcha.Constants;
-import com.joker.common.model.SaleUser;
-import com.joker.common.service.SaleUserService;
+import com.joker.common.model.Account;
+import com.joker.common.model.Client;
+import com.joker.common.service.AccountService;
+import com.joker.common.service.ClientService;
 import com.joker.core.annotation.NotNull;
 import com.joker.core.cache.CacheFactory;
 import com.joker.core.constant.ResponseState;
 import com.joker.core.controller.AbstractController;
 import com.joker.core.dto.ParamsBody;
 import com.joker.core.dto.ReturnBody;
-import com.joker.core.util.IpUtil;
+import com.joker.core.util.EncryptUtil;
 import com.joker.core.util.LogUtil;
 
 @RestController
 public class LoginController extends AbstractController{
 
 	@Autowired
-	SaleUserService saleUserService;
+	AccountService accountService;
+	
+	@Autowired
+	ClientService clientService;
 	
 	@Autowired
 	LogUtil logUtil;
@@ -47,43 +51,44 @@ public class LoginController extends AbstractController{
 	@RequestMapping(value = {"/login"},method = RequestMethod.POST)
     @ResponseBody
     public ReturnBody login(@RequestBody ParamsBody paramsBody,HttpServletRequest request, HttpServletResponse response){
-        ReturnBody rbody = new ReturnBody();
+		
+		//进行参数校验
+        ReturnBody rbody = validateParams(paramsBody, request, response);
+        
+        if(rbody!=null){
+        	return rbody;
+        }
+        rbody = new ReturnBody();
         Map<String, Object> body = paramsBody.getBody();
         
         //验证码校验
         Object verifyCode=body.get("verifyCode");
         Object sessionVerifyCode=request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
-        if(verifyCode == null || sessionVerifyCode ==null){
-        	rbody.setStatus(ResponseState.FAILED);
-            rbody.setMsg("请输入验证码！");
+    	if(!verifyCode.equals(sessionVerifyCode)){
+    		rbody.setStatus(ResponseState.FAILED);
+            rbody.setMsg("验证码校验错误,请重新输入！");
             return rbody;
-        }else{
-        	if(!verifyCode.equals(sessionVerifyCode)){
-        		rbody.setStatus(ResponseState.FAILED);
-                rbody.setMsg("验证码校验错误,请重新输入！");
-                return rbody;
-        	}
+    	}
+        String userName = (String) body.get("userName");
+        String clientCode = (String) body.get("clientCode");
+        String password = (String) body.get("password");
+        
+        //获取商户信息
+        Client client= clientService.getClientByCode(clientCode);
+        if(client == null){
+        	rbody.setStatus(ResponseState.FAILED);
+            rbody.setMsg("商户编号不存在,请重新输入！");
+            return rbody;
         }
         
-        SaleUser user = saleUserService.getUserByName((String) body.get("userName"));
+        Account user = accountService.login(client.getId(), userName);
         if(user != null){
-            //if(!user.getPassword().equals(EncryptUtil.doEncrypt((String) body.get("password")))){
-        	//Todo:待完善之后需要加密.
-            if(!user.getPassword().equals((String) body.get("password"))){
+            if(!user.getPassword().equals(EncryptUtil.doEncrypt(password))){
                 rbody.setStatus(ResponseState.FAILED);
                 rbody.setMsg("密码错误！");
             }else{
-                String token = UUID.randomUUID().toString();
-                user.setToken(token);
-                user.setIp(IpUtil.getIpAddr(request));
-                user.setLastLoginDate(new Date());
                 user.setPassword("");
                 rbody.setData(user);
-
-                saleUserService.login(user);
-                /*request.setAttribute(Context.USER, user);*/
-                //logUtil.action("用户登录", "用户名:" + user.getUserName());
-                
                 rbody.setStatus(ResponseState.SUCCESS);
                 rbody.setMsg("Success");
             }
@@ -141,4 +146,44 @@ public class LoginController extends AbstractController{
 		rbody.setStatus(ResponseState.SUCCESS);
 		return rbody;
 	}
+	
+	private ReturnBody validateParams(ParamsBody paramsBody,HttpServletRequest request, HttpServletResponse response){
+		 Map<String, Object> body = paramsBody.getBody();
+		 Object userName = (String) body.get("userName");
+		 Object clientCode = (String) body.get("clientCode");
+	     Object password=(String) body.get("password");
+	     Object verifyCode=body.get("verifyCode");
+	     
+	     if(userName==null){
+	    	 ReturnBody rbody = new ReturnBody();
+	    	 rbody.setStatus(ResponseState.FAILED);
+	         rbody.setMsg("请输入用户名！");
+	         return rbody;
+	     }
+	     
+	     if(clientCode==null){
+	    	 ReturnBody rbody = new ReturnBody();
+	    	 rbody.setStatus(ResponseState.FAILED);
+	         rbody.setMsg("请输入商户编号！");
+	         return rbody;
+	     }
+	     
+	     if(password==null){
+	    	 ReturnBody rbody = new ReturnBody();
+	    	 rbody.setStatus(ResponseState.FAILED);
+	         rbody.setMsg("请输入密码！");
+	         return rbody;
+	     }
+	     
+	     if(verifyCode==null){
+	    	 ReturnBody rbody = new ReturnBody();
+	    	 rbody.setStatus(ResponseState.FAILED);
+	         rbody.setMsg("请输入验证码！");
+	         return rbody;
+	     }
+	     
+	     return null;
+	     
+	}
+	
 }

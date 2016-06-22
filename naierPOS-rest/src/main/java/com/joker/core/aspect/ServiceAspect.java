@@ -7,7 +7,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
-import com.joker.common.model.SaleUser;
+import com.joker.common.model.Account;
 import com.joker.core.constant.MessageCode;
 import com.joker.core.util.LogUtil;
 import com.joker.core.util.SystemUtil;
@@ -34,10 +34,10 @@ public class ServiceAspect {
 		clock.start();
 		Object object = pjp.proceed();//执行该方法
         clock.stop();
-		SaleUser user = SystemUtil.getUser();
-		if(user == null) user = new SaleUser();
+		Account user = SystemUtil.getUser();
+		if(user == null) user = new Account();
 		//写入性能日志
-		LogUtil.debug(pjp.getTarget().getClass().getName(), pjp.getSignature().getName(), MessageCode.SYSTEM_ASPECT_NORMAL, Long.toString(clock.getTotalTimeMillis()), user.getIp(), user.getUserName());
+		LogUtil.debug(pjp.getTarget().getClass().getName(), pjp.getSignature().getName(), MessageCode.SYSTEM_ASPECT_NORMAL, Long.toString(clock.getTotalTimeMillis()), null, user.getName());
 		return object;
     }
 }

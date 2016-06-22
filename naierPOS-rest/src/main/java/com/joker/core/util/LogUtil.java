@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.joker.common.model.SaleUser;
 import com.joker.core.constant.LogType;
 import com.joker.core.dto.SystemLog;
 
@@ -229,14 +228,14 @@ public class LogUtil {
 	 */
 	public void action(String actionName,String msg) {
 		//生成用户日志信息
-		SystemLog log = new SystemLog();
-		SaleUser user = SystemUtil.getUser();
-		log.setId(UUID.randomUUID().toString());
-		log.setUserName(user.getUserName());
-		log.setIpAddress(user.getIp());
-		log.setCreateDate(DatetimeUtil.nowToString());
-		log.setActionName(actionName);
-		log.setMessage(msg);
+//		SystemLog log = new SystemLog();
+//		SaleUser user = SystemUtil.getUser();
+//		log.setId(UUID.randomUUID().toString());
+//		log.setUserName(user.getUserName());
+//		log.setIpAddress(user.getIp());
+//		log.setCreateDate(DatetimeUtil.nowToString());
+//		log.setActionName(actionName);
+//		log.setMessage(msg);
 		//记录数据
 		//mongoTemplate.save(log);
 	}

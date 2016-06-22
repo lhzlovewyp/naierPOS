@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.joker.common.model.SaleUser;
-import com.joker.common.service.SaleUserService;
+import com.joker.common.model.Account;
+import com.joker.common.service.AccountService;
 import com.joker.core.constant.Context;
 import com.joker.core.util.IpUtil;
 import com.joker.core.util.SystemUtil;
@@ -22,7 +22,7 @@ public class SessionSecurityInterceptor implements HandlerInterceptor {
     public String[] allowUrls;//需要拦截的url，配置文件中注入
 
     @Autowired
-    SaleUserService saleUserService;
+    AccountService accountService;
 
     public void setAllowUrls(String[] allowUrls) {
         this.allowUrls = allowUrls;
@@ -32,19 +32,18 @@ public class SessionSecurityInterceptor implements HandlerInterceptor {
         //请求url
         String requestUrl = request.getRequestURI().replace(request.getContextPath(), "");
         //session中取当前用户session
-        SaleUser user = (SaleUser)request.getSession().getAttribute(Context.USER);
+        Account user = (Account)request.getSession().getAttribute(Context.USER);
         String ipAddr = IpUtil.getIpAddr(request);
 
         if (null != allowUrls && allowUrls.length >= 1) {
 
         }
         if(user!=null){
-            user.setIp(ipAddr);
+           // user.setIp(ipAddr);
             SystemUtil.setUser(user);
         }else if(requestUrl.contains("/login")){
-            user = new SaleUser();
-            user.setUserName(request.getParameter("userName"));
-            user.setIp(ipAddr);
+            user = new Account();
+            user.setName(request.getParameter("userName"));
             SystemUtil.setUser(user);
         }
         return true;
