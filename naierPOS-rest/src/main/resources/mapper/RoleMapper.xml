@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.RoleMapper">
+     
+    
+    <resultMap type="role" id="role">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="code" column="Code" />
+		<result property="name" column="Name" />
+		<result property="loginTerminal" column="LoginTerminal" />
+		<result property="loginAdmin" column="LoginAdmin" />
+		<result property="itemDISC" column="ItemDISC" />
+		<result property="allDISC" column="ALLDISC" />
+		<result property="status" column="Status" />
+		<result property="creator" column="Creator" />
+		<result property="created" column="Created" />
+		<result property="editor" column="Editor" />
+		<result property="modified" column="Modified" />
+	</resultMap>
+    <select id="getRoleByAccountId" parameterType="string" resultMap="role">
+		SELECT 
+			r.ID,r.Client,r.Code,r.Name,r.LoginTerminal,r.LoginAdmin,r.ItemDISC,r.ALLDISC,r.Status,r.Creator,r.Created,r.Editor,r.Modified
+		FROM Role r,AccountRole ar 
+		WHERE 
+			r.ID=ar.Role and ar.Account =#{accountId}
+	</select>
+</mapper>

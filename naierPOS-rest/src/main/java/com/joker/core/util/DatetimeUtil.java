@@ -128,11 +128,12 @@ public class DatetimeUtil {
 	/**
 	 * 查询报表时，只传送月份，所以把月份转为日期类型
 	 */
-	public static String monthToDate(String year, String month, boolean isBeginOfMonth) {
+	public static String monthToDate(String year, String month,
+			boolean isBeginOfMonth) {
 		String tempYear = "";
 		if (year == null || year.trim().equals("")) {
 			Date d = new Date();
-			Calendar cal=Calendar.getInstance();
+			Calendar cal = Calendar.getInstance();
 			cal.setTime(d);
 			tempYear = Integer.toString(cal.get(Calendar.YEAR));
 		} else {
@@ -142,7 +143,8 @@ public class DatetimeUtil {
 		if (isBeginOfMonth)
 			return tempYear + "-" + month + "-01";
 		else
-			return tempYear + "-" + month + "-" + getLastDayOfMonth(year, month);
+			return tempYear + "-" + month + "-"
+					+ getLastDayOfMonth(year, month);
 	}
 
 	/**
@@ -186,7 +188,7 @@ public class DatetimeUtil {
 
 	/**
 	 * 字符串转换为Date
-	 *
+	 * 
 	 * @throws ParseException
 	 * @throws ParseException
 	 */
@@ -249,7 +251,7 @@ public class DatetimeUtil {
 		Calendar calEnd = Calendar.getInstance();
 		dtFrom = strToDate(dateFrom);// yyyy-MM-dd
 		calFrom.setTime(dtFrom);
-		return (calEnd.get(Calendar.YEAR) - calFrom.get(Calendar.YEAR) );
+		return (calEnd.get(Calendar.YEAR) - calFrom.get(Calendar.YEAR));
 	}
 
 	/**
@@ -344,15 +346,37 @@ public class DatetimeUtil {
 		int totalS = new Long(time / 1000).intValue();
 		return totalS;
 	}
-	
-	public static void main(String[] args){
+
+	/**
+	 * 把时间往后移.
+	 * 
+	 * @param date
+	 * @param days
+	 * @return
+	 */
+	public static Date addDays(Date date, int days) {
+		Calendar cal = Calendar.getInstance();
+
+		try {
+			cal.setTime(date);
+			cal.add(Calendar.DATE, days);
+
+		} catch (Exception e) {
+			// e.printStackTrace();
+		}
+		return cal.getTime();
+
+	}
+
+	public static void main(String[] args) {
 		System.out.println(DatetimeUtil.nowToString(DATE));
 		System.out.println(DatetimeUtil.nowToString(DATE_TIME_MILLISECOND));
-		System.out.println(DatetimeUtil.nowToString(DATE_TIME_MILLISECOND_NO_OPERATE));
+		System.out.println(DatetimeUtil
+				.nowToString(DATE_TIME_MILLISECOND_NO_OPERATE));
 		System.out.println(DatetimeUtil.nowToString(SHORTDATE));
 		System.out.println(DatetimeUtil.nowToString(DATEANDTIME));
 		System.out.println(strToDate("2011-11-11"));
-		System.out.println(monthToDate("2013","01",false));
+		System.out.println(monthToDate("2013", "01", false));
 		System.out.println(getCurrentYear());
 		System.out.println(getYears("2000-01-01 23:23:23"));
 		System.out.println(nowToString());

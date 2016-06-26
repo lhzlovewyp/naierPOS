@@ -55,7 +55,7 @@ app.factory('LoginService',['$q','$location','$http','BaseService',function($q,$
         	BaseService.post('/rest/login/validToken', obj).then(function (data) {
         		if(data.data.status == Status.SUCCESS){
         			loginInfo.userName=data.data.data.nick;
-        			loginInfo.orgName=data.data.data.store.name;
+        			loginInfo.storeName=data.data.data.store.name;
         			deferred.resolve(loginInfo);
         		}else{
         			location.href = '/front/login.html';
@@ -76,4 +76,39 @@ app.factory('LoginService',['$q','$location','$http','BaseService',function($q,$
             });
         }
     }
-}])
+}]);
+
+
+app.factory('HomeService',['$q','$location','$http','BaseService',function($q,$location,$http,BaseService){
+	return {
+		getHomeData : function(){
+			var token=$.cookie("token");
+			var obj={"token":token};
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/home/index',obj).then(function(obj){
+                if(obj.data.status==Status.SUCCESS){
+                    var dto=obj.data.data;
+                	info.saleDate=dto.saleDate;
+                	info.perTicketSales=dto.perTicketSales;
+                	info.salesAmount = dto.salesAmount;
+                	info.orders=dto.orders;
+                	deferred.resolve(info);
+                }
+            });
+			return deferred.promise;
+		},
+		dayReport : function(){
+			var token=$.cookie("token");
+			var obj={"token":token};
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/home/dayReport',obj).then(function(obj){
+               	info.status=obj.data.status;
+            	deferred.resolve(info);
+            });
+			return deferred.promise;
+		}
+	}
+	
+}]);

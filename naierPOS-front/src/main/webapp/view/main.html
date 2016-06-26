@@ -1,14 +1,11 @@
-<section class="content-header">
+ <!-- Content Header (Page header) -->
+    <section class="content-header">
       <h1>
         当前营业日期
-        <small>2016-05-25</small>
-        <a class="btn btn-primary btn-flat"><i class="fa fa-credit-card"></i> 日结</a> <a class="btn btn-warning btn-flat"><i class="fa fa-rmb"></i> 读账</a>
+        <small>{{info.saleDate | date:'yyyy-MM-dd'}}</small>
+        <a class="btn btn-primary btn-flat" ng-click="dayReport();"><i class="fa fa-credit-card"></i> 日结</a> <a class="btn btn-warning btn-flat"><i class="fa fa-rmb"></i> 读账</a>
       </h1>
-      <ol class="breadcrumb">
-        <li class="active"><a href="index.html"><i class="fa fa-dashboard"></i> 首页</a></li>
-      </ol>
-    </section>
-
+     </section>
     <!-- Main content -->
     <section class="content">
       <!-- Small boxes (Stat box) -->
@@ -17,7 +14,7 @@
           <!-- small box -->
           <div class="small-box bg-aqua">
             <div class="inner">
-              <h3>¥ 50.00</h3>
+              <h3>¥ {{info.perTicketSales}}</h3>
 
               <p>客单价</p>
             </div>
@@ -31,7 +28,7 @@
           <!-- small box -->
           <div class="small-box bg-green">
             <div class="inner">
-              <h3>¥ 10,000.00</h3>
+              <h3>¥ {{info.salesAmount}}</h3>
 
               <p>销售金额</p>
             </div>
@@ -45,7 +42,7 @@
           <!-- small box -->
           <div class="small-box bg-yellow">
             <div class="inner">
-              <h3>200</h3>
+              <h3>{{info.orders}}</h3>
 
               <p>销售笔数</p>
             </div>

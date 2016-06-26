@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.StoreMapper">
+     
+    
+    <resultMap type="store" id="store">
+		<result property="id" column="ID" />
+		<result property="code" column="Code" />
+		<result property="name" column="Name" />
+		<result property="opened" column="Opened" />
+		<result property="address" column="Address" />
+		<result property="contacts" column="Contacts" />
+		<result property="client.id" column="ClientID" />
+		<result property="creator" column="Creator" />
+		<result property="created" column="Created" />
+		<result property="editor" column="Editor" />
+		<result property="modified" column="Modified" />
+	</resultMap>
+    <select id="getStoreById" parameterType="string" resultMap="store">
+		SELECT s.ID,s.Code,s.Name,s.Opened,s.Address,s.Contacts,s.Client as ClientID ,s.Creator,s.Created,s.Editor,s.Modified
+		FROM Store s left join Client c on c.id=s.Client WHERE s.Status = 1 and s.ID = #{id}
+	</select>
+	
+	<select id="getStoreByClientAndCode" parameterType="map" resultMap="store">
+		SELECT s.ID,s.Code,s.Name,s.Opened,s.Address,s.Contacts,s.Client as ClientID ,s.Creator,s.Created,s.Editor,s.Modified
+		FROM Store s left join Client c on c.id=s.Client WHERE s.Status = 1 and s.Code = #{code} and s.Client = #{client.ID}
+	</select>
+	
+	<delete id="deleteStoreById" parameterType="string">
+		DELETE FROM Store where ID =#{id}
+	</delete>
+	
+	<insert id="insertStore" parameterType="store">
+		insert into Store <include refid="storeSet" />
+	</insert>
+	
+	<update id="updateStore" parameterType="store" >
+		UPDATE Store <include refid="storeSet" /> WHERE ID = #{id}
+	</update>
+    
+    <sql id="storeSet">
+		<set >
+			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
+			<if test= "code != null">Code=#{code,jdbcType=VARCHAR},</if >
+			<if test= "name != null">Name=#{name,jdbcType=VARCHAR},</if >
+			<if test= "opened != null">Opened=#{opened},</if >
+			<if test= "address != null">Address=#{address,jdbcType=VARCHAR},</if >
+			<if test= "contacts != null">Contacts=#{contacts,jdbcType=VARCHAR},</if >
+			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
+			<if test= "creator != null">Creator=#{creator,jdbcType=VARCHAR},</if >
+			<if test= "created != null">Created=#{created},</if >
+			<if test= "editor != null">Editor=#{editor,jdbcType=VARCHAR},</if >
+			<if test= "modified != null">Modified=#{modified},</if >
+		</set>
+	</sql >
+    
+	
+
+</mapper>

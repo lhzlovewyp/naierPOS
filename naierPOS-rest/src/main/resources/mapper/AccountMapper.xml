@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.AccountMapper">
+     
+    
+    <resultMap type="account" id="account">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="store.id" column="Store" />
+		<result property="name" column="Name" />
+		<result property="nick" column="Nick" />
+		<result property="password" column="Password" />
+		<result property="changePWD" column="ChangePWD" />
+		<result property="displayPhoto" column="DisplayPhoto" />
+		<result property="status" column="Status" />
+		<result property="creator" column="Creator" />
+		<result property="created" column="Created" />
+		<result property="editor" column="Editor" />
+		<result property="modified" column="Modified" />
+	</resultMap>
+    <select id="getAccountByClientAndName" parameterType="string" resultMap="account">
+		SELECT 
+			a.ID,a.Client,s.Store,a.Name,a.Nick,a.Password,a.ChangePWD,a.DisplayPhoto,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+		FROM Account a,AccountStore s 
+		WHERE 
+			a.ID=s.Account and a.Client=#{clientId} and a.Name=#{name}  
+	</select>
+	
+	<select id="getAccountByID" parameterType="string" resultMap="account">
+		SELECT 
+			a.ID,a.Client,s.Store,a.Name,a.Nick,a.Password,a.ChangePWD,a.DisplayPhoto,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+		FROM Account a,AccountStore s 
+		WHERE 
+			a.ID=s.Account and a.ID=#{id} 
+	</select>
+	
+	<delete id="deleteAccountByID" parameterType="string">
+		DELETE FROM Account where ID =#{id}
+	</delete>
+	
+	<insert id="insertAccount" parameterType="account">
+		insert into Account <include refid="accountSet" />
+	</insert>
+	
+	<update id="updateAccount" parameterType="account" >
+		UPDATE Account <include refid="accountSet" /> WHERE ID = #{id}
+	</update>
+    
+    <sql id="accountSet">
+		<set >
+			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
+			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
+			<if test= "name != null">Name=#{name,jdbcType=VARCHAR},</if >
+			<if test= "nick != null">Nick=#{nick,jdbcType=VARCHAR},</if >
+			<if test= "password != null">Password=#{password,jdbcType=VARCHAR},</if >
+			<if test= "changePWD != null">ChangePWD=#{changePWD},</if >
+			<if test= "displayPhoto != null">DisplayPhoto=#{displayPhoto},</if >
+			<if test= "status != null">Status=#{status},</if >
+			<if test= "creator != null">Creator=#{creator},</if >
+			<if test= "created != null">Created=#{created},</if >
+			<if test= "editor != null">Editor=#{editor,jdbcType=VARCHAR},</if >
+			<if test= "modified != null">Modified=#{modified},</if >
+			
+		</set>
+	</sql >
+    
+	
+
+</mapper>

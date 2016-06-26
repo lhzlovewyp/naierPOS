@@ -69,7 +69,19 @@ app.controller("headNavCtrl",['$scope','$location','LoginService',function($scop
 	}
 }]);
 
-app.controller("routeMainCtl",['$scope','$location','LoginService',function($scope,$location,LoginService){
+app.controller("routeMainCtl",['$scope','$location','HomeService',function($scope,$location,HomeService){
+	HomeService.getHomeData().then(function(data){
+		$scope.info=data;
+	});
 	
+	$scope.dayReport = function(){
+		HomeService.dayReport().then(function(data){
+			if(data.status == Status.SUCCESS){
+				location.reload();
+			}else{
+				alert('日结失败，请稍后重试.');
+			}
+		});
+	}
 }]);
 

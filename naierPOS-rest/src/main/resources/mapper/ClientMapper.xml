@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.ClientMapper">
+     
+    
+    <resultMap type="client" id="client">
+		<result property="id" column="ID" />
+		<result property="code" column="Code" />
+		<result property="name" column="Name" />
+		<result property="address" column="Address" />
+		<result property="contacts" column="Contacts" />
+		<result property="maxStore" column="MAXStore" />
+		<result property="maxTerminal" column="MAXTerminal" />
+		<result property="creator" column="Creator" />
+		<result property="created" column="Created" />
+		<result property="editor" column="Editor" />
+		<result property="modified" column="Modified" />
+	</resultMap>
+    <select id="getClientById" parameterType="string" resultMap="client">
+		SELECT ID,CODE,NAME,Address,Contacts,MAXStore,MAXTerminal,Creator,created,Editor,Modified
+		FROM Client WHERE Status = 1 and ID = #{id}
+	</select>
+	
+	<select id="getClientByCode" parameterType="string" resultMap="client">
+		SELECT ID,Code,Name,Address,Contacts,MAXStore,MAXTerminal,Creator,created,Editor,Modified
+		FROM Client WHERE Status = 1 and Code = #{code}
+	</select>
+	
+	<delete id="deleteClientByCode" parameterType="string">
+		DELETE FROM Client where Code =#{code}
+	</delete>
+	
+	<delete id="deleteClientById" parameterType="string">
+		DELETE FROM Client where ID =#{id}
+	</delete>
+	
+	<insert id="insertClient" parameterType="client">
+		insert into Client <include refid="clientSet" />
+	</insert>
+	
+	<update id="updateClient" parameterType="client" >
+		UPDATE Client <include refid="clientSet" /> WHERE ID = #{id}
+	</update>
+    
+    <sql id="clientSet">
+		<set >
+			<if test= "ID != null">ID=#{id,jdbcType=VARCHAR},</if >
+			<if test= "Code != null">Code=#{code,jdbcType=VARCHAR},</if >
+			<if test= "Name != null">Name=#{name,jdbcType=VARCHAR},</if >
+			<if test= "Address != null">Address=#{address,jdbcType=VARCHAR},</if >
+			<if test= "Contacts != null">Contacts=#{contacts,jdbcType=VARCHAR},</if >
+			<if test= "MAXStore != null">MAXStore=#{maxStore},</if >
+			<if test= "MAXTerminal != null">MAXTerminal=#{maxTerminal},</if >
+			<if test= "Creator != null">Creator=#{creator,jdbcType=TINYINT},</if >
+			<if test= "Created != null">Created=#{created},</if >
+			<if test= "Editor != null">Editor=#{editor,jdbcType=VARCHAR},</if >
+			<if test= "Modified != null">Modified=#{modified},</if >
+			
+		</set>
+	</sql >
+    
+	
+
+</mapper>

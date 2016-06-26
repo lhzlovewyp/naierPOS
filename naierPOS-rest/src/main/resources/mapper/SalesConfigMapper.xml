@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.SalesConfigMapper">
+     
+    
+    <resultMap type="salesConfig" id="salesConfig">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="store.id" column="Store" />
+		<result property="salesDate" column="SalesDate" />
+		<result property="maxCode" column="MaxCode" />
+		<result property="flag" column="Flag" />
+		
+	</resultMap>
+    <select id="getCurrentSalesConfig" parameterType="string" resultMap="salesConfig">
+    	SELECT s.ID,s.Client,s.Store,s.SalesDate,s.MaxCode,s.Flag from SalesConfig s,
+    	(SELECT Store,max(SalesDate) as SalesDate FROM SalesConfig WHERE Store = #{storeId} group by Store) b
+    	where s.Store=b.Store and s.SalesDate=b.SalesDate and s.Store=#{storeId}
+    </select>
+    
+    <!-- 修改销售配置,只允许修改maxCode值 -->
+    <update id="updateSalesConfig" parameterType="salesConfig">
+    	update SalesConfig set MaxCode=#{maxCode} ,Flag=Flag+1 where Flag=#{flag} and ID=#{id}
+    </update>
+    
+    <insert id="insertSalesConfig" parameterType="salesConfig">
+    	insert into SalesConfig <include refid="salesConfigSet" />
+    </insert>
+    
+    <sql id="salesConfigSet">
+		<set >
+			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
+			<if test= "client.id != null">Client=#{client.id,jdbcType=VARCHAR},</if >
+			<if test= "store.id != null">Store=#{store.id,jdbcType=VARCHAR},</if >
+			<if test= "salesDate != null">SalesDate=#{salesDate},</if >
+			<if test= "maxCode != null">MaxCode=#{maxCode},</if >
+			<if test= "flag != null">Flag=#{flag},</if >
+		</set>
+	</sql >
+    
+	
+
+</mapper>

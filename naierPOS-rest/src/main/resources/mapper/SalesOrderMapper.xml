@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.SalesOrderMapper">
+     
+    
+    <resultMap type="salesOrder" id="salesOrderSum">
+		<result property="store.id" column="Store" />
+		<result property="amount" column="Amount" />
+		<result property="quantity" column="Num" />
+	</resultMap>
+    <select id="getSalesInfo"  resultMap="salesOrderSum">
+		SELECT Store ,SUM(Amount) AS Amount,COUNT(1) AS Num FROM SalesOrder
+		WHERE Store=#{storeId} AND Client=#{clientId} and SalesDate=#{salesDate,jdbcType=DATE} 
+		 GROUP BY Store
+	</select>
+</mapper>
