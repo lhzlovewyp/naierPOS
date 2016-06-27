@@ -112,3 +112,26 @@ app.factory('HomeService',['$q','$location','$http','BaseService',function($q,$l
 	}
 	
 }]);
+
+
+app.factory('SaleService',['$q','$location','$http','BaseService',function($q,$location,$http,BaseService){
+	return {
+		initSalesOrder : function(){
+			var token=$.cookie("token");
+			var obj={"token":token};
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/sale/initSaleOrder',obj).then(function(obj){
+                if(obj.data.status==Status.SUCCESS){
+                    var dto=obj.data.data;
+                	info.saleDate=dto.saleDate;
+                	info.itemDISC=dto.itemDISC;
+                	info.allDISC=dto.allDISC;
+                	deferred.resolve(info);
+                }
+            });
+			return deferred.promise;
+		}
+	}
+}]);	
+	

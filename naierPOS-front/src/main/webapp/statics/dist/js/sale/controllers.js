@@ -85,3 +85,10 @@ app.controller("routeMainCtl",['$scope','$location','HomeService',function($scop
 	}
 }]);
 
+app.controller("routeSaleCtl",['$scope','$location','SaleService',function($scope,$location,SaleService){
+	SaleService.initSalesOrder().then(function(data){
+		$scope.info=data;
+	});
+}]);
+
+

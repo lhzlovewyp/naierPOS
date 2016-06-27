@@ -49,7 +49,7 @@ app.config(['$routeProvider','$locationProvider','$httpProvider', function ($rou
         })
         .when('/front/sale.html', {
             templateUrl: '/front/view/sale.html',
-            controller: 'routeMainCtl'
+            controller: 'routeSaleCtl'
         })
         .when('/front/pinBack.html', {
             templateUrl: '/front/view/pinBack.html',

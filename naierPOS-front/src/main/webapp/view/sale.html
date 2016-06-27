@@ -1,8 +1,9 @@
 <!-- Content Header (Page header) -->
+<div> 
     <section class="content-header">
       <h1>&nbsp;</h1>
       <ol class="breadcrumb">
-        <li><a href="index.html"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li><a href="/front/home.html"><i class="fa fa-dashboard"></i> 首页</a></li>
         <li class="active">销售</li>
       </ol>
     </section>
@@ -22,7 +23,7 @@
             <div class="box-body">
             	<ul class="list-group list-group-unbordered">
                 <li class="list-group-item">
-                  <b>营业日期</b> <a class="pull-right">2016年05月24日</a>
+                  <b>营业日期</b> <a class="pull-right">{{info.saleDate | date:'yyyy-MM-dd'}}</a>
                 </li>
                 <li class="list-group-item">
                   <b>会员</b> <a class="pull-right">-</a>
@@ -87,7 +88,7 @@
         <div class="box-header">
           <h3 class="box-title">销售明细</h3>
           <div class="box-tools">
-            <a id="btn4" href="#" class="btn btn-info btn-flat">整单打折</a>
+            <a id="btn4" href="#" class="btn btn-info btn-flat" ng-if="info.allDISC == 1">整单打折</a>
           </div>
         </div>
         <div class="box-header">
