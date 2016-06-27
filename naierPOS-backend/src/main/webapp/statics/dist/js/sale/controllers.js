@@ -27,10 +27,41 @@ app.controller("loginCtrl",['$scope','$location','LoginService',function($scope,
 	
 }]);
 
+app.controller("changePWDCtrl",['$scope','$location','LoginService',function($scope,$location,LoginService){
+	
+	LoginService.validateToken().then(function(data){
+		$scope.loginInfo = data;
+	});
+	
+	//修改密码
+	$scope.changePWD = function(isValid){
+		if(isValid) {
+			LoginService.updatePWD($scope.form).then(function(data){
+                if(data.updateStatus){
+                	//密码修改成功.
+                	location.href="login.html";
+                }else{
+                    $scope.info = data;
+                }
+            });
+        }else{
+            angular.forEach($scope.changePWDForm,function(e){
+                if(typeof(e) == 'object' && typeof(e.$dirty) == 'boolean'){
+                    e.$dirty = true;
+                }
+            });
+        }
+	};
+}]);
+
 app.controller("headNavCtrl",['$scope','$location','LoginService',function($scope,$location,LoginService){
 	LoginService.validateToken().then(function(data){
 		$scope.loginInfo = data;
 	});
+	
+	$scope.goToChangePWD = function(){
+		location.href = '/backend/changePWD.html';
+	}
 	
 	$scope.logout = function(){
 		LoginService.logOff();

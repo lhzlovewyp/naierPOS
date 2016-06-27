@@ -43,24 +43,24 @@ app.config(['$routeProvider','$locationProvider','$httpProvider', function ($rou
 //    });
 
     $routeProvider
-        .when('/front/home.html', {
-            templateUrl: '/front/view/main.html',
+        .when('/backend/home.html', {
+            templateUrl: '/backend/view/main.html',
             controller: 'routeMainCtl'
         })
-        .when('/front/sale.html', {
-            templateUrl: '/front/view/sale.html',
+        .when('/backend/sale.html', {
+            templateUrl: '/backend/view/sale.html',
             controller: 'routeMainCtl'
         })
-        .when('/front/pinBack.html', {
-            templateUrl: '/front/view/pinBack.html',
+        .when('/backend/pinBack.html', {
+            templateUrl: '/backend/view/pinBack.html',
             controller: 'routeMainCtl'
         })
-        .when('/front/member.html', {
-            templateUrl: '/front/view/member.html',
+        .when('/backend/member.html', {
+            templateUrl: '/backend/view/member.html',
             controller: 'routeMainCtl'
         })
-        .when('/front/order.html', {
-            templateUrl: '/front/view/order.html',
+        .when('/backend/order.html', {
+            templateUrl: '/backend/view/order.html',
             controller: 'routeMainCtl'
         })
         

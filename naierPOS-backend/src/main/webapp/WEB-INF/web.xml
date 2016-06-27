@@ -27,7 +27,7 @@
 		<filter-class>com.joker.login.LoginFilter</filter-class>
 		<init-param>
 			<param-name>excludeUrl</param-name>
-			<param-value>login.html</param-value>
+			<param-value>login.html,authorize.html</param-value>
 		</init-param>
 	</filter>
 	<filter-mapping>

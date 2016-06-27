@@ -27,9 +27,9 @@
     <!-- Logo -->
     <a href="index2.html" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>{{loginInfo.orgName}}</b></span>
+      <span class="logo-mini"><b>{{loginInfo.storeName}}</b></span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>{{loginInfo.orgName}}</b></span>
+      <span class="logo-lg"><b>{{loginInfo.storeName}}</b></span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -48,6 +48,9 @@
           </li>
           <!-- Control Sidebar Toggle Button -->
           <li>
+            <a href="javascript:;;" class="text-gray" ng-click="goToChangePWD()">修改密码 <i class="fa fa-compass"></i></a>
+          </li>
+          <li>
             <a href="javascript:;;" class="text-gray" ng-click="logout()">退出 <i class="fa fa-sign-out"></i></a>
           </li>
         </ul>
@@ -62,29 +65,29 @@
       <ul class="sidebar-menu">
         <li class="header">主导航</li>
         <li class="active treeview">
-          <a href="/front/home.html">
+          <a href="/backend/home.html">
             <i class="fa fa-home"></i> <span>首页</span></i>
           </a>
         </li>
         <li class="treeview">
-          <a href="/front/sale.html">
+          <a href="/backend/sale.html">
             <i class="fa fa-inbox"></i>
             <span>销售</span>
           </a>
         </li>
         <li class="treeview">
-          <a href="/front/pinBack.html">
+          <a href="/backend/pinBack.html">
             <i class="fa fa-truck"></i> <span>销退</span>
           </a>
         </li>
         <li class="treeview">
-          <a href="/front/order.html">
+          <a href="/backend/order.html">
             <i class="fa fa-list-alt"></i>
             <span>订单</span>
           </a>
         </li>
         <li class="treeview">
-          <a href="/front/member.html">
+          <a href="/backend/member.html">
             <i class="fa fa-users"></i>
             <span>会员</span>
           </a>
