@@ -1,4 +1,4 @@
-var app=angular.module('mainApp',['ngRoute']);
+var app=angular.module('mainApp',['ngRoute','ngDialog']);
 
 //app.factory('statusInterceptor', ['$q','$location',function($q,$location) {
 //    var statusInterceptor = {
@@ -64,4 +64,18 @@ app.config(['$routeProvider','$locationProvider','$httpProvider', function ($rou
             controller: 'routeMainCtl'
         })
         
+}]);
+
+app.config(['ngDialogProvider', function (ngDialogProvider) {
+    ngDialogProvider.setDefaults({
+        className: 'ngdialog-theme-default',
+        plain: false,
+        showClose: true,
+        closeByDocument: true,
+        closeByEscape: true,
+        appendTo: false,
+        preCloseCallback: function () {
+            //console.log('default pre-close callback');
+        }
+    });
 }]);

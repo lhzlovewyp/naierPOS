@@ -26,10 +26,10 @@
                   <b>营业日期</b> <a class="pull-right">{{info.saleDate | date:'yyyy-MM-dd'}}</a>
                 </li>
                 <li class="list-group-item">
-                  <b>会员</b> <a class="pull-right">-</a>
+                  <b>会员</b> <a class="pull-right" ng-click="memberSearch()">-</a>
                 </li>
                 <li class="list-group-item">
-                  <b>导购</b> <a class="pull-right">-</a>
+                  <b ng-model="info.shoppingGuide.id">导购</b> <a class="pull-right" ng-click="shoppingGuideSearch()">-</a>
                 </li>
               </ul>
             </div>

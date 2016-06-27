@@ -85,10 +85,52 @@ app.controller("routeMainCtl",['$scope','$location','HomeService',function($scop
 	}
 }]);
 
-app.controller("routeSaleCtl",['$scope','$location','SaleService',function($scope,$location,SaleService){
+app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog',function($scope,$location,SaleService,ngDialog){
 	SaleService.initSalesOrder().then(function(data){
 		$scope.info=data;
 	});
+	
+	$scope.memberSearch = function(){
+		 ngDialog.open({
+             template: '/front/view/template/memberSearch.html',
+             scope: $scope,
+             closeByEscape: false,
+             controller: 'memberCtrl'
+         });
+	}
+	
+	$scope.shoppingGuideSearch = function(){
+		
+		ngDialog.open({
+            template: '/front/view/template/shoppingGuideSearch.html',
+            scope: $scope,
+            closeByEscape: false,
+            controller: 'shoppingGuideCtrl'
+        });
+	}
+	
 }]);
-
+app.controller("memberCtrl",['$scope','$location','SaleService','ngDialog',function($scope,$location,SaleService,ngDialog){
+	
+}]);
+app.controller("shoppingGuideCtrl",['$scope','$location','SaleService','ngDialog',function($scope,$location,SaleService,ngDialog){
+	$scope.array=[];
+	$scope.close=function(){
+		ngDialog.close();
+	};
+	$scope.search=function(){
+		
+		 SaleService.getShoppingGuide($scope.form).then(function(data){
+			 $scope.array[0]=data.data;
+		 });
+	}
+	
+	$scope.choose = function(id){
+		ngDialog.close();
+		var info=$scope.info || {};
+		info.shoppingGuide=info.shoppingGuide || {};
+		info.shoppingGuide.id=id;
+	}
+	
+}]);
 
