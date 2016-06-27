@@ -60,19 +60,18 @@
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
         <li class="header">主导航</li>
-        <li class="active treeview">
+        <li class="treeview">
           <a href="#">
             <i class="fa fa-users"></i> <span>账户中心</span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
           <ul class="treeview-menu">
-            <li class="active"><a href="page1.html"><i class="fa fa-circle-o"></i> 账户管理</a></li>
+            <li><a href="page1.html"><i class="fa fa-circle-o"></i> 账户管理</a></li>
             <li><a href="page2.html"><i class="fa fa-circle-o"></i> 角色管理</a></li>
-            <li><a href="page3.html"><i class="fa fa-circle-o"></i> 账号归属角色</a></li>
           </ul>
         </li>
         <li class="treeview">
-          <a href="page1.html">
+          <a href="#">
             <i class="fa fa-cubes"></i> <span>管理中心</span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
@@ -83,7 +82,7 @@
           </ul>
         </li>
         <li class="treeview">
-          <a href="page2.html">
+          <a href="#">
             <i class="fa fa-dashboard"></i> <span>门店管理</span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
@@ -93,7 +92,7 @@
           </ul>
         </li>
         <li class="treeview">
-          <a href="page3.html">
+          <a href="#">
             <i class="fa fa-database"></i> <span>基础数据管理</span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
@@ -106,7 +105,7 @@
             <li><a href="page14.html"><i class="fa fa-circle-o"></i> 物料管理</a></li>
           </ul>
         </li>
-        <li class="treeview">
+        <li class="treeview active">
           <a href="page4.html">
             <i class="fa fa-credit-card"></i> <span>支付管理</span>
             <i class="fa fa-angle-left pull-right"></i>
@@ -116,7 +115,7 @@
             <li><a href="page16.html"><i class="fa fa-circle-o"></i> 零售参数设定</a></li>
             <li><a href="page17.html"><i class="fa fa-circle-o"></i> 销售交易设定</a></li>
             <li><a href="page18.html"><i class="fa fa-circle-o"></i> 商户支付方式</a></li>
-            <li><a href="page19.html"><i class="fa fa-circle-o"></i> 价格管理</a></li>
+            <li class="active"><a href="page19.html"><i class="fa fa-circle-o"></i> 价格管理</a></li>
           </ul>
         </li>
         <li class="treeview">
@@ -143,91 +142,77 @@
   <div class="content-wrapper">
   	<section class="content">
     	<div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title">账户管理</h3>
+            <div class="box-header">
+              <h3 class="box-title">价格管理</h3>
             </div>
             <div class="box-body">
-            	<ul class="nav nav-tabs" id="myTab">
-                  <li class="active"><a href="#Account">账户信息</a></li>
-                  <li><a href="#Store">所属门店</a></li>
-                  <li><a href="#Role">归属角色</a></li>
+               <ul class="nav nav-tabs" id="myTab">
+                  <li class="active"><a href="#detail">基本信息</a></li>
                   <li><a href="#updateTime">创建/更新</a></li>
                 </ul>
-            	<form class="form-horizontal">
+                <form class="form-horizontal">
                 <div class="tab-content" style="margin-top:20px;">
-                  <div class="tab-pane active" id="Account">
-                      <div class="form-group">
-                        <label for="ID" class="col-sm-2 control-label">GUID</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="ID" name="ID" placeholder="GUID">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="Client" class="col-sm-2 control-label">商户</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="Client" name="Client" placeholder="商户" value="0">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="Name" class="col-sm-2 control-label">账户</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="Name" name="Name" placeholder="账户">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="Nick" class="col-sm-2 control-label">昵称</label>
-                        <div class="col-sm-10">
-                         <input type="text" class="form-control" id="Nick" name="Nick" placeholder="昵称">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="Password" class="col-sm-2 control-label">密码</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="Password" name="Password" placeholder="密码">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="Status" class="col-sm-2 control-label">状态</label>
-                        <div class="col-sm-10">
-                          <select id="Status" name="Status" class="form-control">
-                              <option value="">有效</option>
-                              <option value="">无效</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                          <div class="checkbox">
-                            <label class="icheckbox">
-                              <input type="checkbox" value="1" name="ChangePWD"> 首次登录后强制修改密码
-                            </label>
-                          </div>
-                        </div>
-                      </div>
+                  <div class="tab-pane active" id="detail">
+                  <div class="form-group">
+                    <label for="ID" class="col-sm-2 control-label">GUID</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="ID" name="ID" placeholder="GUID">
+                    </div>
                   </div>
-                  <div class="tab-pane" id="Store">
-                  		<div class="form-group">
-                        <label for="Store" class="col-sm-2 control-label" style="width:100px">所属门店</label>
-                        <div class="col-sm-10">
-                          <select id="Store" name="Store" class="form-control select2" style="width:400px;">
-                              <option value="">测试门店1</option>
-                              <option value="">测试门店2</option>
-                              <option value="">测试门店3</option>
-                          </select>
-                        </div>
-                      </div>
+                  <div class="form-group">
+                    <label for="Client" class="col-sm-2 control-label">商户</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="Client" name="Client" placeholder="商户" value="0">
+                    </div>
                   </div>
-                  <div class="tab-pane" id="Role">
-                  		<div class="form-group">
-                        <label for="Role" class="col-sm-2 control-label" style="width:100px">归属角色</label>
-                        <div class="col-sm-10">
-                          <select id="Role" name="Role" class="form-control select2" style="width:400px;">
-                              <option value="">店长1</option>
-                              <option value="">店员2</option>
-                              <option value="">店员3</option>
-                          </select>
-                        </div>
-                      </div>
+                  <div class="form-group">
+                    <label for="Store" class="col-sm-2 control-label">门店</label>
+                    <div class="col-sm-10">
+                     <select id="Store" name="Store" class="form-control select2">
+                          <option value="">测试门店1</option>
+                          <option value="">测试门店2</option>
+                          <option value="">测试门店3</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="Material" class="col-sm-2 control-label">物料</label>
+                    <div class="col-sm-10">
+                     <select id="Material" name="Material" class="form-control select2">
+                          <option value="">物料1</option>
+                          <option value="">物料2</option>
+                          <option value="">物料3</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="Unit" class="col-sm-2 control-label">销售单位</label>
+                    <div class="col-sm-10">
+                     <select id="Unit" name="Unit" class="form-control select2">
+                          <option value="">物料1</option>
+                          <option value="">物料2</option>
+                          <option value="">物料3</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="Price" class="col-sm-2 control-label">销售价格</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="Price" name="Price" placeholder="销售价格">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="EffectiveDate" class="col-sm-2 control-label">生效日期</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="EffectiveDate" name="EffectiveDate" placeholder="生效日期" data-provide="datepicker-inline" data-date-format="yyyy-mm-dd" >
+                    </div>
+                  </div>
+				  <div class="form-group">
+                    <label for="ExpiryDate" class="col-sm-2 control-label">失效日期</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="ExpiryDate" name="ExpiryDate" placeholder="失效日期" data-provide="datepicker-inline" data-date-format="yyyy-mm-dd" >
+                    </div>
+                  </div>
                   </div>
                   <div class="tab-pane" id="updateTime">
                   	<div class="form-group">
@@ -255,13 +240,13 @@
                         </div>
                     </div>
                   </div>
-                 </div>
+                </div>
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                       <button type="submit" class="btn btn-danger">提交</button>
                     </div>
                   </div>
-              </form>
+                </form>
             </div>
      </div>
     </section>
@@ -271,9 +256,12 @@
 <!-- ./wrapper -->
 <script src="plugins/jQuery/jQuery-2.2.0.min.js"></script> 
 <script src="bootstrap/js/bootstrap.min.js"></script> 
+<script src="plugins/select2/select2.full.min.js" type="text/javascript"></script>
 <link rel="stylesheet" href="plugins/iCheck/all.css">
 <script src="plugins/iCheck/icheck.min.js"></script>
-<script src="plugins/select2/select2.full.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="plugins/datepicker/datepicker3.css">
+<script src="plugins/datepicker/bootstrap-datepicker.js"></script>
+<script src="plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js" charset="UTF-8"></script>
 <script src="dist/js/app.js"></script>
 <script src="dist/js/admin.js"></script>
 </body>

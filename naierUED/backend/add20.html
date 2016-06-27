@@ -60,19 +60,18 @@
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
         <li class="header">主导航</li>
-        <li class="active treeview">
+        <li class="treeview">
           <a href="#">
             <i class="fa fa-users"></i> <span>账户中心</span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
           <ul class="treeview-menu">
-            <li class="active"><a href="page1.html"><i class="fa fa-circle-o"></i> 账户管理</a></li>
+            <li><a href="page1.html"><i class="fa fa-circle-o"></i> 账户管理</a></li>
             <li><a href="page2.html"><i class="fa fa-circle-o"></i> 角色管理</a></li>
-            <li><a href="page3.html"><i class="fa fa-circle-o"></i> 账号归属角色</a></li>
           </ul>
         </li>
         <li class="treeview">
-          <a href="page1.html">
+          <a href="#">
             <i class="fa fa-cubes"></i> <span>管理中心</span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
@@ -83,7 +82,7 @@
           </ul>
         </li>
         <li class="treeview">
-          <a href="page2.html">
+          <a href="#">
             <i class="fa fa-dashboard"></i> <span>门店管理</span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
@@ -93,7 +92,7 @@
           </ul>
         </li>
         <li class="treeview">
-          <a href="page3.html">
+          <a href="#">
             <i class="fa fa-database"></i> <span>基础数据管理</span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
@@ -119,13 +118,13 @@
             <li><a href="page19.html"><i class="fa fa-circle-o"></i> 价格管理</a></li>
           </ul>
         </li>
-        <li class="treeview">
+        <li class="treeview active">
           <a href="#">
             <i class="fa fa-cart-plus"></i> <span>促销管理</span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
           <ul class="treeview-menu">
-            <li><a href="page20.html"><i class="fa fa-circle-o"></i> 促销活动管理</a></li>
+            <li class="active"><a href="page20.html"><i class="fa fa-circle-o"></i> 促销活动管理</a></li>
             <li><a href="page21.html"><i class="fa fa-circle-o"></i> 促销支付限制</a></li>
             <li><a href="page22.html"><i class="fa fa-circle-o"></i> 促销优惠</a></li>
             <li><a href="page23.html"><i class="fa fa-circle-o"></i> 促销优惠匹配内容</a></li>
@@ -143,91 +142,127 @@
   <div class="content-wrapper">
   	<section class="content">
     	<div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title">账户管理</h3>
+            <div class="box-header">
+              <h3 class="box-title">促销活动管理</h3>
             </div>
             <div class="box-body">
-            	<ul class="nav nav-tabs" id="myTab">
-                  <li class="active"><a href="#Account">账户信息</a></li>
-                  <li><a href="#Store">所属门店</a></li>
-                  <li><a href="#Role">归属角色</a></li>
+               <ul class="nav nav-tabs" id="myTab">
+                  <li class="active"><a href="#detail">基本信息</a></li>
                   <li><a href="#updateTime">创建/更新</a></li>
                 </ul>
-            	<form class="form-horizontal">
+                <form class="form-horizontal">
                 <div class="tab-content" style="margin-top:20px;">
-                  <div class="tab-pane active" id="Account">
-                      <div class="form-group">
-                        <label for="ID" class="col-sm-2 control-label">GUID</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="ID" name="ID" placeholder="GUID">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="Client" class="col-sm-2 control-label">商户</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="Client" name="Client" placeholder="商户" value="0">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="Name" class="col-sm-2 control-label">账户</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="Name" name="Name" placeholder="账户">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="Nick" class="col-sm-2 control-label">昵称</label>
-                        <div class="col-sm-10">
-                         <input type="text" class="form-control" id="Nick" name="Nick" placeholder="昵称">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="Password" class="col-sm-2 control-label">密码</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="Password" name="Password" placeholder="密码">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="Status" class="col-sm-2 control-label">状态</label>
-                        <div class="col-sm-10">
-                          <select id="Status" name="Status" class="form-control">
-                              <option value="">有效</option>
-                              <option value="">无效</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                          <div class="checkbox">
-                            <label class="icheckbox">
-                              <input type="checkbox" value="1" name="ChangePWD"> 首次登录后强制修改密码
-                            </label>
-                          </div>
-                        </div>
-                      </div>
+                  <div class="tab-pane active" id="detail">
+                  <div class="form-group">
+                    <label for="ID" class="col-sm-2 control-label">GUID</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="ID" name="ID" placeholder="GUID">
+                    </div>
                   </div>
-                  <div class="tab-pane" id="Store">
-                  		<div class="form-group">
-                        <label for="Store" class="col-sm-2 control-label" style="width:100px">所属门店</label>
-                        <div class="col-sm-10">
-                          <select id="Store" name="Store" class="form-control select2" style="width:400px;">
-                              <option value="">测试门店1</option>
-                              <option value="">测试门店2</option>
-                              <option value="">测试门店3</option>
-                          </select>
-                        </div>
-                      </div>
+                  <div class="form-group">
+                    <label for="Client" class="col-sm-2 control-label">商户</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="Client" name="Client" placeholder="商户" value="0">
+                    </div>
                   </div>
-                  <div class="tab-pane" id="Role">
-                  		<div class="form-group">
-                        <label for="Role" class="col-sm-2 control-label" style="width:100px">归属角色</label>
-                        <div class="col-sm-10">
-                          <select id="Role" name="Role" class="form-control select2" style="width:400px;">
-                              <option value="">店长1</option>
-                              <option value="">店员2</option>
-                              <option value="">店员3</option>
-                          </select>
-                        </div>
+                  <div class="form-group">
+                    <label for="Code" class="col-sm-2 control-label">促销编码</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="Code" name="Code" placeholder="促销编码">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="Name" class="col-sm-2 control-label">促销名称</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="Name" name="Name" placeholder="促销名称">
+                    </div>
+                  </div>
+                   <div class="form-group">
+                    <label for="Memo" class="col-sm-2 control-label">促销说明</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="Memo" name="Memo" placeholder="促销说明">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="EffectiveDate" class="col-sm-2 control-label">生效日期</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="EffectiveDate" name="EffectiveDate" placeholder="生效日期" data-provide="datepicker-inline" data-date-format="yyyy-mm-dd" >
+                    </div>
+                  </div>
+				  <div class="form-group">
+                    <label for="ExpiryDate" class="col-sm-2 control-label">失效日期</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="ExpiryDate" name="ExpiryDate" placeholder="失效日期" data-provide="datepicker-inline" data-date-format="yyyy-mm-dd" >
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="EffectiveTime" class="col-sm-2 control-label">生效时间</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="EffectiveTime" name="EffectiveTime" placeholder="生效时间">
+                    </div>
+                  </div>
+				  <div class="form-group">
+                    <label for="ExpiryTime" class="col-sm-2 control-label">失效时间</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="ExpiryTime" name="ExpiryTime" placeholder="失效时间">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="Week" class="col-sm-2 control-label">限定星期</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="Week" name="Week" placeholder="限定星期">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="Days" class="col-sm-2 control-label">限定日期</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="Days" name="Days" placeholder="限定日期">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="PaymentRestrict" class="col-sm-2 control-label">支付方式限制条件</label>
+                    <div class="col-sm-10">
+                      <select id="PaymentRestrict" name="PaymentRestrict" class="form-control">
+                          <option value="NON">不限制</option>
+                          <option value="INCL">包含</option>
+                          <option value="EXCL">排除</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="MemberRestrict" class="col-sm-2 control-label">会员限制条件</label>
+                    <div class="col-sm-10">
+                      <select id="MemberRestrict" name="MemberRestrict" class="form-control">
+                          <option value="ALL">会员能参加</option>
+                          <option value="ONLY">只能会员参加</option>
+                          <option value="NON">会员不能参加</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="Excluded" class="col-sm-2 control-label">互斥促销活动</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="Excluded" name="Excluded" placeholder="互斥促销活动">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="Status" class="col-sm-2 control-label">状态</label>
+                    <div class="col-sm-10">
+                      <select id="Status" name="Status" class="form-control">
+                          <option value="">有效</option>
+                          <option value="">无效</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                      <div class="checkbox">
+                        <label class="icheckbox">
+                          <input type="checkbox" value="1" name="Repeat"> 多次生效
+                        </label>
                       </div>
+                    </div>
+                  </div>
                   </div>
                   <div class="tab-pane" id="updateTime">
                   	<div class="form-group">
@@ -255,13 +290,13 @@
                         </div>
                     </div>
                   </div>
-                 </div>
+                </div>
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                       <button type="submit" class="btn btn-danger">提交</button>
                     </div>
                   </div>
-              </form>
+                </form>
             </div>
      </div>
     </section>
@@ -271,9 +306,12 @@
 <!-- ./wrapper -->
 <script src="plugins/jQuery/jQuery-2.2.0.min.js"></script> 
 <script src="bootstrap/js/bootstrap.min.js"></script> 
+<script src="plugins/select2/select2.full.min.js" type="text/javascript"></script>
 <link rel="stylesheet" href="plugins/iCheck/all.css">
 <script src="plugins/iCheck/icheck.min.js"></script>
-<script src="plugins/select2/select2.full.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="plugins/datepicker/datepicker3.css">
+<script src="plugins/datepicker/bootstrap-datepicker.js"></script>
+<script src="plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js" charset="UTF-8"></script>
 <script src="dist/js/app.js"></script>
 <script src="dist/js/admin.js"></script>
 </body>
