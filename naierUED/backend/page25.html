@@ -59,18 +59,18 @@
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
         <li class="header">主导航</li>
-        <li class="active treeview">
+        <li class="treeview">
           <a href="#">
             <i class="fa fa-users"></i> <span>账户中心</span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
           <ul class="treeview-menu">
-            <li class="active"><a href="page1.html"><i class="fa fa-circle-o"></i> 账户管理</a></li>
+            <li><a href="page1.html"><i class="fa fa-circle-o"></i> 账户管理</a></li>
             <li><a href="page2.html"><i class="fa fa-circle-o"></i> 角色管理</a></li>
           </ul>
         </li>
         <li class="treeview">
-          <a href="page1.html">
+          <a href="#">
             <i class="fa fa-cubes"></i> <span>管理中心</span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
@@ -81,7 +81,7 @@
           </ul>
         </li>
         <li class="treeview">
-          <a href="page2.html">
+          <a href="#">
             <i class="fa fa-dashboard"></i> <span>门店管理</span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
@@ -91,7 +91,7 @@
           </ul>
         </li>
         <li class="treeview">
-          <a href="page3.html">
+          <a href="#">
             <i class="fa fa-database"></i> <span>基础数据管理</span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
@@ -105,7 +105,7 @@
           </ul>
         </li>
         <li class="treeview">
-          <a href="page4.html">
+          <a href="#">
             <i class="fa fa-credit-card"></i> <span>支付管理</span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
@@ -117,7 +117,7 @@
             <li><a href="page19.html"><i class="fa fa-circle-o"></i> 价格管理</a></li>
           </ul>
         </li>
-        <li class="treeview">
+        <li class="treeview active">
           <a href="#">
             <i class="fa fa-cart-plus"></i> <span>促销管理</span>
             <i class="fa fa-angle-left pull-right"></i>
@@ -128,7 +128,7 @@
             <li><a href="page22.html"><i class="fa fa-circle-o"></i> 促销优惠</a></li>
             <li><a href="page23.html"><i class="fa fa-circle-o"></i> 促销优惠匹配内容</a></li>
             <li><a href="page24.html"><i class="fa fa-circle-o"></i> 促销条件</a></li>
-            <li><a href="page25.html"><i class="fa fa-circle-o"></i> 促销条件匹配内容</a></li>
+            <li class="active"><a href="page25.html"><i class="fa fa-circle-o"></i> 促销条件匹配内容</a></li>
             <li><a href="page26.html"><i class="fa fa-circle-o"></i> 促销门店</a></li>
           </ul>
         </li>
@@ -142,18 +142,10 @@
   	<section class="content">
     	<div class="box">
             <div class="box-header">
-              <h3 class="box-title">账户管理</h3>
+              <h3 class="box-title">促销条件匹配内容</h3>
               <div class="box-tools">
-              	<a class="btn btn-primary btn-flat" href="add1.html"><i class="fa fa-plus"></i> 添加</a> <a class="btn btn-danger btn-flat" href="#"><i class="fa fa-minus"></i> 删除</a>
+              	<a class="btn btn-primary btn-flat" href="add25.html"><i class="fa fa-plus"></i> 添加</a> <a class="btn btn-danger btn-flat" href="#"><i class="fa fa-minus"></i> 删除</a>
               </div>
-            </div>
-            <div class="box-header">
-                <div class="input-group input-group-sm" style="width:250px;">
-                  <input type="text" name="table_search" class="form-control pull-right" placeholder="搜索" id="input1">
-                  <div class="input-group-btn">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
-                  </div>
-                </div>
             </div>
             <div class="box-body">
               <div class="table-responsive mailbox-messages">
@@ -162,43 +154,18 @@
                     <th width="30"><button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i></button></th>
                     <th>GUID</th>
                     <th>商户</th>
-                    <th>帐号</th>
-                    <th>昵称</th>
-                    <th>首次登录后强制修改密码</th>
-                    <th>头像</th>
-                    <th>所属门店</th>
-                    <th>角色</th>
-                    <th>状态</th>
+                    <th>促销条件</th>
+                    <th>条件匹配内容</th>
                     <th>操作</th>
                     </tr>
                     <tr>
                       <td align="center"><input type="checkbox"></td>
                       <td>123456</td>
                       <td>测试商户</td>
-                      <td>测试账户</td>
-                      <td>测试昵称</td>
-                      <td>是</td>
-                      <td><img alt="User Image" class="user-image" src="dist/images/avatar.png" width="50"> <a href="avatar.html" class="btn btn-danger btn-xs">修改</a></td>
-                      <td>测试门店</td>
-                      <td>店长</td>
-                      <td>有效</td>
+                      <td>促销优惠1</td>
+                      <td>品类</td>
                       <td>
-                      	<a href="add1.html" class="btn btn-info btn-xs">编辑</a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td align="center"><input type="checkbox"></td>
-                      <td>123456</td>
-                      <td>测试商户</td>
-                      <td>测试账户</td>
-                      <td>测试昵称</td>
-                      <td>是</td>
-                      <td><img alt="User Image" class="user-image" src="dist/images/avatar.png" width="50"> <a href="avatar.html" class="btn btn-danger btn-xs">修改</a></td>
-                      <td>测试门店</td>
-                      <td>店长</td>
-                      <td>有效</td>
-                      <td>
-                      	<a href="add1.html" class="btn btn-info btn-xs">编辑</a>
+                      	<a href="add25.html" class="btn btn-info btn-xs">编辑</a>
                       </td>
                     </tr>
                 </table>
