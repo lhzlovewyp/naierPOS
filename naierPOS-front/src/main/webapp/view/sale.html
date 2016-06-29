@@ -94,15 +94,15 @@
         <div class="box-header">
         	<div class="">
             <div style="width:250px;" class="input-group input-group-sm">
-              <input id="input1" type="text" placeholder="搜索" class="form-control pull-right" name="table_search">
+              <input id="matCode" ng-model="matForm.code" type="text" placeholder="搜索" class="form-control pull-right" name="table_search">
               <div class="input-group-btn">
-                <button id="btn3" class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                <button id="btn3" class="btn btn-primary" type="submit" ng-click="searchMat();"><i class="fa fa-search"></i></button>
               </div>
             </div>
           </div>
         </div>
         <div class="box-body">
-        	<table id="table1" class="table table-bordered table-hover">
+        	<table id="tableSale" class="table table-bordered table-hover">
             	<tr>
                 <th width="30">&nbsp;</th>
                 <th>货号</th>
@@ -111,6 +111,16 @@
                 <th>单价</th>
                 <th>数量</th>
                 <th>金额</th>
+                </tr>
+                <tr ng-repeat="saleInfo in info.saleInfos"  on-render-finish>
+                <td width="30"><button type="button" class="close" ng-click="deleteSaleInfo(saleInfo);">×</button></td>
+                <td>{{saleInfo.code}}</td>
+                <td>{{saleInfo.abbr}}</td>
+                <td ng-click="updateAttr(saleInfo);">{{saleInfo.color.name}}/{{saleInfo.size.name}}</td>
+                <td>{{saleInfo.retailPrice}}</td>
+                <td class="editable" index={{$index}}>{{saleInfo.count}}</td>
+                <td ng-click="itemDISC(saleInfo);" ng-show="saleInfo.type!=1 && saleInfo.type!=2">{{saleInfo.count * saleInfo.retailPrice | number:2}}</td>
+                <td ng-show="saleInfo.type==1 || saleInfo.type==2">{{saleInfo.totalPrice}}</td>
                 </tr>
             </table>
         </div>

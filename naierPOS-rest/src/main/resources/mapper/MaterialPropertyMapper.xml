@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.MaterialPropertyMapper">
+     
+    
+    <resultMap type="materialProperty" id="materialProperty">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="material.id" column="Material" />
+		<result property="color.id" column="Color" />
+		<result property="color.code" column="ColorCode" />
+		<result property="color.name" column="ColorName" />
+		<result property="size.id" column="Size" />
+		<result property="size.code" column="SizeCode" />
+		<result property="size.name" column="SizeName" />
+		<result property="barCode" column="Barcode" />
+		<result property="status" column="Status" />
+		<result property="creator" column="Creator" />
+		<result property="created" column="Created" />
+		<result property="editor" column="Editor" />
+		<result property="modified" column="Modified" />
+	</resultMap>
+	<select id="getMaterialPropertyByCondition" resultMap="materialProperty">
+		SELECT mp.ID,mp.Client,mp.Material,mp.Color,mp.Size,mp.Barcode,mp.Status,size.code as SizeCode,size.name as SizeName,
+		color.code as ColorCode,color.name as ColorName
+		FROM MaterialProperty mp,Material m,Size size,Color color WHERE m.ID=mp.Material 
+		AND size.id=mp.Size AND color.id=mp.Color 
+		 AND mp.Status=1 AND m.Status=1 AND size.Status=1 AND color.Status=1
+		and mp.Client=#{clientId}
+		<if test="materialId !=null"> and mp.Material=#{materialId}</if>
+		<if test="materialCode !=null"> and m.Code=#{materialCode}</if>
+		<if test="barCode !=null"> and mp.Barcode=#{barCode}</if>		
+	</select>
+
+</mapper>

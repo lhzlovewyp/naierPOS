@@ -1,0 +1,30 @@
+<div class="modal fade in" id="myModal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" style="display: block;">
+	<div class="modal-dialog" role="document" style="width: 600px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true" ng-click="close();">×</span>
+				</button>
+				<h4 class="modal-title">{{tempMat.abbr}}</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-xs-10">
+						<ul class="discount-ul">
+							<li><input type="radio" name="discount" ng-model="discForm.selected" value="1"
+								checked="checked">折扣%<br> <input type="radio"
+								name="discount" value="2" ng-model="discForm.selected">折让</li>
+							<li><input type="text" ng-model="discForm.disc" class="form-control"></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" ng-click="close();">取消</button>
+				<button type="submit" class="btn btn-primary" ng-click="submit();">提交</button>
+			</div>
+		</div>
+	</div>
+</div>

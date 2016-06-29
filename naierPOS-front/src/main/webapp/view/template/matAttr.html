@@ -1,0 +1,41 @@
+<div class="modal fade in" id="myModal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" style="display: block;">
+	<div class="modal-dialog" role="document" style="width: 600px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true" ng-click="close()">×</span>
+				</button>
+				<h4 class="modal-title">选择商品属性</h4>
+			</div>
+			<div class="modal-body">
+				<p class="product-name">{{tempMat.abbr}}</p>
+				<div class="row">
+					<div class="col-xs-5">
+						<ul class="attribute-ul">
+							<li class="header">颜色</li>
+							<li ng-repeat="temp in tempAttrDtos" id="color_{{temp.color.id}}" ng-click="selectColor(temp);">
+								<i class="fa fa-check" ng-show="temp.color.selected==1"></i>
+								{{temp.color.name}}
+							</li>
+						</ul>
+					</div>
+					<div class="col-xs-5">
+						<ul class="attribute-ul">
+							<li class="header">尺码</li>
+							<li ng-repeat="size in tempSizes" id="size_{{size.id}}" ng-click="selectSize(size);">
+							<i class="fa fa-check" ng-show="size.selected==1"></i>
+							{{size.name}}
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" ng-click="close()">取消</button>
+				<button type="submit" class="btn btn-primary" ng-click="submit()">提交</button>
+			</div>
+		</div>
+	</div>
+</div>

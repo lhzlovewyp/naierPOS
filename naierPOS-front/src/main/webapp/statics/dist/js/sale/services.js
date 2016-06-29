@@ -146,6 +146,23 @@ app.factory('SaleService',['$q','$location','$http','BaseService',function($q,$l
                 }
             });
 			return deferred.promise;
+		},
+		searchMat : function(condition){
+			var token=$.cookie("token");
+			if(!condition){
+				return;
+			}
+			condition.token=token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/m/getMaterialByCode',condition).then(function(obj){
+                if(obj.data.status==Status.SUCCESS){
+                    var dto=obj.data.data;
+                    info.data=dto;
+                	deferred.resolve(info);
+                }
+            });
+			return deferred.promise;
 		}
 	}
 }]);	

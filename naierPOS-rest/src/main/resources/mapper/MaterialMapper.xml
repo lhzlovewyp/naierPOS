@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.MaterialMapper">
+     
+    
+    <resultMap type="material" id="material">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="code" column="Code" />
+		<result property="name" column="Name" />
+		<result property="abbr" column="Abbr" />
+		<result property="category.id" column="MaterialCategory" />
+		<result property="brand.id" column="Brand" />
+		<result property="basicUnit.id" column="BasicUnit" />
+		<result property="salesUnit.id" column="SalesUnit" />
+		<result property="retailPrice" column="RetailPrice" />
+		<result property="barCode" column="BarCode" />
+		<result property="property" column="Property" />
+		<result property="status" column="Status" />
+		<result property="creator" column="Creator" />
+		<result property="created" column="Created" />
+		<result property="editor" column="Editor" />
+		<result property="modified" column="Modified" />
+	</resultMap>
+	<select id="getMaterialByCondition" resultMap="material">
+		select ID,Client,Code,Name,Abbr,MaterialCategory,Brand,BasicUnit,SalesUnit,RetailPrice,BarCode,Property,Status,Creator,Created,Editor,Modified
+		from Material
+		where Status='1' and  Client=#{clientId} 
+		<if test="code !=null"> and code=#{code}</if>
+		<if test="barCode !=null"> and Barcode=#{barCode}</if>		
+	</select>
+
+</mapper>
