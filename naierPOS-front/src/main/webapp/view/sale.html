@@ -17,7 +17,7 @@
           	<div class="box-header">
               <h3 class="box-title">交易信息</h3>
               <div class="box-tools">
-                <a id="btn1" href="#" class="btn btn-danger btn-flat" style="display:none">取消交易</a>
+                <a id="btn1" href="javascript:;;" ng-click="cancelSale();" class="btn btn-danger btn-flat" ng-show="info.saleInfos.length>0">取消交易</a>
               </div>
             </div>
             <div class="box-body">
@@ -41,19 +41,19 @@
           	<div class="box-header">
               <h3 class="box-title">结算信息</h3>
               <div class="box-tools">
-                <a id="btn2" href="#" class="btn btn-info btn-flat" style="display:none">结算</a>
+                <a id="btn2" href="javascript:;;" class="btn btn-info btn-flat" ng-show="info.saleInfos.length>0" ng-click="checkout();">结算</a>
               </div>
             </div>
             <div class="box-body">
             	<ul class="list-group list-group-unbordered">
                 <li class="list-group-item">
-                  <b>总数量</b> <a class="pull-right text-black" id="quantity">0</a>
+                  <b>总数量</b> <a class="pull-right text-black" id="quantity">{{info.totalNum}}</a>
                 </li>
                 <li class="list-group-item">
-                  <b>总金额</b> <a class="pull-right text-black" id="total">¥0.00</a>
+                  <b>总金额</b> <a class="pull-right text-black" id="total">¥{{info.totalPrice}}</a>
                 </li>
                 <li class="list-group-item">
-                  <b>总折扣</b> <a class="pull-right text-muted" id="discount">-¥0.00</a>
+                  <b>总折扣</b> <a class="pull-right text-muted" id="discount">¥{{info.totalDiscPrice}}</a>
                 </li>
               </ul>
             </div>
@@ -68,13 +68,13 @@
             <div class="box-body">
             	<ul class="list-group list-group-unbordered">
                 <li class="list-group-item">
-                  <b>应付金额</b> <a class="pull-right text-black" id="final_total">¥0.00</a>
+                  <b>应付金额</b> <a class="pull-right text-black" id="final_total">¥{{info.pay}}</a>
                 </li>
                 <li class="list-group-item">
-                  <b>已付金额</b> <a class="pull-right text-green" id="already_pay">¥0.00</a>
+                  <b>已付金额</b> <a class="pull-right text-green" id="already_pay">¥{{info.payed}}</a>
                 </li>
                 <li class="list-group-item">
-                  <b>尚需付款</b> <a class="pull-right text-danger text-bold" id="need_pay">¥0.00</a>
+                  <b>尚需付款</b> <a class="pull-right text-danger text-bold" id="need_pay">¥{{info.needPay}}</a>
                 </li>
               </ul>
             </div>
@@ -88,7 +88,7 @@
         <div class="box-header">
           <h3 class="box-title">销售明细</h3>
           <div class="box-tools">
-            <a id="btn4" href="#" class="btn btn-info btn-flat" ng-if="info.allDISC == 1">整单打折</a>
+            <a id="btn4" href="#" class="btn btn-info btn-flat" ng-if="info.allDISC == 1" ng-click="allDISC();">整单打折</a>
           </div>
         </div>
         <div class="box-header">
@@ -119,8 +119,8 @@
                 <td ng-click="updateAttr(saleInfo);">{{saleInfo.color.name}}/{{saleInfo.size.name}}</td>
                 <td>{{saleInfo.retailPrice}}</td>
                 <td class="editable" index={{$index}}>{{saleInfo.count}}</td>
-                <td ng-click="itemDISC(saleInfo);" ng-show="saleInfo.type!=1 && saleInfo.type!=2">{{saleInfo.count * saleInfo.retailPrice | number:2}}</td>
-                <td ng-show="saleInfo.type==1 || saleInfo.type==2">{{saleInfo.totalPrice}}</td>
+                <td ng-click="itemDISC(saleInfo);" ng-show="saleInfo.discType!=1 && saleInfo.discType!=2">{{saleInfo.count * saleInfo.retailPrice | number:2}}</td>
+                <td ng-show="saleInfo.discType==1 || saleInfo.discType==2">{{saleInfo.totalPrice}}</td>
                 </tr>
             </table>
         </div>

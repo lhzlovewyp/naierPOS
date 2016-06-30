@@ -1,3 +1,9 @@
+
+//增加公用方法，对数组进行插入.
+Array.prototype.insert = function (index, item) {
+this.splice(index, 0, item);
+};
+
 var app=angular.module('mainApp',['ngRoute','ngDialog']);
 
 //app.factory('statusInterceptor', ['$q','$location',function($q,$location) {

@@ -107,7 +107,41 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog',fun
 	//初始化销售订单.
 	SaleService.initSalesOrder().then(function(data){
 		$scope.info=data;
+		$scope.info.saleInfos=[];
+		
+		//监听变化，计算总数.
+		$scope.$watch("info.saleInfos", function(newValue, oldValue){
+			var saleInfos=$scope.info.saleInfos;
+			var count=0;
+			var totalPrice=0;
+			var discPrice=0;
+			if(saleInfos){
+				for(var i=0;i<saleInfos.length;i++){
+					var saleInfo=saleInfos[i];
+					if(!saleInfo.discType){
+						count+=Number(saleInfo.count);
+						totalPrice+=Number((saleInfo.count*saleInfo.retailPrice).toFixed(2));
+					}else{
+						discPrice+=Number(saleInfo.totalPrice);
+					}
+				}
+			}
+			$scope.info.totalPrice=totalPrice;
+			$scope.info.totalNum=count;
+			$scope.info.totalDiscPrice=discPrice;
+			$scope.info.pay=totalPrice-discPrice;
+			$scope.info.payed=0;
+			$scope.info.needPay=$scope.info.pay-$scope.info.payed;
+		},true);
 	});
+	
+	
+	//取消交易
+	$scope.cancelSale=function(){
+		SaleService.initSalesOrder().then(function(data){
+			$scope.info=data;
+		});
+	}
 	//查找会员.
 	$scope.memberSearch = function(){
 		 ngDialog.open({
@@ -178,7 +212,25 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog',fun
 			return;
 		}
 		saleInfo.disc="1";//1-单项打折,2-整单打折.
+		$scope.info.discType ="1";
 		$scope.tempMat=saleInfo;
+		ngDialog.open({
+            template: '/front/view/template/disc.html',
+            scope: $scope,
+            closeByEscape: false,
+            controller: 'discCtrl'
+        });
+	}
+	//整单打折.
+	$scope.allDISC=function(){
+		if($scope.info.allDISC!="1"){
+			return;
+		}
+		//如果没有选择商品，不允许整单打折.
+		if(!$scope.info.saleInfos || $scope.info.saleInfos.length<=0){
+			return;
+		}
+		$scope.info.discType="2";//1-单项打折,2-整单打折.
 		ngDialog.open({
             template: '/front/view/template/disc.html',
             scope: $scope,
@@ -317,27 +369,76 @@ app.controller("discCtrl",['$scope','$location','SaleService','ngDialog',functio
 		if(!type || !inputDisc || isNaN(inputDisc)){
 			return;
 		}
-		
-		var code="单项折扣";
-		var disc="";
-		var totalPrice=(tempMat.count*tempMat.retailPrice).toFixed(2);//保留2位小数.
-		if(type=="1"){//折扣%
-			if(disc>100 || disc<0){
-				return ;
+		//整单打折
+		if($scope.info.discType == "2"){
+			var saleInfos=$scope.info.saleInfos;
+			var code="整单打折";
+			var disc="";
+			var totalPrice=0;
+			//循环遍历出整个商品
+			for(var i=0;i<saleInfos.length;i++){
+				var saleInfo=saleInfos[i];
+				if(!saleInfo.discType){//discType不存在,说明是普通商品.
+					totalPrice+=Number((saleInfo.count*saleInfo.retailPrice).toFixed(2));//保留2位小数.
+				}else if(saleInfo.discType == "1"){//单项折扣.
+					totalPrice+=Number(saleInfo.totalPrice);
+				}else if(saleInfo.discType == "2"){
+					totalPrice+=Number(saleInfo.totalPrice);
+				}
 			}
-			disc=0-(totalPrice*(100-inputDisc)/100).toFixed(2);
-		}else if(type=="2"){//折让
-			if(disc<0 || disc > totalPrice){
-				return;
+			if(type=="1"){//折扣%
+				if(disc>100 || disc<0){
+					return ;
+				}
+				disc=0-(totalPrice*(100-inputDisc)/100).toFixed(2);
+			}else if(type=="2"){//折让
+				if(disc<0 || disc > totalPrice){
+					return;
+				}
+				disc=0-inputDisc;
 			}
-			disc=0-inputDisc;
+			var saleInfo={};
+			saleInfo.code=code;
+			saleInfo.totalPrice=disc;
+			saleInfo.discType="1";//单项打折
+			//保存折扣信息，方便后续二次计算.
+			saleInfo.disc={
+					type:type,
+					disc:inputDisc
+			};
+			$scope.info.saleInfos.push(saleInfo);
+			
+		}else{//单项打折
+			var code="单项折扣";
+			var disc="";
+			var totalPrice=(tempMat.count*tempMat.retailPrice).toFixed(2);//保留2位小数.
+			if(type=="1"){//折扣%
+				if(disc>100 || disc<0){
+					return ;
+				}
+				disc=0-(totalPrice*(100-inputDisc)/100).toFixed(2);
+			}else if(type=="2"){//折让
+				if(disc<0 || disc > totalPrice){
+					return;
+				}
+				disc=0-inputDisc;
+			}
+			var saleInfo={};
+			saleInfo.code=code;
+			saleInfo.totalPrice=disc;
+			saleInfo.discType="1";//单项打折
+			//保存折扣信息，方便后续二次计算.
+			saleInfo.disc={
+					type:type,
+					saleInfo:tempMat,
+					disc:inputDisc
+			};
+			$scope.info.saleInfos.insert($scope.info.saleInfos.indexOf(tempMat)+1,saleInfo);
+			//$scope.info.saleInfos.push(saleInfo);
+			
 		}
-		var saleInfo={};
-		saleInfo.code=code;
-		saleInfo.totalPrice=disc;
-		saleInfo.type=type;
-		$scope.info.saleInfos.push(saleInfo);
 		ngDialog.close();
+		
 	}
 	$scope.close=function(){
 		ngDialog.close();
