@@ -33,13 +33,17 @@ jQuery.fn.extend({
 })
 
 jQuery.fn.extend({
-	attributeUl : function(){
+	attributeUl : function(child){
 		var ul = $(this);
 		ul.find("li").each(function(i, li){
-			if(i > 0){
+			if((!child && i > 0) || child){
 				$(li).click(function(){
 					$(li).parent().find(".fa-check").remove();
-					$(li).prepend('<i class="fa fa-check"></i>');
+					if(child){
+						$(li).find('a').eq(0).prepend('<i class="fa fa-check"></i>');
+					}else{
+						$(li).prepend('<i class="fa fa-check"></i>');
+					}
 				});
 			}
 		})
@@ -95,14 +99,13 @@ jQuery.fn.extend({
 			$(options.selector).find('.modal-body').html('<div class="row">'
 			  +'  <div>'
 			  +'      <ul class="payment-ul">'
-			  +'	  <li>'
-			  +'		<input type="checkbox" name="coupon" value="1" />'
-			  +'		<div>33121-1 全棉提花女船袜买一送一</div>'
-			  +'	  </li>'
-			  +'	  <li>'
-			  +'		<input type="checkbox" name="coupon" value="2" />'
-			  +'		<div>消费满100减10元</div>'
-			  +'	  </li>'
+			  +'<li><a class="btn btn-default btn-flat" href="#">现金</a> <a class="pull-right text-black">¥7.00</a> </li>'
+			  +'<li><a class="btn btn-default btn-flat" href="#">储值卡</a> <a class="pull-right text-black">¥7.00</a> </li>'
+			  +'<li><a class="btn btn-default btn-flat" href="#">银联卡</a> <a class="pull-right text-black">¥7.00</a> </li>'
+			  +'<li><a class="btn btn-default btn-flat" href="#">电子券</a> <a class="pull-right text-black">¥7.00</a> </li>'
+			  +'<li><a class="btn btn-default btn-flat" href="#">支付宝</a> <a class="pull-right text-black">¥7.00</a> </li>'
+			  +'<li><a class="btn btn-default btn-flat" href="#">会员积分</a> <a class="pull-right text-black">¥7.00</a> </li>'
+			  +'<li><a class="btn btn-default btn-flat" href="#">微信支付</a> <a class="pull-right text-black">¥7.00</a> </li>'
 			  +'      </ul>' 
 			  +'  </div>'
 			  +'</div>');
@@ -166,5 +169,6 @@ jQuery.fn.extend({
 		});
 		$(options.selector).modal('show');
 		$('.attribute-ul').attributeUl();
+		$('.payment-ul').attributeUl(true);
 	},
 })
