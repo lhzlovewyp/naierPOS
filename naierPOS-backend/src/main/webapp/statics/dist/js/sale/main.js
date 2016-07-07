@@ -63,5 +63,9 @@ app.config(['$routeProvider','$locationProvider','$httpProvider', function ($rou
             templateUrl: '/backend/view/order.html',
             controller: 'routeMainCtl'
         })
+        .when('/backend/account.html', {
+            templateUrl: '/backend/view/account.html',
+            controller: 'routeAccountCtl'
+        })
         
 }]);

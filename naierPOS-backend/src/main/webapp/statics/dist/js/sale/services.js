@@ -77,3 +77,21 @@ app.factory('LoginService',['$q','$location','$http','BaseService',function($q,$
         }
     }
 }])
+
+app.factory('AccountService',['$q','$location','$http','BaseService',function($q,$location,$http,BaseService){
+	return {
+		queryByPage : function(condition){
+			var token=$.cookie("token");
+			condition.token = token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/account/queryByPage',condition).then(function(obj){
+                if(obj.data.status==Status.SUCCESS){
+                    var dto=obj.data.data;
+                	deferred.resolve(info);
+                }
+            });
+			return deferred.promise;
+		}
+	}
+}]);

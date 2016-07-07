@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>主页面</title>
+<title>首页</title>
   <!-- Bootstrap 3.3.6 -->
   <link rel="stylesheet" href="statics/bootstrap/css/bootstrap.min.css">
   <!-- Font Awesome -->
@@ -43,6 +43,7 @@
           <!-- User Account: style can be found in dropdown.less -->
           <li class="user user-menu">
             <a href="#">
+              <img alt="User Image" class="user-image" src="statics/dist/images/avatar.png">
               <span class="hidden-xs">当前登录：{{loginInfo.userName}}</span>
             </a>
           </li>
@@ -65,42 +66,76 @@
       <ul class="sidebar-menu">
         <li class="header">主导航</li>
         <li class="active treeview">
-          <a href="/backend/home.html">
-            <i class="fa fa-home"></i> <span>首页</span></i>
-          </a>
-        </li>
-        <li class="treeview">
-          <a href="/backend/sale.html">
-            <i class="fa fa-inbox"></i>
-            <span>销售</span>
-          </a>
-        </li>
-        <li class="treeview">
-          <a href="/backend/pinBack.html">
-            <i class="fa fa-truck"></i> <span>销退</span>
-          </a>
-        </li>
-        <li class="treeview">
-          <a href="/backend/order.html">
-            <i class="fa fa-list-alt"></i>
-            <span>订单</span>
-          </a>
-        </li>
-        <li class="treeview">
-          <a href="/backend/member.html">
-            <i class="fa fa-users"></i>
-            <span>会员</span>
-          </a>
-        </li>
-        <li class="treeview">
           <a href="#">
-            <i class="fa fa-bar-chart"></i> <span>统计</span>
+            <i class="fa fa-users"></i> <span>账户中心</span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
           <ul class="treeview-menu">
-            <li><a href="page5.html"><i class="fa fa-circle-o"></i> 销售明细</a></li>
-            <li><a href="page6.html"><i class="fa fa-circle-o"></i> 销售汇总</a></li>
-            <li><a href="page7.html"><i class="fa fa-circle-o"></i> 收款汇总</a></li>
+            <li class="active"><a href="account.html"><i class="fa fa-circle-o"></i> 账户管理</a></li>
+            <li><a href="page2.html"><i class="fa fa-circle-o"></i> 角色管理</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="page1.html">
+            <i class="fa fa-cubes"></i> <span>管理中心</span>
+            <i class="fa fa-angle-left pull-right"></i>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="page4.html"><i class="fa fa-circle-o"></i> 支付类型</a></li>
+            <li><a href="page5.html"><i class="fa fa-circle-o"></i> 交易类型</a></li>
+            <li><a href="page6.html"><i class="fa fa-circle-o"></i> 明细类型</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="page2.html">
+            <i class="fa fa-dashboard"></i> <span>门店管理</span>
+            <i class="fa fa-angle-left pull-right"></i>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="page7.html"><i class="fa fa-circle-o"></i> 门店管理</a></li>
+            <li><a href="page8.html"><i class="fa fa-circle-o"></i> 导购员管理</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="page3.html">
+            <i class="fa fa-database"></i> <span>基础数据管理</span>
+            <i class="fa fa-angle-left pull-right"></i>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="page9.html"><i class="fa fa-circle-o"></i> 颜色管理</a></li>
+            <li><a href="page10.html"><i class="fa fa-circle-o"></i> 品类管理</a></li>
+            <li><a href="page11.html"><i class="fa fa-circle-o"></i> 计量单位管理</a></li>
+            <li><a href="page12.html"><i class="fa fa-circle-o"></i> 单位换算维护</a></li>
+            <li><a href="page13.html"><i class="fa fa-circle-o"></i> 品牌管理</a></li>
+            <li><a href="page14.html"><i class="fa fa-circle-o"></i> 物料管理</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="page4.html">
+            <i class="fa fa-credit-card"></i> <span>支付管理</span>
+            <i class="fa fa-angle-left pull-right"></i>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="page15.html"><i class="fa fa-circle-o"></i> 收银终端管理</a></li>
+            <li><a href="page16.html"><i class="fa fa-circle-o"></i> 零售参数设定</a></li>
+            <li><a href="page17.html"><i class="fa fa-circle-o"></i> 销售交易设定</a></li>
+            <li><a href="page18.html"><i class="fa fa-circle-o"></i> 商户支付方式</a></li>
+            <li><a href="page19.html"><i class="fa fa-circle-o"></i> 价格管理</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-cart-plus"></i> <span>促销管理</span>
+            <i class="fa fa-angle-left pull-right"></i>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="page20.html"><i class="fa fa-circle-o"></i> 促销活动管理</a></li>
+            <li><a href="page21.html"><i class="fa fa-circle-o"></i> 促销支付限制</a></li>
+            <li><a href="page22.html"><i class="fa fa-circle-o"></i> 促销优惠</a></li>
+            <li><a href="page23.html"><i class="fa fa-circle-o"></i> 促销优惠匹配内容</a></li>
+            <li><a href="page24.html"><i class="fa fa-circle-o"></i> 促销条件</a></li>
+            <li><a href="page25.html"><i class="fa fa-circle-o"></i> 促销条件匹配内容</a></li>
+            <li><a href="page26.html"><i class="fa fa-circle-o"></i> 促销门店</a></li>
           </ul>
         </li>
       </ul>
@@ -110,7 +145,7 @@
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper" >
-   		<div ng-view></div>
+   		<div ng-view style="margin-left:230px"></div>
   </div>
   <!-- /.content-wrapper -->
 </div>
@@ -119,7 +154,7 @@
 <script type="text/javascript" src="statics/plugins/jQuery/jQuery-2.2.0.min.js"></script>
 <script type="text/javascript" src="statics/plugins/jQuery/jquery.cookie.min.js"></script>
 <script type="text/javascript" src="statics/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="statics/dist/js/app.min.js"></script>
+<script type="text/javascript" src="statics/dist/js/app.js"></script>
 <script type="text/javascript" src="statics/plugins/angular/angular.js"></script>
 <script type="text/javascript" src="statics/plugins/angular/angular-route.js"></script>
 <script type="text/javascript" src="statics/dist/js/sale/Status.js"></script>
@@ -127,7 +162,7 @@
 <script type="text/javascript" src="statics/dist/js/sale/baseServices.js"></script>
 <script type="text/javascript" src="statics/dist/js/sale/services.js"></script>
 <script type="text/javascript" src="statics/dist/js/sale/controllers.js"></script>
-
+<script type="text/javascript" src="statics/dist/js/sell.js"></script>
 
 </body>
 </html>

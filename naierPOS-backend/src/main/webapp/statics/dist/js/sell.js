@@ -135,3 +135,11 @@ jQuery.fn.extend({
 		$('.attribute-ul').attributeUl();
 	},
 })
+
+$(function(){ 
+	/*var path = window.location.hash;
+	if(path && path.length > 0){
+		path = path.substr(1);
+		location.href= path + ".html";
+	}*/
+}); 

@@ -54,6 +54,18 @@ app.controller("changePWDCtrl",['$scope','$location','LoginService',function($sc
 	};
 }]);
 
+app.controller("routeAccountCtl",['$scope','$location','AccountService',function($scope,$location,AccountService){
+	$scope.queryByPage = function(start,limit){
+		var body = {};
+		body.start = start||0;
+		body.limit = limit||10;
+		AccountService.queryByPage(body).then(function(data){
+			$scope.info = data;
+        });
+	};	
+	
+}]);
+
 app.controller("headNavCtrl",['$scope','$location','LoginService',function($scope,$location,LoginService){
 	LoginService.validateToken().then(function(data){
 		$scope.loginInfo = data;
