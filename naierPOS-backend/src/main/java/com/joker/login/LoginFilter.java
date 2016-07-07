@@ -64,15 +64,20 @@ public class LoginFilter implements Filter{
 				}
 				if(body == null || body.getStatus() != ResponseState.SUCCESS){
 					response.sendRedirect("/backend/login.html");
+					return;
 				}
 				
 				//判断当前用户所属的权限是否可以访问前台
 				if(body!=null && body.getData()!=null){
 					
 					Account account=JSON.parseObject(body.getData().toString(), Account.class);
-					if(!account.getLoginAdmin().equals("1")){
+					if (!account.getLoginAdmin().equals("1")) {
 						response.sendRedirect("/backend/authorize.html");
-					}
+						return;
+					} /*else if (path.indexOf("account") > 0) {
+						response.sendRedirect("/backend/home.html#account");
+						return;
+					}*/
 				}
 			}
 		}
@@ -83,8 +88,5 @@ public class LoginFilter implements Filter{
 	public void init(FilterConfig config) throws ServletException {
 		excludeUrl = config.getInitParameter("excludeUrl");
 	}
-
-	
-	
 
 }
