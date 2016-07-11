@@ -1,4 +1,4 @@
-var app=angular.module('mainApp',['ngRoute']);
+var app=angular.module('mainApp',['ngRoute','tm.pagination']);
 
 //app.factory('statusInterceptor', ['$q','$location',function($q,$location) {
 //    var statusInterceptor = {
@@ -47,25 +47,14 @@ app.config(['$routeProvider','$locationProvider','$httpProvider', function ($rou
             templateUrl: '/backend/view/main.html',
             controller: 'routeMainCtl'
         })
-        .when('/backend/sale.html', {
-            templateUrl: '/backend/view/sale.html',
-            controller: 'routeMainCtl'
-        })
-        .when('/backend/pinBack.html', {
-            templateUrl: '/backend/view/pinBack.html',
-            controller: 'routeMainCtl'
-        })
-        .when('/backend/member.html', {
-            templateUrl: '/backend/view/member.html',
-            controller: 'routeMainCtl'
-        })
-        .when('/backend/order.html', {
-            templateUrl: '/backend/view/order.html',
-            controller: 'routeMainCtl'
-        })
         .when('/backend/account.html', {
             templateUrl: '/backend/view/account.html',
             controller: 'routeAccountCtl'
         })
+        .when('/backend/addAccount.html', {
+            templateUrl: '/backend/view/addAccount.html',
+            controller: 'routeAddAccountCtl'
+        })
+        
         
 }]);

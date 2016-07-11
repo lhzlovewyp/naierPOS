@@ -55,15 +55,58 @@ app.controller("changePWDCtrl",['$scope','$location','LoginService',function($sc
 }]);
 
 app.controller("routeAccountCtl",['$scope','$location','AccountService',function($scope,$location,AccountService){
-	$scope.queryByPage = function(start,limit){
+	var itemsPerPage = 10;
+	var currentPage = 1;
+	var totalItems = 0;
+	
+	$scope.paginationConf = {
+        currentPage: currentPage,
+        itemsPerPage: itemsPerPage,
+        pagesLength: 15,
+        perPageOptions: [10, 20, 30, 40, 50],
+        rememberPerPage: 'perPageItems',
+        onChange: function(){
+        	var body = {};
+    		body.start = $scope.paginationConf.currentPage - 1;
+    		body.limit = itemsPerPage;
+        	AccountService.queryByPage(body).then(function(data){
+        		$scope.info = data;
+        		$scope.paginationConf.totalItems = data.totalRecord;
+            });
+        }
+    };
+	
+	$scope.queryByPage = function(){
 		var body = {};
-		body.start = start||0;
-		body.limit = limit||10;
+		body.start = 0;
+		body.limit = itemsPerPage;
 		AccountService.queryByPage(body).then(function(data){
 			$scope.info = data;
+			$scope.paginationConf.totalItems = data.totalRecord;
         });
-	};	
-	
+	};
+}]);
+
+app.controller("routeAddAccountCtl",['$scope','$location','AccountService',function($scope,$location,AccountService){
+	var form = {};
+    $scope.form = form;
+	$scope.addAccount = function(isValid){
+		if(isValid) {
+			AccountService.add($scope.form).then(function(data){
+				if(!data.adderror){
+                    location.href="account.html";
+                }else{
+                    $scope.accountInfo = data;
+                }
+            });
+        }else{
+            angular.forEach($scope.accountForm,function(e){
+                if(typeof(e) == 'object' && typeof(e.$dirty) == 'boolean'){
+                    e.$dirty = true;
+                }
+            });
+        }
+	}
 }]);
 
 app.controller("headNavCtrl",['$scope','$location','LoginService',function($scope,$location,LoginService){
