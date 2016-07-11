@@ -3,8 +3,6 @@
  */
 package com.joker.common.service;
 
-import java.util.List;
-
 import com.joker.common.model.Account;
 import com.joker.core.dto.Page;
 
@@ -26,6 +24,7 @@ public interface AccountService {
 	/**
 	 * 根据商户、用户名查询用户信息.
 	 * 
+	 * @param clientId
 	 * @param username
 	 * @return
 	 */
@@ -34,6 +33,7 @@ public interface AccountService {
 	/**
 	 * 根据商户、用户名查询用户信息.
 	 * 
+	 * @param clientCode
 	 * @param username
 	 * @return
 	 */
@@ -43,7 +43,7 @@ public interface AccountService {
 	/**
 	 * 根据id查询账户信息.
 	 * 
-	 * @param username
+	 * @param id
 	 * @return
 	 */
 	public Account getAccountByID(String id);
@@ -62,7 +62,7 @@ public interface AccountService {
 	/**
 	 * 删除账户信息.
 	 * 
-	 * @param username
+	 * @param id
 	 * @return
 	 */
 	public void deleteAccountByID(String id);
@@ -70,7 +70,7 @@ public interface AccountService {
 	/**
 	 * 修改账户信息.
 	 * 
-	 * @param username
+	 * @param account
 	 * @return
 	 */
 	public void updateAccount(Account account);
@@ -78,7 +78,7 @@ public interface AccountService {
 	/**
 	 * 保存账户信息.
 	 * 
-	 * @param username
+	 * @param account
 	 * @return
 	 */
 	public void insertAccount(Account account);

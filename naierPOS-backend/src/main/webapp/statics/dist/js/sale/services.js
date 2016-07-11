@@ -88,8 +88,24 @@ app.factory('AccountService',['$q','$location','$http','BaseService',function($q
 			BaseService.post('/rest/account/queryByPage',condition).then(function(obj){
                 if(obj.data.status==Status.SUCCESS){
                     var dto=obj.data.data;
+                    info = dto;
                 	deferred.resolve(info);
                 }
+            });
+			return deferred.promise;
+		},		
+		add : function(condition){
+			var token=$.cookie("token");
+			condition.token = token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/account/add',condition).then(function(obj){
+				if(obj && obj.data && obj.data.status == Status.SUCCESS) {
+            		info = obj.data.data;
+                }else{
+                	info.adderror = obj.data.msg;
+                }
+            	deferred.resolve(info);
             });
 			return deferred.promise;
 		}

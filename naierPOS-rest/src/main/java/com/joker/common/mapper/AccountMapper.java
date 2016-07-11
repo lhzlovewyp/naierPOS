@@ -14,6 +14,7 @@ public interface AccountMapper {
 	/**
 	 * 根据商户、用户名查询用户信息.
 	 * 
+	 * @param clientId
 	 * @param username
 	 * @return
 	 */
@@ -24,7 +25,7 @@ public interface AccountMapper {
 	/**
 	 * 根据id查询账户信息.
 	 * 
-	 * @param username
+	 * @param id
 	 * @return
 	 */
 	@DataSource("slave")
@@ -54,7 +55,7 @@ public interface AccountMapper {
 	/**
 	 * 删除账户信息.
 	 * 
-	 * @param username
+	 * @param id
 	 * @return
 	 */
 	@DataSource("master")
@@ -63,7 +64,7 @@ public interface AccountMapper {
 	/**
 	 * 修改账户信息.
 	 * 
-	 * @param username
+	 * @param account
 	 * @return
 	 */
 	@DataSource("master")
@@ -72,7 +73,7 @@ public interface AccountMapper {
 	/**
 	 * 保存账户信息.
 	 * 
-	 * @param username
+	 * @param account
 	 * @return
 	 */
 	@DataSource("master")

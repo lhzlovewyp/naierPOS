@@ -1,7 +1,6 @@
 package com.joker.common.service;
 
 import com.joker.common.model.Client;
-import com.joker.core.annotation.DataSource;
 
 public interface ClientService {
 

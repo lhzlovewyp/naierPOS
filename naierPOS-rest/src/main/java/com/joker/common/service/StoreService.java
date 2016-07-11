@@ -1,6 +1,5 @@
 package com.joker.common.service;
 
-import com.joker.common.model.Client;
 import com.joker.common.model.Store;
 
 public interface StoreService {

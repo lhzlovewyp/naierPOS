@@ -22,9 +22,8 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 	     <typeAlias type="com.joker.common.model.promotion.PromotionCondition" alias="promotionCondition" />
 	     <typeAlias type="com.joker.common.model.promotion.PromotionConditionMatchContent" alias="promotionConditionMatchContent" />
 	     <typeAlias type="com.joker.common.model.ClientPayment" alias="clientPayment" />
-	     
-	     
-	     
+	     <typeAlias type="com.joker.common.model.AccountRole" alias="accountRole" />
+	     <typeAlias type="com.joker.common.model.AccountStore" alias="accountStore" />
 	</typeAliases>
 
     <plugins>
