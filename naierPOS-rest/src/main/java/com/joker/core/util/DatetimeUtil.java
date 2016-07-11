@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.springframework.util.StringUtils;
+
 public class DatetimeUtil {
 	public static final String DATEANDTIME = "yyyy-MM-dd HH:mm:ss";
 	public static final String SHORTDATE = "yy-MM-dd";
@@ -367,6 +369,49 @@ public class DatetimeUtil {
 		return cal.getTime();
 
 	}
+	
+	/**
+	 * 获取当前日期中的天.
+	 * @return
+	 */
+	public static int getDay(Date date){
+		Calendar now = Calendar.getInstance();  
+		now.setTime(date);
+		return now.get(Calendar.DAY_OF_MONTH);
+	}
+	
+	/**
+	 * 获取当前日期中的天.
+	 * @return
+	 */
+	public static int getWeek(Date date){
+		Calendar now = Calendar.getInstance();  
+		now.setTime(date);
+		int result= now.get(Calendar.DAY_OF_WEEK)-1;
+		return result<=0 ? 7 : result;
+	}
+	
+	/**
+	 * 比较2个时间的大小.
+	 * 
+	 * @param time1
+	 * @param time2
+	 * @return
+	 */
+	public static int compareTime(String time1,String time2){
+		if(StringUtils.isEmpty(time1) || StringUtils.isEmpty(time2)){
+			return 0;
+		}
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		try {
+			Date d1 = df.parse("2016-07-06 "+time1);
+			Date d2 = df.parse("2016-07-06 "+time2);
+			return d1.getTime()<=d2.getTime() ? 1 :-1;
+		} catch (ParseException e) {
+			
+		}
+		return 0;
+	}
 
 	public static void main(String[] args) {
 		System.out.println(DatetimeUtil.nowToString(DATE));
@@ -380,5 +425,6 @@ public class DatetimeUtil {
 		System.out.println(getCurrentYear());
 		System.out.println(getYears("2000-01-01 23:23:23"));
 		System.out.println(nowToString());
+		System.out.println(compareTime("09:00","10:00"));
 	}
 }

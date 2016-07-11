@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.PromotionMapper">
+     
+    
+    <resultMap type="promotion" id="promotion">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="store.id" column="Store" />
+		<result property="code" column="Code" />
+		<result property="name" column="Name" />
+		<result property="memo" column="Memo" />
+		<result property="effectiveDate" column="EffectiveDate" />
+		<result property="expiryDate" column="ExpiryDate" />
+		<result property="effectiveTime" column="EffectiveTime" />
+		<result property="expiryTime" column="ExpiryTime" />
+		<result property="repeat" column="Repeat" />
+		<result property="week" column="Week" />
+		<result property="days" column="Days" />
+		<result property="paymentRestrict" column="PaymentRestrict" />
+		<result property="memberRestrict" column="MemberRestrict" />
+		<result property="excluded" column="Excluded" />
+		<result property="creator" column="Creator" />
+		<result property="created" column="Created" />
+		<result property="editor" column="Editor" />
+		<result property="modified" column="Modified" />
+	</resultMap>
+	
+	<resultMap type="promotionPayment" id="promotionPayment">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="promotion.id" column="Promotion" />
+		<result property="clientPayment.id" column="ClientPayment" />
+		<result property="clientPayment.payment.code" column="ClientPaymentCode" />
+	</resultMap>
+	
+	<resultMap type="promotionOffer" id="promotionOffer">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="promotion.id" column="Promotion" />
+		<result property="offerType" column="OfferType" />
+		<result property="offerContent" column="OfferContent" />
+		<result property="matchType" column="MatchType" />
+	</resultMap>
+	
+	<resultMap type="promotionOfferMatchContent" id="promotionOfferMatchContent">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="promotionOffer.id" column="PromotionOffer" />
+		<result property="matchContent" column="MatchContent" />
+	</resultMap>
+	
+	<resultMap type="promotionCondition" id="promotionCondition">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="promotionOffer.id" column="PromotionOffer" />
+		<result property="conditionType" column="ConditionType" />
+		<result property="condition" column="Condition" />
+		<result property="match" column="Match" />
+		<result property="matchType" column="MatchType" />
+	</resultMap>
+	
+	<resultMap type="promotionConditionMatchContent" id="promotionConditionMatchContent">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="promotionCondition.id" column="PromotionCondition" />
+		<result property="matchContent" column="MatchContent" />
+	</resultMap>
+	
+	
+    <select id="getPromotionsByStore" resultMap="promotion">
+		SELECT p.*,ps.Store FROM Promotion p, PromotionStore ps
+		WHERE p.id=ps.Promotion AND p.status=1 AND ps.Store=#{storeId} AND p.Client=#{clientId}
+		<![CDATA[  
+    	and ps.EffectiveDate<=#{saleDate}
+    	and (ps.ExpiryDate is null or ps.ExpiryDate>=#{saleDate})
+    	]]>
+    </select>
+    
+    <select id="getPromoPaymentByPromoId" resultMap="promotionPayment">
+    	SELECT 
+		pp.ID,pp.Client,pp.Payment AS ClientPayment,p.Code AS ClientPaymentCode,pp.Promotion
+		FROM PromotionPayment pp,ClientPayment cp,Payment p
+		WHERE pp.Payment=cp.ID AND cp.Payment=p.Code
+		AND cp.Status=1 AND p.Status=1
+		AND Promotion=#{promotionId}
+    	
+    </select>
+    <select id="getPromoOfferbyPromoId" resultMap="promotionOffer">
+    	SELECT * FROM PromotionOffer po
+		WHERE po.Promotion=#{promotionId}
+    </select>
+    <select id="getMatchContentByOfferId" resultMap="promotionOfferMatchContent">
+    	SELECT * FROM PromotionOfferMatchContent pomc
+		WHERE pomc.PromotionOffer=#{offerId}
+    	
+    </select>
+    <select id="getConditionByOfferId" resultMap="promotionCondition">
+    	SELECT * FROM PromotionCondition pc
+		WHERE pc.PromotionOffer=#{offerId}
+    </select>
+    <select id="getMatchContentByConditionId" resultMap="promotionConditionMatchContent">
+    	SELECT * FROM PromotionConditionMatchContent pcmc
+		WHERE pcmc.promotionCondition=#{conditionId}
+    	
+    </select>
+    
+	
+
+</mapper>

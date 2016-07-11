@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.ClientPaymentMapper">
+     
+    
+    <resultMap type="clientPayment" id="clientPayment">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="payment.code" column="Payment" />
+		<result property="payment.name" column="PaymentName" />
+		<result property="status" column="Status" />
+		<result property="creator" column="Creator" />
+		<result property="created" column="Created" />
+		<result property="editor" column="Editor" />
+		<result property="modified" column="Modified" />
+	</resultMap>
+    <select id="getClientPayments" resultType="clientPayment">
+    	SELECT cp.*,p.Name AS PaymentName FROM Payment p,ClientPayment cp WHERE p.Code=cp.Payment AND p.Status=1 AND cp.Status=1
+		AND cp.Client=#{clientId}
+    </select>
+</mapper>

@@ -15,6 +15,16 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 	     <typeAlias type="com.joker.common.model.Material" alias="material" />
 	     <typeAlias type="com.joker.common.model.MaterialProperty" alias="materialProperty" />
 	     <typeAlias type="com.joker.common.model.RetailPrice" alias="retailPrice" />
+	     <typeAlias type="com.joker.common.model.promotion.Promotion" alias="promotion" />
+	     <typeAlias type="com.joker.common.model.promotion.PromotionPayment" alias="promotionPayment" />
+	     <typeAlias type="com.joker.common.model.promotion.PromotionOffer" alias="promotionOffer" />
+	     <typeAlias type="com.joker.common.model.promotion.PromotionOfferMatchContent" alias="promotionOfferMatchContent" />
+	     <typeAlias type="com.joker.common.model.promotion.PromotionCondition" alias="promotionCondition" />
+	     <typeAlias type="com.joker.common.model.promotion.PromotionConditionMatchContent" alias="promotionConditionMatchContent" />
+	     <typeAlias type="com.joker.common.model.ClientPayment" alias="clientPayment" />
+	     
+	     
+	     
 	</typeAliases>
 
     <plugins>

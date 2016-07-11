@@ -1,8 +1,11 @@
 package com.joker.common.dto;
 
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import com.joker.common.model.ShoppingGuide;
+import com.joker.common.model.promotion.Promotion;
 
 public class SaleDto {
 
@@ -17,6 +20,25 @@ public class SaleDto {
 	private String allDISC;
 	//单项打折权限
 	private String itemDISC;
+	//总的商品价格.
+	private BigDecimal totalPrice;
+	
+	//总的商品数量.
+	private Integer totalNum;
+	//打折价格.
+	private BigDecimal totalDiscPrice;
+	//实际支付金额
+	private BigDecimal pay;
+	//已支付金额
+	private BigDecimal payed;
+	//需要支付金额
+	private BigDecimal needPay;
+	//销售单.
+	private List<SaleInfo> saleInfos;
+	//可以参加的促销活动
+	private List<Promotion> effPromotions;
+	//参加的促销活动.
+	private List<Promotion> promotions;
 	
 	public Date getSaleDate() {
 		return saleDate;
@@ -48,9 +70,60 @@ public class SaleDto {
 	public void setItemDISC(String itemDISC) {
 		this.itemDISC = itemDISC;
 	}
-	
-	
-	
+	public BigDecimal getTotalPrice() {
+		return totalPrice;
+	}
+	public void setTotalPrice(BigDecimal totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+	public List<SaleInfo> getSaleInfos() {
+		return saleInfos;
+	}
+	public void setSaleInfos(List<SaleInfo> saleInfos) {
+		this.saleInfos = saleInfos;
+	}
+	public Integer getTotalNum() {
+		return totalNum;
+	}
+	public void setTotalNum(Integer totalNum) {
+		this.totalNum = totalNum;
+	}
+	public BigDecimal getTotalDiscPrice() {
+		return totalDiscPrice;
+	}
+	public void setTotalDiscPrice(BigDecimal totalDiscPrice) {
+		this.totalDiscPrice = totalDiscPrice;
+	}
+	public BigDecimal getPay() {
+		return pay;
+	}
+	public void setPay(BigDecimal pay) {
+		this.pay = pay;
+	}
+	public BigDecimal getPayed() {
+		return payed;
+	}
+	public void setPayed(BigDecimal payed) {
+		this.payed = payed;
+	}
+	public BigDecimal getNeedPay() {
+		return needPay;
+	}
+	public void setNeedPay(BigDecimal needPay) {
+		this.needPay = needPay;
+	}
+	public List<Promotion> getEffPromotions() {
+		return effPromotions;
+	}
+	public void setEffPromotions(List<Promotion> effPromotions) {
+		this.effPromotions = effPromotions;
+	}
+	public List<Promotion> getPromotions() {
+		return promotions;
+	}
+	public void setPromotions(List<Promotion> promotions) {
+		this.promotions = promotions;
+	}
 	
 	
 }

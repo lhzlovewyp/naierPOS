@@ -1,4 +1,3 @@
-
 app.controller("loginCtrl",['$scope','$location','LoginService',function($scope,$location,LoginService){
 	var form = {};
     $scope.form = form;
@@ -164,6 +163,9 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog',fun
 	
 	//查找商品.
 	$scope.searchMat = function(){
+		if(!$scope.matForm){
+			return;
+		}
 		SaleService.searchMat($scope.matForm).then(function(data){
             if(data.data.property=="1"){//需要维护属性.
             	
@@ -238,10 +240,33 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog',fun
             controller: 'discCtrl'
         });
 	}
+	
+	//结算
+	$scope.checkout = function(){
+		SaleService.getPromotions($scope.info).then(function(data){
+			var effPromotions=data.data.effPromotions;
+			//如果没有可以参加的促销活动.
+			if(!effPromotions){
+				//打开付款浮层.
+				ngDialog.open({
+		            template: '/front/view/template/pay.html',
+		            scope: $scope,
+		            closeByEscape: false,
+		            controller: 'payCtrl'
+		        });
+			}else{
+				
+			}
+		});
+	}
+	
+	
 }]);
 app.controller("memberCtrl",['$scope','$location','SaleService','ngDialog',function($scope,$location,SaleService,ngDialog){
 	
 }]);
+
+
 app.controller("shoppingGuideCtrl",['$scope','$location','SaleService','ngDialog',function($scope,$location,SaleService,ngDialog){
 	$scope.array=[];
 	$scope.close=function(){
@@ -254,11 +279,10 @@ app.controller("shoppingGuideCtrl",['$scope','$location','SaleService','ngDialog
 		 });
 	}
 	
-	$scope.choose = function(id){
+	$scope.choose = function(guide){
 		ngDialog.close();
 		var info=$scope.info || {};
-		info.shoppingGuide=info.shoppingGuide || {};
-		info.shoppingGuide.id=id;
+		info.shoppingGuide=guide;
 	}
 	
 }]);
@@ -445,3 +469,17 @@ app.controller("discCtrl",['$scope','$location','SaleService','ngDialog',functio
 	}
 }]);
 
+app.controller("payCtrl",['$scope','$location','PayService','ngDialog',function($scope,$location,PayService,ngDialog){
+	PayService.initPay().then(function(data){
+		$scope.payments=data;
+	});
+	
+	$scope.close=function(){
+		ngDialog.close();
+	}
+	
+	$scope.submit=function(){
+		
+	}
+	
+}]);

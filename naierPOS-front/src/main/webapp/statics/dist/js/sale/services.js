@@ -163,6 +163,45 @@ app.factory('SaleService',['$q','$location','$http','BaseService',function($q,$l
                 }
             });
 			return deferred.promise;
+		},
+		getPromotions:function(condition){
+			var token=$.cookie("token");
+			if(!condition){
+				return;
+			}
+			condition.token=token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/sale/getPromotions',condition).then(function(obj){
+                if(obj.data.status==Status.SUCCESS){
+                    var dto=obj.data.data;
+                    info.data=dto;
+                	deferred.resolve(info);
+                }
+            });
+			return deferred.promise;
+		}
+	}
+}]);	
+
+app.factory('PayService',['$q','$location','$http','BaseService',function($q,$location,$http,BaseService){
+	return {
+		initPay : function(condition){
+			if(!condition){
+				condition={};
+			}
+			var token=$.cookie("token");
+			condition.token=token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/pay/initPay',condition).then(function(obj){
+                if(obj.data.status==Status.SUCCESS){
+                    var dto=obj.data.data;
+                    info.data=dto;
+                	deferred.resolve(info);
+                }
+            });
+			return deferred.promise;
 		}
 	}
 }]);	
