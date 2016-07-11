@@ -3,7 +3,11 @@
  */
 package com.joker.common.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joker.common.dto.SaleDto;
 import com.joker.common.model.Account;
-import com.joker.common.model.SalesConfig;
+import com.joker.common.model.AccountStore;
+import com.joker.common.model.Client;
+import com.joker.common.model.Role;
+import com.joker.common.model.Store;
 import com.joker.common.service.AccountService;
 import com.joker.core.annotation.NotNull;
 import com.joker.core.cache.CacheFactory;
@@ -115,7 +121,7 @@ public class AccountController extends AbstractController {
 	}
 
 	/**
-	 * 初始化销售单.
+	 * 查询账号信息.
 	 * 
 	 * @param paramsBody
 	 * @param request
@@ -143,6 +149,90 @@ public class AccountController extends AbstractController {
 			Page<Account> page = accountService.getAccountPageByClient(
 					clientCode, start, limit);
 			rbody.setData(page);
+			rbody.setStatus(ResponseState.SUCCESS);
+			return rbody;
+		}
+		// 数据返回时永远返回true.
+		return rbody;
+	}
+
+	/**
+	 * 添加账户信息.
+	 * 
+	 * @param paramsBody
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = { "/account/add" }, method = RequestMethod.POST)
+	@NotNull(value = "token")
+	@ResponseBody
+	public ReturnBody add(@RequestBody ParamsBody paramsBody,
+			HttpServletRequest request, HttpServletResponse response) {
+		ReturnBody rbody = new ReturnBody();
+		// 参数校验
+		Map params = paramsBody.getBody();
+		String name = (String) params.get("name");
+		String nick = (String) params.get("nick");
+		String password = (String) params.get("password");
+		String changePWD = (String) params.get("changePWD");
+		String clientId = (String) params.get("clientId");
+		String storeId = (String) params.get("storeId");
+		String roleId = (String) params.get("roleId");
+
+		if (StringUtils.isBlank(name)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入账户！");
+			return rbody;
+		}
+		if (StringUtils.isBlank(nick)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入昵称！");
+			return rbody;
+		}
+		if (StringUtils.isBlank(password)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入密码！");
+			return rbody;
+		}
+		if (StringUtils.isBlank(clientId)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入商户！");
+			return rbody;
+		}
+
+		String token = paramsBody.getToken();
+		Object user = CacheFactory.getCache().get(token);
+		if (user != null) {
+			Account account = (Account) user;
+
+			Client client = new Client();
+			client.setId(clientId);
+
+			Account addAccount = new Account();
+			addAccount.setId(UUID.randomUUID().toString());
+			addAccount.setChangePWD(changePWD);
+			addAccount.setName(name);
+			addAccount.setNick(nick);
+			addAccount.setClient(client);
+			addAccount.setPassword(password);
+			addAccount.setCreated(new Date());
+			addAccount.setCreator(account.getId());
+
+			if (StringUtils.isNotBlank(storeId)) {
+				Store store = new Store();
+				store.setId(storeId);
+				addAccount.setStore(store);
+			}
+			if (StringUtils.isNotBlank(roleId)) {
+				Role role = new Role();
+				role.setId(roleId);
+				List<Role> roles = new ArrayList<Role>();
+				roles.add(role);
+				addAccount.setRoles(roles);
+			}
+
+			accountService.insertAccount(addAccount);
 			rbody.setStatus(ResponseState.SUCCESS);
 			return rbody;
 		}

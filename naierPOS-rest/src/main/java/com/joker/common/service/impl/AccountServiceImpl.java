@@ -3,17 +3,24 @@
  */
 package com.joker.common.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.joker.common.Constant.Constants;
 import com.joker.common.mapper.AccountMapper;
+import com.joker.common.mapper.AccountRoleMapper;
+import com.joker.common.mapper.AccountStoreMapper;
 import com.joker.common.mapper.ClientMapper;
 import com.joker.common.mapper.StoreMapper;
 import com.joker.common.model.Account;
+import com.joker.common.model.AccountRole;
+import com.joker.common.model.AccountStore;
 import com.joker.common.model.Client;
 import com.joker.common.model.Role;
 import com.joker.common.model.Store;
@@ -41,6 +48,12 @@ public class AccountServiceImpl implements AccountService {
 
 	@Autowired
 	RoleService roleService;
+
+	@Autowired
+	AccountStoreMapper accountStoreMapper;
+
+	@Autowired
+	AccountRoleMapper accountRoleMapper;
 
 	@Override
 	public Account login(String clientId, String userName) {
@@ -101,9 +114,11 @@ public class AccountServiceImpl implements AccountService {
 	public Page<Account> getAccountPageByClient(String clientId, int start,
 			int limit) {
 		Page<Account> page = new Page<Account>();
-		int totalPage = mapper.getAccountCountByClient(clientId);
+		int totalRecord = mapper.getAccountCountByClient(clientId);
 		List<Account> list = mapper.getAccountByClient(clientId, start, limit);
-		page.setTotalPage(totalPage);
+		page.setPageNo(start + 1);
+		page.setPageSize(limit);
+		page.setTotalRecord(totalRecord);
 		page.setResults(list);
 		return page;
 	}
@@ -122,8 +137,42 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public void insertAccount(Account account) {
+		if (StringUtils.isBlank(account.getId())) {
+			account.setId(UUID.randomUUID().toString());
+		}
 		mapper.insertAccount(account);
 
+		if (account.getClient() != null
+				&& StringUtils.isNotBlank(account.getClient().getId())) {
+			Client client = account.getClient();
+			if (account.getStore() != null
+					&& StringUtils.isNotBlank(account.getStore().getId())) {
+				AccountStore accountStore = new AccountStore();
+				if (StringUtils.isBlank(accountStore.getId())) {
+					accountStore.setId(UUID.randomUUID().toString());
+				}
+				accountStore.setClient(client);
+				accountStore.setStatus(Constants.STATUS_SUCCESS);
+				accountStore.setStore(account.getStore());
+				accountStoreMapper.insertAccountStore(accountStore);
+			}
+
+			if (CollectionUtils.isNotEmpty(account.getRoles())) {
+				Date createTime = account.getCreated();
+				String creator = account.getCreator();
+				for (Role role : account.getRoles()) {
+					AccountRole accountRole = new AccountRole();
+					accountRole.setId(UUID.randomUUID().toString());
+					accountRole.setAccount(account);
+					accountRole.setClient(client);
+					accountRole.setRole(role);
+					accountRole.setStatus(Constants.STATUS_SUCCESS);
+					accountRole.setCreated(createTime);
+					accountRole.setCreator(creator);
+					accountRoleMapper.insertAccountRole(accountRole);
+				}
+			}
+		}
 	}
 
 	// public SaleUser login(SaleUser user) {
