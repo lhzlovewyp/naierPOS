@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.AccountStoreMapper">
+     
+    
+    <resultMap type="accountStore" id="accountStore">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="store.id" column="Store" />
+		<result property="account.id" column="Account" />
+		<result property="status" column="Status" />
+	</resultMap>
+	
+	<delete id="deleteAccountStoreByID" parameterType="string">
+		DELETE FROM AccountStore where ID =#{id}
+	</delete>
+	
+	<insert id="insertAccountStore" parameterType="accountStore">
+		insert into AccountStore <include refid="accountStoreSet" />
+	</insert>
+	
+	<update id="updateAccountStore" parameterType="accountStore" >
+		UPDATE AccountStore <include refid="accountStoreSet" /> WHERE ID = #{id}
+	</update>
+    
+    <sql id="accountStoreSet">
+		<set >
+			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
+			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
+			<if test= "store != null">Name=#{store.id,jdbcType=VARCHAR},</if >
+			<if test= "account != null">Nick=#{account.id,jdbcType=VARCHAR},</if >
+			<if test= "status != null">Status=#{status},</if >			
+		</set>
+	</sql >
+</mapper>
