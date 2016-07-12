@@ -247,11 +247,13 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog',fun
 			var effPromotions=data.data.effPromotions;
 			//如果没有可以参加的促销活动.
 			if(!effPromotions){
+				 $scope.value = true;
 				//打开付款浮层.
 				ngDialog.open({
 		            template: '/front/view/template/pay.html',
 		            scope: $scope,
 		            closeByEscape: false,
+		            width:700,
 		            controller: 'payCtrl'
 		        });
 			}else{
@@ -471,7 +473,8 @@ app.controller("discCtrl",['$scope','$location','SaleService','ngDialog',functio
 
 app.controller("payCtrl",['$scope','$location','PayService','ngDialog',function($scope,$location,PayService,ngDialog){
 	PayService.initPay().then(function(data){
-		$scope.payments=data;
+		console.log(data);
+		$scope.payments=data.data;
 	});
 	
 	$scope.close=function(){

@@ -16,7 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="editor" column="Editor" />
 		<result property="modified" column="Modified" />
 	</resultMap>
-    <select id="getClientPayments" resultType="clientPayment">
+    <select id="getClientPayments"  resultMap="clientPayment">
     	SELECT cp.*,p.Name AS PaymentName FROM Payment p,ClientPayment cp WHERE p.Code=cp.Payment AND p.Status=1 AND cp.Status=1
 		AND cp.Client=#{clientId}
     </select>

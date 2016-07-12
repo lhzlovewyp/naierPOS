@@ -1,0 +1,22 @@
+
+<div class="modal-content">
+	<div class="modal-header">
+		<h4 class="modal-title">付款</h4>
+	</div>
+	<div class="modal-body">
+		<div class="row">
+			<div>
+				<ul class="payment-ul">
+					<li ng-repeat="payment in payments" id="payment_{{payment.payment.code}}" >
+					   <a class="btn btn-default btn-flat" href="javascript:;;" ng-click="pay(payment);">{{payment.payment.name}}</a> 
+					   <a class="pull-right text-black">¥0.00</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-default" ng-click="close();">取消付款</button>
+		<button type="submit" class="btn btn-primary" ng-click="submit();">完成付款</button>
+	</div>
+</div>
