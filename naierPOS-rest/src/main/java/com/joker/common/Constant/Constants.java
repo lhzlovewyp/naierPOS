@@ -73,4 +73,6 @@ public class Constants {
 	public final static String PAYMENT_BS_COUPON="BS_COUPON";
 	//百胜会员积分
 	public final static String PAYMENT_BS_POINT="BS_POINT";
+	
+	public final static String COMMA = ",";
 }

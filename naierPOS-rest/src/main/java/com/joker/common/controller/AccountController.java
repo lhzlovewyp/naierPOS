@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.joker.common.Constant.Constants;
 import com.joker.common.model.Account;
 import com.joker.common.model.AccountStore;
 import com.joker.common.model.Client;
@@ -179,6 +180,7 @@ public class AccountController extends AbstractController {
 		String clientId = (String) params.get("clientId");
 		String storeId = (String) params.get("storeId");
 		String roleId = (String) params.get("roleId");
+		String status = (String) params.get("status");
 
 		if (StringUtils.isBlank(name)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -218,6 +220,7 @@ public class AccountController extends AbstractController {
 			addAccount.setPassword(password);
 			addAccount.setCreated(new Date());
 			addAccount.setCreator(account.getId());
+			addAccount.setStatus(status);
 
 			if (StringUtils.isNotBlank(storeId)) {
 				Store store = new Store();
@@ -234,7 +237,45 @@ public class AccountController extends AbstractController {
 
 			accountService.insertAccount(addAccount);
 			rbody.setStatus(ResponseState.SUCCESS);
+		}else{
+			rbody.setStatus(ResponseState.ERROR);
+			rbody.setMsg("请登录！");
+		}
+		// 数据返回时永远返回true.
+		return rbody;
+	}
+	
+	/**
+	 * 删除账户信息.
+	 * 
+	 * @param paramsBody
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = { "/account/delete" }, method = RequestMethod.POST)
+	@NotNull(value = "token")
+	@ResponseBody
+	public ReturnBody delete(@RequestBody ParamsBody paramsBody,
+			HttpServletRequest request, HttpServletResponse response) {
+		ReturnBody rbody = new ReturnBody();
+		// 参数校验
+		Map params = paramsBody.getBody();
+		String id = (String) params.get("id");
+
+		if (StringUtils.isBlank(id)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请勾选需要删除的账号！");
 			return rbody;
+		}
+		String token = paramsBody.getToken();
+		Object user = CacheFactory.getCache().get(token);
+		if (user != null) {
+			accountService.deleteAccountByID(id);
+			rbody.setStatus(ResponseState.SUCCESS);
+		}else{
+			rbody.setStatus(ResponseState.ERROR);
+			rbody.setMsg("请登录！");
 		}
 		// 数据返回时永远返回true.
 		return rbody;
