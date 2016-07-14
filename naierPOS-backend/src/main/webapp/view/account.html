@@ -14,7 +14,7 @@
 			<h3 class="box-title">账户管理</h3>
 			<div class="box-tools">
 				<a class="btn btn-primary btn-flat" href="addAccount.html"><i class="fa fa-plus"></i> 添加</a> 
-				<a class="btn btn-danger btn-flat" href="#"><i class="fa fa-minus"></i> 删除</a>
+				<a class="btn btn-danger btn-flat" href="javascript:void(0)" ng-click="delAccount()"><i class="fa fa-minus"></i> 删除</a>
 			</div>
 		</div>
 		<div class="box-header">
@@ -48,7 +48,7 @@
 						<th>操作</th>
 					</tr>
 					<tr ng-repeat="accountInfo in info.results"  on-render-finish>
-						<td align="center"><input type="checkbox"></td>
+						<td align="center"><input type="checkbox" ng-click="check(accountInfo.id,chk)" ng-model="chk"></td>
 		                <td>{{accountInfo.id}}</td>
 		                <td>{{accountInfo.client.name}}</td>
 		                <td>{{accountInfo.name}}</td>

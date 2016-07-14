@@ -58,6 +58,8 @@ app.controller("routeAccountCtl",['$scope','$location','AccountService',function
 	var itemsPerPage = 10;
 	var currentPage = 1;
 	var totalItems = 0;
+	var selectedId ="";
+	$scope.chk = false;
 	
 	$scope.paginationConf = {
         currentPage: currentPage,
@@ -85,18 +87,53 @@ app.controller("routeAccountCtl",['$scope','$location','AccountService',function
 			$scope.paginationConf.totalItems = data.totalRecord;
         });
 	};
+	
+	$scope.delAccount = function(){
+		var body = {};
+		body.id = selectedId;
+		AccountService.del(body).then(function(data){
+			if(data && data.delerror){
+				alert("删除数据出错:"+data.delerror);
+            }else{
+            	location.href="account.html";
+            }
+        });
+	};
+	
+	$scope.check = function(val,chk){
+		if(!chk == true){
+			selectedId += val+",";
+        }else{
+        	selectedId = val.replace(val+",","");
+        }
+	}
 }]);
 
 app.controller("routeAddAccountCtl",['$scope','$location','AccountService',function($scope,$location,AccountService){
+	$scope.statuses = [
+	        	    {value : "1", show : "有效"},
+	        	    {value : "0", show : "无效"}
+	        	];
+	
 	var form = {};
     $scope.form = form;
 	$scope.addAccount = function(isValid){
 		if(isValid) {
+			var selstatus = $scope.selstatus;
+			if(selstatus){
+				$scope.form.status = selstatus.value;
+			}else{
+				$scope.form.status = "1";
+			}
+			if($scope.form.changePWD)
+				$scope.form.changePWD = "1";
+			else
+				$scope.form.changePWD = "0";
 			AccountService.add($scope.form).then(function(data){
-				if(!data.adderror){
-                    location.href="account.html";
+				if(data && data.adderror){
+					$scope.accountInfo = data;
                 }else{
-                    $scope.accountInfo = data;
+                	location.href="account.html";
                 }
             });
         }else{
