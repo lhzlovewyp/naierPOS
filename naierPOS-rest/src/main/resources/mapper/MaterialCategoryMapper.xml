@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.MaterialCategory">
+     
+    
+    <resultMap type="materialCategory" id="materialCategory">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="code" column="Code" />
+		<result property="name" column="Name" />
+		<result property="status" column="Status" />
+		<result property="creator" column="Creator" />
+		<result property="created" column="Created" />
+		<result property="editor" column="Editor" />
+		<result property="modified" column="Modified" />
+	</resultMap>
+    
+	<select id="getMaterialCategoryByID" parameterType="string" resultMap="materialCategory">
+		SELECT 
+			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+		FROM MaterialCategory a
+		WHERE a.ID=#{id} 
+	</select>
+	
+	<select id="getMaterialCategoryByClient" parameterType="string" resultMap="materialCategory">
+		SELECT 
+			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+		FROM MaterialCategory a 
+		WHERE 
+			a.Status= 1 and a.Client=#{clientId}
+			order by a.ID desc
+			<if test="start != null and limit != null">
+				limit #{start},#{limit}
+			</if>
+	</select>
+	
+	<select id="getMaterialCategoryCountByClient" parameterType="string" resultType="int">
+		SELECT count(1)
+		FROM MaterialCategory a WHERE 
+			a.Status= 1 and a.Client=#{clientId}
+	</select>
+	
+	<delete id="deleteMaterialCategoryByID" parameterType="string">
+		DELETE FROM MaterialCategory where ID =#{id}
+	</delete>
+	
+	<insert id="insertMaterialCategory" parameterType="materialCategory">
+		insert into MaterialCategory <include refid="materialCategorySet" />
+	</insert>
+	
+	<update id="updateMaterialCategory" parameterType="materialCategory" >
+		UPDATE MaterialCategory <include refid="materialCategorySet" /> WHERE ID = #{id}
+	</update>
+    
+    <sql id="materialCategorySet">
+		<set >
+			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
+			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
+			<if test= "code != null">Code=#{code,jdbcType=VARCHAR},</if >
+			<if test= "name != null">Name=#{name,jdbcType=VARCHAR},</if >
+			<if test= "status != null">Status=#{status},</if >
+			<if test= "creator != null">Creator=#{creator},</if >
+			<if test= "created != null">Created=#{created},</if >
+			<if test= "editor != null">Editor=#{editor,jdbcType=VARCHAR},</if >
+			<if test= "modified != null">Modified=#{modified},</if >
+			
+		</set>
+	</sql >
+    
+</mapper>
