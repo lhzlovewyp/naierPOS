@@ -3,12 +3,13 @@
  */
 package com.joker.common.service.impl;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import com.joker.common.model.MaterialProperty;
 import com.joker.common.service.MaterialPropertyService;
 import com.joker.common.service.MaterialService;
 import com.joker.common.service.RetailPriceService;
+import com.joker.core.dto.Page;
 
 /**
  * @author lvhaizhen
@@ -66,5 +68,48 @@ public class MaterialServiceImpl implements MaterialService{
 				mat.setProperties(list);
 			}
 		}
+	}
+
+	@Override
+	public Material getMaterialByID(String id) {
+		return mapper.getMaterialByID(id);
+	}
+
+	@Override
+	public Page<Material> getMaterialPageByClient(String clientId, int start,
+			int limit) {
+		Page<Material> page = new Page<Material>();
+		int totalRecord = mapper.getMaterialCountByClient(clientId);
+		List<Material> list = mapper.getMaterialByClient(clientId, start, limit);
+		page.setPageNo(start + 1);
+		page.setPageSize(limit);
+		page.setTotalRecord(totalRecord);
+		page.setResults(list);
+		return page;
+	}
+
+	@Override
+	public void deleteMaterialByID(String id) {
+		if(StringUtils.isNotBlank(id)){
+			String[] ids = id.split(Constants.COMMA);
+			for (String oneId : ids) {
+				if(StringUtils.isNotBlank(oneId)){
+					mapper.deleteMaterialByID(oneId);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void updateMaterial(Material material) {
+		mapper.updateMaterial(material);
+	}
+
+	@Override
+	public void insertMaterial(Material material) {
+		if (StringUtils.isBlank(material.getId())) {
+			material.setId(UUID.randomUUID().toString());
+		}
+		mapper.insertMaterial(material);
 	}
 }
