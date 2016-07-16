@@ -126,3 +126,86 @@ app.factory('AccountService',['$q','$location','$http','BaseService',function($q
 		}
 	}
 }]);
+
+app.factory('BasicsService',['$q','$location','$http','BaseService',function($q,$location,$http,BaseService){
+	return {
+		queryByPage : function(condition,routePath){
+			routePath = routePath.toLocaleLowerCase();
+			var token=$.cookie("token");
+			condition.token = token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/'+routePath+'/queryByPage',condition).then(function(obj){
+                if(obj.data.status==Status.SUCCESS){
+                    var dto=obj.data.data;
+                    info = dto;
+                	deferred.resolve(info);
+                }
+            });
+			return deferred.promise;
+		},
+		queryById : function(condition,routePath){
+			routePath = routePath.toLocaleLowerCase();
+			var token=$.cookie("token");
+			condition.token = token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/'+routePath+'/queryById',condition).then(function(obj){
+                if(obj.data.status==Status.SUCCESS){
+                    var dto=obj.data.data;
+                    info = dto;
+                	deferred.resolve(info);
+                }
+            });
+			return deferred.promise;
+		},
+		add : function(condition,routePath){
+			routePath = routePath.toLocaleLowerCase();
+			var token=$.cookie("token");
+			condition.token = token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/'+routePath+'/add',condition).then(function(obj){
+				if(obj && obj.data && obj.data.status == Status.SUCCESS) {
+            		info = obj.data.data;
+                }else{
+                	info.error = obj.data.msg;
+                }
+            	deferred.resolve(info);
+            });
+			return deferred.promise;
+		},
+		update : function(condition,routePath){
+			routePath = routePath.toLocaleLowerCase();
+			var token=$.cookie("token");
+			condition.token = token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/'+routePath+'/update',condition).then(function(obj){
+				if(obj && obj.data && obj.data.status == Status.SUCCESS) {
+            		info = obj.data.data;
+                }else{
+                	info.error = obj.data.msg;
+                }
+            	deferred.resolve(info);
+            });
+			return deferred.promise;
+		},
+		del : function(condition,routePath){
+			routePath = routePath.toLocaleLowerCase();
+			var token=$.cookie("token");
+			condition.token = token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/'+routePath+'/delete',condition).then(function(obj){
+				if(obj && obj.data && obj.data.status == Status.SUCCESS) {
+            		info = obj.data.data;
+                }else{
+                	info.delerror = obj.data.msg;
+                }
+            	deferred.resolve(info);
+            });
+			return deferred.promise;
+		}
+	}
+}]);

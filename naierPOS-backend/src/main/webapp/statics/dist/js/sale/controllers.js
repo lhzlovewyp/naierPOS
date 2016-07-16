@@ -104,7 +104,7 @@ app.controller("routeAccountCtl",['$scope','$location','AccountService',function
 		if(!chk == true){
 			selectedId += val+",";
         }else{
-        	selectedId = val.replace(val+",","");
+        	selectedId = selectedId.replace(val+",","");
         }
 	}
 }]);
@@ -138,6 +138,117 @@ app.controller("routeAddAccountCtl",['$scope','$location','AccountService',funct
             });
         }else{
             angular.forEach($scope.accountForm,function(e){
+                if(typeof(e) == 'object' && typeof(e.$dirty) == 'boolean'){
+                    e.$dirty = true;
+                }
+            });
+        }
+	}
+}]);
+
+app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsService',function($scope,$location,$routeParams,BasicsService){
+	var itemsPerPage = 10;
+	var currentPage = 1;
+	var totalItems = 0;
+	var selectedId ="";
+	$scope.chk = false;
+	var routePath = $routeParams.routePath;
+	
+	$scope.paginationConf = {
+        currentPage: currentPage,
+        itemsPerPage: itemsPerPage,
+        pagesLength: 15,
+        perPageOptions: [10, 20, 30, 40, 50],
+        rememberPerPage: 'perPageItems',
+        onChange: function(){
+        	var body = {};
+    		body.start = $scope.paginationConf.currentPage - 1;
+    		body.limit = itemsPerPage;
+    		BasicsService.queryByPage(body,routePath).then(function(data){
+        		$scope.basicsInfo = data;
+        		$scope.paginationConf.totalItems = data.totalRecord;
+            });
+        }
+    };
+	
+	$scope.queryByPage = function(){
+		var body = {};
+		body.start = 0;
+		body.limit = itemsPerPage;
+		BasicsService.queryByPage(body,routePath).then(function(data){
+			$scope.info = data;
+			$scope.paginationConf.totalItems = data.totalRecord;
+        });
+	};
+	
+	$scope.del = function(){
+		var body = {};
+		body.id = selectedId;
+		BasicsService.del(body,routePath).then(function(data){
+			if(data && data.delerror){
+				alert("删除数据出错:"+data.delerror);
+            }else{
+            	location.href= routePath + ".html";
+            }
+        });
+	};
+	
+	$scope.check = function(val,chk){
+		if(!chk == true){
+			selectedId += val+",";
+        }else{
+        	selectedId = selectedId.replace(val+",","");
+        }
+	}
+}]);
+
+app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','BasicsService',function($scope,$location,$routeParams,BasicsService){
+	var allStatus = [
+		        	    {value : "1", show : "有效"},
+		        	    {value : "0", show : "无效"}
+		        	];
+	$scope.statuses = allStatus;
+	var id = $routeParams.id;
+	var routePath = $routeParams.routePath;
+	if(id){
+		var body = {};
+		body.id = id;
+		BasicsService.queryById(body,routePath).then(function(data){
+			routePath = routePath.toLocaleLowerCase();
+			if(routePath == 'color'){
+				data.clientId = data.client.id;
+				var selStatusValue = data.status;
+				for ( var i = 0; i < allStatus.length; i++) {
+					if(allStatus[i].value == selStatusValue){
+						$scope.selstatus = allStatus[i];	
+						break;
+					}
+				}
+				
+			}
+			$scope.form = data;
+        });
+	}else{
+		$scope.form = {};
+	}
+	
+	$scope.edit = function(isValid){
+		if(isValid) {
+			var selstatus = $scope.selstatus;
+			if(selstatus){
+				$scope.form.status = selstatus.value;
+			}else{
+				$scope.form.status = "1";
+			}
+			BasicsService.add($scope.form,routePath).then(function(data){
+				if(data && data.adderror){
+					$scope.info = data;
+                }else{
+                	location.href = routePath + ".html";;
+                }
+            });
+        }else{
+            angular.forEach($scope.basicsForm,function(e){
                 if(typeof(e) == 'object' && typeof(e.$dirty) == 'boolean'){
                     e.$dirty = true;
                 }
