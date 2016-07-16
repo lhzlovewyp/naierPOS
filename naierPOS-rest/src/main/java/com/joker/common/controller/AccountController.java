@@ -20,9 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joker.common.Constant.Constants;
 import com.joker.common.model.Account;
-import com.joker.common.model.AccountStore;
 import com.joker.common.model.Client;
 import com.joker.common.model.Role;
 import com.joker.common.model.Store;
