@@ -60,11 +60,11 @@ app.config(['$routeProvider','$locationProvider','$httpProvider', function ($rou
             controller: 'routeBasicsCtl'
         })
         .when('/backend/add/:routePath', {
-            templateUrl: function($routeParams){return '/backend/view/edit'+$routeParams.routePath+'.html';},
+            templateUrl: function($routeParams){return '/backend/view/edit'+$routeParams.routePath.substr(0,1).toUpperCase()+$routeParams.routePath.substr(1)+'.html';},
             controller: 'routeEditBasicsCtl'
         })
         .when('/backend/edit/:routePath/:id', {
-            templateUrl: function($routeParams){return '/backend/view/edit'+$routeParams.routePath+'.html';},
+            templateUrl: function($routeParams){return '/backend/view/edit'+$routeParams.routePath.substr(0,1).toUpperCase()+$routeParams.routePath.substr(1)+'.html';},
             controller: 'routeEditBasicsCtl'
         })
         .when('/backend/materialCategory', {

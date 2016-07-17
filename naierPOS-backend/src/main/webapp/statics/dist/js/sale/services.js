@@ -130,7 +130,6 @@ app.factory('AccountService',['$q','$location','$http','BaseService',function($q
 app.factory('BasicsService',['$q','$location','$http','BaseService',function($q,$location,$http,BaseService){
 	return {
 		queryByPage : function(condition,routePath){
-			routePath = routePath.toLocaleLowerCase();
 			var token=$.cookie("token");
 			condition.token = token;
 			var deferred = $q.defer();
@@ -145,7 +144,6 @@ app.factory('BasicsService',['$q','$location','$http','BaseService',function($q,
 			return deferred.promise;
 		},
 		queryById : function(condition,routePath){
-			routePath = routePath.toLocaleLowerCase();
 			var token=$.cookie("token");
 			condition.token = token;
 			var deferred = $q.defer();
@@ -160,7 +158,6 @@ app.factory('BasicsService',['$q','$location','$http','BaseService',function($q,
 			return deferred.promise;
 		},
 		add : function(condition,routePath){
-			routePath = routePath.toLocaleLowerCase();
 			var token=$.cookie("token");
 			condition.token = token;
 			var deferred = $q.defer();
@@ -176,7 +173,6 @@ app.factory('BasicsService',['$q','$location','$http','BaseService',function($q,
 			return deferred.promise;
 		},
 		update : function(condition,routePath){
-			routePath = routePath.toLocaleLowerCase();
 			var token=$.cookie("token");
 			condition.token = token;
 			var deferred = $q.defer();
@@ -192,7 +188,6 @@ app.factory('BasicsService',['$q','$location','$http','BaseService',function($q,
 			return deferred.promise;
 		},
 		del : function(condition,routePath){
-			routePath = routePath.toLocaleLowerCase();
 			var token=$.cookie("token");
 			condition.token = token;
 			var deferred = $q.defer();
