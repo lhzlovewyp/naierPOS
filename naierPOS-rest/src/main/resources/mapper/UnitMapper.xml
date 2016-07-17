@@ -24,22 +24,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE a.ID=#{id} 
 	</select>
 	
-	<select id="getUnitByClient" parameterType="string" resultMap="unit">
+	<select id="getUnitPageByCondition" parameterType="java.util.Map" resultMap="unit">
 		SELECT 
 			a.ID,a.Client,a.Decimal,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
 		FROM Unit a 
 		WHERE 
-			a.Status= 1 and a.Client=#{clientId}
+			a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
 			order by a.ID desc
 			<if test="start != null and limit != null">
 				limit #{start},#{limit}
 			</if>
 	</select>
 	
-	<select id="getUnitCountByClient" parameterType="string" resultType="int">
+	<select id="getUnitCountByCondition" parameterType="java.util.Map" resultType="int">
 		SELECT count(1)
 		FROM Unit a WHERE 
-			a.Status= 1 and a.Client=#{clientId}
+			a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
 	</select>
 	
 	<delete id="deleteUnitByID" parameterType="string">

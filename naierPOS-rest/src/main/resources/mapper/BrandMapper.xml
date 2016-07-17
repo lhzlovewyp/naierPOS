@@ -9,7 +9,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="id" column="ID" />
 		<result property="client.id" column="Client" />
 		<result property="name" column="Name" />
-		<result property="decimal" column="Decimal" />
+		<result property="code" column="Code" />
 		<result property="status" column="Status" />
 		<result property="creator" column="Creator" />
 		<result property="created" column="Created" />
@@ -19,27 +19,39 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
 	<select id="getBrandByID" parameterType="string" resultMap="brand">
 		SELECT 
-			a.ID,a.Client,a.Decimal,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
 		FROM Brand a
 		WHERE a.ID=#{id} 
 	</select>
 	
-	<select id="getBrandByClient" parameterType="string" resultMap="brand">
+	<select id="getBrandPageByCondition" parameterType="java.util.Map" resultMap="brand">
 		SELECT 
-			a.ID,a.Client,a.Decimal,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
 		FROM Brand a 
 		WHERE 
-			a.Status= 1 and a.Client=#{clientId}
+			a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
 			order by a.ID desc
 			<if test="start != null and limit != null">
 				limit #{start},#{limit}
 			</if>
 	</select>
 	
-	<select id="getBrandCountByClient" parameterType="string" resultType="int">
+	<select id="getBrandCountByCondition" parameterType="java.util.Map" resultType="int">
 		SELECT count(1)
 		FROM Brand a WHERE 
-			a.Status= 1 and a.Client=#{clientId}
+			a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
 	</select>
 	
 	<delete id="deleteBrandByID" parameterType="string">
@@ -58,7 +70,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<set >
 			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
 			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
-			<if test= "decimal != null">Decimal=#{decimal,jdbcType=VARCHAR},</if >
+			<if test= "code != null">Code=#{code,jdbcType=VARCHAR},</if >
 			<if test= "name != null">Name=#{name,jdbcType=VARCHAR},</if >
 			<if test= "status != null">Status=#{status},</if >
 			<if test= "creator != null">Creator=#{creator},</if >

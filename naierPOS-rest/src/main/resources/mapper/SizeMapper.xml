@@ -24,22 +24,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE a.ID=#{id} 
 	</select>
 	
-	<select id="getSizeByClient" parameterType="string" resultMap="size">
+	<select id="getSizePageByCondition" parameterType="java.util.Map" resultMap="size">
 		SELECT 
 			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
 		FROM Size a 
-		WHERE 
-			a.Status= 1 and a.Client=#{clientId}
-			order by a.ID desc
+		WHERE a.Status= 1 
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
 			<if test="start != null and limit != null">
 				limit #{start},#{limit}
 			</if>
 	</select>
 	
-	<select id="getSizeCountByClient" parameterType="string" resultType="int">
+	<select id="getSizeCountByCondition" parameterType="java.util.Map" resultType="int">
 		SELECT count(1)
 		FROM Size a WHERE 
-			a.Status= 1 and a.Client=#{clientId}
+			a.Status= 1 
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
 	</select>
 	
 	<delete id="deleteSizeByID" parameterType="string">

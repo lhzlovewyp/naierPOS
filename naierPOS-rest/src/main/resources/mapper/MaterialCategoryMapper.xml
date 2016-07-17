@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.joker.common.mapper.MaterialCategory">
+<mapper namespace="com.joker.common.mapper.MaterialCategoryMapper">
      
     
     <resultMap type="materialCategory" id="materialCategory">
@@ -24,22 +24,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE a.ID=#{id} 
 	</select>
 	
-	<select id="getMaterialCategoryByClient" parameterType="string" resultMap="materialCategory">
+	<select id="getMaterialCategoryByCondition" parameterType="java.util.Map" resultMap="materialCategory">
 		SELECT 
 			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
 		FROM MaterialCategory a 
 		WHERE 
-			a.Status= 1 and a.Client=#{clientId}
+			a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
 			order by a.ID desc
 			<if test="start != null and limit != null">
 				limit #{start},#{limit}
 			</if>
 	</select>
 	
-	<select id="getMaterialCategoryCountByClient" parameterType="string" resultType="int">
+	<select id="getMaterialCategoryCountByCondition" parameterType="java.util.Map" resultType="int">
 		SELECT count(1)
-		FROM MaterialCategory a WHERE 
-			a.Status= 1 and a.Client=#{clientId}
+		FROM MaterialCategory a WHERE a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
 	</select>
 	
 	<delete id="deleteMaterialCategoryByID" parameterType="string">
@@ -60,6 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
 			<if test= "code != null">Code=#{code,jdbcType=VARCHAR},</if >
 			<if test= "name != null">Name=#{name,jdbcType=VARCHAR},</if >
+			<if test= "parent != null">Super=#{parent.id,jdbcType=VARCHAR},</if >
 			<if test= "status != null">Status=#{status},</if >
 			<if test= "creator != null">Creator=#{creator},</if >
 			<if test= "created != null">Created=#{created},</if >
