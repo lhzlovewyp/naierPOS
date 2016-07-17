@@ -1,6 +1,7 @@
 package com.joker.common.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -20,25 +21,22 @@ public interface ColorMapper {
 	public Color getColorByID(String id);
 
 	/**
-	 * 根据商户查询颜色信息.
+	 * 查询颜色信息.
 	 * 
-	 * @param clientId
-	 * @param start
-	 * @param limit
+	 * @param map
 	 * @return
 	 */
 	@DataSource("slave")
-	public List<Color> getColorByClient(@Param("clientId") String clientId,
-			@Param("start") int start, @Param("limit") int limit);
+	public List<Color> getColorByCondition(Map<String, Object> map);
 
 	/**
-	 * 根据商户查询颜色信息.
+	 * 查询颜色信息.
 	 * 
-	 * @param clientId
+	 * @param map
 	 * @return
 	 */
 	@DataSource("slave")
-	public int getColorCountByClient(@Param("clientId") String clientId);
+	public int getColorCountByCondition(Map<String, Object> map);
 
 	/**
 	 * 删除颜色信息.

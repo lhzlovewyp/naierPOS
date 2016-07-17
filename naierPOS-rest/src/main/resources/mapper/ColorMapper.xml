@@ -24,22 +24,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE a.ID=#{id} 
 	</select>
 	
-	<select id="getColorByClient" parameterType="string" resultMap="color">
+	<select id="getColorByCondition" parameterType="java.util.Map" resultMap="color">
 		SELECT 
 			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
-		FROM Color a 
-		WHERE 
-			a.Status= 1 and a.Client=#{clientId}
+		FROM Color a
+		WHERE a.Status= 1 
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
 			order by a.ID desc
 			<if test="start != null and limit != null">
 				limit #{start},#{limit}
 			</if>
 	</select>
 	
-	<select id="getColorCountByClient" parameterType="string" resultType="int">
+	<select id="getColorCountByCondition" parameterType="string" resultType="int">
 		SELECT count(1)
-		FROM Color a WHERE 
-			a.Status= 1 and a.Client=#{clientId}
+		FROM Color a WHERE a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
 	</select>
 	
 	<delete id="deleteColorByID" parameterType="string">
