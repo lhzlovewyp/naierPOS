@@ -215,16 +215,13 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','Basics
 		var body = {};
 		body.id = id;
 		BasicsService.queryById(body,routePath).then(function(data){
-			if(routePath == 'color'){
-				data.clientId = data.client.id;
-				var selStatusValue = data.status;
-				for ( var i = 0; i < allStatus.length; i++) {
-					if(allStatus[i].value == selStatusValue){
-						$scope.selstatus = allStatus[i];	
-						break;
-					}
+			data.clientId = data.client.id;
+			var selStatusValue = data.status;
+			for ( var i = 0; i < allStatus.length; i++) {
+				if(allStatus[i].value == selStatusValue){
+					$scope.selstatus = allStatus[i];	
+					break;
 				}
-				
 			}
 			$scope.form = data;
         });

@@ -67,14 +67,6 @@ app.config(['$routeProvider','$locationProvider','$httpProvider', function ($rou
             templateUrl: function($routeParams){return '/backend/view/edit'+$routeParams.routePath.substr(0,1).toUpperCase()+$routeParams.routePath.substr(1)+'.html';},
             controller: 'routeEditBasicsCtl'
         })
-        .when('/backend/materialCategory', {
-            templateUrl: '/backend/view/materialCategory.html',
-            controller: 'routeBasicsCtl'
-        })
-        .when('/backend/editMaterialCategory', {
-            templateUrl: '/backend/view/editMaterialCategory.html',
-            controller: 'routeEditBasicsCtl'
-        })
         .when('/backend/unit', {
             templateUrl: '/backend/view/unit.html',
             controller: 'routeBasicsCtl'
