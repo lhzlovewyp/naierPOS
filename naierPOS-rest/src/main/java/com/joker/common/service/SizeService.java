@@ -3,6 +3,8 @@
  */
 package com.joker.common.service;
 
+import java.util.Map;
+
 import com.joker.common.model.Size;
 import com.joker.core.dto.Page;
 
@@ -23,13 +25,13 @@ public interface SizeService {
 	/**
 	 * 根据商户查询尺码信息.
 	 * 
-	 * @param clientId
-	 * @param start
+	 * @param map
+	 * @param pageNo
 	 * @param limit
 	 * @return
 	 */
-	public Page<Size> getSizePageByClient(String clientId, int start,
-			int limit);
+	public Page<Size> getSizePageByCondition(Map<String, Object> map,
+			int pageNo, int limit);
 
 	/**
 	 * 删除尺码信息.

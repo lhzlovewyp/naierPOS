@@ -1,5 +1,7 @@
 package com.joker.common.service;
 
+import java.util.Map;
+
 import com.joker.common.model.Material;
 import com.joker.core.dto.Page;
 
@@ -31,13 +33,13 @@ public interface MaterialService {
 	/**
 	 * 根据商户查询物料信息.
 	 * 
-	 * @param clientId
-	 * @param start
+	 * @param map
+	 * @param pageNo
 	 * @param limit
 	 * @return
 	 */
-	public Page<Material> getMaterialPageByClient(String clientId, int start,
-			int limit);
+	public Page<Material> getMaterialPageByCondition(
+			Map<String, Object> map, int pageNo, int limit);
 
 	/**
 	 * 删除物料信息.

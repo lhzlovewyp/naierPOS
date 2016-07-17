@@ -3,7 +3,9 @@
  */
 package com.joker.common.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
@@ -34,18 +36,29 @@ public class UnitConversionServiceImpl implements UnitConversionService {
 	/**
 	 * 根据商户查询单位换算信息.
 	 * 
-	 * @param clientId
-	 * @param start
+	 * @param map
+	 * @param pageNo
 	 * @param limit
 	 * @return
 	 */
 	@Override
-	public Page<UnitConversion> getUnitConversionPageByClient(String clientId,
-			int start, int limit) {
+	public Page<UnitConversion> getUnitConversionPageByCondition(
+			Map<String, Object> map, int pageNo, int limit) {
+		int start = (pageNo - 1) * limit;
+		if (map == null) {
+			map = new HashMap<String, Object>();
+		}
+		String clientId = null;
+		if (map.containsKey("clientId")) {
+			clientId = (String) map.get("clientId");
+		}
+		map.put("clientId", clientId);
+		map.put("start", start);
+		map.put("limit", limit);
 		Page<UnitConversion> page = new Page<UnitConversion>();
-		int totalRecord = mapper.getUnitConversionCountByClient(clientId);
-		List<UnitConversion> list = mapper.getUnitConversionByClient(clientId,
-				start, limit);
+		int totalRecord = mapper.getUnitConversionCountByCondition(map);
+		List<UnitConversion> list = mapper
+				.getUnitConversionPageByCondition(map);
 		page.setPageNo(start + 1);
 		page.setPageSize(limit);
 		page.setTotalRecord(totalRecord);

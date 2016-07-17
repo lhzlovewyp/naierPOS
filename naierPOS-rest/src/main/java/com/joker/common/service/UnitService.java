@@ -3,6 +3,8 @@
  */
 package com.joker.common.service;
 
+import java.util.Map;
+
 import com.joker.common.model.Unit;
 import com.joker.core.dto.Page;
 
@@ -23,13 +25,13 @@ public interface UnitService {
 	/**
 	 * 根据商户查询计量单位信息.
 	 * 
-	 * @param clientId
-	 * @param start
+	 * @param map
+	 * @param pageNo
 	 * @param limit
 	 * @return
 	 */
-	public Page<Unit> getUnitPageByClient(String clientId, int start,
-			int limit);
+	public Page<Unit> getUnitPageByCondition(Map<String, Object> map,
+			int pageNo, int limit);
 
 	/**
 	 * 删除计量单位信息.

@@ -23,7 +23,7 @@ public interface ColorService {
 	public Color getColorByID(String id);
 
 	/**
-	 * 根据商户查询颜色信息.
+	 * 查询颜色信息.
 	 * 
 	 * @param map
 	 * @param pageNo

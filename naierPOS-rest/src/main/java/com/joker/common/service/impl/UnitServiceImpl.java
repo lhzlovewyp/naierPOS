@@ -3,7 +3,9 @@
  */
 package com.joker.common.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
@@ -34,16 +36,28 @@ public class UnitServiceImpl implements UnitService {
 	/**
 	 * 根据商户查询计量单位信息.
 	 * 
-	 * @param clientId
-	 * @param start
+	 * @param map
+	 * @param pageNo
 	 * @param limit
 	 * @return
 	 */
 	@Override
-	public Page<Unit> getUnitPageByClient(String clientId, int start, int limit) {
+	public Page<Unit> getUnitPageByCondition(Map<String, Object> map,
+			int pageNo, int limit) {
+		int start = (pageNo - 1) * limit;
+		if (map == null) {
+			map = new HashMap<String, Object>();
+		}
+		String clientId = null;
+		if (map.containsKey("clientId")) {
+			clientId = (String) map.get("clientId");
+		}
+		map.put("clientId", clientId);
+		map.put("start", start);
+		map.put("limit", limit);
 		Page<Unit> page = new Page<Unit>();
-		int totalRecord = mapper.getUnitCountByClient(clientId);
-		List<Unit> list = mapper.getUnitByClient(clientId, start, limit);
+		int totalRecord = mapper.getUnitCountByCondition(map);
+		List<Unit> list = mapper.getUnitPageByCondition(map);
 		page.setPageNo(start + 1);
 		page.setPageSize(limit);
 		page.setTotalRecord(totalRecord);

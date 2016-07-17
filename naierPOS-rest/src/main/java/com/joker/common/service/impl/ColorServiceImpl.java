@@ -65,7 +65,7 @@ public class ColorServiceImpl implements ColorService {
 		Page<Color> page = new Page<Color>();
 		int totalRecord = mapper.getColorCountByCondition(map);
 
-		List<Color> list = mapper.getColorByCondition(map);
+		List<Color> list = mapper.getColorPageByCondition(map);
 		if (CollectionUtils.isNotEmpty(list)
 				&& StringUtils.isNotBlank(clientId)) {
 			Client client = clientMapper.getClientById(clientId);

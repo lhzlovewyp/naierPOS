@@ -3,6 +3,8 @@
  */
 package com.joker.common.service;
 
+import java.util.Map;
+
 import com.joker.common.model.Brand;
 import com.joker.core.dto.Page;
 
@@ -23,13 +25,13 @@ public interface BrandService {
 	/**
 	 * 根据商户查询品牌信息.
 	 * 
-	 * @param clientId
-	 * @param start
+	 * @param map
+	 * @param pageNo
 	 * @param limit
 	 * @return
 	 */
-	public Page<Brand> getBrandPageByClient(String clientId, int start,
-			int limit);
+	public Page<Brand> getBrandPageByCondition(Map<String, Object> map,
+			int pageNo, int limit);
 
 	/**
 	 * 删除品牌信息.

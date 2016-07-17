@@ -3,6 +3,8 @@
  */
 package com.joker.common.service;
 
+import java.util.Map;
+
 import com.joker.common.model.MaterialCategory;
 import com.joker.core.dto.Page;
 
@@ -21,15 +23,15 @@ public interface MaterialCategoryService {
 	public MaterialCategory getMaterialCategoryByID(String id);
 
 	/**
-	 * 根据商户查询品类信息.
+	 * 查询品类信息.
 	 * 
-	 * @param clientId
-	 * @param start
+	 * @param map
+	 * @param pageNo
 	 * @param limit
 	 * @return
 	 */
-	public Page<MaterialCategory> getMaterialCategoryPageByClient(
-			String clientId, int start, int limit);
+	public Page<MaterialCategory> getMaterialCategoryPageByCondition(
+			Map<String, Object> map, int pageNo, int limit);
 
 	/**
 	 * 删除品类信息.

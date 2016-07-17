@@ -3,7 +3,9 @@
  */
 package com.joker.common.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
@@ -34,18 +36,29 @@ public class MaterialCategoryServiceImpl implements MaterialCategoryService {
 	/**
 	 * 根据商户查询用户信息.
 	 * 
-	 * @param clientId
-	 * @param start
+	 * @param map
+	 * @param pageNo
 	 * @param limit
 	 * @return
 	 */
 	@Override
-	public Page<MaterialCategory> getMaterialCategoryPageByClient(
-			String clientId, int start, int limit) {
+	public Page<MaterialCategory> getMaterialCategoryPageByCondition(
+			Map<String, Object> map, int pageNo, int limit) {
+		int start = (pageNo - 1) * limit;
+		if (map == null) {
+			map = new HashMap<String, Object>();
+		}
+		String clientId = null;
+		if (map.containsKey("clientId")) {
+			clientId = (String) map.get("clientId");
+		}
+		map.put("clientId", clientId);
+		map.put("start", start);
+		map.put("limit", limit);
 		Page<MaterialCategory> page = new Page<MaterialCategory>();
-		int totalRecord = mapper.getMaterialCategoryCountByClient(clientId);
-		List<MaterialCategory> list = mapper.getMaterialCategoryByClient(
-				clientId, start, limit);
+		int totalRecord = mapper.getMaterialCategoryCountByCondition(map);
+		List<MaterialCategory> list = mapper
+				.getMaterialCategoryPageByCondition(map);
 		page.setPageNo(start + 1);
 		page.setPageSize(limit);
 		page.setTotalRecord(totalRecord);

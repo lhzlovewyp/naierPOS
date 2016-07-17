@@ -3,7 +3,9 @@
  */
 package com.joker.common.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
@@ -34,16 +36,28 @@ public class SizeServiceImpl implements SizeService {
 	/**
 	 * 根据商户查询尺码信息.
 	 * 
-	 * @param clientId
-	 * @param start
+	 * @param map
+	 * @param pageNo
 	 * @param limit
 	 * @return
 	 */
 	@Override
-	public Page<Size> getSizePageByClient(String clientId, int start, int limit) {
+	public Page<Size> getSizePageByCondition(Map<String, Object> map,
+			int pageNo, int limit) {
+		int start = (pageNo - 1) * limit;
+		if (map == null) {
+			map = new HashMap<String, Object>();
+		}
+		String clientId = null;
+		if (map.containsKey("clientId")) {
+			clientId = (String) map.get("clientId");
+		}
+		map.put("clientId", clientId);
+		map.put("start", start);
+		map.put("limit", limit);
 		Page<Size> page = new Page<Size>();
-		int totalRecord = mapper.getSizeCountByClient(clientId);
-		List<Size> list = mapper.getSizeByClient(clientId, start, limit);
+		int totalRecord = mapper.getSizeCountByCondition(map);
+		List<Size> list = mapper.getSizePageByCondition(map);
 		page.setPageNo(start + 1);
 		page.setPageSize(limit);
 		page.setTotalRecord(totalRecord);

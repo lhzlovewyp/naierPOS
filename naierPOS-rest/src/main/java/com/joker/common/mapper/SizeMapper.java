@@ -1,8 +1,8 @@
 package com.joker.common.mapper;
 
 import java.util.List;
+import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joker.common.model.Size;
@@ -20,26 +20,22 @@ public interface SizeMapper {
 	public Size getSizeByID(String id);
 
 	/**
-	 * 根据商户查询尺码信息.
+	 * 查询尺码信息.
 	 * 
-	 * @param clientId
-	 * @param start
-	 * @param limit
+	 * @param map
 	 * @return
 	 */
 	@DataSource("slave")
-	public List<Size> getSizeByClient(
-			@Param("clientId") String clientId, @Param("start") int start,
-			@Param("limit") int limit);
+	public List<Size> getSizePageByCondition(Map<String, Object> map);
 
 	/**
-	 * 根据商户查询尺码信息.
+	 * 查询尺码信息.
 	 * 
-	 * @param clientId
+	 * @param map
 	 * @return
 	 */
 	@DataSource("slave")
-	public int getSizeCountByClient(@Param("clientId") String clientId);
+	public int getSizeCountByCondition(Map<String, Object> map);
 
 	/**
 	 * 删除尺码信息.

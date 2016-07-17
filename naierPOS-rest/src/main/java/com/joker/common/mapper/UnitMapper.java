@@ -1,8 +1,8 @@
 package com.joker.common.mapper;
 
 import java.util.List;
+import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joker.common.model.Unit;
@@ -20,25 +20,22 @@ public interface UnitMapper {
 	public Unit getUnitByID(String id);
 
 	/**
-	 * 根据商户查询单位信息.
+	 * 查询单位信息.
 	 * 
-	 * @param clientId
-	 * @param start
-	 * @param limit
+	 * @param map
 	 * @return
 	 */
 	@DataSource("slave")
-	public List<Unit> getUnitByClient(@Param("clientId") String clientId,
-			@Param("start") int start, @Param("limit") int limit);
+	public List<Unit> getUnitPageByCondition(Map<String, Object> map);
 
 	/**
-	 * 根据商户查询单位信息.
+	 * 查询单位信息.
 	 * 
-	 * @param clientId
+	 * @param map
 	 * @return
 	 */
 	@DataSource("slave")
-	public int getUnitCountByClient(@Param("clientId") String clientId);
+	public int getUnitCountByCondition(Map<String, Object> map);
 
 	/**
 	 * 删除单位信息.

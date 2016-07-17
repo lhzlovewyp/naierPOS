@@ -24,47 +24,49 @@ import com.joker.core.dto.Page;
 
 /**
  * @author lvhaizhen
- *
+ * 
  */
 @Service
-public class MaterialServiceImpl implements MaterialService{
+public class MaterialServiceImpl implements MaterialService {
 
 	@Autowired
-    MaterialMapper mapper;
-	
+	MaterialMapper mapper;
+
 	@Autowired
 	MaterialPropertyService materialPropertyService;
-	
+
 	@Autowired
 	RetailPriceService retailPriceService;
 
 	@Override
-	public Material getMaterialByCode(String clientId,String code) {
-		Map<String,String> map = new HashMap<String,String>();
+	public Material getMaterialByCode(String clientId, String code) {
+		Map<String, String> map = new HashMap<String, String>();
 		map.put("clientId", clientId);
 		map.put("code", code);
-		Material mat=mapper.getMaterialByCondition(map);
+		Material mat = mapper.getMaterialByCondition(map);
 		initMaterial(mat);
 		return mat;
 	}
 
 	@Override
 	public Material getMaterialByBarCode(String clientId, String barCode) {
-		Map<String,String> map = new HashMap<String,String>();
+		Map<String, String> map = new HashMap<String, String>();
 		map.put("clientId", clientId);
 		map.put("barCode", barCode);
-		Material mat=mapper.getMaterialByCondition(map);
-		if(mat!=null){
+		Material mat = mapper.getMaterialByCondition(map);
+		if (mat != null) {
 			initMaterial(mat);
 		}
 		return mat;
 	}
-	
-	//初始化颜色、尺寸、价格信息.
-	private void initMaterial(Material mat){
-		if(mat.getProperty().equals(Constants.PROPERTY_YES)){
-			List<MaterialProperty> list = materialPropertyService.getMaterialPropertyByCode(mat.getClient().getId(),mat.getCode());
-			if(CollectionUtils.isNotEmpty(list)){
+
+	// 初始化颜色、尺寸、价格信息.
+	private void initMaterial(Material mat) {
+		if (mat.getProperty().equals(Constants.PROPERTY_YES)) {
+			List<MaterialProperty> list = materialPropertyService
+					.getMaterialPropertyByCode(mat.getClient().getId(),
+							mat.getCode());
+			if (CollectionUtils.isNotEmpty(list)) {
 				mat.setProperties(list);
 			}
 		}
@@ -76,11 +78,22 @@ public class MaterialServiceImpl implements MaterialService{
 	}
 
 	@Override
-	public Page<Material> getMaterialPageByClient(String clientId, int start,
-			int limit) {
+	public Page<Material> getMaterialPageByCondition(Map<String, Object> map,
+			int pageNo, int limit) {
+		int start = (pageNo - 1) * limit;
+		if (map == null) {
+			map = new HashMap<String, Object>();
+		}
+		String clientId = null;
+		if (map.containsKey("clientId")) {
+			clientId = (String) map.get("clientId");
+		}
+		map.put("clientId", clientId);
+		map.put("start", start);
+		map.put("limit", limit);
 		Page<Material> page = new Page<Material>();
-		int totalRecord = mapper.getMaterialCountByClient(clientId);
-		List<Material> list = mapper.getMaterialByClient(clientId, start, limit);
+		int totalRecord = mapper.getMaterialCountByCondition(map);
+		List<Material> list = mapper.getMaterialPageByCondition(map);
 		page.setPageNo(start + 1);
 		page.setPageSize(limit);
 		page.setTotalRecord(totalRecord);
@@ -90,10 +103,10 @@ public class MaterialServiceImpl implements MaterialService{
 
 	@Override
 	public void deleteMaterialByID(String id) {
-		if(StringUtils.isNotBlank(id)){
+		if (StringUtils.isNotBlank(id)) {
 			String[] ids = id.split(Constants.COMMA);
 			for (String oneId : ids) {
-				if(StringUtils.isNotBlank(oneId)){
+				if (StringUtils.isNotBlank(oneId)) {
 					mapper.deleteMaterialByID(oneId);
 				}
 			}

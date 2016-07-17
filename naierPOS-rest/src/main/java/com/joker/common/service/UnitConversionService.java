@@ -3,6 +3,8 @@
  */
 package com.joker.common.service;
 
+import java.util.Map;
+
 import com.joker.common.model.UnitConversion;
 import com.joker.core.dto.Page;
 
@@ -23,13 +25,13 @@ public interface UnitConversionService {
 	/**
 	 * 根据商户查询单位换算信息.
 	 * 
-	 * @param clientId
-	 * @param start
+	 * @param map
+	 * @param pageNo
 	 * @param limit
 	 * @return
 	 */
-	public Page<UnitConversion> getUnitConversionPageByClient(String clientId,
-			int start, int limit);
+	public Page<UnitConversion> getUnitConversionPageByCondition(
+			Map<String, Object> map, int pageNo, int limit);
 
 	/**
 	 * 删除单位换算信息.
