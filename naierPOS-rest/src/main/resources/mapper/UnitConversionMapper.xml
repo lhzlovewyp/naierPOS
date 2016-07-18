@@ -66,12 +66,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		DELETE FROM UnitConversion where ID =#{id}
 	</delete>
 	
-	<insert id="insertUnitConversion" parameterType="unit">
-		insert into UnitConversion <include refid="unitSet" />
+	<insert id="insertUnitConversion" parameterType="unitConversion">
+		insert into UnitConversion <include refid="unitConversionSet" />
 	</insert>
 	
-	<update id="updateUnitConversion" parameterType="unit" >
-		UPDATE UnitConversion <include refid="unitSet" /> WHERE ID = #{id}
+	<update id="updateUnitConversion" parameterType="unitConversion" >
+		UPDATE UnitConversion <include refid="unitConversionSet" /> WHERE ID = #{id}
 	</update>
     
     <sql id="unitConversionSet">
