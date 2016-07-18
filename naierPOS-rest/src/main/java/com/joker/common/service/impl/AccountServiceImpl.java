@@ -125,8 +125,14 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public void deleteAccountByID(String id) {
-		mapper.deleteAccountByID(id);
-
+		if(StringUtils.isNotBlank(id)){
+			String[] ids = id.split(Constants.COMMA);
+			for (String oneId : ids) {
+				if(StringUtils.isNotBlank(oneId)){
+					mapper.deleteAccountByID(oneId);
+				}
+			}
+		}
 	}
 
 	@Override

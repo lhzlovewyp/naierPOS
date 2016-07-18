@@ -12,10 +12,83 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="qtyA" column="QTYA" />
 		<result property="unitB.id" column="UnitB" />
 		<result property="qtyB" column="QTYB" />
+		<result property="desc" column="Desc" />
+		<result property="status" column="Status" />
+		<result property="creator" column="Creator" />
+		<result property="created" column="Created" />
+		<result property="editor" column="Editor" />
+		<result property="modified" column="Modified" />
 	</resultMap>
-	
-	<select id="getUnitConversion" resultType="unitConversion">
+    
+    <select id="getUnitConversion" resultType="unitConversion">
 		select * from UnitConversion
 		where Client=#{clientId} and UnitA=#{unitA} and UnitB=#{unitB}
 	</select>
+    
+	<select id="getUnitConversionByID" parameterType="string" resultMap="unitConversion">
+		SELECT 
+			a.ID,a.Client,a.UnitA,a.QtyA,a.UnitB,a.QtyB,a.Desc,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+		FROM UnitConversion a
+		WHERE a.ID=#{id} 
+	</select>
+	
+	<select id="getUnitConversionPageByCondition" parameterType="java.util.Map" resultMap="unitConversion">
+		SELECT 
+			a.ID,a.Client,a.UnitA,a.QtyA,a.UnitB,a.QtyB,a.Desc,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+		FROM UnitConversion a 
+		WHERE 
+			a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
+			order by a.ID desc
+			<if test="start != null and limit != null">
+				limit #{start},#{limit}
+			</if>
+	</select>
+	
+	<select id="getUnitConversionCountByCondition" parameterType="java.util.Map" resultType="int">
+		SELECT count(1)
+		FROM UnitConversion a WHERE 
+			a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
+	</select>
+	
+	<delete id="deleteUnitConversionByID" parameterType="string">
+		DELETE FROM UnitConversion where ID =#{id}
+	</delete>
+	
+	<insert id="insertUnitConversion" parameterType="unit">
+		insert into UnitConversion <include refid="unitSet" />
+	</insert>
+	
+	<update id="updateUnitConversion" parameterType="unit" >
+		UPDATE UnitConversion <include refid="unitSet" /> WHERE ID = #{id}
+	</update>
+    
+    <sql id="unitConversionSet">
+		<set >
+			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
+			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
+			<if test= "unitA != null">UnitA=#{unitA.id,jdbcType=VARCHAR},</if >
+			<if test= "qtyA != null">QtyA=#{qtyA,jdbcType=VARCHAR},</if >
+			<if test= "unitB != null">UnitB=#{unitB.id,jdbcType=VARCHAR},</if >
+			<if test= "qtyB != null">QtyB=#{qtyB,jdbcType=VARCHAR},</if >
+			<if test= "desc != null">Desc=#{desc,jdbcType=VARCHAR},</if >
+			<if test= "status != null">Status=#{status},</if >
+			<if test= "creator != null">Creator=#{creator},</if >
+			<if test= "created != null">Created=#{created},</if >
+			<if test= "editor != null">Editor=#{editor,jdbcType=VARCHAR},</if >
+			<if test= "modified != null">Modified=#{modified},</if >
+		</set>
+	</sql >
+    
 </mapper>

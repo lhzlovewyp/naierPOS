@@ -39,9 +39,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getAccountByClient" parameterType="string" resultMap="account">
 		SELECT 
 			a.ID,a.Client,s.Store,a.Name,a.Nick,a.Password,a.ChangePWD,a.DisplayPhoto,a.Status,a.Creator,a.Created,a.Editor,a.Modified
-		FROM Account a,AccountStore s 
+		FROM Account a left outer join AccountStore s 
+		on a.ID=s.Account and s.Status = 1
 		WHERE 
-			a.ID=s.Account and a.Status= 1 and s.Status = 1 and a.Client=#{clientId}
+			a.Status= 1 and a.Client=#{clientId}
 			order by a.ID desc
 			<if test="start != null and limit != null">
 				limit #{start},#{limit}
@@ -50,9 +51,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="getAccountCountByClient" parameterType="string" resultType="int">
 		SELECT count(1)
-		FROM Account a,AccountStore s 
-		WHERE 
-			a.ID=s.Account and a.Status= 1 and s.Status = 1 and a.Client=#{clientId} 
+		FROM Account a WHERE 
+			a.Status= 1 and a.Client=#{clientId}
 	</select>
 	
 	<delete id="deleteAccountByID" parameterType="string">

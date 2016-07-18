@@ -83,4 +83,5 @@ public class Constants {
 	public final static String SALE_TYPE_TRANSDISC="TRANSDISC";
 	//商品
 	public final static String SALE_TYPE_PROMDISC="PROMDISC";
+	public final static String COMMA = ",";
 }

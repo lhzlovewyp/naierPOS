@@ -24,7 +24,7 @@ public class BaseModel implements Serializable {
 	// 编辑者
 	private String editor;
 	// 编辑时间
-	private String modified;
+	private Date modified;
 	
 	private String status;
 
@@ -60,11 +60,11 @@ public class BaseModel implements Serializable {
 		this.editor = editor;
 	}
 
-	public String getModified() {
+	public Date getModified() {
 		return modified;
 	}
 
-	public void setModified(String modified) {
+	public void setModified(Date modified) {
 		this.modified = modified;
 	}
 

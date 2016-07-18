@@ -1,0 +1,58 @@
+<section class="content">
+	<div class="box">
+		<div class="box-header">
+			<h3 class="box-title">品牌管理</h3>
+		</div>
+		<div class="box-body">
+			<ul class="nav nav-tabs" id="myTab">
+				<li class="active"><a href="#detail">基本信息</a></li>
+			</ul>
+			<form class="form-horizontal" role="form" method="post"  name="basicsForm" id="basicsForm" ng-submit="edit(basicsForm.$valid)" novalidate>
+				<div class="tab-content" style="margin-top: 20px;">
+					<div class="tab-pane active" id="detail">
+						<div class="form-group">
+							<label for="ID" class="col-sm-2 control-label">GUID</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="ID" name="ID"
+									placeholder="GUID" ng-model="form.id">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="Client" class="col-sm-2 control-label">商户</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="Client"
+									name="Client" placeholder="商户" value="0" ng-model="form.clientId">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="Code" class="col-sm-2 control-label">品牌编码</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="Code" name="Code"
+									placeholder="品牌编码" ng-model="form.code">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="Name" class="col-sm-2 control-label">品牌名称</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="Name" name="Name"
+									placeholder="品牌名称" ng-model="form.name">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="Status" class="col-sm-2 control-label">状态</label>
+							<div class="col-sm-10">
+								<select id="status" name="status" class="form-control" ng-model="selstatus" ng-options="x.show for x in statuses">
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="button" class="btn btn-danger" ng-click="edit(basicsForm.$valid)">提交</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</section>

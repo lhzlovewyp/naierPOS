@@ -25,8 +25,12 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 	     <typeAlias type="com.joker.common.model.AccountRole" alias="accountRole" />
 	     <typeAlias type="com.joker.common.model.AccountStore" alias="accountStore" />
 	     <typeAlias type="com.joker.common.model.RetailConfig" alias="retailConfig" />
+	     <typeAlias type="com.joker.common.model.Brand" alias="brand" />
+	     <typeAlias type="com.joker.common.model.Color" alias="color" />
+	     <typeAlias type="com.joker.common.model.MaterialCategory" alias="materialCategory" />
+	     <typeAlias type="com.joker.common.model.Size" alias="size" />
 	     <typeAlias type="com.joker.common.model.Unit" alias="unit" />
-	     <typeAlias type="com.joker.common.model.UnitConversion" alias="UnitConversion" />
+	     <typeAlias type="com.joker.common.model.UnitConversion" alias="unitConversion" />
 	</typeAliases>
 
     <plugins>

@@ -47,14 +47,64 @@ app.config(['$routeProvider','$locationProvider','$httpProvider', function ($rou
             templateUrl: '/backend/view/main.html',
             controller: 'routeMainCtl'
         })
-        .when('/backend/account.html', {
+        .when('/backend/list/account', {
             templateUrl: '/backend/view/account.html',
             controller: 'routeAccountCtl'
         })
-        .when('/backend/addAccount.html', {
-            templateUrl: '/backend/view/addAccount.html',
+        .when('/backend/editAccount.html', {
+            templateUrl: '/backend/view/editAccount.html',
             controller: 'routeAddAccountCtl'
         })
-        
-        
+        .when('/backend/list/:routePath', {
+            templateUrl: function($routeParams){return '/backend/view/'+$routeParams.routePath+'.html';},
+            controller: 'routeBasicsCtl'
+        })
+        .when('/backend/add/:routePath', {
+            templateUrl: function($routeParams){return '/backend/view/edit'+$routeParams.routePath.substr(0,1).toUpperCase()+$routeParams.routePath.substr(1)+'.html';},
+            controller: 'routeEditBasicsCtl'
+        })
+        .when('/backend/edit/:routePath/:id', {
+            templateUrl: function($routeParams){return '/backend/view/edit'+$routeParams.routePath.substr(0,1).toUpperCase()+$routeParams.routePath.substr(1)+'.html';},
+            controller: 'routeEditBasicsCtl'
+        })
+        .when('/backend/unit', {
+            templateUrl: '/backend/view/unit.html',
+            controller: 'routeBasicsCtl'
+        })
+        .when('/backend/editUnit', {
+            templateUrl: '/backend/view/editUnit.html',
+            controller: 'routeEditBasicsCtl'
+        })
+        .when('/backend/unitConversion', {
+            templateUrl: '/backend/view/unitConversion.html',
+            controller: 'routeBasicsCtl'
+        })
+        .when('/backend/editUnitunitConversion', {
+            templateUrl: '/backend/view/editUnitunitConversion.html',
+            controller: 'routeEditBasicsCtl'
+        })
+        .when('/backend/brand', {
+            templateUrl: '/backend/view/brand.html',
+            controller: 'routeBasicsCtl'
+        })
+        .when('/backend/editBrand', {
+            templateUrl: '/backend/view/editBrand.html',
+            controller: 'routeEditBasicsCtl'
+        })        
+        .when('/backend/material', {
+            templateUrl: '/backend/view/material.html',
+            controller: 'routeBasicsCtl'
+        })
+        .when('/backend/editMaterial', {
+            templateUrl: '/backend/view/editMaterial.html',
+            controller: 'routeEditBasicsCtl'
+        })
+        .when('/backend/size', {
+            templateUrl: '/backend/view/size.html',
+            controller: 'routeBasicsCtl'
+        })
+        .when('/backend/editSize', {
+            templateUrl: '/backend/view/editSize.html',
+            controller: 'routeEditBasicsCtl'
+        })
 }]);

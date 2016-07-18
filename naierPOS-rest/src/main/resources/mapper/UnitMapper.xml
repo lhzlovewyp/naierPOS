@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.UnitMapper">
+     
+    
+    <resultMap type="unit" id="unit">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="name" column="Name" />
+		<result property="decimal" column="Decimal" />
+		<result property="status" column="Status" />
+		<result property="creator" column="Creator" />
+		<result property="created" column="Created" />
+		<result property="editor" column="Editor" />
+		<result property="modified" column="Modified" />
+	</resultMap>
+    
+	<select id="getUnitByID" parameterType="string" resultMap="unit">
+		SELECT 
+			a.ID,a.Client,a.Decimal,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+		FROM Unit a
+		WHERE a.ID=#{id} 
+	</select>
+	
+	<select id="getUnitPageByCondition" parameterType="java.util.Map" resultMap="unit">
+		SELECT 
+			a.ID,a.Client,a.Decimal,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+		FROM Unit a 
+		WHERE 
+			a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
+			order by a.ID desc
+			<if test="start != null and limit != null">
+				limit #{start},#{limit}
+			</if>
+	</select>
+	
+	<select id="getUnitCountByCondition" parameterType="java.util.Map" resultType="int">
+		SELECT count(1)
+		FROM Unit a WHERE 
+			a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
+	</select>
+	
+	<delete id="deleteUnitByID" parameterType="string">
+		DELETE FROM Unit where ID =#{id}
+	</delete>
+	
+	<insert id="insertUnit" parameterType="unit">
+		insert into Unit <include refid="unitSet" />
+	</insert>
+	
+	<update id="updateUnit" parameterType="unit" >
+		UPDATE Unit <include refid="unitSet" /> WHERE ID = #{id}
+	</update>
+    
+    <sql id="unitSet">
+		<set >
+			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
+			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
+			<if test= "decimal != null">Decimal=#{decimal,jdbcType=VARCHAR},</if >
+			<if test= "name != null">Name=#{name,jdbcType=VARCHAR},</if >
+			<if test= "status != null">Status=#{status},</if >
+			<if test= "creator != null">Creator=#{creator},</if >
+			<if test= "created != null">Created=#{created},</if >
+			<if test= "editor != null">Editor=#{editor,jdbcType=VARCHAR},</if >
+			<if test= "modified != null">Modified=#{modified},</if >
+		</set>
+	</sql >
+    
+</mapper>

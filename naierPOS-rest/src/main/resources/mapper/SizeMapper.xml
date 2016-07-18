@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.SizeMapper">
+     
+    
+    <resultMap type="size" id="size">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="code" column="Code" />
+		<result property="name" column="Name" />
+		<result property="status" column="Status" />
+		<result property="creator" column="Creator" />
+		<result property="created" column="Created" />
+		<result property="editor" column="Editor" />
+		<result property="modified" column="Modified" />
+	</resultMap>
+    
+	<select id="getSizeByID" parameterType="string" resultMap="size">
+		SELECT 
+			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+		FROM Size a
+		WHERE a.ID=#{id} 
+	</select>
+	
+	<select id="getSizePageByCondition" parameterType="java.util.Map" resultMap="size">
+		SELECT 
+			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+		FROM Size a 
+		WHERE a.Status= 1 
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
+			<if test="start != null and limit != null">
+				limit #{start},#{limit}
+			</if>
+	</select>
+	
+	<select id="getSizeCountByCondition" parameterType="java.util.Map" resultType="int">
+		SELECT count(1)
+		FROM Size a WHERE 
+			a.Status= 1 
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
+	</select>
+	
+	<delete id="deleteSizeByID" parameterType="string">
+		DELETE FROM Size where ID =#{id}
+	</delete>
+	
+	<insert id="insertSize" parameterType="size">
+		insert into Size <include refid="sizeSet" />
+	</insert>
+	
+	<update id="updateSize" parameterType="size" >
+		UPDATE Size <include refid="sizeSet" /> WHERE ID = #{id}
+	</update>
+    
+    <sql id="sizeSet">
+		<set >
+			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
+			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
+			<if test= "code != null">Code=#{code,jdbcType=VARCHAR},</if >
+			<if test= "name != null">Name=#{name,jdbcType=VARCHAR},</if >
+			<if test= "status != null">Status=#{status},</if >
+			<if test= "creator != null">Creator=#{creator},</if >
+			<if test= "created != null">Created=#{created},</if >
+			<if test= "editor != null">Editor=#{editor,jdbcType=VARCHAR},</if >
+			<if test= "modified != null">Modified=#{modified},</if >
+			
+		</set>
+	</sql >
+    
+</mapper>

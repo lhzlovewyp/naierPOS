@@ -1,0 +1,88 @@
+<style>
+    .page-list .pagination {float:left;}
+    .page-list .pagination span {cursor: pointer;}
+    .page-list .pagination .separate span{cursor: default; border-top:none;border-bottom:none;}
+    .page-list .pagination .separate span:hover {background: none;}
+    .page-list .page-total {float:left; margin: 25px 20px;}
+    .page-list .page-total input, .page-list .page-total select{height: 26px; border: 1px solid #ddd;}
+    .page-list .page-total input {width: 40px; padding-left:3px;}
+    .page-list .page-total select {width: 50px;}
+</style>
+<section class="content">
+	<div class="box">
+		<div class="box-header">
+			<h3 class="box-title">物料管理</h3>
+			<div class="box-tools">
+				<a class="btn btn-primary btn-flat" href="/backend/add/material"><i
+					class="fa fa-plus"></i> 添加</a> <a class="btn btn-danger btn-flat"
+					href="#"><i class="fa fa-minus" ng-click="del()"></i> 删除</a>
+			</div>
+		</div>
+		<div class="box-header">
+			<div class="input-group input-group-sm" style="width: 250px;">
+				<input type="text" name="table_search"
+					class="form-control pull-right" placeholder="搜索" id="input1" ng-model="likeName">
+				<div class="input-group-btn">
+					<button type="submit" class="btn btn-primary" ng-click="queryByPage()">
+						<i class="fa fa-search"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="box-header">
+			<div class="input-group input-group-sm" style="width: 250px;">
+				<input type="text" name="table_search"
+					class="form-control pull-right" placeholder="搜索" id="input1">
+				<div class="input-group-btn">
+					<button type="submit" class="btn btn-primary">
+						<i class="fa fa-search"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="box-body">
+			<div class="table-responsive mailbox-messages">
+				<table class="table table-hover">
+					<tr>
+						<th width="30"><button type="button"
+								class="btn btn-default btn-sm checkbox-toggle">
+								<i class="fa fa-square-o"></i>
+							</button></th>
+						<th>GUID</th>
+						<th>商户</th>
+						<th>图片</th>
+						<th>物料编码</th>
+						<th>物料名称</th>
+						<th>简称</th>
+						<th>品类</th>
+						<th>品牌</th>
+						<th>标准零售价</th>
+						<th>状态码</th>
+						<th>操作</th>
+					</tr>
+					<tr ng-repeat="result in basicsInfo.results"  on-render-finish>
+						<td align="center"><input type="checkbox" ng-click="check(result.id,chk)" ng-model="chk"></td>
+		                <td>{{result.id}}</td>
+		                <td>{{result.client.name}}</td>
+		                <td><img src="dist/images/avatar.png" width="50"></td>
+		                <td>{{result.code}}</td>
+		                <td>{{result.name}}</td>
+		                <td>{{result.abbr}}</td>
+		                <td>{{result.materialCategory.name}}</td>
+		                <td>{{result.brand.name}}</td>
+		                <td>{{result.retailPrice}}</td>
+						<td>{{result.status}}</td>
+						<td><a href="/backend/edit/brand/{{result.id}}" class="btn btn-info btn-xs">编辑</a></td>
+		            </tr>
+				</table>
+			</div>
+			<div class="row">
+				<div class="col-sm-5">
+					<div class="dataTables_info">{{basicsInfo.pageNo}}/{{basicsInfo.totalPage}}</div>
+				</div>
+				<tm-pagination conf="paginationConf"></tm-pagination>
+			</div>
+		</div>
+		<!-- /.box-body -->
+	</div>
+</section>

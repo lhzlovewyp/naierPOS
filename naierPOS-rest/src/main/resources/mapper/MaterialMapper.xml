@@ -33,5 +33,75 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="barCode !=null"> and Barcode=#{barCode}</if>
 		<if test="id !=null"> and ID=#{id}</if>		
 	</select>
-
+	
+	<select id="getMaterialByID" parameterType="string" resultMap="material">
+		SELECT 
+			ID,Client,Code,Name,Abbr,MaterialCategory,Brand,BasicUnit,SalesUnit,RetailPrice,BarCode,Property,Status,Creator,Created,Editor,Modified
+		FROM Material a
+		WHERE a.ID=#{id} 
+	</select>
+	
+	<select id="getMaterialPageByClient" parameterType="string" resultMap="material">
+		SELECT 
+			ID,Client,Code,Name,Abbr,MaterialCategory,Brand,BasicUnit,SalesUnit,RetailPrice,BarCode,Property,Status,Creator,Created,Editor,Modified
+		FROM Material a 
+		WHERE 
+			a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
+			order by a.ID desc
+			<if test="start != null and limit != null">
+				limit #{start},#{limit}
+			</if>
+	</select>
+	
+	<select id="getMaterialCountByCondition" parameterType="string" resultType="int">
+		SELECT count(1)
+		FROM Material a WHERE 
+			a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
+	</select>
+	
+	<delete id="deleteMaterialByID" parameterType="string">
+		DELETE FROM Material where ID =#{id}
+	</delete>
+	
+	<insert id="insertMaterial" parameterType="material">
+		insert into Material <include refid="materialSet" />
+	</insert>
+	
+	<update id="updateMaterial" parameterType="material" >
+		UPDATE Material <include refid="materialSet" /> WHERE ID = #{id}
+	</update>
+    
+    <sql id="materialSet">
+		<set >
+			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
+			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
+			<if test= "code != null">Code=#{code,jdbcType=VARCHAR},</if >
+			<if test= "name != null">Name=#{name,jdbcType=VARCHAR},</if >
+			<if test= "abbr != null">Abbr=#{abbr,jdbcType=VARCHAR},</if >
+			<if test= "category != null">MaterialCategory=#{category.id,jdbcType=VARCHAR},</if >
+			<if test= "brand != null">Brand=#{brand.id,jdbcType=VARCHAR},</if >
+			<if test= "basicUnit != null">BasicUnit=#{basicUnit.id,jdbcType=VARCHAR},</if >
+			<if test= "salesUnit != null">SalesUnit=#{salesUnit.id,jdbcType=VARCHAR},</if >
+			<if test= "retailprice != null">RetailPrice=#{retailprice,jdbcType=VARCHAR},</if >
+			<if test= "barcode != null">BarCode=#{barcode,jdbcType=VARCHAR},</if >
+			<if test= "property != null">Property=#{property,jdbcType=VARCHAR},</if >
+			<if test= "status != null">Status=#{status},</if >
+			<if test= "creator != null">Creator=#{creator},</if >
+			<if test= "created != null">Created=#{created},</if >
+			<if test= "editor != null">Editor=#{editor,jdbcType=VARCHAR},</if >
+			<if test= "modified != null">Modified=#{modified},</if >
+		</set>
+	</sql >
 </mapper>

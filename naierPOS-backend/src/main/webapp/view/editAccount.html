@@ -8,7 +8,6 @@
 				<li class="active"><a href="#Account">账户信息</a></li>
 				<li><a href="#Store">所属门店</a></li>
 				<li><a href="#Role">归属角色</a></li>
-				<li><a href="#updateTime">创建/更新</a></li>
 			</ul>
 			<form class="form-horizontal" role="form" method="post"  name="accountForm" id="accountForm" ng-submit="addAccount(accountForm.$valid)" novalidate>
 				<div class="tab-content" style="margin-top: 20px;">
@@ -17,43 +16,41 @@
 							<label for="id" class="col-sm-2 control-label">GUID</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control" id="id" name="id"
-									placeholder="GUID" ng-bind="form.id" ng-model="form.id" >
+									placeholder="GUID" ng-model="form.id" >
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="clientId" class="col-sm-2 control-label">商户</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control" id="clientId"
-									name="clientId" placeholder="商户" value="0" ng-bind="form.clientId" ng-model="form.clientId">
+									name="clientId" placeholder="商户" value="0" ng-model="form.clientId">
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="name" class="col-sm-2 control-label">账户</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control" id="name" name="name"
-									placeholder="账户" ng-bind="form.name" ng-model="form.name">
+									placeholder="账户" ng-model="form.name">
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="nick" class="col-sm-2 control-label">昵称</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control" id="nick" name="nick"
-									placeholder="昵称" ng-bind="form.nick" ng-model="form.nick">
+									placeholder="昵称" ng-model="form.nick">
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="password" class="col-sm-2 control-label">密码</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control" id="password"
-									name="password" placeholder="密码" ng-bind="form.password" ng-model="form.password">
+									name="password" placeholder="密码" ng-model="form.password">
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="status" class="col-sm-2 control-label">状态</label>
 							<div class="col-sm-10">
-								<select id="status" name="status" class="form-control" ng-bind="form.status" ng-model="form.status">
-									<option value="">有效</option>
-									<option value="">无效</option>
+								<select id="status" name="status" class="form-control" ng-model="selstatus" ng-options="x.show for x in statuses">
 								</select>
 							</div>
 						</div>
@@ -61,7 +58,7 @@
 							<div class="col-sm-offset-2 col-sm-10">
 								<div class="checkbox">
 									<label class="icheckbox"> <input type="checkbox"
-										value="1" id="changePWD" name="changePWD" ng-bind="form.changePWD" ng-model="form.changePWD"> 首次登录后强制修改密码
+										value="0" id="changePWD" name="changePWD" ng-model="form.changePWD"> 首次登录后强制修改密码
 									</label>
 								</div>
 							</div>
@@ -92,36 +89,6 @@
 									<option value="">店员2</option>
 									<option value="">店员3</option>
 								</select>
-							</div>
-						</div>
-					</div>
-					<div class="tab-pane" id="updateTime">
-						<div class="form-group">
-							<label for="Creator" class="col-sm-2 control-label">创建者</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" id="Creator"
-									name="Creator" value="Admin">
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="Created" class="col-sm-2 control-label">创建时间</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" id="Created"
-									name="Created" value="2016-06-22 11:37">
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="Editor" class="col-sm-2 control-label">最后修改者</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" id="Editor"
-									name="Editor" value="Admin" >
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="Modified" class="col-sm-2 control-label">最后修改时间</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" id="Modified"
-									name="Modified" value="2016-06-22 11:37">
 							</div>
 						</div>
 					</div>
