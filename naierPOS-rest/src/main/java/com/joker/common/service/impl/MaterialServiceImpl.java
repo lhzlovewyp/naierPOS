@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joker.common.Constant.Constants;
+import com.joker.common.mapper.ClientMapper;
 import com.joker.common.mapper.MaterialMapper;
+import com.joker.common.model.Client;
 import com.joker.common.model.Material;
 import com.joker.common.model.MaterialProperty;
 import com.joker.common.model.UnitConversion;
@@ -31,7 +33,7 @@ import com.joker.core.dto.Page;
  * 
  */
 @Service("materialService")
-public class MaterialServiceImpl implements MaterialService{
+public class MaterialServiceImpl implements MaterialService {
 
 	@Autowired
 	MaterialMapper mapper;
@@ -41,17 +43,20 @@ public class MaterialServiceImpl implements MaterialService{
 
 	@Autowired
 	RetailPriceService retailPriceService;
-	
+
 	@Autowired
 	UnitConversionService unitConversionService;
+
+	@Autowired
+	ClientMapper clientMapper;
 
 	@Override
 	public Material getMaterialByCode(String clientId, String code) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("clientId", clientId);
 		map.put("code", code);
-		Material mat=mapper.getMaterialByCondition(map);
-		if(mat!=null){
+		Material mat = mapper.getMaterialByCondition(map);
+		if (mat != null) {
 			initMaterial(mat);
 			initUnitConversion(mat);
 		}
@@ -70,12 +75,13 @@ public class MaterialServiceImpl implements MaterialService{
 		}
 		return mat;
 	}
+
 	@Override
 	public Material getMaterialById(String id) {
-		Map<String,String> map = new HashMap<String,String>();
+		Map<String, String> map = new HashMap<String, String>();
 		map.put("id", id);
-		Material mat=mapper.getMaterialByCondition(map);
-		if(mat!=null){
+		Material mat = mapper.getMaterialByCondition(map);
+		if (mat != null) {
 			initMaterial(mat);
 			initUnitConversion(mat);
 		}
@@ -93,28 +99,29 @@ public class MaterialServiceImpl implements MaterialService{
 			}
 		}
 	}
-	
-	private void initUnitConversion(Material mat){
-		if(mat.getSalesConversion() != null){
-			return ;
+
+	private void initUnitConversion(Material mat) {
+		if (mat.getSalesConversion() != null) {
+			return;
 		}
-		//如果销售单位=基本单位，设置为1.
-		if(mat.getBasicUnit().getId().equals(mat.getSalesUnit().getId())){
+		// 如果销售单位=基本单位，设置为1.
+		if (mat.getBasicUnit().getId().equals(mat.getSalesUnit().getId())) {
 			mat.setSalesConversion(new BigDecimal(1));
-			return ;
+			return;
 		}
-		//获取销售单位和基本单位的换算关系.
-		
-		UnitConversion conversion = unitConversionService.getUnitConversion(mat.getClient().getId(), mat.getSalesUnit().getId(), mat.getBasicUnit().getId());
-		if(conversion == null){
+		// 获取销售单位和基本单位的换算关系.
+
+		UnitConversion conversion = unitConversionService.getUnitConversion(mat
+				.getClient().getId(), mat.getSalesUnit().getId(), mat
+				.getBasicUnit().getId());
+		if (conversion == null) {
 			mat.setSalesConversion(new BigDecimal(1));
-			return ;
+			return;
 		}
-		BigDecimal saleConversion= conversion.getQtyB().divide(conversion.getQtyA());
+		BigDecimal saleConversion = conversion.getQtyB().divide(
+				conversion.getQtyA());
 		mat.setSalesConversion(NumberUtil.round(saleConversion, 2, 4));
 	}
-
-	
 
 	@Override
 	public Material getMaterialByID(String id) {
@@ -138,6 +145,15 @@ public class MaterialServiceImpl implements MaterialService{
 		Page<Material> page = new Page<Material>();
 		int totalRecord = mapper.getMaterialCountByCondition(map);
 		List<Material> list = mapper.getMaterialPageByCondition(map);
+		if (CollectionUtils.isNotEmpty(list)
+				&& StringUtils.isNotBlank(clientId)) {
+			Client client = clientMapper.getClientById(clientId);
+			if (client != null && StringUtils.isNotBlank(client.getName())) {
+				for (Material material : list) {
+					material.setClient(client);
+				}
+			}
+		}
 		page.setPageNo(start + 1);
 		page.setPageSize(limit);
 		page.setTotalRecord(totalRecord);

@@ -8,12 +8,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joker.common.Constant.Constants;
+import com.joker.common.mapper.ClientMapper;
 import com.joker.common.mapper.SizeMapper;
+import com.joker.common.model.Client;
+import com.joker.common.model.Color;
 import com.joker.common.model.Size;
 import com.joker.common.service.SizeService;
 import com.joker.core.dto.Page;
@@ -27,6 +31,9 @@ public class SizeServiceImpl implements SizeService {
 
 	@Autowired
 	SizeMapper mapper;
+	
+	@Autowired
+	ClientMapper clientMapper;
 
 	@Override
 	public Size getSizeByID(String id) {
@@ -58,6 +65,15 @@ public class SizeServiceImpl implements SizeService {
 		Page<Size> page = new Page<Size>();
 		int totalRecord = mapper.getSizeCountByCondition(map);
 		List<Size> list = mapper.getSizePageByCondition(map);
+		if (CollectionUtils.isNotEmpty(list)
+				&& StringUtils.isNotBlank(clientId)) {
+			Client client = clientMapper.getClientById(clientId);
+			if (client != null && StringUtils.isNotBlank(client.getName())) {
+				for (Size size : list) {
+					size.setClient(client);
+				}
+			}
+		}
 		page.setPageNo(start + 1);
 		page.setPageSize(limit);
 		page.setTotalRecord(totalRecord);

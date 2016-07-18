@@ -8,12 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joker.common.Constant.Constants;
+import com.joker.common.mapper.ClientMapper;
 import com.joker.common.mapper.MaterialCategoryMapper;
+import com.joker.common.model.Client;
 import com.joker.common.model.MaterialCategory;
 import com.joker.common.service.MaterialCategoryService;
 import com.joker.core.dto.Page;
@@ -27,6 +30,9 @@ public class MaterialCategoryServiceImpl implements MaterialCategoryService {
 
 	@Autowired
 	MaterialCategoryMapper mapper;
+
+	@Autowired
+	ClientMapper clientMapper;
 
 	@Override
 	public MaterialCategory getMaterialCategoryByID(String id) {
@@ -59,6 +65,15 @@ public class MaterialCategoryServiceImpl implements MaterialCategoryService {
 		int totalRecord = mapper.getMaterialCategoryCountByCondition(map);
 		List<MaterialCategory> list = mapper
 				.getMaterialCategoryPageByCondition(map);
+		if (CollectionUtils.isNotEmpty(list)
+				&& StringUtils.isNotBlank(clientId)) {
+			Client client = clientMapper.getClientById(clientId);
+			if (client != null && StringUtils.isNotBlank(client.getName())) {
+				for (MaterialCategory materialCategory : list) {
+					materialCategory.setClient(client);
+				}
+			}
+		}
 		page.setPageNo(start + 1);
 		page.setPageSize(limit);
 		page.setTotalRecord(totalRecord);

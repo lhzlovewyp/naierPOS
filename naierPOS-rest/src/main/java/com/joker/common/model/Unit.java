@@ -17,7 +17,7 @@ public class Unit extends BaseModel {
 	// 单元描述
 	private String name;
 	// 小数位
-	private int decimal;
+	private int unitNum;
 
 	public Client getClient() {
 		return client;
@@ -35,12 +35,11 @@ public class Unit extends BaseModel {
 		this.name = name;
 	}
 
-	public int getDecimal() {
-		return decimal;
+	public int getUnitNum() {
+		return unitNum;
 	}
 
-	public void setDecimal(int decimal) {
-		this.decimal = decimal;
+	public void setUnitNum(int unitNum) {
+		this.unitNum = unitNum;
 	}
-
 }

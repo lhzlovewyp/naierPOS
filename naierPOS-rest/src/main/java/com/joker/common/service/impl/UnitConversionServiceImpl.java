@@ -6,7 +6,9 @@ package com.joker.common.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.joker.common.mapper.ClientMapper;
 import com.joker.common.mapper.UnitConversionMapper;
+import com.joker.common.model.Client;
 import com.joker.common.model.UnitConversion;
 import com.joker.common.service.UnitConversionService;
 
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.joker.common.Constant.Constants;
@@ -29,13 +32,15 @@ public class UnitConversionServiceImpl implements UnitConversionService {
 
 	@Autowired
 	UnitConversionMapper mapper;
-	
+
+	@Autowired
+	ClientMapper clientMapper;
+
 	@Override
 	public UnitConversion getUnitConversion(String clientId, String unitA,
 			String unitB) {
 		return mapper.getUnitConversion(clientId, unitA, unitB);
 	}
-
 
 	@Override
 	public UnitConversion getUnitConversionByID(String id) {
@@ -68,6 +73,15 @@ public class UnitConversionServiceImpl implements UnitConversionService {
 		int totalRecord = mapper.getUnitConversionCountByCondition(map);
 		List<UnitConversion> list = mapper
 				.getUnitConversionPageByCondition(map);
+		if (CollectionUtils.isNotEmpty(list)
+				&& StringUtils.isNotBlank(clientId)) {
+			Client client = clientMapper.getClientById(clientId);
+			if (client != null && StringUtils.isNotBlank(client.getName())) {
+				for (UnitConversion unitConversion : list) {
+					unitConversion.setClient(client);
+				}
+			}
+		}
 		page.setPageNo(start + 1);
 		page.setPageSize(limit);
 		page.setTotalRecord(totalRecord);
