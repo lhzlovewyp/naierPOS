@@ -64,6 +64,8 @@ public class Promotion extends BaseModel{
 	//互斥促销活动
 	private String excluded;
 	
+	private String offerRelation;
+	
 	//促销支付限制
 	private List<PromotionPayment> promotionPayments;
 	//促销优惠
@@ -170,6 +172,12 @@ public class Promotion extends BaseModel{
 	}
 	public void setStore(Store store) {
 		this.store = store;
+	}
+	public String getOfferRelation() {
+		return offerRelation;
+	}
+	public void setOfferRelation(String offerRelation) {
+		this.offerRelation = offerRelation;
 	}
 	
 }

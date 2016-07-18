@@ -27,9 +27,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getMaterialByCondition" resultMap="material">
 		select ID,Client,Code,Name,Abbr,MaterialCategory,Brand,BasicUnit,SalesUnit,RetailPrice,BarCode,Property,Status,Creator,Created,Editor,Modified
 		from Material
-		where Status='1' and  Client=#{clientId} 
+		where Status='1' 
+		<if test="clientId !=null"> and Client=#{clientId}</if>
 		<if test="code !=null"> and code=#{code}</if>
-		<if test="barCode !=null"> and Barcode=#{barCode}</if>		
+		<if test="barCode !=null"> and Barcode=#{barCode}</if>
+		<if test="id !=null"> and ID=#{id}</if>		
 	</select>
 	
 	<select id="getMaterialByID" parameterType="string" resultMap="material">

@@ -33,7 +33,7 @@ public class SalesOrder extends BaseModel{
 	//会员编号
 	private String member;
 	//导购员
-	private ShoppingGuide shppingGuide;
+	private ShoppingGuide shoppingGuide;
 	//销售总数
 	private BigDecimal quantity;
 	//销售金额
@@ -109,12 +109,12 @@ public class SalesOrder extends BaseModel{
 		this.member = member;
 	}
 
-	public ShoppingGuide getShppingGuide() {
-		return shppingGuide;
+	public ShoppingGuide getShoppingGuide() {
+		return shoppingGuide;
 	}
 
-	public void setShppingGuide(ShoppingGuide shppingGuide) {
-		this.shppingGuide = shppingGuide;
+	public void setShoppingGuide(ShoppingGuide shoppingGuide) {
+		this.shoppingGuide = shoppingGuide;
 	}
 
 	public BigDecimal getQuantity() {

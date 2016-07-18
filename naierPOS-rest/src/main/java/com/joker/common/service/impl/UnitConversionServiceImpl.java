@@ -3,19 +3,21 @@
  */
 package com.joker.common.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.joker.common.mapper.UnitConversionMapper;
+import com.joker.common.model.UnitConversion;
+import com.joker.common.service.UnitConversionService;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.joker.common.Constant.Constants;
-import com.joker.common.mapper.UnitConversionMapper;
-import com.joker.common.model.UnitConversion;
-import com.joker.common.service.UnitConversionService;
 import com.joker.core.dto.Page;
 
 /**
@@ -27,6 +29,13 @@ public class UnitConversionServiceImpl implements UnitConversionService {
 
 	@Autowired
 	UnitConversionMapper mapper;
+	
+	@Override
+	public UnitConversion getUnitConversion(String clientId, String unitA,
+			String unitB) {
+		return mapper.getUnitConversion(clientId, unitA, unitB);
+	}
+
 
 	@Override
 	public UnitConversion getUnitConversionByID(String id) {

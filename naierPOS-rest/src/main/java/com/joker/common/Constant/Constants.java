@@ -19,15 +19,15 @@ public class Constants {
 	
 	
 	//促销类型
-	//折扣
+	/**折扣*/
 	public final static String PROMOTION_DISC="DISC";
-	//折让
+	/**折让*/
 	public final static String PROMOTION_RED="RED";
-	//特价
+	/**特价*/
 	public final static String PROMOTION_SPCL="SPCL";
-	//赠送商品.
+	/**赠送商品.*/
 	public final static String PROMOTION_FREE="FREE";
-	//加价购买.
+	/**加价购买.*/
 	public final static String PROMOTION_EXT="EXT";
 	
 	//促销类型
@@ -74,5 +74,14 @@ public class Constants {
 	//百胜会员积分
 	public final static String PAYMENT_BS_POINT="BS_POINT";
 	
+	//销售单明细类型.
+	//商品
+	public final static String SALE_TYPE_MAT="MAT";
+	//商品
+	public final static String SALE_TYPE_ITEMDISC="ITEMDISC";
+	//商品
+	public final static String SALE_TYPE_TRANSDISC="TRANSDISC";
+	//商品
+	public final static String SALE_TYPE_PROMDISC="PROMDISC";
 	public final static String COMMA = ",";
 }

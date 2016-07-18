@@ -20,8 +20,15 @@ public interface MaterialService {
 	 * @param username
 	 * @return
 	 */
-	public Material getMaterialByBarCode(String clientId, String barCode);
-
+	public Material getMaterialByBarCode(String clientId,String barCode);
+	
+	/**
+	 * 查询物料信息.
+	 * @param username
+	 * @return
+	 */
+	public Material getMaterialById(String id);
+	
 	/**
 	 * 根据id查询物料信息.
 	 * 

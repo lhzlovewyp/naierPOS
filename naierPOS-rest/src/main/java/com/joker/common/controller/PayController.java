@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONObject;
+import com.joker.common.dto.SaleDto;
 import com.joker.common.model.Account;
 import com.joker.common.model.ClientPayment;
 import com.joker.common.service.ClientPaymentService;
@@ -22,6 +24,10 @@ import com.joker.core.controller.AbstractController;
 import com.joker.core.dto.ParamsBody;
 import com.joker.core.dto.ReturnBody;
 
+/**
+ * @author lvhaizhen
+ *
+ */
 @RestController
 public class PayController extends AbstractController {
 
@@ -45,4 +51,7 @@ public class PayController extends AbstractController {
 		}
 		return rbody;
 	}
+	
+	
+	
 }

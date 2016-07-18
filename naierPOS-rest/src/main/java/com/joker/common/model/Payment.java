@@ -3,6 +3,8 @@
  */
 package com.joker.common.model;
 
+import java.math.BigDecimal;
+
 /**
  * 
  * 支付方式.
@@ -20,6 +22,7 @@ public class Payment extends BaseModel{
 	
 	private String name;
 
+
 	public String getCode() {
 		return code;
 	}
@@ -35,6 +38,8 @@ public class Payment extends BaseModel{
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	
 	
 	
 }

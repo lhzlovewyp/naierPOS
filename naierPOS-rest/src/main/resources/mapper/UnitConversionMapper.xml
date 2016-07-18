@@ -9,9 +9,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="id" column="ID" />
 		<result property="client.id" column="Client" />
 		<result property="unitA.id" column="UnitA" />
-		<result property="qtyA" column="QtyA" />
+		<result property="qtyA" column="QTYA" />
 		<result property="unitB.id" column="UnitB" />
-		<result property="qtyB" column="QtyB" />
+		<result property="qtyB" column="QTYB" />
 		<result property="desc" column="Desc" />
 		<result property="status" column="Status" />
 		<result property="creator" column="Creator" />
@@ -19,6 +19,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="editor" column="Editor" />
 		<result property="modified" column="Modified" />
 	</resultMap>
+    
+    <select id="getUnitConversion" resultType="unitConversion">
+		select * from UnitConversion
+		where Client=#{clientId} and UnitA=#{unitA} and UnitB=#{unitB}
+	</select>
     
 	<select id="getUnitConversionByID" parameterType="string" resultMap="unitConversion">
 		SELECT 
@@ -61,12 +66,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		DELETE FROM UnitConversion where ID =#{id}
 	</delete>
 	
-	<insert id="insertUnitConversion" parameterType="unit">
-		insert into UnitConversion <include refid="unitSet" />
+	<insert id="insertUnitConversion" parameterType="unitConversion">
+		insert into UnitConversion <include refid="unitConversionSet" />
 	</insert>
 	
-	<update id="updateUnitConversion" parameterType="unit" >
-		UPDATE UnitConversion <include refid="unitSet" /> WHERE ID = #{id}
+	<update id="updateUnitConversion" parameterType="unitConversion" >
+		UPDATE UnitConversion <include refid="unitConversionSet" /> WHERE ID = #{id}
 	</update>
     
     <sql id="unitConversionSet">

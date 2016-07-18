@@ -25,4 +25,11 @@ public interface SalesConfigService {
 	 * @return
 	 */
 	public int insertSalesConfig(SalesConfig salesConfig);
+	
+	/**
+	 * 获取当前最大销售序列号.
+	 * @param account
+	 * @return
+	 */
+	public int getSaleMaxCode(Account account);
 }

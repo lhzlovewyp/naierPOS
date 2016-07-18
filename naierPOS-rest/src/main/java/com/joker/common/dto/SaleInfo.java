@@ -1,14 +1,17 @@
 package com.joker.common.dto;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.joker.common.model.Brand;
 import com.joker.common.model.Client;
 import com.joker.common.model.Color;
+import com.joker.common.model.ItemClass;
 import com.joker.common.model.Material;
 import com.joker.common.model.MaterialCategory;
 import com.joker.common.model.Size;
 import com.joker.common.model.Unit;
+import com.joker.common.model.promotion.Promotion;
 
 /**
  * 
@@ -19,6 +22,8 @@ import com.joker.common.model.Unit;
  */
 public class SaleInfo {
 
+	//前台显示的序号.
+	private String sort;
 	//商户
 	private Client client;
 	
@@ -43,7 +48,7 @@ public class SaleInfo {
 	
 	private Size size;
 	
-	//销售单类型：空-商品，1-单项折扣 2-整单折扣
+	//销售单类型：空-商品，1-单项折扣 2-整单折扣 ,3-促销折扣 4-促销相关商品.
 	private String type;
 	//1-单项折扣 2-整单折扣
 	private String discType;
@@ -55,10 +60,31 @@ public class SaleInfo {
 	private BigDecimal retailPrice;
 	//商品总价.
 	private BigDecimal totalPrice;
-	
+	//折扣信息.
 	private DictDto dict;
 	
+	//单项折扣金额.
+	private BigDecimal discount ;
+	
+	//活动折扣.
+	private Promotion promotion;
+	
+	//明细类型.MAT:商品 ITEMDISC:折扣折让 TRANSDISC:整单折扣 PROMDISC:促销折扣
+	private ItemClass itemClass;
+	
+	//如果是促销活动类型，存储参加当前促销活动的物料信息.
+	private List<SaleInfo> promotionDetails;
 
+	
+	public void addItemClassCode(String itemCode){
+		if(itemClass ==null){
+			itemClass=new ItemClass();
+			itemClass.setCode(itemCode);
+		}else{
+			itemClass.setCode(itemCode);
+		}
+	}
+	
 	public String getDiscType() {
 		return discType;
 	}
@@ -68,7 +94,7 @@ public class SaleInfo {
 	}
 
 	public Material getMaterial() {
-		return material;
+		return this.material;
 	}
 
 	public void setMaterial(Material material) {
@@ -91,8 +117,11 @@ public class SaleInfo {
 		this.retailPrice = retailPrice;
 	}
 
-	public BigDecimal getSaleInfoTotlaPrice() {
-		return this.retailPrice.multiply(new BigDecimal(this.count));
+	public BigDecimal getSaleInfoTotalPrice() {
+		if(this.retailPrice!=null && this.count!=null){
+			return this.retailPrice.multiply(new BigDecimal(this.count));
+		}
+		return new BigDecimal(0);
 	}
 
 	public Client getClient() {
@@ -213,6 +242,46 @@ public class SaleInfo {
 
 	public void setSize(Size size) {
 		this.size = size;
+	}
+
+	public ItemClass getItemClass() {
+		return itemClass;
+	}
+
+	public void setItemClass(ItemClass itemClass) {
+		this.itemClass = itemClass;
+	}
+
+	public BigDecimal getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(BigDecimal discount) {
+		this.discount = discount;
+	}
+
+	public Promotion getPromotion() {
+		return promotion;
+	}
+
+	public void setPromotion(Promotion promotion) {
+		this.promotion = promotion;
+	}
+
+	public String getSort() {
+		return sort;
+	}
+
+	public void setSort(String sort) {
+		this.sort = sort;
+	}
+
+	public List<SaleInfo> getPromotionDetails() {
+		return promotionDetails;
+	}
+
+	public void setPromotionDetails(List<SaleInfo> promotionDetails) {
+		this.promotionDetails = promotionDetails;
 	}
 	
 }

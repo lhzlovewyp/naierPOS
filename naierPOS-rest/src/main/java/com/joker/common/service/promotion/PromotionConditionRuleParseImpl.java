@@ -80,7 +80,7 @@ public class PromotionConditionRuleParseImpl implements PromotionConditionRulePa
 				if(CollectionUtils.isNotEmpty(promotionCondition.getPromotionConditionMatchContents())){
 					for(PromotionConditionMatchContent content:promotionCondition.getPromotionConditionMatchContents()){
 						for(SaleInfo info:saleInfos){
-							if(StringUtils.isEmpty(info.getDiscType()) && info.getMaterial().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
+							if(StringUtils.isEmpty(info.getDiscType()) && info.getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
 								num+=info.getCount();
 							}
 						}
@@ -143,7 +143,7 @@ public class PromotionConditionRuleParseImpl implements PromotionConditionRulePa
 						for(PromotionConditionMatchContent content:promotionCondition.getPromotionConditionMatchContents()){
 							for(SaleInfo info:saleInfos){
 								if(StringUtils.isEmpty(info.getDiscType()) && info.getMaterial().getCategory().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
-									amount=amount.add(info.getSaleInfoTotlaPrice());
+									amount=amount.add(info.getSaleInfoTotalPrice());
 								}
 							}
 						}
@@ -153,7 +153,7 @@ public class PromotionConditionRuleParseImpl implements PromotionConditionRulePa
 					for(PromotionConditionMatchContent content:promotionCondition.getPromotionConditionMatchContents()){
 						for(SaleInfo info:saleInfos){
 							if(StringUtils.isEmpty(info.getDiscType()) && info.getMaterial().getBrand().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
-								amount=amount.add(info.getSaleInfoTotlaPrice());
+								amount=amount.add(info.getSaleInfoTotalPrice());
 							}
 						}
 					}
@@ -162,8 +162,8 @@ public class PromotionConditionRuleParseImpl implements PromotionConditionRulePa
 				if(CollectionUtils.isNotEmpty(promotionCondition.getPromotionConditionMatchContents())){
 					for(PromotionConditionMatchContent content:promotionCondition.getPromotionConditionMatchContents()){
 						for(SaleInfo info:saleInfos){
-							if(StringUtils.isEmpty(info.getDiscType()) && info.getMaterial().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
-								amount=amount.add(info.getSaleInfoTotlaPrice());
+							if(StringUtils.isEmpty(info.getDiscType()) && info.getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
+								amount=amount.add(info.getSaleInfoTotalPrice());
 							}
 						}
 					}
@@ -179,7 +179,7 @@ public class PromotionConditionRuleParseImpl implements PromotionConditionRulePa
 								continue;
 							}
 						}
-						amount=amount.add(info.getSaleInfoTotlaPrice());
+						amount=amount.add(info.getSaleInfoTotalPrice());
 					}
 				}
 			
@@ -191,7 +191,7 @@ public class PromotionConditionRuleParseImpl implements PromotionConditionRulePa
 								continue;
 							}
 						}
-						amount=amount.add(info.getSaleInfoTotlaPrice());
+						amount=amount.add(info.getSaleInfoTotalPrice());
 					}
 			}
 			
@@ -203,7 +203,7 @@ public class PromotionConditionRuleParseImpl implements PromotionConditionRulePa
 								continue;
 							}
 						}
-						amount=amount.add(info.getSaleInfoTotlaPrice());
+						amount=amount.add(info.getSaleInfoTotalPrice());
 					}
 				}
 			}
@@ -213,7 +213,7 @@ public class PromotionConditionRuleParseImpl implements PromotionConditionRulePa
 	
 	//整单金额
 	private boolean ttlAmtValidate(){
-		if(promotionCondition.getCondition().compareTo(saleDto.getTotalPrice())>=0){
+		if(promotionCondition.getCondition().compareTo(saleDto.getTotalPrice())<0){
 			return true;
 		}
 		return false;
