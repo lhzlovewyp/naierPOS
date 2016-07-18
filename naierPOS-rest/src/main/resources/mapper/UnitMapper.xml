@@ -9,7 +9,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="id" column="ID" />
 		<result property="client.id" column="Client" />
 		<result property="name" column="Name" />
-		<result property="decimal" column="Decimal" />
+		<result property="unitNum" column="UnitNum" />
 		<result property="status" column="Status" />
 		<result property="creator" column="Creator" />
 		<result property="created" column="Created" />
@@ -19,14 +19,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
 	<select id="getUnitByID" parameterType="string" resultMap="unit">
 		SELECT 
-			a.ID,a.Client,a.Decimal,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+			a.ID,a.Client,a.UnitNum,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
 		FROM Unit a
 		WHERE a.ID=#{id} 
 	</select>
 	
 	<select id="getUnitPageByCondition" parameterType="java.util.Map" resultMap="unit">
 		SELECT 
-			a.ID,a.Client,a.Decimal,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+			a.ID,a.Client,a.UnitNum,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
 		FROM Unit a 
 		WHERE 
 			a.Status= 1
@@ -70,8 +70,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<set >
 			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
 			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
-			<if test= "decimal != null">Decimal=#{decimal,jdbcType=VARCHAR},</if >
 			<if test= "name != null">Name=#{name,jdbcType=VARCHAR},</if >
+			<if test= "unitNum != null">UnitNum=#{unitNum},</if >
 			<if test= "status != null">Status=#{status},</if >
 			<if test= "creator != null">Creator=#{creator},</if >
 			<if test= "created != null">Created=#{created},</if >

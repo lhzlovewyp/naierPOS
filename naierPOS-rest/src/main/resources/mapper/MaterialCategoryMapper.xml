@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE a.ID=#{id} 
 	</select>
 	
-	<select id="getMaterialCategoryByCondition" parameterType="java.util.Map" resultMap="materialCategory">
+	<select id="getMaterialCategoryPageByCondition" parameterType="java.util.Map" resultMap="materialCategory">
 		SELECT 
 			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
 		FROM MaterialCategory a 
