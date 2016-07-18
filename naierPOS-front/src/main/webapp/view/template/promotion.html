@@ -1,0 +1,22 @@
+
+<div class="modal-content">
+	<div class="modal-header">
+		<h4 class="modal-title">可参加的促销活动</h4>
+	</div>
+	<div class="modal-body">
+		<div class="row">
+			<div>
+				<ul class="coupon-ul">
+					<li ng-repeat="promotion in effPromotions">
+						<input type="checkbox" name="coupon" value="{{promotion.id}}" ng-model="promotion.selected" checked="{{promotion.selected}}">
+						<div>{{promotion.name}}</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-default" ng-click="submit(1)">都不参加</button>
+		<button type="submit" class="btn btn-primary" ng-click="submit(0)">参加</button>
+	</div>
+</div>
