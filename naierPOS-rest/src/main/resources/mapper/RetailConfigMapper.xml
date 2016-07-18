@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.RetailConfigMapper">
+     
+    
+    <resultMap type="retailConfig" id="retailConfig">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="priceDecimal" column="PriceDecimal" />
+		<result property="itemDecimal" column="ItemDecimal" />
+		<result property="itemRoundDown" column="ItemRoundDown" />
+		<result property="transDecimal" column="TransDecimal" />
+		<result property="saleRoundDown" column="SaleRoundDown" />
+	</resultMap>
+	
+	<select id="getRetailConfig" resultMap="retailConfig"> 
+		select * from RetailConfig where Client=#{clientId}
+	</select>
+    
+    
+	
+
+</mapper>

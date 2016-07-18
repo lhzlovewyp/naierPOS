@@ -3,6 +3,7 @@
  */
 package com.joker.common.model.promotion;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.joker.common.model.BaseModel;
@@ -26,7 +27,7 @@ public class PromotionOffer extends BaseModel{
 	//优惠方式
 	private String offerType;
 	//优惠值
-	private String offerContent;
+	private BigDecimal offerContent;
 	//优惠匹配类型
 	private String matchType;
 	
@@ -75,12 +76,11 @@ public class PromotionOffer extends BaseModel{
 	public void setOfferType(String offerType) {
 		this.offerType = offerType;
 	}
-
-	public String getOfferContent() {
+	public BigDecimal getOfferContent() {
 		return offerContent;
 	}
 
-	public void setOfferContent(String offerContent) {
+	public void setOfferContent(BigDecimal offerContent) {
 		this.offerContent = offerContent;
 	}
 

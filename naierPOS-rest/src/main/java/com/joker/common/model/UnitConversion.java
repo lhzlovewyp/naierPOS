@@ -23,7 +23,7 @@ public class UnitConversion extends BaseModel{
 	//甲单位.
 	private Unit unitA;
 	//甲单位数量.
-	private BigDecimal qtya;
+	private BigDecimal qtyA;
 	//乙单位.
 	private Unit UnitB;
 	//乙单位数量.
@@ -42,11 +42,12 @@ public class UnitConversion extends BaseModel{
 	public void setUnitA(Unit unitA) {
 		this.unitA = unitA;
 	}
-	public BigDecimal getQtya() {
-		return qtya;
+	
+	public BigDecimal getQtyA() {
+		return qtyA;
 	}
-	public void setQtya(BigDecimal qtya) {
-		this.qtya = qtya;
+	public void setQtyA(BigDecimal qtyA) {
+		this.qtyA = qtyA;
 	}
 	public Unit getUnitB() {
 		return UnitB;

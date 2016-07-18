@@ -5,6 +5,8 @@ package com.joker.common.service.impl;
 
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -22,10 +24,11 @@ import com.joker.core.util.RandomCodeFactory;
 @Service
 public class SalesConfigServiceImpl implements SalesConfigService{
 
+	private Logger log = LoggerFactory.getLogger(SalesConfigServiceImpl.class);
+	
+	
 	@Autowired
     SalesConfigMapper mapper;
-	
-	
 
 	@Override
 	public SalesConfig getCurrentSalesConfig(Account account) {
@@ -56,6 +59,25 @@ public class SalesConfigServiceImpl implements SalesConfigService{
 			salesConfig.setId(RandomCodeFactory.defaultGenerateMixed());
 		}
 		return mapper.insertSalesConfig(salesConfig);
+	}
+
+	@Override
+	public int getSaleMaxCode(Account account) {
+		//flag标记循环5次.
+		for(int i=0;i<=5;i++){
+			SalesConfig config =  mapper.getCurrentSalesConfig(account.getStore().getId());
+			if(config==null){
+				log.error("get config null!");
+				return -1;
+			}
+			config.setMaxCode(config.getMaxCode()+1);
+			if (mapper.updateSalesConfig(config) == 1) {
+				return config.getMaxCode();
+			}
+		}
+		// 多次重试还不能获取，则抛出异常
+		log.error("get maxcode error");
+		return -1;
 	}
 	
 

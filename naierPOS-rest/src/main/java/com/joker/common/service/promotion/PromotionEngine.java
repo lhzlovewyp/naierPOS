@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.joker.common.Constant.Constants;
 import com.joker.common.dto.SaleDto;
+import com.joker.common.dto.SaleInfo;
 import com.joker.common.model.promotion.Promotion;
 import com.joker.common.model.promotion.PromotionCondition;
 import com.joker.common.model.promotion.PromotionOffer;
@@ -17,7 +18,7 @@ import com.joker.core.util.DatetimeUtil;
 import com.joker.core.util.SpringBeanFactory;
 
 /**
- * 促销规则引擎.
+ * 促销规则引擎,获取当前销售单可参与的促销活动.
  * 
  * @author lvhaizhen
  *
@@ -45,9 +46,6 @@ public class PromotionEngine {
 		this.storeId=storeId;
 		
 		promotionService=(PromotionService)SpringBeanFactory.getBean("promotionService");
-		
-		//得到当前门店可用促销.
-		promotions = promotionService.getPromotionsByStore(clientId, storeId, saleDto.getSaleDate());
 	}
 	
 	/**
@@ -55,11 +53,15 @@ public class PromotionEngine {
 	 * @return
 	 */
 	public List<Promotion> getAvailablePromotion(){
+		
+		//得到当前门店可用促销.
+		promotions = promotionService.getPromotionsByStore(clientId, storeId, saleDto.getSaleDate());
+		
 		if(CollectionUtils.isEmpty(promotions)){
 			return null;
 		}
 		
-		List<Promotion> promotions= new ArrayList<Promotion>();
+		List<Promotion> result= new ArrayList<Promotion>();
 		
 		for(Promotion promotion:promotions){
 			//如果时间上不匹配,直接过滤.
@@ -75,12 +77,30 @@ public class PromotionEngine {
 				continue;
 			}
 			
-			promotions.add(promotion);
+			result.add(promotion);
 		}
-		if(CollectionUtils.isEmpty(promotions)){
+		if(CollectionUtils.isEmpty(result)){
 			return null;
 		}
-		return promotions;
+		return result;
+	}
+	
+	/**
+	 * 参与促销活动，并返回当前saleDto对象.
+	 * 
+	 * @return
+	 */
+	public SaleDto calPromotions(){
+		
+		List<Promotion> cacPromotions=saleDto.getPromotions();
+		if(CollectionUtils.isEmpty(cacPromotions)){
+			return saleDto;
+		}
+		
+		for(Promotion cacPromotion:cacPromotions){
+			saleDto = PromotionParserFactory.parsePromotion(saleDto, cacPromotion);
+		}
+		return saleDto;
 	}
 	
 	

@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.joker.common.model.ClientPayment;
+import com.joker.common.model.Payment;
 import com.joker.common.model.ShoppingGuide;
 import com.joker.common.model.promotion.Promotion;
 
@@ -25,6 +27,7 @@ public class SaleDto {
 	
 	//总的商品数量.
 	private Integer totalNum;
+	
 	//打折价格.
 	private BigDecimal totalDiscPrice;
 	//实际支付金额
@@ -39,6 +42,10 @@ public class SaleDto {
 	private List<Promotion> effPromotions;
 	//参加的促销活动.
 	private List<Promotion> promotions;
+	
+	private List<ClientPayment> payments;
+	
+	private String cancelPromotion;
 	
 	public Date getSaleDate() {
 		return saleDate;
@@ -123,6 +130,18 @@ public class SaleDto {
 	}
 	public void setPromotions(List<Promotion> promotions) {
 		this.promotions = promotions;
+	}
+	public String getCancelPromotion() {
+		return cancelPromotion;
+	}
+	public void setCancelPromotion(String cancelPromotion) {
+		this.cancelPromotion = cancelPromotion;
+	}
+	public List<ClientPayment> getPayments() {
+		return payments;
+	}
+	public void setPayments(List<ClientPayment> payments) {
+		this.payments = payments;
 	}
 	
 	

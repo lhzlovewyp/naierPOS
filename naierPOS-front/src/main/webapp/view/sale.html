@@ -17,7 +17,7 @@
           	<div class="box-header">
               <h3 class="box-title">交易信息</h3>
               <div class="box-tools">
-                <a id="btn1" href="javascript:;;" ng-click="cancelSale();" class="btn btn-danger btn-flat" ng-show="info.saleInfos.length>0">取消交易</a>
+                <a id="cancelSale" href="javascript:;;" ng-click="cancelSale();" class="btn btn-danger btn-flat" ng-show="info.saleInfos.length>0">取消交易</a>
               </div>
             </div>
             <div class="box-body">
@@ -105,6 +105,7 @@
         	<table id="tableSale" class="table table-bordered table-hover">
             	<tr>
                 <th width="30">&nbsp;</th>
+                <th>序号</th>
                 <th>货号</th>
                 <th>品名</th>
                 <th>属性</th>
@@ -114,13 +115,14 @@
                 </tr>
                 <tr ng-repeat="saleInfo in info.saleInfos"  on-render-finish>
                 <td width="30"><button type="button" class="close" ng-click="deleteSaleInfo(saleInfo);">×</button></td>
+                <td>{{saleInfo.sort}}</td>
                 <td>{{saleInfo.code}}</td>
                 <td>{{saleInfo.abbr}}</td>
                 <td ng-click="updateAttr(saleInfo);">{{saleInfo.color.name}}/{{saleInfo.size.name}}</td>
                 <td>{{saleInfo.retailPrice}}</td>
                 <td class="editable" index={{$index}}>{{saleInfo.count}}</td>
-                <td ng-click="itemDISC(saleInfo);" ng-show="saleInfo.discType!=1 && saleInfo.discType!=2">{{saleInfo.count * saleInfo.retailPrice | number:2}}</td>
-                <td ng-show="saleInfo.discType==1 || saleInfo.discType==2">{{saleInfo.totalPrice}}</td>
+                <td ng-click="itemDISC(saleInfo);" ng-show="saleInfo.discType!=1 && saleInfo.discType!=2 && saleInfo.discType!=3">{{saleInfo.count * saleInfo.retailPrice | number:2}}</td>
+                <td ng-show="saleInfo.discType==1 || saleInfo.discType==2 || saleInfo.discType==3">{{saleInfo.totalPrice}}</td>
                 </tr>
             </table>
         </div>

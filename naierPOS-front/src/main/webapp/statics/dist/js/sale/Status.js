@@ -7,7 +7,16 @@ var Status = (function() {
         ERROR : 1002,
         FAILED : 1003,
         INVALID_TOKEN : 1004,
-        INVALID_USER : 1005
+        INVALID_USER : 1005,
+        
+        
+        CASH : "CASH",
+        UNIONPAY_OFF : "UNIONPAY_OFF",
+        ALIPAY : "ALIPAY",
+        WXPAY : "WXPAY",
+        BS_PREPAID : "BS_PREPAID",
+        BS_COUPON : "BS_COUPON",
+        BS_POINT : "BS_POINT"
     };
     return constant;
 })();

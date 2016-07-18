@@ -17,5 +17,12 @@ public interface MaterialService {
 	 */
 	public Material getMaterialByBarCode(String clientId,String barCode);
 	
+	/**
+	 * 查询物料信息.
+	 * @param username
+	 * @return
+	 */
+	public Material getMaterialById(String id);
+	
 	
 }

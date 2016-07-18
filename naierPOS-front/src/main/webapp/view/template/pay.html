@@ -7,10 +7,13 @@
 		<div class="row">
 			<div>
 				<ul class="payment-ul">
-					<li ng-repeat="payment in payments" id="payment_{{payment.payment.code}}" >
-					   <a class="btn btn-default btn-flat" href="javascript:;;" ng-click="pay(payment);">{{payment.payment.name}}</a> 
-					   <a class="pull-right text-black">¥0.00</a>
-					</li>
+					<li ng-repeat="payment in payments"
+						id="payment_{{payment.payment.code}}">
+						<a class="btn btn-default btn-flat" href="javascript:;;" ng-click="pay(payment);">
+							<i class="fa fa-check" ng-show="payment.selected==1"></i>
+							{{payment.payment.name}}</a> 
+						     <input type="text" class="form-control" value="{{payment.amount}}" ng-model="payment.amount">
+						</li>
 				</ul>
 			</div>
 		</div>

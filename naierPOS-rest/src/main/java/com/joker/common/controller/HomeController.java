@@ -66,7 +66,7 @@ public class HomeController extends AbstractController{
         			orders = order.getQuantity() == null ? 0:order.getQuantity().intValue();
         			salesAmount=order.getAmount() == null ? new BigDecimal(0) : order.getAmount();
         			if(orders!=0){
-        				perTicketSales = salesAmount.divide(new BigDecimal(orders));
+        				perTicketSales = salesAmount.divide(new BigDecimal(orders),2);
         			}
         		}
         		dto.setOrders(orders);

@@ -19,6 +19,7 @@ import com.joker.common.model.Account;
 import com.joker.common.model.SalesConfig;
 import com.joker.common.model.promotion.Promotion;
 import com.joker.common.service.SalesConfigService;
+import com.joker.common.service.SalesOrderService;
 import com.joker.common.service.ShoppingGuideService;
 import com.joker.common.service.promotion.PromotionEngine;
 import com.joker.core.annotation.NotNull;
@@ -36,6 +37,9 @@ public class SaleController extends AbstractController{
 	
 	@Autowired
 	SalesConfigService salesConfigService;
+	
+	@Autowired
+	SalesOrderService salesOrderService;
 
 	/**
 	 * 初始化销售单.
@@ -90,6 +94,78 @@ public class SaleController extends AbstractController{
 			rbody.setStatus(ResponseState.SUCCESS);
 		}
 		return rbody;
+	}
+	
+	/**
+	 * 
+	 * 保存支付信息.
+	 * 
+	 * @param paramsBody
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = { "/sale/cacPromotions" }, method = RequestMethod.POST)
+	@NotNull(value = "token")
+	@ResponseBody
+	public ReturnBody cacPromotions(@RequestBody ParamsBody paramsBody,
+			HttpServletRequest request, HttpServletResponse response) {
+		ReturnBody rbody = new ReturnBody();
+		String token = paramsBody.getToken();
+		Object user = CacheFactory.getCache().get(token);
+		if (user != null) {
+			Account account = (Account) user;
+			JSONObject jsonObject = new JSONObject(paramsBody.getBody());
+			SaleDto dto = JSONObject.parseObject(jsonObject.toJSONString(), SaleDto.class);
+			
+			PromotionEngine engine = new PromotionEngine(account.getClient().getId(), account.getStore().getId(), dto);
+			dto=engine.calPromotions();
+			rbody.setData(dto);
+			rbody.setStatus(ResponseState.SUCCESS);
+		}
+		
+		
+		return rbody;
+	}
+	
+	/**
+	 * 
+	 * 保存支付信息.
+	 * 
+	 * @param paramsBody
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = { "/sale/submit" }, method = RequestMethod.POST)
+	@NotNull(value = "token")
+	@ResponseBody
+	public ReturnBody submit(@RequestBody ParamsBody paramsBody,
+			HttpServletRequest request, HttpServletResponse response) {
+		ReturnBody rbody = new ReturnBody();
+		String token = paramsBody.getToken();
+		Object user = CacheFactory.getCache().get(token);
+		if (user != null) {
+			Account account = (Account) user;
+			JSONObject jsonObject = new JSONObject(paramsBody.getBody());
+			SaleDto dto = JSONObject.parseObject(jsonObject.toJSONString(), SaleDto.class);
+			
+			//对销售单进行校验，检查销售单是否有效.
+			boolean result=checkDto(dto);
+			if(result){
+				//保存销售单.
+				salesOrderService.addSaleInfo(dto, account);
+			}
+			
+			rbody.setStatus(ResponseState.SUCCESS);
+		}
+		
+		
+		return rbody;
+	}
+	
+	private boolean checkDto(SaleDto dto){
+		return true;
 	}
 	
 	

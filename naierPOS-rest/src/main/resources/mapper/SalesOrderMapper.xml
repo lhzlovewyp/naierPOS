@@ -15,4 +15,93 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE Store=#{storeId} AND Client=#{clientId} and SalesDate=#{salesDate,jdbcType=DATE} 
 		 GROUP BY Store
 	</select>
+	
+	
+	
+	<insert id="saveSalesOrder" parameterType="salesOrder">
+		insert into SalesOrder <include refid="salesOrderSet" />  
+	</insert>
+	
+	<sql id="salesOrderSet">
+         <set>
+              <if test= "id != null">ID=#{id},</if>
+              <if test= "client != null">Client=#{client.id},</if>
+              <if test= "transClass != null">transClass=#{transClass},</if>
+              <if test= "store != null">Store=#{store.id},</if>
+              <if test= "salesDate != null">SalesDate=#{salesDate},</if>
+              <if test= "code != null">Code=#{code},</if>
+              <if test= "originOrder != null">OriginOrder=#{originOrder.id},</if>
+              <if test= "member != null">Member=#{member},</if>
+              <if test= "shoppingGuide != null">ShoppingGuide=#{shoppingGuide.id},</if>
+              <if test= "quantity != null">Quantity=#{quantity},</if>
+              <if test= "amount != null">Amount=#{amount},</if>
+              <if test= "discount != null">Discount=#{discount},</if>
+              <if test= "minusChange != null">MinusChange=#{minusChange},</if>
+              <if test= "payable != null">Payable=#{payable},</if>
+              <if test= "paid != null">Paid=#{paid},</if>
+              <if test= "excess != null">Excess=#{excess},</if>
+              <if test= "cancelPromotion != null">CancelPromotion=#{cancelPromotion},</if>
+              <if test= "status != null">Status=#{status},</if>
+              <if test= "creator != null">Creator=#{creator},</if>
+              <if test= "created != null">Created=#{created},</if>
+              <if test= "finished != null">Finished=#{finished},</if>
+         </set>
+    </sql >
+	
+	<sql id="salesOrderDetailSet">
+		<foreach collection="list" index="index" item="item" separator=",">
+			<set>
+				<if test= "item.id != null">ID=#{item.id},</if>
+				<if test= "item.client != null">Client=#{item.client.id},</if>
+				<if test= "item.salesOrder != null">SalesOrder=#{item.salesOrder.id},</if>
+				<if test= "item.transClass != null">TransClass=#{item.transClass},</if>
+				<if test= "item.store != null">Store=#{item.store.id},</if>
+				<if test= "item.salesDate != null">SalesDate=#{item.salesDate},</if>
+				<if test= "item.code != null">Code=#{item.code},</if>
+				<if test= "item.serialNo != null">SerialNo=#{item.serialNo},</if>
+				<if test= "item.itemClass != null">ItemClass=#{item.itemClass.code},</if>
+				<if test= "item.material != null">Item=#{item.material.id},</if>
+				<if test= "item.quantity != null">Quantity=#{item.quantity},</if>
+				<if test= "item.salesUnit != null">SalesUnit=#{item.salesUnit.id},</if>
+				<if test= "item.basicQuantity != null">BasicQuantity=#{item.basicQuantity},</if>
+				<if test= "item.basicUnit != null">BasicUnit=#{item.basicUnit.id},</if>
+				<if test= "item.conversion != null">Conversion=#{item.conversion},</if>
+				<if test= "item.price != null">Price=#{item.price},</if>
+				<if test= "item.conversion != null">Conversion=#{item.conversion},</if>
+				<if test= "item.amount != null">Amount=#{item.amount},</if>
+				<if test= "item.discount != null">Discount=#{item.discount},</if>
+				<if test= "item.minusChange != null">MinusChange=#{item.minusChange},</if>
+				<if test= "item.payable != null">Payable=#{item.payable},</if>
+				<if test= "item.promotion != null">Promotion=#{item.promotion.id},</if>
+				<if test= "item.color != null">Color=#{item.color.id},</if>
+				<if test= "item.size != null">Size=#{item.size.id},</if>
+			
+			</set>
+		</foreach>
+	</sql>
+	<insert id="saveSalesOrderDetail" parameterType="java.util.List">
+		insert into SalesOrderDetails (ID,Client,SalesOrder,TransClass,Store,SalesDate,Code,SerialNo,ItemClass,Item,Quantity,SalesUnit,BasicQuantity,BasicUnit,
+		Conversion,Price,Amount,Discount,MinusChange,Payable,Promotion,Color,Size)   
+    values  
+    <foreach collection="list" item="item" index="index" separator="," >  
+        (#{item.id},#{item.client.id},#{item.salesOrder.id},#{item.transClass},#{item.store.id},#{item.salesDate},#{item.code},#{item.serialNo},#{item.itemClass.code},#{item.material.id},#{item.quantity},#{item.salesUnit.id},#{item.basicQuantity},#{item.basicUnit.id},#{item.conversion},#{item.price},#{item.amount},#{item.discount},#{item.minusChange},#{item.payable},#{item.promotion.id},#{item.color.id},#{item.size.id})  
+    </foreach>   
+	
+	</insert>
+	
+	<insert id="saveSalesOrderDiscount" parameterType="java.util.List">
+		insert into SalesOrderDiscount (ID,Client,SalesOrder,TransClass,Store,SalesDate,Code,DISC,MAT,Amount)
+		values
+		<foreach collection="list" item="item" index="index" separator="," >  
+		 (#{item.id},#{item.client.id},#{item.salesOrder.id},#{item.transClass},#{item.store.id},#{item.salesDate},#{item.code},#{item.disc},#{item.mat},#{item.amount})
+        </foreach>  
+	</insert>
+	
+	<insert id="saveSalesOrderPay" parameterType="java.util.List">
+		insert into SalesOrderPay (ID,Client,SalesOrder,TransClass,Store,SalesDate,Code,SerialNo,PayTime,Payment,Amount,Changed,Excess,TransNo)
+		values
+		<foreach collection="list" item="item" index="index" separator="," >  
+		 (#{item.id},#{item.client.id},#{item.salesOrder.id},#{item.transClass},#{item.store.id},#{item.salesDate},#{item.code},#{item.serialNo},#{item.payTime},#{item.payment.code},#{item.amount},#{item.changed},#{item.excess},#{item.transNo})
+        </foreach>  
+	</insert>
 </mapper>

@@ -3,25 +3,21 @@
  */
 package com.joker.common.model;
 
-import java.math.BigDecimal;
-
 /**
- * 
- * 支付方式.
  * @author lvhaizhen
  *
  */
-public class Payment extends BaseModel{
+public class ItemClass extends BaseModel{
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8783755983556830188L;
+	private static final long serialVersionUID = 8586378499780426634L;
 
+	//MAT:商品；ITEMDISC:整单折扣；TRANSDISC:整单折扣；PROMDISC:促销折扣
 	private String code;
 	
 	private String name;
-
 
 	public String getCode() {
 		return code;
@@ -34,12 +30,7 @@ public class Payment extends BaseModel{
 	public String getName() {
 		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	
-	
-	
 }

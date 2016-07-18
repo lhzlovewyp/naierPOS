@@ -84,7 +84,7 @@ app.controller("routeMainCtl",['$scope','$location','HomeService',function($scop
 	}
 }]);
 
-app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog',function($scope,$location,SaleService,ngDialog){
+app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog','PayService',function($scope,$location,SaleService,ngDialog,PayService){
 	
 	//表格渲染完成后执行，主要用于编辑商品数量.
 	$scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
@@ -117,7 +117,8 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog',fun
 			if(saleInfos){
 				for(var i=0;i<saleInfos.length;i++){
 					var saleInfo=saleInfos[i];
-					if(!saleInfo.discType){
+					if(!saleInfo) continue;
+					if(!saleInfo.discType || saleInfo.discType == '4'){
 						count+=Number(saleInfo.count);
 						totalPrice+=Number((saleInfo.count*saleInfo.retailPrice).toFixed(2));
 					}else{
@@ -125,12 +126,12 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog',fun
 					}
 				}
 			}
-			$scope.info.totalPrice=totalPrice;
+			$scope.info.totalPrice=totalPrice.toFixed(2);
 			$scope.info.totalNum=count;
 			$scope.info.totalDiscPrice=discPrice;
-			$scope.info.pay=totalPrice-discPrice;
+			$scope.info.pay=(totalPrice-Math.abs(discPrice)).toFixed(2);
 			$scope.info.payed=0;
-			$scope.info.needPay=$scope.info.pay-$scope.info.payed;
+			$scope.info.needPay=($scope.info.pay-Math.abs($scope.info.payed)).toFixed(2);
 		},true);
 	});
 	
@@ -139,6 +140,8 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog',fun
 	$scope.cancelSale=function(){
 		SaleService.initSalesOrder().then(function(data){
 			$scope.info=data;
+			$scope.promotions=null;
+			$scope.payments=null;
 		});
 	}
 	//查找会员.
@@ -174,6 +177,7 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog',fun
                     template: '/front/view/template/matAttr.html',
                     scope: $scope,
                     closeByEscape: false,
+                    width:600,
                     controller: 'matAttrCtrl'
                 });
             }else{
@@ -183,6 +187,9 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog',fun
             	mat=data.data
         		mat.count=1;
             	mat.totalPrice=mat.count*mat.retailPrice;
+            	if(!mat.sort){
+            		mat.sort=saleInfos.length;
+            	}
         		saleInfos.push(mat);
             }
         });
@@ -248,16 +255,42 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog',fun
 			//如果没有可以参加的促销活动.
 			if(!effPromotions){
 				 $scope.value = true;
-				//打开付款浮层.
+				 if($scope.payments){
+					 ngDialog.open({
+				            template: '/front/view/template/pay.html',
+				            scope: $scope,
+				            closeByEscape: false,
+				            width:700,
+				            controller: 'payCtrl'
+				        });
+				 }else{
+					 PayService.initPay().then(function(data){
+							$scope.payments=data.data;
+							//打开付款浮层.
+							ngDialog.open({
+					            template: '/front/view/template/pay.html',
+					            scope: $scope,
+					            closeByEscape: false,
+					            width:700,
+					            controller: 'payCtrl'
+					        });
+					 });
+				 }
+				 
+				
+			}else{
+				$scope.effPromotions=effPromotions;
 				ngDialog.open({
-		            template: '/front/view/template/pay.html',
+		            template: '/front/view/template/promotion.html',
 		            scope: $scope,
 		            closeByEscape: false,
 		            width:700,
-		            controller: 'payCtrl'
+		            controller: 'promotionCtrl',
+		            preCloseCallback: function () {
+		            	var saleInfos = clearPromotionSaleInfos($scope.info.saleInfos);
+		            	$scope.info.saleInfos=saleInfos;
+	                }
 		        });
-			}else{
-				
 			}
 		});
 	}
@@ -375,6 +408,9 @@ app.controller("matAttrCtrl",['$scope','$location','SaleService','ngDialog',func
 		var saleInfos=info.saleInfos || [];
 		info.saleInfos=saleInfos;
 		$scope.tempMat.count=1;
+		if(!$scope.tempMat.sort){
+			$scope.tempMat.sort=saleInfos.length;
+		}
 		//$scope.tempMat.totalPrice=1*$scope.tempMat.retailPrice;
 		if(saleInfos.indexOf($scope.tempMat)<0){
 			saleInfos.push($scope.tempMat);
@@ -404,6 +440,7 @@ app.controller("discCtrl",['$scope','$location','SaleService','ngDialog',functio
 			//循环遍历出整个商品
 			for(var i=0;i<saleInfos.length;i++){
 				var saleInfo=saleInfos[i];
+				if(!saleInfo) continue;
 				if(!saleInfo.discType){//discType不存在,说明是普通商品.
 					totalPrice+=Number((saleInfo.count*saleInfo.retailPrice).toFixed(2));//保留2位小数.
 				}else if(saleInfo.discType == "1"){//单项折扣.
@@ -426,9 +463,12 @@ app.controller("discCtrl",['$scope','$location','SaleService','ngDialog',functio
 			var saleInfo={};
 			saleInfo.code=code;
 			saleInfo.totalPrice=disc;
-			saleInfo.discType="1";//单项打折
+			saleInfo.discType="2";//整单折扣.
+			if(!saleInfo.sort){
+				saleInfo.sort=$scope.info.saleInfos.length;
+			}
 			//保存折扣信息，方便后续二次计算.
-			saleInfo.disc={
+			saleInfo.dict={
 					type:type,
 					disc:inputDisc
 			};
@@ -453,8 +493,11 @@ app.controller("discCtrl",['$scope','$location','SaleService','ngDialog',functio
 			saleInfo.code=code;
 			saleInfo.totalPrice=disc;
 			saleInfo.discType="1";//单项打折
+			if(!saleInfo.sort){
+				saleInfo.sort=$scope.info.saleInfos.length;
+			}
 			//保存折扣信息，方便后续二次计算.
-			saleInfo.disc={
+			saleInfo.dict={
 					type:type,
 					saleInfo:tempMat,
 					disc:inputDisc
@@ -471,18 +514,187 @@ app.controller("discCtrl",['$scope','$location','SaleService','ngDialog',functio
 	}
 }]);
 
-app.controller("payCtrl",['$scope','$location','PayService','ngDialog',function($scope,$location,PayService,ngDialog){
-	PayService.initPay().then(function(data){
-		console.log(data);
-		$scope.payments=data.data;
-	});
+app.controller("payCtrl",['$scope','$location','PayService','SaleService','ngDialog','$timeout',function($scope,$location,PayService,SaleService,ngDialog,$timeout){
 	
 	$scope.close=function(){
+		loadPayInfo();
 		ngDialog.close();
 	}
 	
+	$scope.pay=function(payment){
+		if(payment.selected==1){
+			payment.selected=0;
+			loadPayInfo();
+			return;
+		}else{
+			payment.selected=1;
+		}
+		//如果是select状态,需要判断支付类型.
+		if(payment.selected==1){
+			if(Status.CASH == payment.payment.code || Status.UNIONPAY_OFF == payment.payment.code){//现金支付 银行卡支付
+				loadPayInfo();
+			}else if(Status.BS_PREPAID == payment.payment.code){//百胜储值卡
+				  //支付金额为空判断.
+				  if(!checkPayEmpty(payment)){
+					  return false;
+				  }
+				  //百盛储值卡支付
+			}else if(Status.BS_COUPON == payment.payment.code){//百胜电子券
+				if(!checkPayEmpty(payment)){
+					  return false;
+				 }
+				//百盛电子券支付.
+			}else if(Status.BS_POINT == payment.payment.code){//百胜会员积分
+				if(!checkPayEmpty(payment)){
+					  return false;
+				 }
+				//百盛电子券支付.
+			}else if(Status.ALIPAY == payment.payment.code){//支付宝支付
+				if(!checkPayEmpty(payment)){
+					  return false;
+				 }
+				//支付宝支付只能作为最后一个支付渠道
+				
+			}else if(Status.WXPAY == payment.payment.code){//微信支付.
+				//微信支付只能作为最后一个支付渠道
+			}
+		}
+		
+	}
 	$scope.submit=function(){
+		var info=$scope.info;
+		//如果支付没有完成，不允许提交.
+		if(info.needPay>0){
+			alert('支付未完成');
+			return;
+		}
+		info.payments=$scope.payments;
+		SaleService.submit(info).then(function(data){
+			//支付完成后刷新数据.
+			if(data.data.status==Status.SUCCESS){
+				alert("数据保存成功.");
+				ngDialog.close();
+				$timeout(function(){
+					$("#cancelSale").trigger("click");
+				});
+			}else{
+				
+			}
+			
+		});
+	}
+	
+	//判断支付输入的金额是否为空.
+	function checkPayEmpty(payment){
+		var amount=payment.amount;
+		if(!amount || isNaN(amount)){
+			payment.selected=0;
+			return false;
+		}
+		payment.selected=1;
+		return true;
+	}
+	//基于目前的支付信息，刷新支付数据.
+	function loadPayInfo(){
+		var info=$scope.info;
+		var pay=info.pay;
+		//var needPay=info.needPay;
+		//var payed=parseFloat(info.payed);
+		
+		var payments = $scope.payments;
+		var payed=0;
+		for(var i=0;i<payments.length;i++){
+			var payment=payments[i];
+			if(payment.selected ==1 ){
+				payed += parseFloat(payment.amount || 0);
+			}
+		}
+		info.payed=payed.toFixed(2);
+		info.needPay=(pay-info.payed).toFixed(2);
 		
 	}
 	
 }]);
+
+app.controller("promotionCtrl",['$scope','$location','SaleService','ngDialog','PayService',function($scope,$location,SaleService,ngDialog,PayService){
+	$scope.close=function(){
+		ngDialog.close();
+	}
+	
+	$scope.submit=function(flag){
+		if(flag==1){//都不参加活动.
+			$scope.info.cancelPromotion=flag;
+			gotoPay(ngDialog,$scope,PayService);
+		}else{//参加活动.
+			var effpromotions = $scope.effPromotions;
+			var promotions=[];
+			for(var i=0;i<effpromotions.length;i++){
+				if(effpromotions[i].selected){
+					promotions.push(effpromotions[i]);
+				}
+			}
+			if(promotions.length==0){//如果没有勾选任何促销.
+				alert('请选择促销活动');
+				return;
+			}
+			$scope.info.promotions=promotions;
+			SaleService.cacPromotions($scope.info).then(function(obj){
+				 if(obj.data.status==Status.SUCCESS){
+					 
+	                    var dto=obj.data.data;
+	                    $scope.info.saleInfos=dto.saleInfos;
+	                    gotoPay(ngDialog,$scope,PayService);
+	             }else{
+	            	 alert(obj.data.msg);
+	             }
+		   });
+		}
+	}
+}]);
+
+
+
+
+
+
+//定义各控制器公用方法，方便控制器进行通用调用.
+/**
+ * 调用结算按钮，打开支付页面.
+ */
+function gotoPay(ngDialog,$scope,PayService){
+	var openPay = function(ngDialog,$scope){
+		ngDialog.open({
+            template: '/front/view/template/pay.html',
+            scope: $scope,
+            closeByEscape: false,
+            width:700,
+            controller: 'payCtrl'
+        });
+	}
+	
+	if($scope.payments){
+		openPay(ngDialog,$scope);
+	 }else{
+		 PayService.initPay().then(function(data){
+				$scope.payments=data.data;
+				//打开付款浮层.
+				openPay(ngDialog,$scope);
+		 });
+	 }
+	
+}
+
+function clearPromotionSaleInfos(saleInfos){
+	//删除掉促销相关的信息.
+	var result=[];
+	for(var i=0;i<saleInfos.length;i++){
+		if(!saleInfos[i]) continue;
+		if(saleInfos[i].discType == '3' || saleInfos[i].discType=='4'){
+			delete saleInfos[i];
+		}else{
+			result.push(saleInfos[i]);
+		}
+	}
+	return result;
+}
+

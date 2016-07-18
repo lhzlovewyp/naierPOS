@@ -24,6 +24,9 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 	     <typeAlias type="com.joker.common.model.ClientPayment" alias="clientPayment" />
 	     <typeAlias type="com.joker.common.model.AccountRole" alias="accountRole" />
 	     <typeAlias type="com.joker.common.model.AccountStore" alias="accountStore" />
+	     <typeAlias type="com.joker.common.model.RetailConfig" alias="retailConfig" />
+	     <typeAlias type="com.joker.common.model.Unit" alias="unit" />
+	     <typeAlias type="com.joker.common.model.UnitConversion" alias="UnitConversion" />
 	</typeAliases>
 
     <plugins>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.UnitConversionMapper">
+     
+    
+    <resultMap type="unitConversion" id="unitConversion">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="unitA.id" column="UnitA" />
+		<result property="qtyA" column="QTYA" />
+		<result property="unitB.id" column="UnitB" />
+		<result property="qtyB" column="QTYB" />
+	</resultMap>
+	
+	<select id="getUnitConversion" resultType="unitConversion">
+		select * from UnitConversion
+		where Client=#{clientId} and UnitA=#{unitA} and UnitB=#{unitB}
+	</select>
+</mapper>

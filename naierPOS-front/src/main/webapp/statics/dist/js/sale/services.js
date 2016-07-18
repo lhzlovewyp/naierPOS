@@ -180,6 +180,28 @@ app.factory('SaleService',['$q','$location','$http','BaseService',function($q,$l
                 }
             });
 			return deferred.promise;
+		},
+		cacPromotions:function(condition){//参加活动.
+			var token=$.cookie("token");
+			if(!condition){
+				return;
+			}
+			condition.token=token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/sale/cacPromotions',condition).then(function(obj){
+				deferred.resolve(obj);
+            });
+			return deferred.promise;
+		},
+		submit:function(pay){
+			var token=$.cookie("token");
+			pay.token=token;
+			var deferred = $q.defer();
+			BaseService.post('/rest/sale/submit',pay).then(function(obj){
+                deferred.resolve(obj);
+            });
+			return deferred.promise;
 		}
 	}
 }]);	

@@ -3,6 +3,8 @@
  */
 package com.joker.common.model;
 
+import java.math.BigDecimal;
+
 /**
  * 商户支付方式.
  * 
@@ -19,6 +21,11 @@ public class ClientPayment extends BaseModel{
 	private Client client;
 	
 	private Payment payment;
+	private BigDecimal amount;
+	
+	private String selected;
+	//支付流水号.
+	private String transNo;
 
 	public Client getClient() {
 		return client;
@@ -34,6 +41,30 @@ public class ClientPayment extends BaseModel{
 
 	public void setPayment(Payment payment) {
 		this.payment = payment;
+	}
+
+	public BigDecimal getAmount() {
+		return amount;
+	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+
+	public String getSelected() {
+		return selected;
+	}
+
+	public void setSelected(String selected) {
+		this.selected = selected;
+	}
+
+	public String getTransNo() {
+		return transNo;
+	}
+
+	public void setTransNo(String transNo) {
+		this.transNo = transNo;
 	}
 	
 	
