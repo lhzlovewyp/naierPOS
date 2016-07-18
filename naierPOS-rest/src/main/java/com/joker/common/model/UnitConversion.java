@@ -29,7 +29,7 @@ public class UnitConversion extends BaseModel{
 	//乙单位数量.
 	private BigDecimal qtyB;
 	//说明.
-	private String desc;
+	private String remark;
 	public Client getClient() {
 		return client;
 	}
@@ -60,12 +60,10 @@ public class UnitConversion extends BaseModel{
 	public void setQtyB(BigDecimal qtyB) {
 		this.qtyB = qtyB;
 	}
-	public String getDesc() {
-		return desc;
+	public String getRemark() {
+		return remark;
 	}
-	public void setDesc(String desc) {
-		this.desc = desc;
-	}
-	
-	
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}	
 }
