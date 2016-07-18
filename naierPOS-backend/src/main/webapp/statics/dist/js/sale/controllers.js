@@ -210,10 +210,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','Basics
 	$scope.editType = 'add';
 	var id = $routeParams.id;
 	var routePath = $routeParams.routePath;
-	if(id){
-		$scope.editType = 'update';
-		var body = {};
-		body.id = id;
+	
+	function queryunitConversionInfoById(unitMap){
 		BasicsService.queryById(body,routePath).then(function(data){
 			data.clientId = data.client.id;
 			var selStatusValue = data.status;
@@ -224,9 +222,55 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','Basics
 				}
 			}
 			$scope.form = data;
+			
+			if(unitMap){
+				var selUnitAValue = data.unitA.id;
+				$scope.selUnitA = unitMap[selUnitAValue];
+				var selUnitBValue = data.unitB.id;
+				$scope.selUnitB = unitMap[selUnitBValue];
+			}
         });
+	}
+	
+	function queryUnitInfo(callback){
+		var unitBody = {};
+		unitBody.pageNo = 1;
+		unitBody.limit = 2147483647;
+		BasicsService.queryByPage(unitBody,'unit').then(function(data){
+    		if(data && data.results && data.results.length > 0){
+    			var unitResult = data.results;
+    			var unitLen = unitResult.length;
+    			var allUnit = [];
+    			var unitMap = {};
+    			for ( var i = 0; i < unitLen; i++) {
+    				var unitId = unitResult[i].id;
+    				var unitName = unitResult[i].name;
+					var unitObj = {"value":unitId,"show":unitName};
+					allUnit.push(unitObj);
+					unitMap[unitId] = unitObj;
+				}
+    			$scope.units = allUnit;
+    			
+    			if(callback){
+    				queryunitConversionInfoById(unitMap);
+    			}
+    		}
+        });
+	}
+	
+	if(id){		
+		$scope.editType = 'update';
+		var body = {};
+		body.id = id;
+		if(routePath == 'unitConversion'){
+			queryUnitInfo(1);
+		}else{
+			queryunitConversionInfoById();
+		}
+		
 	}else{
 		$scope.form = {};
+		queryUnitInfo();
 	}
 	
 	$scope.edit = function(isValid){
@@ -236,6 +280,16 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','Basics
 				$scope.form.status = selstatus.value;
 			}else{
 				$scope.form.status = "1";
+			}
+			if(routePath == 'unitConversion'){
+				var selUnitA = $scope.selUnitA;
+				if(selUnitA){
+					$scope.form.unitAId = selUnitA.value;
+				}
+				var selUnitB = $scope.selUnitB;
+				if(selUnitB){
+					$scope.form.unitBId = selUnitB.value;
+				}
 			}
 			if($scope.editType == 'add'){
 				BasicsService.add($scope.form,routePath).then(function(data){
