@@ -15,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joker.common.Constant.Constants;
-import com.joker.common.mapper.ClientMapper;
 import com.joker.common.mapper.MaterialMapper;
-import com.joker.common.model.Client;
 import com.joker.common.model.Material;
 import com.joker.common.model.MaterialProperty;
 import com.joker.common.model.UnitConversion;
@@ -46,9 +44,6 @@ public class MaterialServiceImpl implements MaterialService {
 
 	@Autowired
 	UnitConversionService unitConversionService;
-
-	@Autowired
-	ClientMapper clientMapper;
 
 	@Override
 	public Material getMaterialByCode(String clientId, String code) {
@@ -145,15 +140,6 @@ public class MaterialServiceImpl implements MaterialService {
 		Page<Material> page = new Page<Material>();
 		int totalRecord = mapper.getMaterialCountByCondition(map);
 		List<Material> list = mapper.getMaterialPageByCondition(map);
-		if (CollectionUtils.isNotEmpty(list)
-				&& StringUtils.isNotBlank(clientId)) {
-			Client client = clientMapper.getClientById(clientId);
-			if (client != null && StringUtils.isNotBlank(client.getName())) {
-				for (Material material : list) {
-					material.setClient(client);
-				}
-			}
-		}
 		page.setPageNo(start + 1);
 		page.setPageSize(limit);
 		page.setTotalRecord(totalRecord);

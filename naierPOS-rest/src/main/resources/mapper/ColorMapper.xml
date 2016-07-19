@@ -16,6 +16,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="editor" column="Editor" />
 		<result property="modified" column="Modified" />
 	</resultMap>
+	
+	<resultMap type="color" id="colorPage" extends="color">
+		<result property="client.name" column="ClientName" />
+	</resultMap>
     
 	<select id="getColorByID" parameterType="string" resultMap="color">
 		SELECT 
@@ -24,11 +28,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE a.ID=#{id} 
 	</select>
 	
-	<select id="getColorPageByCondition" parameterType="java.util.Map" resultMap="color">
+	<select id="getColorPageByCondition" parameterType="java.util.Map" resultMap="colorPage">
 		SELECT 
-			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
-		FROM Color a
-		WHERE a.Status= 1 
+			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified,c.Name ClientName
+		FROM Color a left outer join Client c
+		on a.Client = c.id and c.status = 1 
+		WHERE a.Status = 1
 			<if test="clientId != null">
 				and a.Client=#{clientId}
 			</if>

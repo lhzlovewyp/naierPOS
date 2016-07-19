@@ -17,6 +17,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="modified" column="Modified" />
 	</resultMap>
     
+    <resultMap type="brand" id="brandPage" extends="brand">
+		<result property="client.name" column="ClientName" />
+	</resultMap>
+    
 	<select id="getBrandByID" parameterType="string" resultMap="brand">
 		SELECT 
 			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
@@ -24,10 +28,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE a.ID=#{id} 
 	</select>
 	
-	<select id="getBrandPageByCondition" parameterType="java.util.Map" resultMap="brand">
+	<select id="getBrandPageByCondition" parameterType="java.util.Map" resultMap="brandPage">
 		SELECT 
-			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
-		FROM Brand a 
+			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified,c.Name ClientName
+		FROM Brand a left outer join Client c
+		on a.Client = c.id and c.status = 1 
 		WHERE 
 			a.Status= 1
 			<if test="clientId != null">

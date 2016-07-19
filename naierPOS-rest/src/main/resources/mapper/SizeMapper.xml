@@ -16,6 +16,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="editor" column="Editor" />
 		<result property="modified" column="Modified" />
 	</resultMap>
+	
+	<resultMap type="size" id="sizePage" extends="size">
+		<result property="client.name" column="ClientName" />
+	</resultMap>
     
 	<select id="getSizeByID" parameterType="string" resultMap="size">
 		SELECT 
@@ -24,10 +28,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE a.ID=#{id} 
 	</select>
 	
-	<select id="getSizePageByCondition" parameterType="java.util.Map" resultMap="size">
+	<select id="getSizePageByCondition" parameterType="java.util.Map" resultMap="sizePage">
 		SELECT 
-			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
-		FROM Size a 
+			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified,c.Name ClientName
+		FROM Size a left outer join Client c
+		on a.Client = c.id and c.status = 1 
 		WHERE a.Status= 1 
 			<if test="clientId != null">
 				and a.Client=#{clientId}

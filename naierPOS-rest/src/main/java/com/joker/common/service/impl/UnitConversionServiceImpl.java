@@ -6,9 +6,9 @@ package com.joker.common.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.joker.common.mapper.ClientMapper;
 import com.joker.common.mapper.UnitConversionMapper;
-import com.joker.common.model.Client;
+import com.joker.common.mapper.UnitMapper;
+import com.joker.common.model.Unit;
 import com.joker.common.model.UnitConversion;
 import com.joker.common.service.UnitConversionService;
 
@@ -34,7 +34,7 @@ public class UnitConversionServiceImpl implements UnitConversionService {
 	UnitConversionMapper mapper;
 
 	@Autowired
-	ClientMapper clientMapper;
+	UnitMapper unitMapper;
 
 	@Override
 	public UnitConversion getUnitConversion(String clientId, String unitA,
@@ -73,13 +73,13 @@ public class UnitConversionServiceImpl implements UnitConversionService {
 		int totalRecord = mapper.getUnitConversionCountByCondition(map);
 		List<UnitConversion> list = mapper
 				.getUnitConversionPageByCondition(map);
-		if (CollectionUtils.isNotEmpty(list)
-				&& StringUtils.isNotBlank(clientId)) {
-			Client client = clientMapper.getClientById(clientId);
-			if (client != null && StringUtils.isNotBlank(client.getName())) {
-				for (UnitConversion unitConversion : list) {
-					unitConversion.setClient(client);
-				}
+		if (CollectionUtils.isNotEmpty(list)) {
+			Map<String, Unit> unitMap = new HashMap<String, Unit>();
+			for (UnitConversion unitConversion : list) {
+				unitConversion.setUnitA(getUnitInfoById(
+						unitConversion.getUnitA(), unitMap));
+				unitConversion.setUnitB(getUnitInfoById(
+						unitConversion.getUnitB(), unitMap));
 			}
 		}
 		page.setPageNo(start + 1);
@@ -113,5 +113,23 @@ public class UnitConversionServiceImpl implements UnitConversionService {
 			unitConversion.setId(UUID.randomUUID().toString());
 		}
 		mapper.insertUnitConversion(unitConversion);
+	}
+
+	private Unit getUnitInfoById(Unit unit, Map<String, Unit> unitMap) {
+		Unit returnUnit = unit;
+		if (unit != null && StringUtils.isNotBlank(unit.getId())) {
+			String unitId = unit.getId();
+			Unit cacheUnit = unitMap.get(unitId);
+			if (cacheUnit != null) {
+				returnUnit = cacheUnit;
+			} else {
+				Unit dbUnit = unitMapper.getUnitByID(unitId);
+				if (dbUnit != null) {
+					returnUnit = dbUnit;
+				}
+				unitMap.put(unitId, dbUnit);
+			}
+		}
+		return returnUnit;
 	}
 }

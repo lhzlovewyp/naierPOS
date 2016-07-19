@@ -52,7 +52,7 @@ public class BrandController extends AbstractController {
 	@RequestMapping(value = { "/brand/queryByPage" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
-	public ReturnBody getColorByPage(@RequestBody ParamsBody paramsBody,
+	public ReturnBody getBrandByPage(@RequestBody ParamsBody paramsBody,
 			HttpServletRequest request, HttpServletResponse response) {
 		ReturnBody rbody = new ReturnBody();
 		// 参数校验
@@ -95,7 +95,7 @@ public class BrandController extends AbstractController {
 	@RequestMapping(value = { "/brand/queryById" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
-	public ReturnBody getColorById(@RequestBody ParamsBody paramsBody,
+	public ReturnBody getBrandById(@RequestBody ParamsBody paramsBody,
 			HttpServletRequest request, HttpServletResponse response) {
 		ReturnBody rbody = new ReturnBody();
 		// 参数校验

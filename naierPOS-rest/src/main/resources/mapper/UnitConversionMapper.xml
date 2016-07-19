@@ -20,6 +20,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="modified" column="Modified" />
 	</resultMap>
     
+    <resultMap type="unitConversion" id="unitConversionPage" extends="unitConversion">
+		<result property="client.name" column="ClientName" />
+	</resultMap>
+    
     <select id="getUnitConversion" resultType="unitConversion">
 		select * from UnitConversion
 		where Client=#{clientId} and UnitA=#{unitA} and UnitB=#{unitB}
@@ -32,10 +36,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE a.ID=#{id} 
 	</select>
 	
-	<select id="getUnitConversionPageByCondition" parameterType="java.util.Map" resultMap="unitConversion">
+	<select id="getUnitConversionPageByCondition" parameterType="java.util.Map" resultMap="unitConversionPage">
 		SELECT 
 			a.ID,a.Client,a.UnitA,a.QtyA,a.UnitB,a.QtyB,a.Remark,a.Status,a.Creator,a.Created,a.Editor,a.Modified
-		FROM UnitConversion a 
+			,c.Name ClientName
+		FROM UnitConversion a left outer join Client c
+		on a.Client = c.id and c.status = 1
 		WHERE 
 			a.Status= 1
 			<if test="clientId != null">

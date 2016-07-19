@@ -16,6 +16,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="editor" column="Editor" />
 		<result property="modified" column="Modified" />
 	</resultMap>
+	
+	<resultMap type="unit" id="unitPage" extends="unit">
+		<result property="client.name" column="ClientName" />
+	</resultMap>
     
 	<select id="getUnitByID" parameterType="string" resultMap="unit">
 		SELECT 
@@ -24,10 +28,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE a.ID=#{id} 
 	</select>
 	
-	<select id="getUnitPageByCondition" parameterType="java.util.Map" resultMap="unit">
+	<select id="getUnitPageByCondition" parameterType="java.util.Map" resultMap="unitPage">
 		SELECT 
-			a.ID,a.Client,a.UnitNum,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
-		FROM Unit a 
+			a.ID,a.Client,a.UnitNum,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified,c.Name ClientName
+		FROM Unit a left outer join Client c
+		on a.Client = c.id and c.status = 1 
 		WHERE 
 			a.Status= 1
 			<if test="clientId != null">

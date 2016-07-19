@@ -8,15 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joker.common.Constant.Constants;
-import com.joker.common.mapper.ClientMapper;
 import com.joker.common.mapper.ColorMapper;
-import com.joker.common.model.Client;
 import com.joker.common.model.Color;
 import com.joker.common.service.ColorService;
 import com.joker.core.dto.Page;
@@ -30,9 +27,6 @@ public class ColorServiceImpl implements ColorService {
 
 	@Autowired
 	ColorMapper mapper;
-
-	@Autowired
-	ClientMapper clientMapper;
 
 	@Override
 	public Color getColorByID(String id) {
@@ -64,17 +58,7 @@ public class ColorServiceImpl implements ColorService {
 		map.put("limit", limit);
 		Page<Color> page = new Page<Color>();
 		int totalRecord = mapper.getColorCountByCondition(map);
-
 		List<Color> list = mapper.getColorPageByCondition(map);
-		if (CollectionUtils.isNotEmpty(list)
-				&& StringUtils.isNotBlank(clientId)) {
-			Client client = clientMapper.getClientById(clientId);
-			if (client != null && StringUtils.isNotBlank(client.getName())) {
-				for (Color color : list) {
-					color.setClient(client);
-				}
-			}
-		}
 		page.setPageNo(pageNo);
 		page.setPageSize(limit);
 		page.setTotalRecord(totalRecord);

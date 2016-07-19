@@ -54,7 +54,7 @@ public class UnitConversionController extends AbstractController {
 	@RequestMapping(value = { "/unitConversion/queryByPage" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
-	public ReturnBody getColorByPage(@RequestBody ParamsBody paramsBody,
+	public ReturnBody getUnitConversionByPage(@RequestBody ParamsBody paramsBody,
 			HttpServletRequest request, HttpServletResponse response) {
 		ReturnBody rbody = new ReturnBody();
 		// 参数校验
@@ -97,7 +97,7 @@ public class UnitConversionController extends AbstractController {
 	@RequestMapping(value = { "/unitConversion/queryById" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
-	public ReturnBody getColorById(@RequestBody ParamsBody paramsBody,
+	public ReturnBody getUnitConversionById(@RequestBody ParamsBody paramsBody,
 			HttpServletRequest request, HttpServletResponse response) {
 		ReturnBody rbody = new ReturnBody();
 		// 参数校验

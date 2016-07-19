@@ -8,15 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joker.common.Constant.Constants;
-import com.joker.common.mapper.ClientMapper;
 import com.joker.common.mapper.UnitMapper;
-import com.joker.common.model.Client;
 import com.joker.common.model.Unit;
 import com.joker.common.service.UnitService;
 import com.joker.core.dto.Page;
@@ -30,9 +27,6 @@ public class UnitServiceImpl implements UnitService {
 
 	@Autowired
 	UnitMapper mapper;
-
-	@Autowired
-	ClientMapper clientMapper;
 
 	@Override
 	public Unit getUnitByID(String id) {
@@ -64,15 +58,6 @@ public class UnitServiceImpl implements UnitService {
 		Page<Unit> page = new Page<Unit>();
 		int totalRecord = mapper.getUnitCountByCondition(map);
 		List<Unit> list = mapper.getUnitPageByCondition(map);
-		if (CollectionUtils.isNotEmpty(list)
-				&& StringUtils.isNotBlank(clientId)) {
-			Client client = clientMapper.getClientById(clientId);
-			if (client != null && StringUtils.isNotBlank(client.getName())) {
-				for (Unit unit : list) {
-					unit.setClient(client);
-				}
-			}
-		}
 		page.setPageNo(start + 1);
 		page.setPageSize(limit);
 		page.setTotalRecord(totalRecord);
