@@ -54,98 +54,6 @@ app.controller("changePWDCtrl",['$scope','$location','LoginService',function($sc
 	};
 }]);
 
-app.controller("routeAccountCtl",['$scope','$location','AccountService',function($scope,$location,AccountService){
-	var itemsPerPage = 10;
-	var currentPage = 1;
-	var totalItems = 0;
-	var selectedId ="";
-	$scope.chk = false;
-	
-	$scope.paginationConf = {
-        currentPage: currentPage,
-        itemsPerPage: itemsPerPage,
-        pagesLength: 15,
-        perPageOptions: [10, 20, 30, 40, 50],
-        rememberPerPage: 'perPageItems',
-        onChange: function(){
-        	var body = {};
-    		body.start = $scope.paginationConf.currentPage - 1;
-    		body.limit = itemsPerPage;
-        	AccountService.queryByPage(body).then(function(data){
-        		$scope.info = data;
-        		$scope.paginationConf.totalItems = data.totalRecord;
-            });
-        }
-    };
-	
-	$scope.queryByPage = function(){
-		var body = {};
-		body.start = 0;
-		body.limit = itemsPerPage;
-		AccountService.queryByPage(body).then(function(data){
-			$scope.info = data;
-			$scope.paginationConf.totalItems = data.totalRecord;
-        });
-	};
-	
-	$scope.delAccount = function(){
-		var body = {};
-		body.id = selectedId;
-		AccountService.del(body).then(function(data){
-			if(data && data.delerror){
-				alert("删除数据出错:"+data.delerror);
-            }else{
-            	location.href="account.html";
-            }
-        });
-	};
-	
-	$scope.check = function(val,chk){
-		if(!chk == true){
-			selectedId += val+",";
-        }else{
-        	selectedId = selectedId.replace(val+",","");
-        }
-	}
-}]);
-
-app.controller("routeAddAccountCtl",['$scope','$location','AccountService',function($scope,$location,AccountService){
-	$scope.statuses = [
-	        	    {value : "1", show : "有效"},
-	        	    {value : "0", show : "无效"}
-	        	];
-	
-	var form = {};
-    $scope.form = form;
-	$scope.addAccount = function(isValid){
-		if(isValid) {
-			var selstatus = $scope.selstatus;
-			if(selstatus){
-				$scope.form.status = selstatus.value;
-			}else{
-				$scope.form.status = "1";
-			}
-			if($scope.form.changePWD)
-				$scope.form.changePWD = "1";
-			else
-				$scope.form.changePWD = "0";
-			AccountService.add($scope.form).then(function(data){
-				if(data && data.adderror){
-					$scope.accountInfo = data;
-                }else{
-                	location.href="account.html";
-                }
-            });
-        }else{
-            angular.forEach($scope.accountForm,function(e){
-                if(typeof(e) == 'object' && typeof(e.$dirty) == 'boolean'){
-                    e.$dirty = true;
-                }
-            });
-        }
-	}
-}]);
-
 app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsService',function($scope,$location,$routeParams,BasicsService){
 	var initItemsPerPage = 10;
 	var initCurrentPage = 1;
@@ -211,7 +119,16 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','Basics
 	var id = $routeParams.id;
 	var routePath = $routeParams.routePath;
 	
-	function queryunitConversionInfoById(unitMap){
+	function setUnitInfoByUnitConversion(data,selectInfoMap){
+		if(routePath == 'unitConversion' && data && selectInfoMap){
+			var selUnitAValue = data.unitA.id;
+			$scope.selUnitA = selectInfoMap[selUnitAValue];
+			var selUnitBValue = data.unitB.id;
+			$scope.selUnitB = selectInfoMap[selUnitBValue];
+		}
+	}
+	
+	function queryBasicsInfoById(selectInfoMap){
 		BasicsService.queryById(body,routePath).then(function(data){
 			data.clientId = data.client.id;
 			var selStatusValue = data.status;
@@ -223,36 +140,32 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','Basics
 			}
 			$scope.form = data;
 			
-			if(unitMap){
-				var selUnitAValue = data.unitA.id;
-				$scope.selUnitA = unitMap[selUnitAValue];
-				var selUnitBValue = data.unitB.id;
-				$scope.selUnitB = unitMap[selUnitBValue];
-			}
+			setUnitInfoByUnitConversion(data,selectInfoMap);
+			
         });
 	}
 	
-	function queryUnitInfo(callback){
-		var unitBody = {};
-		unitBody.pageNo = 1;
-		unitBody.limit = 2147483647;
-		BasicsService.queryByPage(unitBody,'unit').then(function(data){
+	function querySelectInfo(type,selectParam,queryBasics){
+		var pageBody = {};
+		pageBody.pageNo = 1;
+		pageBody.limit = 2147483647;
+		BasicsService.queryByPage(pageBody,type).then(function(data){
     		if(data && data.results && data.results.length > 0){
-    			var unitResult = data.results;
-    			var unitLen = unitResult.length;
-    			var allUnit = [];
-    			var unitMap = {};
-    			for ( var i = 0; i < unitLen; i++) {
-    				var unitId = unitResult[i].id;
-    				var unitName = unitResult[i].name;
-					var unitObj = {"value":unitId,"show":unitName};
-					allUnit.push(unitObj);
-					unitMap[unitId] = unitObj;
+    			var result = data.results;
+    			var len = result.length;
+    			var allSelect = [];
+    			var selectInfoMap = {};
+    			for ( var i = 0; i < len; i++) {
+    				var id = result[i].id;
+    				var name = result[i].name;
+					var selectObj = {"value":id,"show":name};
+					allSelect.push(selectObj);
+					selectInfoMap[id] = selectObj;
 				}
-    			$scope.units = allUnit;
+    			$scope[selectParam] = allSelect;
     			
-    			if(callback){
-    				queryunitConversionInfoById(unitMap);
+    			if(queryBasics){
+    				queryBasicsInfoById(selectInfoMap);
     			}
     		}
         });
@@ -263,14 +176,20 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','Basics
 		var body = {};
 		body.id = id;
 		if(routePath == 'unitConversion'){
-			queryUnitInfo(1);
+			querySelectInfo('unit','units',1);
+		}else if(routePath == 'account'){
+			querySelectInfo('account','stores',1);
 		}else{
-			queryunitConversionInfoById();
+			queryBasicsInfoById();
 		}
 		
 	}else{
 		$scope.form = {};
-		queryUnitInfo();
+		if(routePath == 'unitConversion'){
+			querySelectInfo('unit','units');
+		}else if(routePath == 'account'){
+			querySelectInfo('account','stores',1);
+		}
 	}
 	
 	$scope.edit = function(isValid){
@@ -281,6 +200,14 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','Basics
 			}else{
 				$scope.form.status = "1";
 			}
+			
+			if(routePath == 'account'){
+				if($scope.form.changePWD)
+					$scope.form.changePWD = "1";
+				else
+					$scope.form.changePWD = "0";
+			}
+			
 			if(routePath == 'unitConversion'){
 				var selUnitA = $scope.selUnitA;
 				if(selUnitA){
