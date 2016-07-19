@@ -50,7 +50,8 @@
 		                <td>{{result.client.name}}</td>
 		                <td>{{result.code}}</td>
 		                <td>{{result.name}}</td>
-						<td>{{result.status}}</td>
+						<td ng-if="result.status == 1">有效</td>
+						<td ng-if="!result.status || result.status != 1">无效</td>
 						<td><a href="/backend/edit/color/{{result.id}}" class="btn btn-info btn-xs">编辑</a></td>
 		            </tr>
 				</table>
