@@ -4,7 +4,9 @@
 package com.joker.common.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -105,17 +107,28 @@ public class AccountServiceImpl implements AccountService {
 	/**
 	 * 根据商户查询用户信息.
 	 * 
-	 * @param clientId
-	 * @param start
+	 * @param map
+	 * @param pageNo
 	 * @param limit
 	 * @return
 	 */
 	@Override
-	public Page<Account> getAccountPageByClient(String clientId, int start,
-			int limit) {
+	public Page<Account> getAccountPageByClient(Map<String, Object> map,
+			int pageNo, int limit) {
+		int start = (pageNo - 1) * limit;
+		if (map == null) {
+			map = new HashMap<String, Object>();
+		}
+		String clientId = null;
+		if (map.containsKey("clientId")) {
+			clientId = (String) map.get("clientId");
+		}
+		map.put("clientId", clientId);
+		map.put("start", start);
+		map.put("limit", limit);
 		Page<Account> page = new Page<Account>();
-		int totalRecord = mapper.getAccountCountByClient(clientId);
-		List<Account> list = mapper.getAccountByClient(clientId, start, limit);
+		int totalRecord = mapper.getAccountCountByCondition(map);
+		List<Account> list = mapper.getAccountPageByCondition(map);
 		page.setPageNo(start + 1);
 		page.setPageSize(limit);
 		page.setTotalRecord(totalRecord);
@@ -125,10 +138,10 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public void deleteAccountByID(String id) {
-		if(StringUtils.isNotBlank(id)){
+		if (StringUtils.isNotBlank(id)) {
 			String[] ids = id.split(Constants.COMMA);
 			for (String oneId : ids) {
-				if(StringUtils.isNotBlank(oneId)){
+				if (StringUtils.isNotBlank(oneId)) {
 					mapper.deleteAccountByID(oneId);
 				}
 			}

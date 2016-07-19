@@ -1,6 +1,7 @@
 package com.joker.common.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -34,23 +35,20 @@ public interface AccountMapper {
 	/**
 	 * 根据商户查询用户信息.
 	 * 
-	 * @param clientId
-	 * @param start
-	 * @param limit
+	 * @param map
 	 * @return
 	 */
 	@DataSource("slave")
-	public List<Account> getAccountByClient(@Param("clientId") String clientId,
-			@Param("start") int start, @Param("limit") int limit);
+	public List<Account> getAccountPageByCondition(Map<String, Object> map);
 
 	/**
 	 * 根据商户查询用户信息.
 	 * 
-	 * @param clientId
+	 * @param map
 	 * @return
 	 */
 	@DataSource("slave")
-	public int getAccountCountByClient(@Param("clientId") String clientId);
+	public int getAccountCountByCondition(Map<String, Object> map);
 
 	/**
 	 * 删除账户信息.

@@ -5,6 +5,7 @@ package com.joker.common.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -135,21 +136,28 @@ public class AccountController extends AbstractController {
 		ReturnBody rbody = new ReturnBody();
 		// 参数校验
 		Map params = paramsBody.getBody();
-		Integer start = (Integer) params.get("start");
+		Integer pageNo = (Integer) params.get("pageNo");
 		Integer limit = (Integer) params.get("limit");
-		start = (start == null ? 0 : start);
+		String likeName = (String) params.get("likeName");
+		pageNo = (pageNo == null ? 0 : pageNo);
 		limit = (limit == null ? 10 : limit);
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
-			String clientCode = account.getClient().getId();
+			String clientId = account.getClient().getId();
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("clientId", clientId);
+			map.put("likeName", likeName);
 			Page<Account> page = accountService.getAccountPageByClient(
-					clientCode, start, limit);
+					map, pageNo, limit);
 			rbody.setData(page);
 			rbody.setStatus(ResponseState.SUCCESS);
 			return rbody;
+		} else {
+			rbody.setStatus(ResponseState.ERROR);
+			rbody.setMsg("请登录！");
 		}
 		// 数据返回时永远返回true.
 		return rbody;

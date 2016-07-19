@@ -28,6 +28,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM Store s left join Client c on c.id=s.Client WHERE s.Status = 1 and s.Code = #{code} and s.Client = #{client.ID}
 	</select>
 	
+	<select id="getStorePageByCondition" parameterType="java.util.Map" resultMap="store">
+		SELECT 
+			s.ID,s.Code,s.Name,s.Opened,s.Address,s.Contacts,s.Client as ClientID ,s.Creator,s.Created,s.Editor,s.Modified
+		FROM Store s left join Client c on s.Client = c.id and c.status = 1 
+		WHERE s.Status = 1
+			<if test="clientId != null">
+				and s.Client=#{clientId}
+			</if>
+			order by s.ID desc
+			<if test="start != null and limit != null">
+				limit #{start},#{limit}
+			</if>
+	</select>
+	
+	<select id="getStoreCountByCondition" parameterType="java.util.Map" resultType="int">
+		SELECT count(1)
+		FROM Store s WHERE s.Status= 1
+			<if test="clientId != null">
+				and s.Client=#{clientId}
+			</if>
+	</select>
+	
 	<delete id="deleteStoreById" parameterType="string">
 		DELETE FROM Store where ID =#{id}
 	</delete>

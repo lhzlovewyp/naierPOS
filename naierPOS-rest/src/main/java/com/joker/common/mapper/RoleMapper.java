@@ -1,6 +1,7 @@
 package com.joker.common.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -18,5 +19,21 @@ public interface RoleMapper {
 	@DataSource("slave")
 	public List<Role> getRoleByAccountId(String accountId);
 	
+	/**
+	 * 查询门店信息.
+	 * 
+	 * @param map
+	 * @return
+	 */
+	@DataSource("slave")
+	public List<Role> getRolePageByCondition(Map<String, Object> map);
 	
+	/**
+	 * 查询门店信息.
+	 * 
+	 * @param map
+	 * @return
+	 */
+	@DataSource("slave")
+	public int getRoleCountByCondition(Map<String, Object> map);
 }

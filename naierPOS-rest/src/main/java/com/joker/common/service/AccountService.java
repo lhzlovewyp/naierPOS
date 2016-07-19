@@ -3,6 +3,8 @@
  */
 package com.joker.common.service;
 
+import java.util.Map;
+
 import com.joker.common.model.Account;
 import com.joker.core.dto.Page;
 
@@ -51,13 +53,13 @@ public interface AccountService {
 	/**
 	 * 根据商户查询用户信息.
 	 * 
-	 * @param clientId
-	 * @param start
+	 * @param map
+	 * @param pageNo
 	 * @param limit
 	 * @return
 	 */
-	public Page<Account> getAccountPageByClient(String clientId, int start,
-			int limit);
+	public Page<Account> getAccountPageByClient(Map<String, Object> map,
+			int pageNo, int limit);
 
 	/**
 	 * 删除账户信息.

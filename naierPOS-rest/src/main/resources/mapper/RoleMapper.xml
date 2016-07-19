@@ -27,4 +27,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE 
 			r.ID=ar.Role and ar.Account =#{accountId}
 	</select>
+	
+	<select id="getRolePageByCondition" parameterType="java.util.Map" resultMap="role">
+		SELECT 
+			r.ID,r.Client,r.Code,r.Name,r.LoginTerminal,r.LoginAdmin,r.ItemDISC,r.ALLDISC,r.Status,r.Creator,r.Created,r.Editor,r.Modified
+		FROM Role r left join Client c on r.Client = c.id and c.status = 1 
+		WHERE r.Status = 1
+			<if test="clientId != null">
+				and r.Client=#{clientId}
+			</if>
+			order by r.ID desc
+			<if test="start != null and limit != null">
+				limit #{start},#{limit}
+			</if>
+	</select>
+	
+	<select id="getRoleCountByCondition" parameterType="java.util.Map" resultType="int">
+		SELECT count(1)
+		FROM Role r WHERE r.Status= 1
+			<if test="clientId != null">
+				and r.Client=#{clientId}
+			</if>
+	</select>
 </mapper>

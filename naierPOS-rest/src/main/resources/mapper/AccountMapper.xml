@@ -20,6 +20,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="editor" column="Editor" />
 		<result property="modified" column="Modified" />
 	</resultMap>
+	
+	<resultMap type="account" id="accountPage" extends="account">
+		<result property="client.name" column="ClientName" />
+	</resultMap>
+	
     <select id="getAccountByClientAndName" parameterType="string" resultMap="account">
 		SELECT 
 			a.ID,a.Client,s.Store,a.Name,a.Nick,a.Password,a.ChangePWD,a.DisplayPhoto,a.Status,a.Creator,a.Created,a.Editor,a.Modified
@@ -36,11 +41,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			a.ID=s.Account and a.ID=#{id} 
 	</select>
 	
-	<select id="getAccountByClient" parameterType="string" resultMap="account">
+	<select id="getAccountPageByCondition" parameterType="java.util.Map" resultMap="accountPage">
 		SELECT 
 			a.ID,a.Client,s.Store,a.Name,a.Nick,a.Password,a.ChangePWD,a.DisplayPhoto,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+			,c.Name ClientName
 		FROM Account a left outer join AccountStore s 
 		on a.ID=s.Account and s.Status = 1
+		left outer join Client c
+		on a.Client = c.id and c.status = 1 
 		WHERE 
 			a.Status= 1 and a.Client=#{clientId}
 			order by a.ID desc
@@ -49,10 +57,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			</if>
 	</select>
 	
-	<select id="getAccountCountByClient" parameterType="string" resultType="int">
+	<select id="getAccountCountByCondition" parameterType="java.util.Map" resultType="int">
 		SELECT count(1)
-		FROM Account a WHERE 
-			a.Status= 1 and a.Client=#{clientId}
+		FROM Account a WHERE a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
 	</select>
 	
 	<delete id="deleteAccountByID" parameterType="string">
