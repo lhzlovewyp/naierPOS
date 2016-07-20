@@ -4,6 +4,7 @@
 package com.joker.common.service.promotion;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -15,6 +16,7 @@ import com.joker.common.model.promotion.Promotion;
 import com.joker.common.model.promotion.PromotionOffer;
 import com.joker.common.model.promotion.PromotionOfferMatchContent;
 import com.joker.common.service.MaterialService;
+import com.joker.core.util.RandomCodeFactory;
 import com.joker.core.util.SpringBeanFactory;
 
 /**
@@ -42,6 +44,8 @@ public class FreePromotionParser implements PromotionParser{
 		
 		MaterialService materialService=(MaterialService)SpringBeanFactory.getBean("materialService");
 		BigDecimal amount=new BigDecimal(0);
+		
+		List<SaleInfo> list=new ArrayList<SaleInfo>();
 		//赠送商品优惠活动.
 		for(PromotionOffer offer:promotionOffers){
 			//赠品数量.
@@ -52,8 +56,10 @@ public class FreePromotionParser implements PromotionParser{
 					Material m = materialService.getMaterialById(content.getId());
 					if(m!=null){
 						SaleInfo saleInfo=PromotionUtil.transToSaleInfo(m,saleDto.getSaleInfos().size());
+						saleInfo.setCount(num.intValue());
 						saleDto.getSaleInfos().add(saleInfo);
-						amount=amount.add(saleInfo.getTotalPrice());
+						amount=amount.add(saleInfo.getRetailPrice().multiply(num));
+						list.add(saleInfo);
 					}
 				}
 			}
@@ -62,6 +68,11 @@ public class FreePromotionParser implements PromotionParser{
 		if(amount.intValue()>0){
 			SaleInfo saleInfo=PromotionUtil.createPromotionSaleInfo(saleDto.getSaleInfos().size());
 			saleInfo.setTotalPrice(amount.negate());
+			saleInfo.setId(RandomCodeFactory.defaultGenerateMixed());
+			
+			//给销售单中商品设置促销折扣金额.
+			PromotionUtil.setSalesPromoPrice(list, saleDto.getSaleInfos(), saleInfo.getTotalPrice(),saleInfo);
+			
 			saleDto.getSaleInfos().add(saleInfo);
 		}
 		

@@ -16,6 +16,7 @@ import com.joker.common.model.promotion.Promotion;
 import com.joker.common.model.promotion.PromotionOffer;
 import com.joker.common.model.promotion.PromotionOfferMatchContent;
 import com.joker.common.service.MaterialService;
+import com.joker.core.util.RandomCodeFactory;
 import com.joker.core.util.SpringBeanFactory;
 
 /**
@@ -71,6 +72,10 @@ public class ExtPromotionParser implements PromotionParser {
 		//计算促销优惠价格.
 		SaleInfo saleInfo=PromotionUtil.createPromotionSaleInfo(saleDto.getSaleInfos().size());
 		saleInfo.setTotalPrice(extAmount.subtract(amount));
+		saleInfo.setId(RandomCodeFactory.defaultGenerateMixed());
+		//给销售单中商品设置促销折扣金额.
+		PromotionUtil.setSalesPromoPrice(list, saleDto.getSaleInfos(), saleInfo.getTotalPrice(),saleInfo);
+		
 		saleInfo.setPromotionDetails(list);
 		saleDto.getSaleInfos().add(saleInfo);
 		return saleDto;

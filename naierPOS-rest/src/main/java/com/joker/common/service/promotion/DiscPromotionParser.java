@@ -18,6 +18,7 @@ import com.joker.common.dto.SaleInfo;
 import com.joker.common.model.promotion.Promotion;
 import com.joker.common.model.promotion.PromotionOffer;
 import com.joker.common.model.promotion.PromotionOfferMatchContent;
+import com.joker.core.util.RandomCodeFactory;
 
 /**
  * 折扣解析.折扣解析主要分为2类，整单折扣和商品折扣.
@@ -59,12 +60,31 @@ public class DiscPromotionParser implements PromotionParser {
 		}
 		
 		Map<String,Object> map=PromotionUtil.cacAllPrice(saleDto, saleDto.getSaleInfos(), contents, offer.getMatchType());
-		BigDecimal disc=(BigDecimal)map.get("amount");
+		BigDecimal amount=(BigDecimal)map.get("amount");
 		List<SaleInfo> details=(List<SaleInfo>) map.get("details");
-		disc=disc.multiply(offer.getOfferContent().subtract(new BigDecimal(100))).divide(new BigDecimal(100));
+		BigDecimal disc=amount.multiply(offer.getOfferContent().subtract(new BigDecimal(100))).divide(new BigDecimal(100));
 		SaleInfo saleInfo=PromotionUtil.createPromotionSaleInfo(saleDto.getSaleInfos().size());
 		saleInfo.setTotalPrice(disc);
+		saleInfo.setId(RandomCodeFactory.defaultGenerateMixed());
+		//计算details中的促销折扣.
+		for(SaleInfo detail : details){
+			List<SaleInfo> saleInfos = saleDto.getSaleInfos();
+			for(SaleInfo mat:saleInfos){
+				if(mat.getSort().equals(detail.getSort())){
+					BigDecimal price=mat.getSaleInfoTotalPrice();
+					//计算当前促销下面的促销折扣信息.
+					BigDecimal cac = disc.multiply((price.divide(amount,2,4)));
+					mat.setPromotionDiscount(mat.getPromotionDiscount().add(cac));
+					mat.addPromotionDiscount(cac,saleInfo.getId());
+				}
+			}
+		}
+		
+		
+		
 		saleInfo.setPromotionDetails(details);
+		
+		
 		
 		//如果促销折扣是针对商品的信息,把数据插入到商品信息的后面.
 		if(CollectionUtils.isNotEmpty(contents)){

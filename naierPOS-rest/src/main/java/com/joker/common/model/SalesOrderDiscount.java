@@ -6,6 +6,8 @@ package com.joker.common.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.joker.common.model.promotion.Promotion;
+
 /**
  * @author lvhaizhen
  *
@@ -37,6 +39,8 @@ public class SalesOrderDiscount extends BaseModel{
 	private String mat;
 	/**分摊折扣金额*/
 	private BigDecimal amount;
+	
+	private Promotion promotion;
 
 	public Client getClient() {
 		return client;
@@ -117,4 +121,13 @@ public class SalesOrderDiscount extends BaseModel{
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
+
+	public Promotion getPromotion() {
+		return promotion;
+	}
+
+	public void setPromotion(Promotion promotion) {
+		this.promotion = promotion;
+	}
+	
 } 

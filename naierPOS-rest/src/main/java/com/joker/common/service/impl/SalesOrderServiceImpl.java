@@ -30,6 +30,7 @@ import com.joker.common.model.SalesOrderPay;
 import com.joker.common.service.MaterialService;
 import com.joker.common.service.SalesConfigService;
 import com.joker.common.service.SalesOrderService;
+import com.joker.common.service.promotion.PromotionUtil;
 import com.joker.core.util.NumberUtil;
 import com.joker.core.util.RandomCodeFactory;
 
@@ -130,7 +131,10 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 		for(SaleInfo saleInfo : saleInfos){
 			if("1".equals(saleInfo.getDiscType())){//单项打折.
 				 String relatedId=saleInfo.getDict().getSaleInfo().getSort();
-				 saleInfo.setId(RandomCodeFactory.defaultGenerateMixed());
+				 if(StringUtils.isEmpty(saleInfo.getId())){
+					 saleInfo.setId(RandomCodeFactory.defaultGenerateMixed());
+				 }
+				
 				 if(itemDiscMap.containsKey(relatedId)){
 					 itemDiscMap.get(relatedId).add(saleInfo);
 				 }else{
@@ -139,11 +143,15 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 					 itemDiscMap.put(relatedId, temp);
 				 }
 			}else if("2".equals(saleInfo.getDiscType())){//整单打折.
-				saleInfo.setId(RandomCodeFactory.defaultGenerateMixed());
-				allDiscs.add(saleInfo);
+				 if(StringUtils.isEmpty(saleInfo.getId())){
+					 saleInfo.setId(RandomCodeFactory.defaultGenerateMixed());
+				 }
+				 allDiscs.add(saleInfo);
 			}else if("3".equals(saleInfo.getDiscType())){//促销折扣.
-				saleInfo.setId(RandomCodeFactory.defaultGenerateMixed());
-				promotionDiscs.add(saleInfo);
+				 if(StringUtils.isEmpty(saleInfo.getId())){
+					 saleInfo.setId(RandomCodeFactory.defaultGenerateMixed());
+				 }
+				 promotionDiscs.add(saleInfo);
 			}
 		}
 		
@@ -187,7 +195,7 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 				detail.setBasicQuantity(material.getSalesConversion().multiply(new BigDecimal(saleInfo.getCount())));
 				//销售价格
 				detail.setPrice(saleInfo.getRetailPrice());
-				detail.setAmount(saleInfo.getSaleInfoTotalPrice());
+				detail.setAmount(saleInfo.getRetailPrice().multiply(new BigDecimal(saleInfo.getCount())));
 				//销售折扣.
 				//计算销售折扣,并生成折扣明细,主要是单项折扣和整单折扣.
 				//单项折扣计算.
@@ -213,10 +221,10 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 				//整单折扣计算.
 				if(CollectionUtils.isNotEmpty(allDiscs)){
 					for(SaleInfo allDisc:allDiscs ){
-						BigDecimal tempDiscount=saleInfo.getDiscount() == null ?new BigDecimal(0) : saleInfo.getDiscount();
-						BigDecimal price = allDisc.getTotalPrice().multiply((saleInfo.getSaleInfoTotalPrice().subtract(tempDiscount).divide(saleDto.getTotalPrice(),2)));
-						price=NumberUtil.round(price,2,2);
-						discount=discount.add(price);
+						//BigDecimal tempDiscount=saleInfo.getDiscount() == null ?new BigDecimal(0) : saleInfo.getDiscount();
+						//BigDecimal price = allDisc.getTotalPrice().multiply((saleInfo.getSaleInfoTotalPrice().subtract(tempDiscount).divide(saleDto.getTotalPrice(),2)));
+						//price=NumberUtil.round(price,2,4);
+						//discount=discount.add(price);
 						SalesOrderDiscount discountVo=new SalesOrderDiscount();
 						discountVo.setId(RandomCodeFactory.defaultGenerateMixed());
 						discountVo.setClient(salesOrder.getClient());
@@ -227,47 +235,29 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 						discountVo.setCode(salesOrder.getCode());
 						discountVo.setDisc(allDisc.getId());
 						discountVo.setMat(detail.getId());
-						discountVo.setAmount(allDisc.getTotalPrice());
+						discountVo.setAmount(saleInfo.getAllDiscount());
 						discounts.add(discountVo);
 					}
 				}
 				
-				if(CollectionUtils.isNotEmpty(promotionDiscs)){
-					for(SaleInfo disc:promotionDiscs){
-						List<SaleInfo> details=disc.getPromotionDetails();
-						if(CollectionUtils.isNotEmpty(details)){
-							BigDecimal pdPrice=new BigDecimal(0);
-							BigDecimal allPrice=new BigDecimal(0);
-							for(SaleInfo pd : details){
-								allPrice=allPrice.add(pd.getSaleInfoTotalPrice());
-								if(pd.getSort().equals(saleInfo.getSort())){
-									pdPrice=pd.getSaleInfoTotalPrice();
-								}
-							}
-							if(pdPrice.doubleValue() == 0){
-								continue;
-							}
-							BigDecimal proDisc=disc.getTotalPrice().multiply(pdPrice.divide(allPrice,2,4));
-							SalesOrderDiscount discountVo=new SalesOrderDiscount();
-							discountVo.setId(RandomCodeFactory.defaultGenerateMixed());
-							discountVo.setClient(salesOrder.getClient());
-							discountVo.setSalesDate(salesOrder.getSalesDate());
-							discountVo.setSalesOrder(salesOrder);
-							discountVo.setTransClass(salesOrder.getTransClass());
-							discountVo.setStore(salesOrder.getStore());
-							discountVo.setCode(salesOrder.getCode());
-							discountVo.setDisc(disc.getId());
-							discountVo.setMat(detail.getId());
-							discountVo.setAmount(proDisc);
-							discounts.add(discountVo);
-						}
+				if(CollectionUtils.isNotEmpty(saleInfo.getPromotionDiscountDetails())){
+					for(SalesOrderDiscount discountVo:saleInfo.getPromotionDiscountDetails()){
+						discountVo.setId(RandomCodeFactory.defaultGenerateMixed());
+						discountVo.setClient(salesOrder.getClient());
+						discountVo.setSalesDate(salesOrder.getSalesDate());
+						discountVo.setSalesOrder(salesOrder);
+						discountVo.setTransClass(salesOrder.getTransClass());
+						discountVo.setStore(salesOrder.getStore());
+						discountVo.setCode(salesOrder.getCode());
+						discountVo.setMat(detail.getId());
+						discounts.add(discountVo);
 					}
 				}
 				
-				detail.setDiscount(discount);
+				detail.setDiscount(saleInfo.getDiscount().add(saleInfo.getAllDiscount()).add(saleInfo.getPromotionDiscount()));
 				//抹零金额.
 				//销售净额.
-				detail.setPayable(detail.getAmount().subtract(detail.getDiscount()));
+				detail.setPayable(detail.getAmount().add(detail.getDiscount()));
 				detail.setColor(saleInfo.getColor());
 				detail.setSize(saleInfo.getSize());
 			}else if("1".equals(saleInfo.getDiscType())){//单项打折.

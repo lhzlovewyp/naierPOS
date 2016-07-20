@@ -38,11 +38,11 @@ public class Constants {
 	//物料
 	public final static String PROMOTION_TYPE_MAT="MAT";
 	//促销条件
-	//商品数量
+	/**商品数量*/
 	public final static String PROMOTION_CONDITION_MATQTY="MATQTY";
-	//商品金额
+	/**商品金额*/
 	public final static String PROMOTION_CONDITION_MATAMT="MATAMT";
-	//整单金额
+	/**整单金额*/
 	public final static String PROMOTION_CONDITION_TTLAMT="TTLAMT";
 	//促销匹配条件-任意
 	public final static String PROMOTION_CONDITION_MATCH_ANY="ANY";
