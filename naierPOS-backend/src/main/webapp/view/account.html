@@ -53,9 +53,10 @@
 		                <td>{{result.client.name}}</td>
 		                <td>{{result.name}}</td>
 		                <td>{{result.nick}}</td>
-		                <td>{{result.changePWD}}</td>
+		                <td ng-if="result.changePWD == 1">是</td>
+						<td ng-if="!result.changePWD || result.changePWD != 1">否</td>
 		                <td><img alt="User Image" class="user-image"
-							src="statics/dist/images/avatar.png" width="50"> <a
+							src={{result.displayPhoto}} width="50"> <a
 							href="avatar.html" class="btn btn-danger btn-xs">修改</a></td>
 						<td>{{result.store.name}}</td>
 						<td>店长</td>

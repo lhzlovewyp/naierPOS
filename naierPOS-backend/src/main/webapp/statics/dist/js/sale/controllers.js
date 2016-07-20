@@ -118,17 +118,34 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','Basics
 	$scope.editType = 'add';
 	var id = $routeParams.id;
 	var routePath = $routeParams.routePath;
+	var selectComplete = {};
+	var allSelectInfoMap = {};
+	var completeQueryById = false;
 	
-	function setUnitInfoByUnitConversion(data,selectInfoMap){
-		if(routePath == 'unitConversion' && data && selectInfoMap){
-			var selUnitAValue = data.unitA.id;
-			$scope.selUnitA = selectInfoMap[selUnitAValue];
-			var selUnitBValue = data.unitB.id;
-			$scope.selUnitB = selectInfoMap[selUnitBValue];
+	function setSelectedInfo(){
+		var data = $scope.form;
+		if(data && completeQueryById){
+			if(routePath == 'unitConversion' && allSelectInfoMap['unit']){
+				var selectInfoMap = allSelectInfoMap['unit'];
+				var selUnitAValue = data.unitA.id;
+				$scope.selUnitA = selectInfoMap[selUnitAValue];
+				var selUnitBValue = data.unitB.id;
+				$scope.selUnitB = selectInfoMap[selUnitBValue];
+			}else if(routePath == 'account' && allSelectInfoMap['store']){
+				var selectInfoMap = allSelectInfoMap['store'];
+				var selStoreValue = data.store.id;
+				$scope.selstore = selectInfoMap[selStoreValue];
+			}else if(routePath == 'account' && allSelectInfoMap['role']){
+				var selectInfoMap = allSelectInfoMap['role'];
+				var selRoleValue = data.role.id;
+				$scope.selrole = selectInfoMap[selRoleValue];
+			}
 		}
 	}
 	
-	function queryBasicsInfoById(selectInfoMap){
+	function queryBasicsInfoById(){
+		var body = {};
+		body.id = id;
 		BasicsService.queryById(body,routePath).then(function(data){
 			data.clientId = data.client.id;
 			var selStatusValue = data.status;
@@ -139,9 +156,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','Basics
 				}
 			}
 			$scope.form = data;
-			
-			setUnitInfoByUnitConversion(data,selectInfoMap);
-			
+			completeQueryById = true;
+			setSelectedInfo();
         });
 	}
 	
@@ -164,31 +180,29 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','Basics
 				}
     			$scope[selectParam] = allSelect;
     			
-    			if(queryBasics){
-    				queryBasicsInfoById(selectInfoMap);
-    			}
+				allSelectInfoMap[type] = selectInfoMap;
+				setSelectedInfo();
     		}
         });
 	}
 	
 	if(id){		
 		$scope.editType = 'update';
-		var body = {};
-		body.id = id;
+		
 		if(routePath == 'unitConversion'){
 			querySelectInfo('unit','units',1);
 		}else if(routePath == 'account'){
-			querySelectInfo('account','stores',1);
-		}else{
-			queryBasicsInfoById();
+			querySelectInfo('store','stores',1);
+			querySelectInfo('role','roles',1);
 		}
-		
+		queryBasicsInfoById();
 	}else{
 		$scope.form = {};
 		if(routePath == 'unitConversion'){
 			querySelectInfo('unit','units');
 		}else if(routePath == 'account'){
-			querySelectInfo('account','stores',1);
+			querySelectInfo('store','stores');
+			querySelectInfo('role','roles');
 		}
 	}
 	
