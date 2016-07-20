@@ -58,7 +58,7 @@ public interface AccountService {
 	 * @param limit
 	 * @return
 	 */
-	public Page<Account> getAccountPageByClient(Map<String, Object> map,
+	public Page<Account> getAccountPageByCondition(Map<String, Object> map,
 			int pageNo, int limit);
 
 	/**

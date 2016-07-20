@@ -22,6 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 	
 	<resultMap type="account" id="accountPage" extends="account">
+		<result property="store.name" column="StoreName" />
 		<result property="client.name" column="ClientName" />
 	</resultMap>
 	
@@ -44,13 +45,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getAccountPageByCondition" parameterType="java.util.Map" resultMap="accountPage">
 		SELECT 
 			a.ID,a.Client,s.Store,a.Name,a.Nick,a.Password,a.ChangePWD,a.DisplayPhoto,a.Status,a.Creator,a.Created,a.Editor,a.Modified
-			,c.Name ClientName
+			,s.Name StoreName,c.Name ClientName
 		FROM Account a left outer join AccountStore s 
 		on a.ID=s.Account and s.Status = 1
 		left outer join Client c
 		on a.Client = c.id and c.status = 1 
 		WHERE 
-			a.Status= 1 and a.Client=#{clientId}
+			a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
 			order by a.ID desc
 			<if test="start != null and limit != null">
 				limit #{start},#{limit}

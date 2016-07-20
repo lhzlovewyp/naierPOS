@@ -150,9 +150,47 @@ public class AccountController extends AbstractController {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("clientId", clientId);
 			map.put("likeName", likeName);
-			Page<Account> page = accountService.getAccountPageByClient(
+			Page<Account> page = accountService.getAccountPageByCondition(
 					map, pageNo, limit);
 			rbody.setData(page);
+			rbody.setStatus(ResponseState.SUCCESS);
+			return rbody;
+		} else {
+			rbody.setStatus(ResponseState.ERROR);
+			rbody.setMsg("请登录！");
+		}
+		// 数据返回时永远返回true.
+		return rbody;
+	}
+	
+	/**
+	 * 查询账号信息.
+	 * 
+	 * @param paramsBody
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = { "/account/queryById" }, method = RequestMethod.POST)
+	@NotNull(value = "token")
+	@ResponseBody
+	public ReturnBody getAccountById(@RequestBody ParamsBody paramsBody,
+			HttpServletRequest request, HttpServletResponse response) {
+		ReturnBody rbody = new ReturnBody();
+		// 参数校验
+		Map params = paramsBody.getBody();
+		String id = (String) params.get("id");
+
+		if (StringUtils.isBlank(id)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("记录唯一信息缺失，请刷新页面！");
+			return rbody;
+		}
+		String token = paramsBody.getToken();
+		Object user = CacheFactory.getCache().get(token);
+		if (user != null) {
+			Account account = accountService.getAccountByID(id);
+			rbody.setData(account);
 			rbody.setStatus(ResponseState.SUCCESS);
 			return rbody;
 		} else {

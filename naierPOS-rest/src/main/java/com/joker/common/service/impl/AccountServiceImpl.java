@@ -113,7 +113,7 @@ public class AccountServiceImpl implements AccountService {
 	 * @return
 	 */
 	@Override
-	public Page<Account> getAccountPageByClient(Map<String, Object> map,
+	public Page<Account> getAccountPageByCondition(Map<String, Object> map,
 			int pageNo, int limit) {
 		int start = (pageNo - 1) * limit;
 		if (map == null) {
