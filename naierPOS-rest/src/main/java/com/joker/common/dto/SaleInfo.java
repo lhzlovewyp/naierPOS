@@ -1,6 +1,7 @@
 package com.joker.common.dto;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.joker.common.model.Brand;
@@ -9,6 +10,7 @@ import com.joker.common.model.Color;
 import com.joker.common.model.ItemClass;
 import com.joker.common.model.Material;
 import com.joker.common.model.MaterialCategory;
+import com.joker.common.model.SalesOrderDiscount;
 import com.joker.common.model.Size;
 import com.joker.common.model.Unit;
 import com.joker.common.model.promotion.Promotion;
@@ -64,7 +66,13 @@ public class SaleInfo {
 	private DictDto dict;
 	
 	//单项折扣金额.
-	private BigDecimal discount ;
+	private BigDecimal discount = new BigDecimal(0) ;
+	//整单折扣金额.
+	private BigDecimal allDiscount = new BigDecimal(0) ;
+	//促销折扣金额.
+	private BigDecimal promotionDiscount = new BigDecimal(0) ;
+	
+	private List<SalesOrderDiscount> promotionDiscountDetails;
 	
 	//活动折扣.
 	private Promotion promotion;
@@ -75,6 +83,16 @@ public class SaleInfo {
 	//如果是促销活动类型，存储参加当前促销活动的物料信息.
 	private List<SaleInfo> promotionDetails;
 
+	
+	public void addPromotionDiscount(BigDecimal amount,String disc){
+		if(promotionDiscountDetails == null){
+			promotionDiscountDetails = new ArrayList<SalesOrderDiscount>();
+		}
+		SalesOrderDiscount sod=new SalesOrderDiscount();
+		sod.setAmount(amount);
+		sod.setDisc(disc);
+		promotionDiscountDetails.add(sod);
+	}
 	
 	public void addItemClassCode(String itemCode){
 		if(itemClass ==null){
@@ -119,7 +137,7 @@ public class SaleInfo {
 
 	public BigDecimal getSaleInfoTotalPrice() {
 		if(this.retailPrice!=null && this.count!=null){
-			return this.retailPrice.multiply(new BigDecimal(this.count));
+			return this.retailPrice.multiply(new BigDecimal(this.count)).add(this.discount).add(this.promotionDiscount).add(this.allDiscount);
 		}
 		return new BigDecimal(0);
 	}
@@ -282,6 +300,31 @@ public class SaleInfo {
 
 	public void setPromotionDetails(List<SaleInfo> promotionDetails) {
 		this.promotionDetails = promotionDetails;
+	}
+
+	public BigDecimal getAllDiscount() {
+		return allDiscount;
+	}
+
+	public void setAllDiscount(BigDecimal allDiscount) {
+		this.allDiscount = allDiscount;
+	}
+
+	public BigDecimal getPromotionDiscount() {
+		return promotionDiscount;
+	}
+
+	public void setPromotionDiscount(BigDecimal promotionDiscount) {
+		this.promotionDiscount = promotionDiscount;
+	}
+
+	public List<SalesOrderDiscount> getPromotionDiscountDetails() {
+		return promotionDiscountDetails;
+	}
+
+	public void setPromotionDiscountDetails(
+			List<SalesOrderDiscount> promotionDiscountDetails) {
+		this.promotionDiscountDetails = promotionDiscountDetails;
 	}
 	
 }

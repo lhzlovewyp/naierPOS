@@ -9,7 +9,6 @@ import org.apache.commons.lang.StringUtils;
 
 import com.joker.common.Constant.Constants;
 import com.joker.common.dto.SaleDto;
-import com.joker.common.dto.SaleInfo;
 import com.joker.common.model.promotion.Promotion;
 import com.joker.common.model.promotion.PromotionCondition;
 import com.joker.common.model.promotion.PromotionOffer;
@@ -63,6 +62,11 @@ public class PromotionEngine {
 		
 		List<Promotion> result= new ArrayList<Promotion>();
 		
+		//对促销活动进行排序,根据促销条件来进行排序
+		List<Promotion> matQtyPromotions = new ArrayList<Promotion>();
+		List<Promotion> matAmtPromotions = new ArrayList<Promotion>();
+		List<Promotion> ttlAmtPromotions = new ArrayList<Promotion>();
+		
 		for(Promotion promotion:promotions){
 			//如果时间上不匹配,直接过滤.
 			if(!timeAvailable(promotion)){
@@ -77,8 +81,22 @@ public class PromotionEngine {
 				continue;
 			}
 			
-			result.add(promotion);
+			List<PromotionOffer> offers=promotion.getPromotionOffers();
+			for(PromotionOffer offer:offers){
+				List<PromotionCondition> conditions = offer.getPromotionCondition();
+				PromotionCondition condition = conditions.get(0);
+				if (condition.getConditionType().equals(Constants.PROMOTION_CONDITION_MATAMT)){//商品金额
+					matAmtPromotions.add(promotion);
+				}else if (condition.getConditionType().equals(Constants.PROMOTION_CONDITION_MATQTY)){//商品金额
+					matQtyPromotions.add(promotion);
+				}else if (condition.getConditionType().equals(Constants.PROMOTION_CONDITION_TTLAMT)){//商品金额
+					ttlAmtPromotions.add(promotion);
+				}
+			}
 		}
+		result.addAll(matQtyPromotions);
+		result.addAll(matAmtPromotions);
+		result.addAll(ttlAmtPromotions);
 		if(CollectionUtils.isEmpty(result)){
 			return null;
 		}

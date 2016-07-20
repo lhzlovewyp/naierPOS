@@ -242,6 +242,107 @@
             <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
+        
+        <!-- 支付宝依赖的jar包 start -->
+        <dependency>
+            <groupId>com.joker.alipay</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/alipay-sdk-java20160302220055.jar</systemPath>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.joker.alipay</groupId>
+            <artifactId>alipay-trade-sdk</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/alipay-trade-sdk.jar</systemPath>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.joker.alipay</groupId>
+            <artifactId>configuration</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/commons-configuration-1.10.jar</systemPath>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.joker.alipay</groupId>
+            <artifactId>core</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/core-2.1.jar</systemPath>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.joker.alipay</groupId>
+            <artifactId>gson</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/gson-2.3.1.jar</systemPath>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.joker.alipay</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/hamcrest-core-1.3.jar</systemPath>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>fluent-hc</artifactId>
+            <version>4.3.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient-cache</artifactId>
+            <version>4.3.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.3.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>4.3.5</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.7</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>xmlpull</groupId>
+            <artifactId>xmlpull</artifactId>
+            <version>1.1.3.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>xpp3</groupId>
+            <artifactId>xpp3</artifactId>
+            <version>1.1.4c</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>1.4.7</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        
     </dependencies>
 
     <build>

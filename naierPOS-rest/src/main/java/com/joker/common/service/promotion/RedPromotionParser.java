@@ -15,6 +15,7 @@ import com.joker.common.dto.SaleInfo;
 import com.joker.common.model.promotion.Promotion;
 import com.joker.common.model.promotion.PromotionOffer;
 import com.joker.common.model.promotion.PromotionOfferMatchContent;
+import com.joker.core.util.RandomCodeFactory;
 
 /**
  * 折让
@@ -58,7 +59,7 @@ private List<PromotionOffer> promotionOffers;
 		
 		SaleInfo saleInfo=PromotionUtil.createPromotionSaleInfo(saleDto.getSaleInfos().size());
 		saleInfo.setTotalPrice(offer.getOfferContent().negate());
-		
+		saleInfo.setId(RandomCodeFactory.defaultGenerateMixed());
 		
 		if(CollectionUtils.isNotEmpty(contents)){
 			
@@ -68,6 +69,9 @@ private List<PromotionOffer> promotionOffers;
 					details.add(saleDto.getSaleInfos().get(i));
 				}
 			}
+			
+			//给销售单中商品设置促销折扣金额.
+			PromotionUtil.setSalesPromoPrice(details, saleDto.getSaleInfos(), saleInfo.getTotalPrice(),saleInfo);
 			saleInfo.setPromotionDetails(details);
 			//如果促销折扣是针对商品的信息,把数据插入到商品信息的后面.
 			for(int i=saleDto.getSaleInfos().size()-1;i>=0;i--){
@@ -83,6 +87,8 @@ private List<PromotionOffer> promotionOffers;
 					details.add(info);
 				}
 			}
+			//给销售单中商品设置促销折扣金额.
+			PromotionUtil.setSalesPromoPrice(details, saleDto.getSaleInfos(), saleInfo.getTotalPrice(),saleInfo);
 			saleInfo.setPromotionDetails(details);
 			saleDto.getSaleInfos().add(saleInfo);
 		}

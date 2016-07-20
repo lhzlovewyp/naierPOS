@@ -99,6 +99,7 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog','Pa
 			var index=$(this).attr("index");
 			var saleInfo=$scope.info.saleInfos[index];
 			saleInfo.count=newValue;
+			reloadSaleInfos($scope.info.saleInfos);
 			$scope.$apply();
 		})
 
@@ -197,6 +198,7 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog','Pa
 	//删除商品.
 	$scope.deleteSaleInfo=function(saleInfo){
 		$scope.info.saleInfos.splice($scope.info.saleInfos.indexOf(saleInfo), 1);
+		reloadSaleInfos($scope.info.saleInfos);
 	}
 	
 	//修改商品属性.
@@ -259,7 +261,7 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog','Pa
 					 ngDialog.open({
 				            template: '/front/view/template/pay.html',
 				            scope: $scope,
-				            closeByEscape: false,
+				            closeByDocument: false,
 				            width:700,
 				            controller: 'payCtrl'
 				        });
@@ -270,7 +272,7 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog','Pa
 							ngDialog.open({
 					            template: '/front/view/template/pay.html',
 					            scope: $scope,
-					            closeByEscape: false,
+					            closeByDocument: false,
 					            width:700,
 					            controller: 'payCtrl'
 					        });
@@ -283,7 +285,7 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog','Pa
 				ngDialog.open({
 		            template: '/front/view/template/promotion.html',
 		            scope: $scope,
-		            closeByEscape: false,
+		            closeByDocument: false,
 		            width:700,
 		            controller: 'promotionCtrl',
 		            preCloseCallback: function () {
@@ -442,11 +444,14 @@ app.controller("discCtrl",['$scope','$location','SaleService','ngDialog',functio
 				var saleInfo=saleInfos[i];
 				if(!saleInfo) continue;
 				if(!saleInfo.discType){//discType不存在,说明是普通商品.
-					totalPrice+=Number((saleInfo.count*saleInfo.retailPrice).toFixed(2));//保留2位小数.
-				}else if(saleInfo.discType == "1"){//单项折扣.
-					totalPrice+=Number(saleInfo.totalPrice);
-				}else if(saleInfo.discType == "2"){
-					totalPrice+=Number(saleInfo.totalPrice);
+					totalPrice+=Number(Number(saleInfo.count*saleInfo.retailPrice).toFixed(2));//保留2位小数.
+					if(saleInfo.discount){
+						totalPrice+=Number(Number(saleInfo.discount).toFixed(2));//增加该商品的单项折扣.
+					}
+					if(saleInfo.allDiscount){
+						totalPrice+=Number(Number(saleInfo.allDiscount).toFixed(2));//增加该商品的单项折扣.
+					}
+					
 				}
 			}
 			if(type=="1"){//折扣%
@@ -460,6 +465,24 @@ app.controller("discCtrl",['$scope','$location','SaleService','ngDialog',functio
 				}
 				disc=0-inputDisc;
 			}
+			
+			//计算折扣在每件商品中的折扣.
+			for(var i=0;i<saleInfos.length;i++){
+				var saleInfo=saleInfos[i];
+				if(!saleInfo) continue;
+				if(!saleInfo.discType){//discType不存在,说明是普通商品.
+					var saleInfoPrice=Number(Number(saleInfo.count*saleInfo.retailPrice).toFixed(2));//保留2位小数.
+					if(saleInfo.discount){
+						saleInfoPrice+=Number(Number(saleInfo.discount).toFixed(2));//增加该商品的单项折扣.
+					}
+					if(saleInfo.allDiscount){
+						saleInfoPrice+=Number(Number(saleInfo.allDiscount).toFixed(2));//增加该商品的单项折扣.
+					}
+					var saleInfoDisc=(disc*saleInfoPrice/totalPrice).toFixed(2);
+					saleInfo.allDiscount=saleInfoDisc;
+				}
+			}
+			
 			var saleInfo={};
 			saleInfo.code=code;
 			saleInfo.totalPrice=disc;
@@ -479,12 +502,12 @@ app.controller("discCtrl",['$scope','$location','SaleService','ngDialog',functio
 			var disc="";
 			var totalPrice=(tempMat.count*tempMat.retailPrice).toFixed(2);//保留2位小数.
 			if(type=="1"){//折扣%
-				if(disc>100 || disc<0){
+				if(inputDisc>100 || inputDisc<0){
 					return ;
 				}
 				disc=0-(totalPrice*(100-inputDisc)/100).toFixed(2);
 			}else if(type=="2"){//折让
-				if(disc<0 || disc > totalPrice){
+				if(inputDisc<0 || inputDisc > totalPrice){
 					return;
 				}
 				disc=0-inputDisc;
@@ -496,6 +519,7 @@ app.controller("discCtrl",['$scope','$location','SaleService','ngDialog',functio
 			if(!saleInfo.sort){
 				saleInfo.sort=$scope.info.saleInfos.length;
 			}
+			tempMat.discount=disc;
 			//保存折扣信息，方便后续二次计算.
 			saleInfo.dict={
 					type:type,
@@ -616,9 +640,36 @@ app.controller("payCtrl",['$scope','$location','PayService','SaleService','ngDia
 	
 }]);
 
-app.controller("promotionCtrl",['$scope','$location','SaleService','ngDialog','PayService',function($scope,$location,SaleService,ngDialog,PayService){
+app.controller("promotionCtrl",['$scope','$location','SaleService','ngDialog','PayService','$timeout',function($scope,$location,SaleService,ngDialog,PayService,$timeout){
+	
+	
+	
 	$scope.close=function(){
 		ngDialog.close();
+	}
+	
+	$scope.choosePromotion = function(promotion){
+		
+		if(!$("#promotion_"+promotion.id).prop("checked")){
+			return ;
+		}
+		
+		var id = promotion.id;
+		var effPromotions=$scope.effPromotions;
+		var excluded=promotion.excluded;
+		var index=effPromotions.indexOf(promotion);
+		for(var i=0;i<effPromotions.length;i++){
+			var effp=effPromotions[i];
+			if(effp.selected && excluded && excluded.indexOf(effp.id)>=0){
+				//促销互斥，不允许参加此促销活动.
+				promotion.selected = false;
+				effPromotions[index]=promotion;
+				alert("和促销活动["+effp.name+"]互斥");
+				$("#promotion_"+promotion.id).prop("checked",false)
+				$scope.effPromotions=effPromotions;
+				return;
+			}
+		}
 	}
 	
 	$scope.submit=function(flag){
@@ -666,9 +717,11 @@ function gotoPay(ngDialog,$scope,PayService){
 		ngDialog.open({
             template: '/front/view/template/pay.html',
             scope: $scope,
-            closeByEscape: false,
+            closeByDocument: false,
             width:700,
-            controller: 'payCtrl'
+            controller: 'payCtrl',
+            showClose:false
+            
         });
 	}
 	
@@ -692,9 +745,146 @@ function clearPromotionSaleInfos(saleInfos){
 		if(saleInfos[i].discType == '3' || saleInfos[i].discType=='4'){
 			delete saleInfos[i];
 		}else{
+			saleInfos[i].promotionDiscount=0;
+			saleInfos[i].promotionDiscountDetails=[];
 			result.push(saleInfos[i]);
 		}
 	}
 	return result;
 }
+//重新计算saleinfos.
+function reloadSaleInfos(saleInfos){
+	//提取出单项折扣选项.
+	var itemDiscs=[];
+	//提取出整单折扣.
+	var allDiscs=[];
+	var mats=[];
+	for(var i=0;i<saleInfos.length;i++){
+		var saleInfo=saleInfos[i];
+		if(!saleInfo) continue;
+		if(!saleInfo.discType){//商品
+			mats.push(saleInfo);
+		}else if(saleInfo.discType == 1){//单项折扣 .
+			itemDiscs.push(saleInfo);
+		}else if(saleInfo.discType == 2){//整单折扣.
+			allDiscs.push(saleInfo);
+		}
+	}
+	//首先处理单项折扣.
+	if(itemDiscs.length>0){//如果存在单项折扣.
+		for(var i=0;i<itemDiscs.length;i++){
+			var itemDisc=itemDiscs[i];
+			var flag=false;
+			for(var j=0;j<mats.length;j++){
+				var mat=mats[j];
+				if(itemDisc.dict.saleInfo.sort==mat.sort){//如果单项折扣对应的商品能够匹配上。
+					mat.discount=cacItemDisc(mat,itemDisc.dict);
+					itemDisc.totalPrice=mat.discount;
+					flag=true;
+				}
+			}
+			if(!flag){//如果折扣没有匹配上,删除此折扣信息.
+				saleInfos.remove(itemDisc);
+			}
+		}
+	}
+	//处理整单折扣.
+	if(allDiscs.length>0){
+		for(var i=0;i<allDiscs.length;i++){
+			var allDisc=allDiscs[i];
+			if(mats.length==0){
+				saleInfos.remove(allDisc);
+				continue;
+			}
+			cacAllDisc(allDisc,mats);
+		}
+	}
+	//处理物料信息,如果物料中存在单项折扣或者整单折扣，而选项又没有，则需要删除相关属性.
+	if(mats.length>0){
+		for(var i=0;i<mats.length;i++){
+			var mat=mats[i];
+			//单项折扣匹配.
+			if(mat.discount && mat.discount>0){
+				var flag=false;
+				for(var i=0;i<itemDiscs.length;i++){
+					var itemDisc=itemDiscs[i];
+					if(mat.sort == itemDisc.dict.saleInfo.sort){
+						flag=true;
+						break;
+					}
+				}
+				if(!flag){
+					mat.discount=0;
+				}
+				//如果不存在整单折扣，删除折扣信息.
+				if(allDiscs.length==0){
+					mat.allDiscount=0;
+				}
+			}
+		}
+	}
+}
+
+function cacItemDisc(saleInfo,dict){
+	var disc="0";
+	var totalPrice=(saleInfo.count*saleInfo.retailPrice).toFixed(2);//保留2位小数.
+	var inputDisc=dict.disc;
+	var type=dict.type;
+	if(type=="1"){//折扣%
+		disc=0-(totalPrice*(100-inputDisc)/100).toFixed(2);
+	}else if(type=="2"){//折让
+		disc=0-inputDisc;
+	}
+	return disc;
+}
+
+function cacAllDisc(allDisc,saleInfos){
+	var disc="";
+	var totalPrice=0;
+	var type=allDisc.dict.type;
+	var inputDisc=allDisc.dict.disc;
+	//循环遍历出整个商品
+	for(var i=0;i<saleInfos.length;i++){
+		var saleInfo=saleInfos[i];
+		if(!saleInfo) continue;
+		if(!saleInfo.discType){//discType不存在,说明是普通商品.
+			totalPrice+=Number(Number(saleInfo.count*saleInfo.retailPrice).toFixed(2));//保留2位小数.
+			if(saleInfo.discount){
+				totalPrice+=Number(Number(saleInfo.discount).toFixed(2));//增加该商品的单项折扣.
+			}
+			if(saleInfo.allDiscount){
+				totalPrice+=Number(Number(saleInfo.allDiscount).toFixed(2));//增加该商品的单项折扣.
+			}
+		}
+	}
+	if(type=="1"){//折扣%
+		disc=0-(totalPrice*(100-inputDisc)/100).toFixed(2);
+	}else if(type=="2"){//折让
+		disc=0-inputDisc;
+	}
+	allDisc.totalPrice=disc;
+
+	//计算折扣在每件商品中的折扣.
+	for(var i=0;i<saleInfos.length;i++){
+		var saleInfo=saleInfos[i];
+		if(!saleInfo) continue;
+		if(!saleInfo.discType){//discType不存在,说明是普通商品.
+			var saleInfoPrice=Number(Number(saleInfo.count*saleInfo.retailPrice).toFixed(2));//保留2位小数.
+			if(saleInfo.discount){
+				saleInfoPrice+=Number(Number(saleInfo.discount).toFixed(2));//增加该商品的单项折扣.
+			}
+			if(saleInfo.allDiscount){
+				saleInfoPrice+=Number(Number(saleInfo.allDiscount).toFixed(2));//增加该商品的单项折扣.
+			}
+			var saleInfoDisc=(disc*saleInfoPrice/totalPrice).toFixed(2);
+			saleInfo.allDiscount=saleInfoDisc;
+		}
+	}
+}
+
+
+
+
+
+
 

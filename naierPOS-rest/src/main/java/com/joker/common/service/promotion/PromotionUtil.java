@@ -92,4 +92,38 @@ public class PromotionUtil {
 		return saleInfo;
 	}
 	
+	
+	
+	/**
+	 * 根据促销匹配上的商品信息,获取销售单中对应的商品总价.
+	 * 
+	 * @param promDetails
+	 * @param saleInfos
+	 */
+	public static List<SaleInfo>  setSalesPromoPrice(List<SaleInfo> promDetails,List<SaleInfo> saleInfos,BigDecimal amount,SaleInfo promoSaleInfo){
+		BigDecimal result = new BigDecimal(0);
+		//设置商品的总价.
+		for(SaleInfo detail : promDetails){
+			for(SaleInfo saleInfo : saleInfos){
+				if(saleInfo.getSort().equals(detail.getSort())){
+					result=result.add(saleInfo.getSaleInfoTotalPrice());
+				}
+			}
+		}
+		//计算商品的折扣.
+		for(SaleInfo detail : promDetails){
+			for(SaleInfo saleInfo : saleInfos){
+				if(saleInfo.getSort().equals(detail.getSort())){
+					BigDecimal price=saleInfo.getSaleInfoTotalPrice();
+					//计算当前促销下面的促销折扣信息.
+					BigDecimal cac = amount.multiply(price).divide(result,2,4);
+					saleInfo.setPromotionDiscount(saleInfo.getPromotionDiscount().add(cac));
+					saleInfo.addPromotionDiscount(cac,promoSaleInfo.getId());
+				}
+			}
+		}
+		return saleInfos;
+	}
+	
+	
 }

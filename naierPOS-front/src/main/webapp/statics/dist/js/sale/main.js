@@ -3,6 +3,12 @@
 Array.prototype.insert = function (index, item) {
 this.splice(index, 0, item);
 };
+Array.prototype.remove = function(val) {
+	var index = this.indexOf(val);
+	if (index > -1) {
+		this.splice(index, 1);
+	}
+};
 
 var app=angular.module('mainApp',['ngRoute','ngDialog']);
 

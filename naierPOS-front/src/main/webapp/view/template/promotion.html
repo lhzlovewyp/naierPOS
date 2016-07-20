@@ -8,7 +8,7 @@
 			<div>
 				<ul class="coupon-ul">
 					<li ng-repeat="promotion in effPromotions">
-						<input type="checkbox" name="coupon" value="{{promotion.id}}" ng-model="promotion.selected" checked="{{promotion.selected}}">
+						<input type="checkbox" name="coupon" id="promotion_{{promotion.id}}" value="{{promotion.id}}" ng-model="promotion.selected" checked="{{promotion.selected}}" ng-click="choosePromotion(promotion)">
 						<div>{{promotion.name}}</div>
 					</li>
 				</ul>
