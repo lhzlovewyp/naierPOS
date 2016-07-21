@@ -31,6 +31,7 @@ import com.joker.common.service.MaterialService;
 import com.joker.common.service.SalesConfigService;
 import com.joker.common.service.SalesOrderService;
 import com.joker.common.service.promotion.PromotionUtil;
+import com.joker.core.dto.Page;
 import com.joker.core.util.NumberUtil;
 import com.joker.core.util.RandomCodeFactory;
 
@@ -52,6 +53,22 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 	@Override
 	public SalesOrder getSalesInfo(String clientId, String storeId, Date salesDate) {
 		return mapper.getSalesInfo(clientId, storeId, salesDate);
+	}
+	
+	@Override
+	public Page<SalesOrder> getSalesOrderPageByClient(Map<String, Object> map,
+			int pageNo, int limit) {
+		int start = (pageNo - 1) * limit;
+		map.put("start", start);
+		map.put("limit", limit);
+		Page<SalesOrder> page = new Page<SalesOrder>();
+		int totalRecord = mapper.getSalesOrderCountByCondition(map);
+		List<SalesOrder> list = mapper.getSalesOrderPageByCondition(map);
+		page.setPageNo(start + 1);
+		page.setPageSize(limit);
+		page.setTotalRecord(totalRecord);
+		page.setResults(list);
+		return page;
 	}
 
 
@@ -312,6 +329,9 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 		}
 		return list;
 	}
+
+
+	
 	
 
 }

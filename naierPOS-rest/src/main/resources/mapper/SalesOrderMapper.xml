@@ -10,17 +10,80 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="amount" column="Amount" />
 		<result property="quantity" column="Num" />
 	</resultMap>
+	
+	<resultMap type="salesOrder" id="salesOrder">
+		<result property="id" column="ID"/>
+		<result property="client.id" column="Client"/>
+		<result property="transClass" column="TransClass"/>
+		<result property="store.id" column="Store"/>
+		<result property="salesDate" column="SalesDate"/>
+		<result property="code" column="Code"/>
+		<result property="originOrder.id" column="OriginOrder"/>
+		<result property="member" column="Member"/>
+		<result property="shoppingGuide.id" column="ShoppingGuide"/>
+		<result property="quantity" column="Quantity"/>
+		<result property="amount" column="Amount"/>
+		<result property="discount" column="Discount"/>
+		<result property="minusChange" column="MinusChange"/>
+		<result property="payable" column="Payable"/>
+		<result property="paid" column="Paid"/>
+		<result property="excess" column="Excess"/>
+		<result property="cancelPromotion" column="CancelPromotion"/>
+		<result property="status" column="Status"/>
+		<result property="creator" column="Creator"/>
+		<result property="created" column="Created"/>
+		<result property="finished" column="Finished"/>
+	</resultMap>
+	
     <select id="getSalesInfo"  resultMap="salesOrderSum">
 		SELECT Store ,SUM(Amount) AS Amount,COUNT(1) AS Num FROM SalesOrder
 		WHERE Store=#{storeId} AND Client=#{clientId} and SalesDate=#{salesDate,jdbcType=DATE} 
 		 GROUP BY Store
 	</select>
 	
+	<select id="getSalesOrderPageByCondition" resultMap="salesOrder" parameterType="java.util.Map">
+		select * from SalesOrder where TransClass='SO' and Status=1
+		and Store=#{storeId} and Client=#{clientId}
+		<if test="id != null">
+				and ID=#{id}
+		</if>
+		
+		<if test="startDate != null">
+				<![CDATA[  and Finished>=#{startDate} ]]>
+		</if>
+		<if test="endDate != null">
+				<![CDATA[  and Finished<=#{endDate}]]>
+		</if>
+		
+		order by Finished desc
+		<if test="start != null and limit != null">
+				limit #{start},#{limit}
+		</if>
+	</select>
 	
+	<select id="getSalesOrderCountByCondition" parameterType="java.util.Map" resultType="int">
+		select count(1) from SalesOrder where TransClass='SO' and Status=1
+		and Store=#{storeId} and Client=#{clientId}
+		
+		<if test="id != null">
+				and ID=#{id}
+		</if>
+		
+		<if test="startDate != null">
+		<![CDATA[  and Finished>=#{startDate}]]>		
+		</if>
+		
+		<if test="endDate != null">
+				<![CDATA[  and Finished<=#{endDate} ]]>
+		</if>
+		
+	</select>
 	
 	<insert id="saveSalesOrder" parameterType="salesOrder">
 		insert into SalesOrder <include refid="salesOrderSet" />  
 	</insert>
+	
+	
 	
 	<sql id="salesOrderSet">
          <set>

@@ -2,10 +2,12 @@ package com.joker.common.mapper;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.joker.common.model.Account;
 import com.joker.common.model.SalesOrder;
 import com.joker.common.model.SalesOrderDetails;
 import com.joker.common.model.SalesOrderDiscount;
@@ -23,6 +25,22 @@ public interface SalesOrderMapper {
 	@DataSource("slave")
 	public SalesOrder getSalesInfo(@Param("clientId") String clientId,@Param("storeId")String storeId,@Param("salesDate") Date salesDate);
 	
+	/**
+	 * 根据条件查询销售单信息.
+	 * 
+	 * @param map
+	 * @return
+	 */
+	@DataSource("slave")
+	public List<SalesOrder> getSalesOrderPageByCondition(Map<String, Object> map);
+	
+	/**
+	 * 根据条件查询销售单记录数.
+	 * @param map
+	 * @return
+	 */
+	@DataSource("slave")
+	public int getSalesOrderCountByCondition(Map<String, Object> map);
 	
 	/**
 	 * 保存销售单
