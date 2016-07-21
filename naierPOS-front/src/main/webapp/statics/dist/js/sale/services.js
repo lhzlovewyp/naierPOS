@@ -227,4 +227,20 @@ app.factory('PayService',['$q','$location','$http','BaseService',function($q,$lo
 		}
 	}
 }]);	
+app.factory('PinBackService',['$q','$location','$http','BaseService',function($q,$location,$http,BaseService){
+	return {
+		getSalesOrder : function(condition){
+			if(!condition){
+				condition={};
+			}
+			var token=$.cookie("token");
+			condition.token=token;
+			var deferred = $q.defer();
+			BaseService.post('/rest/pinBack/getSalesOrder',condition).then(function(obj){
+                	deferred.resolve(obj);
+            });
+			return deferred.promise;
+		}
+	}
+}]);
 	

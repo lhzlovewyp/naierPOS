@@ -65,7 +65,7 @@ app.config(['$routeProvider','$locationProvider','$httpProvider', function ($rou
         })
         .when('/front/pinBack.html', {
             templateUrl: '/front/view/pinBack.html',
-            controller: 'routeMainCtl'
+            controller: 'pinBackCtl'
         })
         .when('/front/member.html', {
             templateUrl: '/front/view/member.html',

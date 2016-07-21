@@ -703,9 +703,58 @@ app.controller("promotionCtrl",['$scope','$location','SaleService','ngDialog','P
 	}
 }]);
 
+app.controller("pinBackCtl",['$scope','$location','PinBackService','ngDialog','PayService','$timeout',function($scope,$location,PinBackService,ngDialog,PayService,$timeout){
+	//初始化数据.
+	var initCurrentPage = 1;
+	var totalItems = 0;
+	
+	$scope.paginationConf = {
+	        currentPage: initCurrentPage,
+	        onChange: function(){
+	        	goPage($scope.paginationConf.currentPage);
+	        }
+	};
+	
+	$scope.queryByPage = function(){
+		goPage(1);
+	};
+	
+	$scope.pageTurn = function(flag){
+		var currentPage=$scope.paginationConf.pageNo;
+		goPage(currentPage+flag);
+	}
+	
+	goPage();
+	
+	function goPage(pageNo){
+		var body = {};
+		pageNo = pageNo || 1;
+		console.log(pageNo);
+		body.pageNo = pageNo || 1;
+		body.limit = $scope.paginationConf.itemsPerPage || 10;
+		if($scope.selectForm){
+			body.startDate=$scope.selectForm.startDate;
+			body.endDate=$scope.selectForm.endDate;
+			body.id=$scope.selectForm.id;
+		}
+		
+		PinBackService.getSalesOrder(body).then(function(obj){
+			var data=obj.data;
+			 if(data.status==Status.SUCCESS){
+	             var dto=data.data;
+	             $scope.basicsInfo = dto;
+	             $scope.paginationConf.totalItems=dto.totalRecord;
+	             $scope.paginationConf.totalPage=dto.totalPage;
+	             $scope.paginationConf.pageNo=pageNo;
+	         }else{
+	        	 alert(data.msg);
+	        	 return;
+	         }
+		});
+	}
+	
 
-
-
+}]);
 
 
 //定义各控制器公用方法，方便控制器进行通用调用.
