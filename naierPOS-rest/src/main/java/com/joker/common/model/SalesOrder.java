@@ -5,6 +5,7 @@ package com.joker.common.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 
@@ -52,6 +53,14 @@ public class SalesOrder extends BaseModel{
 	private String cancelPromotion;
 	//完成时间
 	private Date finished;
+	
+	private List<SalesOrderDetails> salesOrderDetails;
+	
+	private List<SalesOrderDiscount> salesOrderDiscount;
+	
+	private List<SalesOrderPay> salesOrderPay;
+	
+	private String cashFlag;
 
 	public Client getClient() {
 		return client;
@@ -187,6 +196,38 @@ public class SalesOrder extends BaseModel{
 
 	public void setFinished(Date finished) {
 		this.finished = finished;
+	}
+
+	public List<SalesOrderDetails> getSalesOrderDetails() {
+		return salesOrderDetails;
+	}
+
+	public void setSalesOrderDetails(List<SalesOrderDetails> salesOrderDetails) {
+		this.salesOrderDetails = salesOrderDetails;
+	}
+
+	public List<SalesOrderDiscount> getSalesOrderDiscount() {
+		return salesOrderDiscount;
+	}
+
+	public void setSalesOrderDiscount(List<SalesOrderDiscount> salesOrderDiscount) {
+		this.salesOrderDiscount = salesOrderDiscount;
+	}
+
+	public List<SalesOrderPay> getSalesOrderPay() {
+		return salesOrderPay;
+	}
+
+	public void setSalesOrderPay(List<SalesOrderPay> salesOrderPay) {
+		this.salesOrderPay = salesOrderPay;
+	}
+
+	public String getCashFlag() {
+		return cashFlag;
+	}
+
+	public void setCashFlag(String cashFlag) {
+		this.cashFlag = cashFlag;
 	}
 	
 	

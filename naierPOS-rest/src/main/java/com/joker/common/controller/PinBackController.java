@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.joker.common.Constant.Constants;
 import com.joker.common.model.Account;
 import com.joker.common.model.SalesOrder;
+import com.joker.common.model.SalesOrderPay;
 import com.joker.common.service.SalesOrderService;
 import com.joker.core.annotation.NotNull;
 import com.joker.core.cache.CacheFactory;
@@ -44,7 +46,7 @@ public class PinBackController extends AbstractController{
 	@RequestMapping(value = { "/pinBack/getSalesOrder" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
-	public ReturnBody getShoppingGuide(@RequestBody ParamsBody paramsBody,
+	public ReturnBody getSalesOrder(@RequestBody ParamsBody paramsBody,
 			HttpServletRequest request, HttpServletResponse response) {
 		ReturnBody rbody = new ReturnBody();
 		
@@ -86,4 +88,78 @@ public class PinBackController extends AbstractController{
 		// 数据返回时永远返回true.
 		return rbody;
 	}
+	
+	@RequestMapping(value = { "/pinBack/getSalesOrderDetails" }, method = RequestMethod.POST)
+	@NotNull(value = "token")
+	@ResponseBody
+	public ReturnBody getSalesOrderDetails(@RequestBody ParamsBody paramsBody,
+			HttpServletRequest request, HttpServletResponse response) {
+		ReturnBody rbody = new ReturnBody();
+		
+		Map params = paramsBody.getBody();
+		String id=(String)params.get("id");
+		String token = paramsBody.getToken();
+		Object user = CacheFactory.getCache().get(token);
+		if (user != null) {
+			Account account = (Account) user;
+			SalesOrder order = salesOrderService.getSalesOrderById(account.getClient().getId(), account.getStore().getId(), id);
+			if(order == null){
+				rbody.setStatus(ResponseState.FAILED);
+				rbody.setMsg("找不到记录.");
+			}else{
+				//遍历支付信息，只有现金支付才能单项退款.
+				String flag="1";
+				for(SalesOrderPay pay:order.getSalesOrderPay()){
+					if(!pay.getPayment().getCode().equals(Constants.PAYMENT_CASH)){
+						flag="0";
+						break;
+					}
+				}
+				order.setCashFlag(flag);
+				rbody.setData(order);
+				rbody.setStatus(ResponseState.SUCCESS);
+			}
+		}else{
+			rbody.setStatus(ResponseState.ERROR);
+			rbody.setMsg("请登录！");
+		}
+		// 数据返回时永远返回true.
+		return rbody;
+	}
+	
+	@RequestMapping(value = { "/pinBack/refund" }, method = RequestMethod.POST)
+	@NotNull(value = "token")
+	@ResponseBody
+	public ReturnBody refund(@RequestBody ParamsBody paramsBody,
+			HttpServletRequest request, HttpServletResponse response) {
+		ReturnBody rbody = new ReturnBody();
+		
+		Map params = paramsBody.getBody();
+		String salesOrderId=(String)params.get("salesOrderId");
+		String token = paramsBody.getToken();
+		Object user = CacheFactory.getCache().get(token);
+		
+		if(StringUtils.isEmpty(salesOrderId)){
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("参数错误.");
+			return rbody;
+		}
+		
+		if (user != null) {
+			Account account = (Account) user;
+			String result = salesOrderService.addRefund(account.getClient().getId(), account.getStore().getId(), salesOrderId);
+			if(StringUtils.isEmpty(result)){
+				rbody.setStatus(ResponseState.SUCCESS);
+			}else{
+				rbody.setStatus(ResponseState.FAILED);
+				rbody.setMsg("找不到记录.");
+			}
+		}else{
+			rbody.setStatus(ResponseState.ERROR);
+			rbody.setMsg("请登录！");
+		}
+		// 数据返回时永远返回true.
+		return rbody;
+	}
+	
 }

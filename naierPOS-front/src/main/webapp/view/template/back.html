@@ -1,0 +1,68 @@
+
+<div class="modal-content">
+	<div class="modal-header">
+		<h4 class="modal-title" id="myModalLabel">订单详情</h4>
+	</div>
+	<div class="modal-body">
+		<div class="margin-bottom">
+			<table class="table">
+				<tbody>
+					<tr>
+						<th>订单编号</th>
+						<td><input type="text" class="form-control" value="{{salesOrder.id}}"></td>
+						<th>订单时间</th>
+						<td><input type="text" class="form-control"
+							value="{{salesOrder.finished | date:'yyyy-MM-dd hh:mm:ss'}}"></td>
+					</tr>
+					<tr>
+						<th>总数量</th>
+						<td><input type="text" class="form-control" value="{{salesOrder.quantity}}"></td>
+						<th>总金额</th>
+						<td><input type="text" class="form-control" value="{{salesOrder.payable}}"></td>
+					</tr>
+				</tbody>
+			</table>
+			<table class="table">
+				<tbody>
+					<tr>
+						<th>支付编码</th>
+						<th>支付名称</th>
+						<th>支付金额</th>
+					</tr>
+					<tr ng-repeat="pay in salesOrder.salesOrderPay">
+						<td>{{pay.payment.code}}</td>
+						<td>{{pay.payment.name}}</td>
+						<td>{{pay.amount}}</td>
+					</tr>
+				</tbody>
+			</table>
+			
+		</div>
+		<div>
+			<table class="table table-bordered table-hover">
+				<tbody>
+					<tr>
+						<th>货号</th>
+						<th>品名</th>
+						<th>属性</th>
+						<th>单价</th>
+						<th>数量</th>
+						<th>金额</th>
+					</tr>
+					<tr ng-repeat="detail in salesOrder.salesOrderDetails">
+						<td>{{detail.material.code}}</td>
+						<td>{{detail.material.abbr}}</td>
+						<td class="editable" ng-if="detail.color!=null && detail.size!=null">{{detail.color.name}}/{{detail.size.name}}</td>
+						<td class="editable" ng-if="detail.color==null || detail.size==null">-</td>
+						<td>¥{{detail.price}}/{{detail.salesUnit.name}}</td>
+						<td class="editable">{{detail.quantity}}{{detail.salesUnit.name}}</td>
+						<td class="editable">¥{{detail.amount}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-default" ng-click="refund(salesOrder.id)">退款</button>
+	</div>
+</div>

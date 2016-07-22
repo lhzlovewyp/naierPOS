@@ -60,7 +60,8 @@ public class LoginFilter implements Filter{
 				if(StringUtils.isNotBlank(token)){
 					ParamsBody params=new ParamsBody();
 					params.setToken(token);
-					body=RestUtil.post("/login/validToken", params);
+					String url="http://"+request.getServerName()+":"+request.getServerPort()+"/rest";
+					body=RestUtil.post(url+"/login/validToken", params);
 				}
 				if(body == null || body.getStatus() != ResponseState.SUCCESS){
 					response.sendRedirect("/backend/login.html");

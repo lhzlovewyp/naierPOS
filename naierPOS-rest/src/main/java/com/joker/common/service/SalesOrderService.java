@@ -29,6 +29,24 @@ public interface SalesOrderService {
 	 */
 	public SalesOrder getSalesInfo(String clientId,String storeId,Date salesDate);
 	
+	/**
+	 * 销售单退货.
+	 * 
+	 * @param clientId
+	 * @param storeId
+	 * @param id
+	 * @return
+	 */
+	public String addRefund(String clientId,String storeId,String id);
+	
+	/**
+	 * 
+	 * 获取销售单信息，销售单内容包含明细，折扣和支付方式.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public SalesOrder getSalesOrderById(String clientId,String storeId,String id);
 	
 	/**
 	 * 保存销售单.

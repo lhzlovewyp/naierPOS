@@ -34,12 +34,12 @@ import com.joker.core.dto.ReturnBody;
  */
 public class RestUtil {
 
-	private static String path = "http://localhost:8082/rest";
+	//private static String path = "http://localhost:8082/rest";
 
 	public static ReturnBody post(String url, ParamsBody paramsBody) {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		// 创建httppost
-		HttpPost httppost = new HttpPost(path + url);
+		HttpPost httppost = new HttpPost( url);
 		httppost.setHeader("Content-Type", "application/json");
 
 		// 依次是代理地址，代理端口号，协议类型
@@ -82,7 +82,7 @@ public class RestUtil {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		try {
 			// 创建httpget.
-			HttpGet httpget = new HttpGet(path + url);
+			HttpGet httpget = new HttpGet(url);
 			// 执行get请求.
 			CloseableHttpResponse response = httpclient.execute(httpget);
 			try {

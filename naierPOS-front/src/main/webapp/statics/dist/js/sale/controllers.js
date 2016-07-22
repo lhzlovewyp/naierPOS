@@ -703,11 +703,102 @@ app.controller("promotionCtrl",['$scope','$location','SaleService','ngDialog','P
 	}
 }]);
 
+app.controller("pinBackCtl",['$scope','$location','PinBackService','ngDialog','PayService','$timeout',function($scope,$location,PinBackService,ngDialog,PayService,$timeout){
+	
+	$scope.$on('$viewContentLoaded', function(){
+		$('[data-provide="datepicker-inline"]').datepicker();
+	});
+	
+	//初始化数据.
+	var initCurrentPage = 1;
+	var totalItems = 0;
+	
+	$scope.paginationConf = {
+	        currentPage: initCurrentPage,
+	        onChange: function(){
+	        	goPage($scope.paginationConf.currentPage);
+	        }
+	};
+	
+	$scope.queryByPage = function(){
+		goPage(1);
+	};
+	
+	$scope.pageTurn = function(flag){
+		var currentPage=$scope.paginationConf.pageNo;
+		goPage(currentPage+flag);
+	}
+	//整单退款.
+	$scope.matBack = function(id){
+		$scope.salesOrderId=id;
+		ngDialog.open({
+            template: '/front/view/template/back.html',
+            scope: $scope,
+            closeByDocument: false,
+            width:700,
+            controller: 'backCtrl'
+        });
+	}
+	goPage();
+	
+	function goPage(pageNo){
+		var body = {};
+		pageNo = pageNo || 1;
+		body.pageNo = pageNo || 1;
+		body.limit = $scope.paginationConf.itemsPerPage || 10;
+		if($scope.selectForm){
+			body.startDate=$scope.selectForm.startDate;
+			body.endDate=$scope.selectForm.endDate;
+			body.id=$scope.selectForm.id;
+		}
+		
+		PinBackService.getSalesOrder(body).then(function(obj){
+			var data=obj.data;
+			 if(data.status==Status.SUCCESS){
+	             var dto=data.data;
+	             $scope.basicsInfo = dto;
+	             $scope.paginationConf.totalItems=dto.totalRecord;
+	             $scope.paginationConf.totalPage=dto.totalPage;
+	             $scope.paginationConf.pageNo=pageNo;
+	         }else{
+	        	 alert(data.msg);
+	        	 return;
+	         }
+		});
+	}
+	
 
-
-
-
-
+}]);
+app.controller("backCtrl",['$scope','$location','PinBackService','ngDialog','PayService','$timeout',function($scope,$location,PinBackService,ngDialog,PayService,$timeout){
+	var id=$scope.salesOrderId;
+	var condition={id:id};
+	PinBackService.getSalesOrderDetails(condition).then(function(obj){
+		var data=obj.data;
+		if(data.status==Status.SUCCESS){
+			$scope.salesOrder=data.data;
+		}else{
+			alert(data.msg);
+		}
+	});
+	
+	$scope.refund = function(salesOrderId){
+		var condition={};
+		condition.salesOrderId=salesOrderId;
+		PinBackService.refund(condition).then(function(obj){
+			var data=obj.data;
+			if(data.status==Status.SUCCESS){
+				alert("操作成功");
+				ngDialog.close();
+				$timeout(function(){
+					$("#searchSalesOrder").trigger("click");
+				});
+			}else{
+				alert(data.msg);
+			}
+		});
+	};
+	
+}]);
 //定义各控制器公用方法，方便控制器进行通用调用.
 /**
  * 调用结算按钮，打开支付页面.

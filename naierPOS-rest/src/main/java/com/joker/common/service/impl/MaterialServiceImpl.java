@@ -18,13 +18,15 @@ import com.joker.common.Constant.Constants;
 import com.joker.common.mapper.MaterialMapper;
 import com.joker.common.model.Material;
 import com.joker.common.model.MaterialProperty;
+import com.joker.common.model.Unit;
 import com.joker.common.model.UnitConversion;
 import com.joker.common.service.MaterialPropertyService;
 import com.joker.common.service.MaterialService;
 import com.joker.common.service.RetailPriceService;
 import com.joker.common.service.UnitConversionService;
-import com.joker.core.util.NumberUtil;
+import com.joker.common.service.UnitService;
 import com.joker.core.dto.Page;
+import com.joker.core.util.NumberUtil;
 
 /**
  * @author lvhaizhen
@@ -44,6 +46,9 @@ public class MaterialServiceImpl implements MaterialService {
 
 	@Autowired
 	UnitConversionService unitConversionService;
+	
+	@Autowired
+	UnitService unitService;
 
 	@Override
 	public Material getMaterialByCode(String clientId, String code) {
@@ -99,6 +104,17 @@ public class MaterialServiceImpl implements MaterialService {
 		if (mat.getSalesConversion() != null) {
 			return;
 		}
+		
+		Unit basicUnit=unitService.getUnitByID(mat.getBasicUnit().getId());
+		if(basicUnit!=null){
+			mat.setBasicUnit(basicUnit);
+		}
+		
+		Unit salesUnit=unitService.getUnitByID(mat.getSalesUnit().getId());
+		if(salesUnit!=null){
+			mat.setSalesUnit(salesUnit);
+		}
+		
 		// 如果销售单位=基本单位，设置为1.
 		if (mat.getBasicUnit().getId().equals(mat.getSalesUnit().getId())) {
 			mat.setSalesConversion(new BigDecimal(1));
