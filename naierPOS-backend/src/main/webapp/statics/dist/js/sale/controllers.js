@@ -109,7 +109,7 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 	}
 }]);
 
-app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','BasicsService',function($scope,$location,$routeParams,BasicsService){
+app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDialog','BasicsService',function($scope,$location,$routeParams,ngDialog,BasicsService){
 	var allStatus = [
 		        	    {value : "1", show : "有效"},
 		        	    {value : "0", show : "无效"}
@@ -154,6 +154,9 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','Basics
 					$scope.selstatus = allStatus[i];	
 					break;
 				}
+			}
+			if(routePath == 'materialCategory'){
+				data.parentId = data.parent.id;
 			}
 			$scope.form = data;
 			completeQueryById = true;
@@ -258,6 +261,61 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','Basics
             });
         }
 	}
+	
+	//导购员信息查询.
+	$scope.openMaterialCategoryTree = function(){
+		
+		ngDialog.open({
+            template: '/backend/view/template/materialCategoryTree.html',
+            scope: $scope,
+            closeByEscape: false,
+            controller: 'materialCategoryTreeCtrl'
+        });
+	}
+}]);
+
+app.controller("materialCategoryTreeCtrl",['$scope','$location','LoginService','ngDialog',function($scope,$location,LoginService,ngDialog){
+	var tree = [
+	            {
+	              text: "Parent 1",
+	              nodes: [
+	                {
+	                  text: "Child 1",
+	                  nodes: [
+	                    {
+	                      text: "Grandchild 1"
+	                    },
+	                    {
+	                      text: "Grandchild 2"
+	                    }
+	                  ]
+	                },
+	                {
+	                  text: "Child 2"
+	                }
+	              ]
+	            },
+	            {
+	              text: "Parent 2"
+	            },
+	            {
+	              text: "Parent 3"
+	            },
+	            {
+	              text: "Parent 4"
+	            },
+	            {
+	              text: "Parent 5"
+	            }
+	          ];
+	
+	//表格渲染完成后执行
+	$scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
+		$('#materialCategoryTree').treeview({data: tree});
+	});
+	$scope.close=function(){
+		ngDialog.close();
+	};
 }]);
 
 app.controller("headNavCtrl",['$scope','$location','LoginService',function($scope,$location,LoginService){
