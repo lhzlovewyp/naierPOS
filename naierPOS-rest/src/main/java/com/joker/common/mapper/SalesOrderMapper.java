@@ -7,7 +7,6 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import com.joker.common.model.Account;
 import com.joker.common.model.SalesOrder;
 import com.joker.common.model.SalesOrderDetails;
 import com.joker.common.model.SalesOrderDiscount;
@@ -24,6 +23,30 @@ public interface SalesOrderMapper {
 	 */
 	@DataSource("slave")
 	public SalesOrder getSalesInfo(@Param("clientId") String clientId,@Param("storeId")String storeId,@Param("salesDate") Date salesDate);
+	
+	
+	/**
+	 * 查询订单详细信息.
+	 * 
+	 * @param salesOrderId
+	 * @return
+	 */
+	public List<SalesOrderDetails> getSalesOrderDetailById(@Param("salesOrderId")String salesOrderId);
+	
+	
+	/**
+	 * 获取订单支付信息.
+	 * @param salesOrderId
+	 * @return
+	 */
+	public List<SalesOrderPay> getSalesOrderPayById(@Param("salesOrderId")String salesOrderId);
+	
+	/**
+	 * 获取订单折扣信息.
+	 * @param salesOrderId
+	 * @return
+	 */
+	public List<SalesOrderDiscount> getSalesOrderDiscountById(@Param("salesOrderId")String salesOrderId);
 	
 	/**
 	 * 根据条件查询销售单信息.
@@ -48,6 +71,13 @@ public interface SalesOrderMapper {
 	 * @return
 	 */
 	public int saveSalesOrder(SalesOrder salesOrder);
+	
+	/**
+	 * 修改销售单.
+	 * @param salesOrder
+	 * @return
+	 */
+	public int updateSalesOrder(SalesOrder salesOrder);
 	
 	/**
 	 * 保存销售单明细.

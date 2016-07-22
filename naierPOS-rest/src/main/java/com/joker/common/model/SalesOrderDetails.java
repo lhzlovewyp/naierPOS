@@ -40,7 +40,7 @@ public class SalesOrderDetails extends BaseModel{
 	/**商品*/
 	private Material material;
 	/**销售数量*/
-	private BigDecimal quantity;
+	private BigDecimal quantity =new BigDecimal(0);
 	/**销售单位*/
 	private Unit salesUnit;
 	/**基本单位数量*/

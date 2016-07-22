@@ -35,6 +35,63 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="finished" column="Finished"/>
 	</resultMap>
 	
+	<resultMap type="salesOrderDetails" id="salesOrderDetails">
+		<result property="id" column="ID"/>
+		<result property="client.id" column="Client"/>
+		<result property="salesOrder.id" column="SalesOrder"/>
+		<result property="transClass" column="TransClass"/>
+		<result property="store.id" column="Store"/>
+		<result property="salesDate" column="SalesDate"/>
+		<result property="code" column="Code"/>
+		<result property="serialNo" column="SerialNo"/>
+		<result property="itemClass.code" column="ItemClass"/>
+		<result property="material.id" column="Item"/>
+		<result property="color.id" column="Color"/>
+		<result property="size.id" column="Size"/>
+		<result property="quantity" column="Quantity"/>
+		<result property="salesUnit.id" column="SalesUnit"/>
+		<result property="basicQuantity" column="BasicQuantity"/>
+		<result property="basicUnit.id" column="BasicUnit"/>
+		<result property="conversion" column="Conversion"/>
+		<result property="price" column="Price"/>
+		<result property="amount" column="Amount"/>
+		<result property="discount" column="Discount"/>
+		<result property="minusChange" column="MinusChange"/>
+		<result property="payable" column="Payable"/>
+		<result property="promotion.id" column="Promotion"/>
+	</resultMap>
+	
+	<resultMap type="salesOrderPay" id="salesOrderPay">
+		<result property="id" column="ID"/>
+		<result property="client.id" column="Client"/>
+		<result property="salesOrder.id" column="SalesOrder"/>
+		<result property="transClass" column="TransClass"/>
+		<result property="store.id" column="Store"/>
+		<result property="salesDate" column="SalesDate"/>
+		<result property="code" column="Code"/>
+		<result property="serialNo" column="SerialNo"/>
+		<result property="payTime" column="PayTime"/>
+		<result property="payment.code" column="Payment"/>
+		<result property="payment.name" column="PaymentName"/>
+		<result property="amount" column="Amount"/>
+		<result property="changed" column="Changed"/>
+		<result property="excess" column="Excess"/>
+		<result property="transNo" column="TransNo"/>
+	</resultMap>
+	
+	<resultMap type="salesOrderDiscount" id="salesOrderDiscount">
+		<result property="id" column="ID"/>
+		<result property="client.id" column="Client"/>
+		<result property="salesOrder.id" column="SalesOrder"/>
+		<result property="transClass" column="TransClass"/>
+		<result property="store.id" column="Store"/>
+		<result property="salesDate" column="SalesDate"/>
+		<result property="code" column="Code"/>
+		<result property="disc" column="DISC"/>
+		<result property="mat" column="MAT"/>
+		<result property="amount" column="Amount"/>
+	</resultMap>
+	
     <select id="getSalesInfo"  resultMap="salesOrderSum">
 		SELECT Store ,SUM(Amount) AS Amount,COUNT(1) AS Num FROM SalesOrder
 		WHERE Store=#{storeId} AND Client=#{clientId} and SalesDate=#{salesDate,jdbcType=DATE} 
@@ -42,7 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="getSalesOrderPageByCondition" resultMap="salesOrder" parameterType="java.util.Map">
-		select * from SalesOrder where TransClass='SO' and Status=1
+		select * from SalesOrder where TransClass='SO'
 		and Store=#{storeId} and Client=#{clientId}
 		<if test="id != null">
 				and ID=#{id}
@@ -54,11 +111,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="endDate != null">
 				<![CDATA[  and Finished<=#{endDate}]]>
 		</if>
+		<if test="Status != null">
+				<![CDATA[  and Status=#{stauts}]]>
+		</if>
+		
 		
 		order by Finished desc
 		<if test="start != null and limit != null">
 				limit #{start},#{limit}
 		</if>
+	</select>
+	
+	<select id="getSalesOrderDetailById" resultMap="salesOrderDetails">
+		select * from SalesOrderDetails where SalesOrder=#{salesOrderId} order by   SerialNo
+	</select>
+	<select id="getSalesOrderPayById" resultMap="salesOrderPay">
+		SELECT sp.*,p.Name as PaymentName FROM SalesOrderPay sp, Payment p WHERE sp.Payment=p.Code
+       and sp.SalesOrder=#{salesOrderId} order by  sp.SerialNo
+	</select>
+	<select id="getSalesOrderDiscountById" resultMap="salesOrderDiscount">
+		select * from SalesOrderDiscount where SalesOrder=#{salesOrderId}
 	</select>
 	
 	<select id="getSalesOrderCountByCondition" parameterType="java.util.Map" resultType="int">
@@ -82,7 +154,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<insert id="saveSalesOrder" parameterType="salesOrder">
 		insert into SalesOrder <include refid="salesOrderSet" />  
 	</insert>
-	
+	<update id="updateSalesOrder" parameterType="salesOrder">
+		update SalesOrder  <include refid="salesOrderSet" />   where ID=#{id}
+	</update>
 	
 	
 	<sql id="salesOrderSet">
@@ -111,37 +185,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </set>
     </sql >
 	
-	<sql id="salesOrderDetailSet">
-		<foreach collection="list" index="index" item="item" separator=",">
-			<set>
-				<if test= "item.id != null">ID=#{item.id},</if>
-				<if test= "item.client != null">Client=#{item.client.id},</if>
-				<if test= "item.salesOrder != null">SalesOrder=#{item.salesOrder.id},</if>
-				<if test= "item.transClass != null">TransClass=#{item.transClass},</if>
-				<if test= "item.store != null">Store=#{item.store.id},</if>
-				<if test= "item.salesDate != null">SalesDate=#{item.salesDate},</if>
-				<if test= "item.code != null">Code=#{item.code},</if>
-				<if test= "item.serialNo != null">SerialNo=#{item.serialNo},</if>
-				<if test= "item.itemClass != null">ItemClass=#{item.itemClass.code},</if>
-				<if test= "item.material != null">Item=#{item.material.id},</if>
-				<if test= "item.quantity != null">Quantity=#{item.quantity},</if>
-				<if test= "item.salesUnit != null">SalesUnit=#{item.salesUnit.id},</if>
-				<if test= "item.basicQuantity != null">BasicQuantity=#{item.basicQuantity},</if>
-				<if test= "item.basicUnit != null">BasicUnit=#{item.basicUnit.id},</if>
-				<if test= "item.conversion != null">Conversion=#{item.conversion},</if>
-				<if test= "item.price != null">Price=#{item.price},</if>
-				<if test= "item.conversion != null">Conversion=#{item.conversion},</if>
-				<if test= "item.amount != null">Amount=#{item.amount},</if>
-				<if test= "item.discount != null">Discount=#{item.discount},</if>
-				<if test= "item.minusChange != null">MinusChange=#{item.minusChange},</if>
-				<if test= "item.payable != null">Payable=#{item.payable},</if>
-				<if test= "item.promotion != null">Promotion=#{item.promotion.id},</if>
-				<if test= "item.color != null">Color=#{item.color.id},</if>
-				<if test= "item.size != null">Size=#{item.size.id},</if>
-			
-			</set>
-		</foreach>
-	</sql>
 	<insert id="saveSalesOrderDetail" parameterType="java.util.List">
 		insert into SalesOrderDetails (ID,Client,SalesOrder,TransClass,Store,SalesDate,Code,SerialNo,ItemClass,Item,Quantity,SalesUnit,BasicQuantity,BasicUnit,
 		Conversion,Price,Amount,Discount,MinusChange,Payable,Promotion,Color,Size)   

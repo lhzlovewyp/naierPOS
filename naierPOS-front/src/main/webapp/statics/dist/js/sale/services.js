@@ -240,7 +240,29 @@ app.factory('PinBackService',['$q','$location','$http','BaseService',function($q
                 	deferred.resolve(obj);
             });
 			return deferred.promise;
+		},
+		getSalesOrderDetails : function(condition){
+			if(!condition){
+				return ;
+			}
+			var token=$.cookie("token");
+			condition.token=token;
+			var deferred = $q.defer();
+			BaseService.post('/rest/pinBack/getSalesOrderDetails',condition).then(function(obj){
+                	deferred.resolve(obj);
+            });
+			return deferred.promise;
+		},
+		refund : function(condition){
+			var token=$.cookie("token");
+			condition.token=token;
+			var deferred = $q.defer();
+			BaseService.post('/rest/pinBack/refund',condition).then(function(obj){
+                	deferred.resolve(obj);
+            });
+			return deferred.promise;
 		}
+		
 	}
 }]);
 	

@@ -10,6 +10,9 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 	     <typeAlias type="com.joker.common.model.Account" alias="account" />
 	     <typeAlias type="com.joker.common.model.Role" alias="role" />
 	     <typeAlias type="com.joker.common.model.SalesConfig" alias="salesConfig" />
+	     <typeAlias type="com.joker.common.model.SalesOrderDetails" alias="salesOrderDetails" />
+	     <typeAlias type="com.joker.common.model.SalesOrderPay" alias="salesOrderPay" />
+	     <typeAlias type="com.joker.common.model.SalesOrderDiscount" alias="salesOrderDiscount" />
 	     <typeAlias type="com.joker.common.model.SalesOrder" alias="salesOrder" />
 	     <typeAlias type="com.joker.common.model.ShoppingGuide" alias="shoppingGuide" />
 	     <typeAlias type="com.joker.common.model.Material" alias="material" />

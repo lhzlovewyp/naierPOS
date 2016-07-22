@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -18,21 +19,23 @@ import org.springframework.util.StringUtils;
 import com.joker.common.Constant.Constants;
 import com.joker.common.dto.SaleDto;
 import com.joker.common.dto.SaleInfo;
+import com.joker.common.mapper.ColorMapper;
 import com.joker.common.mapper.SalesOrderMapper;
+import com.joker.common.mapper.SizeMapper;
 import com.joker.common.model.Account;
 import com.joker.common.model.ClientPayment;
+import com.joker.common.model.Color;
 import com.joker.common.model.ItemClass;
 import com.joker.common.model.Material;
 import com.joker.common.model.SalesOrder;
 import com.joker.common.model.SalesOrderDetails;
 import com.joker.common.model.SalesOrderDiscount;
 import com.joker.common.model.SalesOrderPay;
+import com.joker.common.model.Size;
 import com.joker.common.service.MaterialService;
 import com.joker.common.service.SalesConfigService;
 import com.joker.common.service.SalesOrderService;
-import com.joker.common.service.promotion.PromotionUtil;
 import com.joker.core.dto.Page;
-import com.joker.core.util.NumberUtil;
 import com.joker.core.util.RandomCodeFactory;
 
 /**
@@ -48,6 +51,10 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 	SalesConfigService salesConfigService;
 	@Autowired
 	MaterialService materialService;
+	@Autowired
+	ColorMapper colorMapper;
+	@Autowired
+	SizeMapper sizeMapper;
 	
 
 	@Override
@@ -71,6 +78,60 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 		return page;
 	}
 
+	@Override
+	public SalesOrder getSalesOrderById(String clientId,String storeId,String id) {
+		Map<String,Object> map=new HashMap<String,Object>();
+		map.put("clientId", clientId);
+		map.put("storeId", storeId);
+		map.put("id", id);
+		List<SalesOrder> orders=mapper.getSalesOrderPageByCondition(map);
+		if(CollectionUtils.isNotEmpty(orders)){
+			SalesOrder order=orders.get(0);
+			
+			//获取订单详情
+			List<SalesOrderDetails> details=mapper.getSalesOrderDetailById(order.getId());
+			for(Iterator<SalesOrderDetails> it=details.iterator();it.hasNext();){
+				SalesOrderDetails detail=it.next();
+				if(detail.getItemClass().getCode().equals(Constants.SALE_TYPE_MAT)){
+					//获取物料信息.
+					Material material=materialService.getMaterialById(detail.getMaterial().getId());
+					detail.setMaterial(material);
+					detail.setSalesUnit(material.getSalesUnit());
+					detail.setBasicUnit(material.getBasicUnit());
+					if(detail.getColor()!=null){
+						Color color=colorMapper.getColorByID(detail.getColor().getId());
+						if(color!=null){
+							detail.setColor(color);
+						}
+					}
+					if(detail.getSize()!=null){
+						Size size= sizeMapper.getSizeByID(detail.getSize().getId());
+						if(size!=null){
+							detail.setSize(size);
+						}
+					}
+				}else{
+					Material m=new Material();
+					if(detail.getItemClass().getCode().equals(Constants.SALE_TYPE_ITEMDISC)){//单项折扣
+						m.setAbbr("单项折扣");
+					}else if(detail.getItemClass().getCode().equals(Constants.SALE_TYPE_TRANSDISC)){//整单折扣
+						m.setAbbr("整单折扣");
+					}else if(detail.getItemClass().getCode().equals(Constants.SALE_TYPE_PROMDISC)){//促销折扣
+						m.setAbbr("促销折扣");
+					}
+					detail.setMaterial(m);
+				}
+			}
+			
+			order.setSalesOrderDetails(details);
+			//获取折扣
+			order.setSalesOrderDiscount(mapper.getSalesOrderDiscountById(order.getId()));
+			//获取支付信息.
+			order.setSalesOrderPay(mapper.getSalesOrderPayById(order.getId()));
+			return order;
+		}
+		return null;
+	}
 
 	@Override
 	public boolean addSaleInfo(SaleDto saleDto,Account account) {
@@ -329,6 +390,79 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 		}
 		return list;
 	}
+
+	@Override
+	public String addRefund(String clientId, String storeId, String id) {
+		SalesOrder salesOrder=this.getSalesOrderById(clientId, storeId, id);
+		if(salesOrder == null){
+			return "-1";
+		}
+		//修改销售单信息.
+		SalesOrder originOrder=new SalesOrder();
+		originOrder.setId(salesOrder.getId());
+		salesOrder.setOriginOrder(originOrder);
+		salesOrder.setId(RandomCodeFactory.defaultGenerateMixed());
+		salesOrder.setQuantity(salesOrder.getQuantity().negate());
+		salesOrder.setAmount(salesOrder.getAmount().negate());
+		salesOrder.setDiscount(salesOrder.getDiscount());
+		salesOrder.setMinusChange(salesOrder.getMinusChange().negate());
+		salesOrder.setPaid(salesOrder.getPaid().negate());
+		salesOrder.setPayable(salesOrder.getPayable().negate());
+		salesOrder.setExcess(salesOrder.getExcess().negate());
+		salesOrder.setFinished(new Date());
+		salesOrder.setCreated(new Date());
+		salesOrder.setTransClass(Constants.ORDER_TYPE_RTN);
+		//修改销售单明细.
+		if(CollectionUtils.isNotEmpty(salesOrder.getSalesOrderDetails())){
+			for(SalesOrderDetails detail:salesOrder.getSalesOrderDetails()){
+				detail.setId(RandomCodeFactory.defaultGenerateMixed());
+				detail.setSalesOrder(salesOrder);
+				detail.setTransClass(salesOrder.getTransClass());
+				detail.setQuantity(salesOrder.getQuantity().negate());
+				detail.setAmount(detail.getAmount().negate());
+				detail.setDiscount(salesOrder.getDiscount().negate());
+				detail.setMinusChange(salesOrder.getMinusChange().negate());
+				detail.setPayable(salesOrder.getPayable().negate());
+			}
+		}
+		//修改支付信息.
+		if(CollectionUtils.isNotEmpty(salesOrder.getSalesOrderPay())){
+			for(SalesOrderPay pay:salesOrder.getSalesOrderPay()){
+				pay.setId(RandomCodeFactory.defaultGenerateMixed());
+				pay.setSalesOrder(salesOrder);
+				pay.setTransClass(salesOrder.getTransClass());
+				pay.setAmount(pay.getAmount().negate());
+				pay.setChange(pay.getChanged());
+				pay.setExcess(pay.getExcess());
+			}
+		}
+		//修改折扣明细
+		if(CollectionUtils.isNotEmpty(salesOrder.getSalesOrderDiscount())){
+			for(SalesOrderDiscount discount:salesOrder.getSalesOrderDiscount()){
+				discount.setSalesOrder(salesOrder);
+				discount.setTransClass(discount.getTransClass());
+				discount.setAmount(salesOrder.getAmount().negate());
+				discount.setId(RandomCodeFactory.defaultGenerateMixed());
+			}
+		}
+		//保存数据
+		mapper.saveSalesOrder(salesOrder);
+		if(CollectionUtils.isNotEmpty(salesOrder.getSalesOrderDetails())){
+			mapper.saveSalesOrderDetail(salesOrder.getSalesOrderDetails());
+		}
+		if(CollectionUtils.isNotEmpty(salesOrder.getSalesOrderPay())){
+			mapper.saveSalesOrderPay(salesOrder.getSalesOrderPay());
+		}
+		if(CollectionUtils.isNotEmpty(salesOrder.getSalesOrderDiscount())){
+			mapper.saveSalesOrderDiscount(salesOrder.getSalesOrderDiscount());
+		}
+		//修改原始订单数据状态为取消.
+		originOrder.setStatus(Constants.STATUS_FAIL); 
+		mapper.updateSalesOrder(originOrder);
+		return null;
+	}
+
+	
 
 
 	
