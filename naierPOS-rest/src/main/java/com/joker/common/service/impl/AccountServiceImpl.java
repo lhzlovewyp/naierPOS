@@ -129,6 +129,29 @@ public class AccountServiceImpl implements AccountService {
 		Page<Account> page = new Page<Account>();
 		int totalRecord = mapper.getAccountCountByCondition(map);
 		List<Account> list = mapper.getAccountPageByCondition(map);
+		if (CollectionUtils.isNotEmpty(list)) {
+			Map<String, Store> cacheMap = new HashMap<String, Store>();
+			for (Account account : list) {
+				if (account != null && account.getStore() != null
+						&& StringUtils.isNotBlank(account.getStore().getId())) {
+					String storeId = account.getStore().getId();
+					Store store = null;
+					if (cacheMap.containsKey(storeId)) {
+						store = cacheMap.get(storeId);
+					} else {
+						store = storeMapper.getStoreById(account.getStore()
+								.getId());
+						if (store != null) {
+							cacheMap.put(storeId, store);
+						}
+					}
+					if (store != null) {
+						account.setStore(store);
+					}
+				}
+			}
+		}
+
 		page.setPageNo(start + 1);
 		page.setPageSize(limit);
 		page.setTotalRecord(totalRecord);

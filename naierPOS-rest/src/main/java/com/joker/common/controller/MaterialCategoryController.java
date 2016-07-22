@@ -123,6 +123,39 @@ public class MaterialCategoryController extends AbstractController {
 		// 数据返回时永远返回true.
 		return rbody;
 	}
+	
+	/**
+	 * 查询品类树信息.
+	 * 
+	 * @param paramsBody
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = { "/materialCategory/queryTree" }, method = RequestMethod.POST)
+	@NotNull(value = "token")
+	@ResponseBody
+	public ReturnBody getTree(@RequestBody ParamsBody paramsBody,
+			HttpServletRequest request, HttpServletResponse response) {
+		ReturnBody rbody = new ReturnBody();
+		// 参数校验
+		Map params = paramsBody.getBody();
+		
+		String token = paramsBody.getToken();
+		Object user = CacheFactory.getCache().get(token);
+		if (user != null) {
+			MaterialCategory materialCategory = materialCategoryService
+					.getMaterialCategoryByID(id);
+			rbody.setData(materialCategory);
+			rbody.setStatus(ResponseState.SUCCESS);
+			return rbody;
+		} else {
+			rbody.setStatus(ResponseState.ERROR);
+			rbody.setMsg("请登录！");
+		}
+		// 数据返回时永远返回true.
+		return rbody;
+	}
 
 	/**
 	 * 添加品类信息.

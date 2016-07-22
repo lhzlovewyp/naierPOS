@@ -53,7 +53,5 @@ public class MaterialCategory  extends BaseModel{
 
 	public void setParent(MaterialCategory parent) {
 		this.parent = parent;
-	}
-	
-	
+	}	
 }
