@@ -3,9 +3,9 @@
  */
 package com.joker.common.controller;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,9 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.joker.common.model.Account;
 import com.joker.common.model.Client;
-import com.joker.common.model.Unit;
-import com.joker.common.model.UnitConversion;
-import com.joker.common.service.UnitConversionService;
+import com.joker.common.model.RetailConfig;
+import com.joker.common.service.RetailConfigService;
 import com.joker.core.annotation.NotNull;
 import com.joker.core.cache.CacheFactory;
 import com.joker.core.constant.ResponseState;
@@ -38,30 +37,29 @@ import com.joker.core.dto.ReturnBody;
  * 
  */
 @Controller
-public class UnitConversionController extends AbstractController {
+public class RetailConfigController extends AbstractController {
 
 	@Autowired
-	UnitConversionService unitConversionService;
+	RetailConfigService retailConfigService;
 
 	/**
-	 * 查询品牌信息.
+	 * 查询零售参数信息.
 	 * 
 	 * @param paramsBody
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = { "/unitConversion/queryByPage" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/retailConfig/queryByPage" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
-	public ReturnBody getUnitConversionByPage(@RequestBody ParamsBody paramsBody,
+	public ReturnBody getRetailConfigByPage(@RequestBody ParamsBody paramsBody,
 			HttpServletRequest request, HttpServletResponse response) {
 		ReturnBody rbody = new ReturnBody();
 		// 参数校验
 		Map params = paramsBody.getBody();
 		Integer pageNo = (Integer) params.get("pageNo");
 		Integer limit = (Integer) params.get("limit");
-		String likeName = (String) params.get("likeName");
 		pageNo = (pageNo == null ? 0 : pageNo);
 		limit = (limit == null ? 10 : limit);
 
@@ -72,9 +70,8 @@ public class UnitConversionController extends AbstractController {
 			String clientId = account.getClient().getId();
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("clientId", clientId);
-			map.put("likeName", likeName);
-			Page<UnitConversion> page = unitConversionService
-					.getUnitConversionPageByCondition(map, pageNo, limit);
+			Page<RetailConfig> page = retailConfigService
+					.getRetailConfigPageByCondition(map, pageNo, limit);
 			rbody.setData(page);
 			rbody.setStatus(ResponseState.SUCCESS);
 			return rbody;
@@ -87,17 +84,52 @@ public class UnitConversionController extends AbstractController {
 	}
 
 	/**
-	 * 查询品牌信息.
+	 * 查询零售参数信息.
 	 * 
 	 * @param paramsBody
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = { "/unitConversion/queryById" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/retailConfig/queryByList" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
-	public ReturnBody getUnitConversionById(@RequestBody ParamsBody paramsBody,
+	public ReturnBody getRetailConfigByList(@RequestBody ParamsBody paramsBody,
+			HttpServletRequest request, HttpServletResponse response) {
+		ReturnBody rbody = new ReturnBody();
+
+		String token = paramsBody.getToken();
+		Object user = CacheFactory.getCache().get(token);
+		if (user != null) {
+			Account account = (Account) user;
+			String clientId = account.getClient().getId();
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("clientId", clientId);
+			List<RetailConfig> list = retailConfigService
+					.getRetailConfigPageByCondition(map);
+			rbody.setData(list);
+			rbody.setStatus(ResponseState.SUCCESS);
+			return rbody;
+		} else {
+			rbody.setStatus(ResponseState.ERROR);
+			rbody.setMsg("请登录！");
+		}
+		// 数据返回时永远返回true.
+		return rbody;
+	}
+
+	/**
+	 * 查询零售参数信息.
+	 * 
+	 * @param paramsBody
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = { "/retailConfig/queryById" }, method = RequestMethod.POST)
+	@NotNull(value = "token")
+	@ResponseBody
+	public ReturnBody getRetailConfigById(@RequestBody ParamsBody paramsBody,
 			HttpServletRequest request, HttpServletResponse response) {
 		ReturnBody rbody = new ReturnBody();
 		// 参数校验
@@ -112,9 +144,9 @@ public class UnitConversionController extends AbstractController {
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
-			UnitConversion unitConversion = unitConversionService
-					.getUnitConversionByID(id);
-			rbody.setData(unitConversion);
+			RetailConfig retailConfig = retailConfigService
+					.getRetailConfigByID(id);
+			rbody.setData(retailConfig);
 			rbody.setStatus(ResponseState.SUCCESS);
 			return rbody;
 		} else {
@@ -126,14 +158,14 @@ public class UnitConversionController extends AbstractController {
 	}
 
 	/**
-	 * 添加品牌信息.
+	 * 添加零售参数信息.
 	 * 
 	 * @param paramsBody
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = { "/unitConversion/add" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/retailConfig/add" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
 	public ReturnBody add(@RequestBody ParamsBody paramsBody,
@@ -141,31 +173,36 @@ public class UnitConversionController extends AbstractController {
 		ReturnBody rbody = new ReturnBody();
 		// 参数校验
 		Map params = paramsBody.getBody();
-		String unitAId = (String) params.get("unitAId");
-		String qtyA = (String) params.get("qtyA");
-		String unitBId = (String) params.get("unitBId");
-		String qtyB = (String) params.get("qtyB");
-		String remark = (String) params.get("remark");
+		String priceDecimal = (String) params.get("priceDecimal");
+		String itemDecimal = (String) params.get("itemDecimal");
+		String itemRoundDown = (String) params.get("itemRoundDown");
+		String transDecimal = (String) params.get("transDecimal");
+		String saleRoundDown = (String) params.get("saleRoundDown");
 		String clientId = (String) params.get("clientId");
 
-		if (StringUtils.isBlank(unitAId)) {
+		if (!StringUtils.isNumeric(priceDecimal)) {
 			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入甲单位！");
+			rbody.setMsg("请输入单价保留小数位数！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(qtyA)) {
+		if (!StringUtils.isNumeric(itemDecimal)) {
 			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入甲单位数量！");
+			rbody.setMsg("请输入商品金额保留小数位数！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(unitBId)) {
+		if (!StringUtils.isNumeric(itemRoundDown)) {
 			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入乙单位！");
+			rbody.setMsg("请输入商品金额舍去值！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(qtyB)) {
+		if (!StringUtils.isNumeric(transDecimal)) {
 			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入乙单位数量！");
+			rbody.setMsg("请输入销售单金额保留小数位数！");
+			return rbody;
+		}
+		if (!StringUtils.isNumeric(saleRoundDown)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入销售单金额舍去值！");
 			return rbody;
 		}
 		if (StringUtils.isBlank(clientId)) {
@@ -182,24 +219,18 @@ public class UnitConversionController extends AbstractController {
 			Client client = new Client();
 			client.setId(clientId);
 
-			Unit unitA = new Unit();
-			unitA.setId(unitAId);
+			RetailConfig retailConfig = new RetailConfig();
+			retailConfig.setId(UUID.randomUUID().toString());
+			retailConfig.setPriceDecimal(Integer.valueOf(priceDecimal));
+			retailConfig.setItemDecimal(Integer.valueOf(itemDecimal));
+			retailConfig.setItemRoundDown(Integer.valueOf(itemRoundDown));
+			retailConfig.setTransDecimal(Integer.valueOf(transDecimal));
+			retailConfig.setSaleRoundDown(Integer.valueOf(saleRoundDown));
+			retailConfig.setClient(client);
+			retailConfig.setCreated(new Date());
+			retailConfig.setCreator(account.getId());
 
-			Unit unitB = new Unit();
-			unitB.setId(unitBId);
-
-			UnitConversion addUnitConversion = new UnitConversion();
-			addUnitConversion.setId(UUID.randomUUID().toString());
-			addUnitConversion.setUnitA(unitA);
-			addUnitConversion.setQtyA(new BigDecimal(qtyA));
-			addUnitConversion.setUnitB(unitB);
-			addUnitConversion.setQtyB(new BigDecimal(qtyB));
-			addUnitConversion.setRemark(remark);
-			addUnitConversion.setClient(client);
-			addUnitConversion.setCreated(new Date());
-			addUnitConversion.setCreator(account.getId());
-
-			unitConversionService.insertUnitConversion(addUnitConversion);
+			retailConfigService.insertRetailConfig(retailConfig);
 			rbody.setStatus(ResponseState.SUCCESS);
 		} else {
 			rbody.setStatus(ResponseState.ERROR);
@@ -210,14 +241,14 @@ public class UnitConversionController extends AbstractController {
 	}
 
 	/**
-	 * 更新品牌信息.
+	 * 更新零售参数信息.
 	 * 
 	 * @param paramsBody
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = { "/unitConversion/update" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/retailConfig/update" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
 	public ReturnBody update(@RequestBody ParamsBody paramsBody,
@@ -226,47 +257,46 @@ public class UnitConversionController extends AbstractController {
 		// 参数校验
 		Map params = paramsBody.getBody();
 		String id = (String) params.get("id");
-		String unitAId = (String) params.get("unitAId");
-		String qtyA = (String) params.get("qtyA");
-		String unitBId = (String) params.get("unitBId");
-		String qtyB = (String) params.get("qtyB");
-		String remark = (String) params.get("remark");
+		String priceDecimal = (String) params.get("priceDecimal");
+		String itemDecimal = (String) params.get("itemDecimal");
+		String itemRoundDown = (String) params.get("itemRoundDown");
+		String transDecimal = (String) params.get("transDecimal");
+		String saleRoundDown = (String) params.get("saleRoundDown");
 		String clientId = (String) params.get("clientId");
-		String status = (String) params.get("status");
 
 		if (StringUtils.isBlank(id)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("记录唯一信息缺失，请刷新页面！");
 			return rbody;
 		}
-		if (!StringUtils.isNumeric(unitAId)) {
+		if (!StringUtils.isNumeric(priceDecimal)) {
 			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入甲单位！");
+			rbody.setMsg("请输入单价保留小数位数！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(qtyA)) {
+		if (!StringUtils.isNumeric(itemDecimal)) {
 			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入甲单位数量！");
+			rbody.setMsg("请输入商品金额保留小数位数！");
 			return rbody;
 		}
-		if (!StringUtils.isNumeric(unitBId)) {
+		if (!StringUtils.isNumeric(itemRoundDown)) {
 			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入乙单位！");
+			rbody.setMsg("请输入商品金额舍去值！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(qtyB)) {
+		if (!StringUtils.isNumeric(transDecimal)) {
 			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入乙单位数量！");
+			rbody.setMsg("请输入销售单金额保留小数位数！");
+			return rbody;
+		}
+		if (!StringUtils.isNumeric(saleRoundDown)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入销售单金额舍去值！");
 			return rbody;
 		}
 		if (StringUtils.isBlank(clientId)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
-		if (StringUtils.isBlank(status)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入状态！");
 			return rbody;
 		}
 
@@ -278,25 +308,18 @@ public class UnitConversionController extends AbstractController {
 			Client client = new Client();
 			client.setId(clientId);
 
-			Unit unitA = new Unit();
-			unitA.setId(unitAId);
+			RetailConfig retailConfig = new RetailConfig();
+			retailConfig.setId(id);
+			retailConfig.setPriceDecimal(Integer.valueOf(priceDecimal));
+			retailConfig.setItemDecimal(Integer.valueOf(itemDecimal));
+			retailConfig.setItemRoundDown(Integer.valueOf(itemRoundDown));
+			retailConfig.setTransDecimal(Integer.valueOf(transDecimal));
+			retailConfig.setSaleRoundDown(Integer.valueOf(saleRoundDown));
+			retailConfig.setClient(client);
+			retailConfig.setModified(new Date());
+			retailConfig.setEditor(account.getId());
 
-			Unit unitB = new Unit();
-			unitB.setId(unitBId);
-
-			UnitConversion updateUnitConversion = new UnitConversion();
-			updateUnitConversion.setId(id);
-			updateUnitConversion.setUnitA(unitA);
-			updateUnitConversion.setQtyA(new BigDecimal(qtyA));
-			updateUnitConversion.setUnitB(unitA);
-			updateUnitConversion.setQtyB(new BigDecimal(qtyB));
-			updateUnitConversion.setRemark(remark);
-			updateUnitConversion.setClient(client);
-			updateUnitConversion.setStatus(status);
-			updateUnitConversion.setModified(new Date());
-			updateUnitConversion.setEditor(account.getId());
-
-			unitConversionService.updateUnitConversion(updateUnitConversion);
+			retailConfigService.updateRetailConfig(retailConfig);
 			rbody.setStatus(ResponseState.SUCCESS);
 		} else {
 			rbody.setStatus(ResponseState.ERROR);
@@ -307,14 +330,14 @@ public class UnitConversionController extends AbstractController {
 	}
 
 	/**
-	 * 删除品牌信息.
+	 * 删除零售参数信息.
 	 * 
 	 * @param paramsBody
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = { "/unitConversion/delete" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/retailConfig/delete" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
 	public ReturnBody delete(@RequestBody ParamsBody paramsBody,
@@ -332,7 +355,7 @@ public class UnitConversionController extends AbstractController {
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
-			unitConversionService.deleteUnitConversionByID(id);
+			retailConfigService.deleteRetailConfigByID(id);
 			rbody.setStatus(ResponseState.SUCCESS);
 		} else {
 			rbody.setStatus(ResponseState.ERROR);

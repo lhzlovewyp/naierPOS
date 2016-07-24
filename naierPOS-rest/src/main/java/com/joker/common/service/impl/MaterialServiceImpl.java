@@ -157,6 +157,12 @@ public class MaterialServiceImpl implements MaterialService {
 		page.setResults(list);
 		return page;
 	}
+	
+	@Override
+	public List<Material> getMaterialPageByCondition(Map<String, Object> map) {
+		List<Material> list = mapper.getMaterialPageByCondition(map);
+		return list;
+	}
 
 	@Override
 	public void deleteMaterialByID(String id) {

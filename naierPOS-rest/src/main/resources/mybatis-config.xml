@@ -34,6 +34,8 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 	     <typeAlias type="com.joker.common.model.Size" alias="size" />
 	     <typeAlias type="com.joker.common.model.Unit" alias="unit" />
 	     <typeAlias type="com.joker.common.model.UnitConversion" alias="unitConversion" />
+	     <typeAlias type="com.joker.common.model.Terminal" alias="terminal" />
+	     <typeAlias type="com.joker.common.model.Payment" alias="payment" />
 	</typeAliases>
 
     <plugins>

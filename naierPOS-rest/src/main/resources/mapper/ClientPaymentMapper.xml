@@ -16,8 +16,72 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="editor" column="Editor" />
 		<result property="modified" column="Modified" />
 	</resultMap>
+	
+	<resultMap type="clientPayment" id="clientPaymentPage" extends="clientPayment">
+		<result property="client.name" column="ClientName" />
+	</resultMap>
+	
     <select id="getClientPayments"  resultMap="clientPayment">
     	SELECT cp.*,p.Name AS PaymentName FROM Payment p,ClientPayment cp WHERE p.Code=cp.Payment AND p.Status=1 AND cp.Status=1
 		AND cp.Client=#{clientId}
     </select>
+    
+    <select id="getClientPaymentByID" parameterType="string" resultMap="clientPayment">
+		SELECT 
+			a.ID,a.Client,a.Payment,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+			,p.Name AS PaymentName
+		FROM ClientPayment a left outer join Payment p
+		on a.Payment = p.id and p.status = 1 
+		WHERE a.ID=#{id} 
+	</select>
+	
+	<select id="getClientPaymentPageByCondition" parameterType="java.util.Map" resultMap="clientPaymentPage">
+		SELECT 
+			a.ID,a.Client,a.Payment,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+			,p.Name AS PaymentName
+		FROM ClientPayment a left outer join Payment p
+		on a.Payment = p.id and p.status = 1 
+		WHERE 
+			a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			order by a.ID desc
+			<if test="start != null and limit != null">
+				limit #{start},#{limit}
+			</if>
+	</select>
+	
+	<select id="getClientPaymentCountByCondition" parameterType="java.util.Map" resultType="int">
+		SELECT count(1)
+		FROM ClientPayment a WHERE 
+			a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+	</select>
+	
+	<delete id="deleteClientPaymentByID" parameterType="string">
+		DELETE FROM ClientPayment where ID =#{id}
+	</delete>
+	
+	<insert id="insertClientPayment" parameterType="clientPayment">
+		insert into ClientPayment <include refid="clientPaymentSet" />
+	</insert>
+	
+	<update id="updateClientPayment" parameterType="clientPayment" >
+		UPDATE ClientPayment <include refid="clientPaymentSet" /> WHERE ID = #{id}
+	</update>
+    
+    <sql id="clientPaymentSet">
+		<set >
+			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
+			<if test= "payment != null">Payment=#{payment.code,jdbcType=VARCHAR},</if >
+			<if test= "status != null">Status=#{status},</if >
+			<if test= "creator != null">Creator=#{creator},</if >
+			<if test= "created != null">Created=#{created},</if >
+			<if test= "editor != null">Editor=#{editor,jdbcType=VARCHAR},</if >
+			<if test= "modified != null">Modified=#{modified},</if >
+		</set>
+	</sql >
 </mapper>

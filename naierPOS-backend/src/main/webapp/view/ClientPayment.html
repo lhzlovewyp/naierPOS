@@ -11,22 +11,11 @@
 <section class="content">
 	<div class="box">
 		<div class="box-header">
-			<h3 class="box-title">物料管理</h3>
+			<h3 class="box-title">商户支付方式</h3>
 			<div class="box-tools">
-				<a class="btn btn-primary btn-flat" href="/backend/add/material"><i
+				<a class="btn btn-primary btn-flat" href="/backend/add/clientPayment"><i
 					class="fa fa-plus"></i> 添加</a> <a class="btn btn-danger btn-flat"
 					href="javascript:void(0)" ng-click="del()"><i class="fa fa-minus"></i> 删除</a>
-			</div>
-		</div>
-		<div class="box-header">
-			<div class="input-group input-group-sm" style="width: 250px;">
-				<input type="text" name="table_search"
-					class="form-control pull-right" placeholder="搜索" id="input1" ng-model="likeName">
-				<div class="input-group-btn">
-					<button type="submit" class="btn btn-primary" ng-click="queryByPage()">
-						<i class="fa fa-search"></i>
-					</button>
-				</div>
 			</div>
 		</div>
 		<div class="box-body">
@@ -39,13 +28,7 @@
 							</button></th>
 						<th>GUID</th>
 						<th>商户</th>
-						<th>图片</th>
-						<th>物料编码</th>
-						<th>物料名称</th>
-						<th>简称</th>
-						<th>品类</th>
-						<th>品牌</th>
-						<th>标准零售价</th>
+						<th>支付方式</th>
 						<th>状态码</th>
 						<th>操作</th>
 					</tr>
@@ -53,16 +36,10 @@
 						<td align="center"><input type="checkbox" ng-click="check(result.id,chk)" ng-model="chk"></td>
 		                <td>{{result.id}}</td>
 		                <td>{{result.client.name}}</td>
-		                <td><img src="dist/images/avatar.png" width="50"></td>
-		                <td>{{result.code}}</td>
-		                <td>{{result.name}}</td>
-		                <td>{{result.abbr}}</td>
-		                <td>{{result.materialCategory.name}}</td>
-		                <td>{{result.brand.name}}</td>
-		                <td>{{result.retailPrice}}</td>
-						<td ng-if="result.status == 1">有效</td>
+		                <td>{{result.payment.name}}</td>
+		                <td ng-if="result.status == 1">有效</td>
 						<td ng-if="!result.status || result.status != 1">无效</td>
-						<td><a href="/backend/edit/brand/{{result.id}}" class="btn btn-info btn-xs">编辑</a></td>
+						<td><a href="/backend/edit/clientPayment/{{result.id}}" class="btn btn-info btn-xs">编辑</a></td>
 		            </tr>
 				</table>
 			</div>
