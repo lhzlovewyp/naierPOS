@@ -94,6 +94,20 @@ app.factory('BasicsService',['$q','$location','$http','BaseService',function($q,
             });
 			return deferred.promise;
 		},
+		queryByList : function(condition,routePath){
+			var token=$.cookie("token");
+			condition.token = token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/'+routePath+'/queryByList',condition).then(function(obj){
+                if(obj.data.status==Status.SUCCESS){
+                    var dto=obj.data.data;
+                    info = dto;
+                }
+                deferred.resolve(info);
+            });
+			return deferred.promise;
+		},
 		queryById : function(condition,routePath){
 			var token=$.cookie("token");
 			condition.token = token;

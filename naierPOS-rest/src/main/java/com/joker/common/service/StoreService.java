@@ -1,5 +1,6 @@
 package com.joker.common.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.joker.common.model.Store;
@@ -32,6 +33,8 @@ public interface StoreService {
 	 */
 	public Page<Store> getStorePageByCondition(Map<String, Object> map,
 			int pageNo, int limit);
+
+	public List<Store> getStorePageByCondition(Map<String, Object> map);
 
 	/**
 	 * 根据id删除门店信息.

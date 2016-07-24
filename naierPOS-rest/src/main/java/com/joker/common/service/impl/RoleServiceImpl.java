@@ -58,4 +58,16 @@ public class RoleServiceImpl implements RoleService{
 		return page;
 	}
 
+	/**
+	 * 根据商户查询角色信息.
+	 * 
+	 * @param map
+	 * @param clientId
+	 * @return
+	 */
+	@Override
+	public List<Role> getRolePageByCondition(Map<String, Object> map) {
+		List<Role> list = mapper.getRolePageByCondition(map);
+		return list;
+	}
 }

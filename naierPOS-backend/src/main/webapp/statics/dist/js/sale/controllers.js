@@ -168,15 +168,14 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		var pageBody = {};
 		pageBody.pageNo = 1;
 		pageBody.limit = 2147483647;
-		BasicsService.queryByPage(pageBody,type).then(function(data){
-    		if(data && data.results && data.results.length > 0){
-    			var result = data.results;
-    			var len = result.length;
+		BasicsService.queryByList(pageBody,type).then(function(data){
+    		if(data && data.length > 0){
+    			var len = data.length;
     			var allSelect = [];
     			var selectInfoMap = {};
     			for ( var i = 0; i < len; i++) {
-    				var id = result[i].id;
-    				var name = result[i].name;
+    				var id = data[i].id;
+    				var name = data[i].name;
 					var selectObj = {"value":id,"show":name};
 					allSelect.push(selectObj);
 					selectInfoMap[id] = selectObj;

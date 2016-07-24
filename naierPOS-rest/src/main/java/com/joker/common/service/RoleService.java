@@ -34,4 +34,12 @@ public interface RoleService {
 	 */
 	public Page<Role> getRolePageByCondition(Map<String, Object> map,
 			int pageNo, int limit);
+	
+	/**
+	 * 查询门店信息.
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public List<Role> getRolePageByCondition(Map<String, Object> map);
 }

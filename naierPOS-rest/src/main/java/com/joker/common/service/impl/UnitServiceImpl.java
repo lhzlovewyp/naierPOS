@@ -60,6 +60,18 @@ public class UnitServiceImpl implements UnitService {
 		return page;
 	}
 
+	/**
+	 * 根据商户查询计量单位信息.
+	 * 
+	 * @param map
+	 * @return
+	 */
+	@Override
+	public List<Unit> getUnitPageByCondition(Map<String, Object> map) {
+		List<Unit> list = mapper.getUnitPageByCondition(map);
+		return list;
+	}
+
 	@Override
 	public void deleteUnitByID(String id) {
 		if (StringUtils.isNotBlank(id)) {

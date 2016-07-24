@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+
 import com.joker.common.model.Account;
 import com.joker.common.model.Client;
 import com.joker.common.model.Unit;
@@ -74,6 +76,39 @@ public class UnitController extends AbstractController {
 			Page<Unit> page = unitService.getUnitPageByCondition(map,
 					pageNo, limit);
 			rbody.setData(page);
+			rbody.setStatus(ResponseState.SUCCESS);
+			return rbody;
+		} else {
+			rbody.setStatus(ResponseState.ERROR);
+			rbody.setMsg("请登录！");
+		}
+		// 数据返回时永远返回true.
+		return rbody;
+	}
+	
+	/**
+	 * 查询品牌信息.
+	 * 
+	 * @param paramsBody
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = { "/unit/queryByList" }, method = RequestMethod.POST)
+	@NotNull(value = "token")
+	@ResponseBody
+	public ReturnBody getUnitByList(@RequestBody ParamsBody paramsBody,
+			HttpServletRequest request, HttpServletResponse response) {
+		ReturnBody rbody = new ReturnBody();
+		String token = paramsBody.getToken();
+		Object user = CacheFactory.getCache().get(token);
+		if (user != null) {
+			Account account = (Account) user;
+			String clientId = account.getClient().getId();
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("clientId", clientId);
+			List<Unit> list = unitService.getUnitPageByCondition(map);
+			rbody.setData(list);
 			rbody.setStatus(ResponseState.SUCCESS);
 			return rbody;
 		} else {

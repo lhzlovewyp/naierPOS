@@ -60,6 +60,18 @@ public class BrandServiceImpl implements BrandService {
 		return page;
 	}
 
+	/**
+	 * 根据商户查询品牌信息.
+	 * 
+	 * @param map
+	 * @return
+	 */
+	@Override
+	public List<Brand> getBrandPageByCondition(Map<String, Object> map) {
+		List<Brand> list = mapper.getBrandPageByCondition(map);
+		return list;
+	}
+
 	@Override
 	public void deleteBrandByID(String id) {
 		if (StringUtils.isNotBlank(id)) {

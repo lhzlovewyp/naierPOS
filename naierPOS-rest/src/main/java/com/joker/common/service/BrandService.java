@@ -3,6 +3,7 @@
  */
 package com.joker.common.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.joker.common.model.Brand;
@@ -32,6 +33,8 @@ public interface BrandService {
 	 */
 	public Page<Brand> getBrandPageByCondition(Map<String, Object> map,
 			int pageNo, int limit);
+
+	public List<Brand> getBrandPageByCondition(Map<String, Object> map);
 
 	/**
 	 * 删除品牌信息.
