@@ -119,11 +119,6 @@ public class AccountServiceImpl implements AccountService {
 		if (map == null) {
 			map = new HashMap<String, Object>();
 		}
-		String clientId = null;
-		if (map.containsKey("clientId")) {
-			clientId = (String) map.get("clientId");
-		}
-		map.put("clientId", clientId);
 		map.put("start", start);
 		map.put("limit", limit);
 		Page<Account> page = new Page<Account>();

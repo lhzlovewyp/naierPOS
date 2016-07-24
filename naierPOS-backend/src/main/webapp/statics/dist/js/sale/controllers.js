@@ -235,6 +235,12 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					$scope.form.unitBId = selUnitB.value;
 				}
 			}
+			if(routePath == 'materialCategory'){
+				if($scope.form.parent.id)
+					$scope.form.parentId = $scope.form.parent.id;
+				else
+					$scope.form.parentId = "0";
+			}
 			if($scope.editType == 'add'){
 				BasicsService.add($scope.form,routePath).then(function(data){
 					if(data && data.error){
@@ -274,46 +280,34 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 	}
 }]);
 
-app.controller("materialCategoryTreeCtrl",['$scope','$location','LoginService','ngDialog',function($scope,$location,LoginService,ngDialog){
-	var tree = [
-	            {
-	              text: "Parent 1",
-	              nodes: [
-	                {
-	                  text: "Child 1",
-	                  nodes: [
-	                    {
-	                      text: "Grandchild 1"
-	                    },
-	                    {
-	                      text: "Grandchild 2"
-	                    }
-	                  ]
-	                },
-	                {
-	                  text: "Child 2"
-	                }
-	              ]
-	            },
-	            {
-	              text: "Parent 2"
-	            },
-	            {
-	              text: "Parent 3"
-	            },
-	            {
-	              text: "Parent 4"
-	            },
-	            {
-	              text: "Parent 5"
-	            }
-	          ];
+app.controller("materialCategoryTreeCtrl",['$scope','$location','LoginService','ngDialog','BasicsService',function($scope,$location,LoginService,ngDialog,BasicsService){
+	var selectedNode = {};
+	
 	
 	//表格渲染完成后执行
 	$scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
-		$('#materialCategoryTree').treeview({data: tree});
+		var body = {};
+		BasicsService.queryTree(body,'materialCategory').then(function(data){
+			var tree = data;
+			$('#materialCategoryTree').treeview({
+				data: tree,
+				onNodeSelected: function(event, node) {
+					selectedNode = node;
+	            }}
+			);
+        });
 	});
 	$scope.close=function(){
+		ngDialog.close();
+	};
+	
+	$scope.selectMCTree=function(){
+		if(!$scope.form.parent){
+			$scope.form.parent = {};
+		}
+		$scope.form.parent.id = selectedNode.id;
+		$scope.form.parent.name = selectedNode.text;
+		selectedNode = {};
 		ngDialog.close();
 	};
 }]);
