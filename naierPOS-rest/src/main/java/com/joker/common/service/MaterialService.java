@@ -1,5 +1,6 @@
 package com.joker.common.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.joker.common.model.Material;
@@ -20,15 +21,16 @@ public interface MaterialService {
 	 * @param username
 	 * @return
 	 */
-	public Material getMaterialByBarCode(String clientId,String barCode);
-	
+	public Material getMaterialByBarCode(String clientId, String barCode);
+
 	/**
 	 * 查询物料信息.
+	 * 
 	 * @param username
 	 * @return
 	 */
 	public Material getMaterialById(String id);
-	
+
 	/**
 	 * 根据id查询物料信息.
 	 * 
@@ -45,8 +47,16 @@ public interface MaterialService {
 	 * @param limit
 	 * @return
 	 */
-	public Page<Material> getMaterialPageByCondition(
-			Map<String, Object> map, int pageNo, int limit);
+	public Page<Material> getMaterialPageByCondition(Map<String, Object> map,
+			int pageNo, int limit);
+
+	/**
+	 * 根据商户查询物料信息.
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public List<Material> getMaterialPageByCondition(Map<String, Object> map);
 
 	/**
 	 * 删除物料信息.

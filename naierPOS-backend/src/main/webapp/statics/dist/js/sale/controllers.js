@@ -131,7 +131,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 				$scope.selUnitA = selectInfoMap[selUnitAValue];
 				var selUnitBValue = data.unitB.id;
 				$scope.selUnitB = selectInfoMap[selUnitBValue];
-			}else if(routePath == 'account' && allSelectInfoMap['store']){
+			}else if((routePath == 'account' || routePath == 'terminal') && allSelectInfoMap['store']){
 				var selectInfoMap = allSelectInfoMap['store'];
 				var selStoreValue = data.store.id;
 				$scope.selstore = selectInfoMap[selStoreValue];
@@ -196,6 +196,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		}else if(routePath == 'account'){
 			querySelectInfo('store','stores',1);
 			querySelectInfo('role','roles',1);
+		}else if(routePath == 'terminal'){
+			querySelectInfo('store','stores',1);
 		}
 		queryBasicsInfoById();
 	}else{
@@ -205,6 +207,9 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		}else if(routePath == 'account'){
 			querySelectInfo('store','stores');
 			querySelectInfo('role','roles');
+		}
+		else if(routePath == 'terminal'){
+			querySelectInfo('store','stores');
 		}
 	}
 	

@@ -3,7 +3,6 @@
  */
 package com.joker.common.controller;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,9 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.joker.common.model.Account;
 import com.joker.common.model.Client;
-import com.joker.common.model.Unit;
-import com.joker.common.model.UnitConversion;
-import com.joker.common.service.UnitConversionService;
+import com.joker.common.model.Size;
+import com.joker.common.service.SizeService;
 import com.joker.core.annotation.NotNull;
 import com.joker.core.cache.CacheFactory;
 import com.joker.core.constant.ResponseState;
@@ -38,23 +36,23 @@ import com.joker.core.dto.ReturnBody;
  * 
  */
 @Controller
-public class UnitConversionController extends AbstractController {
+public class SizeController extends AbstractController {
 
 	@Autowired
-	UnitConversionService unitConversionService;
+	SizeService sizeService;
 
 	/**
-	 * 查询品牌信息.
+	 * 查询颜色信息.
 	 * 
 	 * @param paramsBody
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = { "/unitConversion/queryByPage" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/size/queryByPage" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
-	public ReturnBody getUnitConversionByPage(@RequestBody ParamsBody paramsBody,
+	public ReturnBody getColorByPage(@RequestBody ParamsBody paramsBody,
 			HttpServletRequest request, HttpServletResponse response) {
 		ReturnBody rbody = new ReturnBody();
 		// 参数校验
@@ -73,8 +71,8 @@ public class UnitConversionController extends AbstractController {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("clientId", clientId);
 			map.put("likeName", likeName);
-			Page<UnitConversion> page = unitConversionService
-					.getUnitConversionPageByCondition(map, pageNo, limit);
+			Page<Size> page = sizeService.getSizePageByCondition(map,
+					pageNo, limit);
 			rbody.setData(page);
 			rbody.setStatus(ResponseState.SUCCESS);
 			return rbody;
@@ -87,17 +85,17 @@ public class UnitConversionController extends AbstractController {
 	}
 
 	/**
-	 * 查询品牌信息.
+	 * 查询颜色信息.
 	 * 
 	 * @param paramsBody
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = { "/unitConversion/queryById" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/size/queryById" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
-	public ReturnBody getUnitConversionById(@RequestBody ParamsBody paramsBody,
+	public ReturnBody getColorById(@RequestBody ParamsBody paramsBody,
 			HttpServletRequest request, HttpServletResponse response) {
 		ReturnBody rbody = new ReturnBody();
 		// 参数校验
@@ -112,9 +110,8 @@ public class UnitConversionController extends AbstractController {
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
-			UnitConversion unitConversion = unitConversionService
-					.getUnitConversionByID(id);
-			rbody.setData(unitConversion);
+			Size size = sizeService.getSizeByID(id);
+			rbody.setData(size);
 			rbody.setStatus(ResponseState.SUCCESS);
 			return rbody;
 		} else {
@@ -126,14 +123,14 @@ public class UnitConversionController extends AbstractController {
 	}
 
 	/**
-	 * 添加品牌信息.
+	 * 添加颜色信息.
 	 * 
 	 * @param paramsBody
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = { "/unitConversion/add" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/size/add" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
 	public ReturnBody add(@RequestBody ParamsBody paramsBody,
@@ -141,31 +138,18 @@ public class UnitConversionController extends AbstractController {
 		ReturnBody rbody = new ReturnBody();
 		// 参数校验
 		Map params = paramsBody.getBody();
-		String unitAId = (String) params.get("unitAId");
-		String qtyA = (String) params.get("qtyA");
-		String unitBId = (String) params.get("unitBId");
-		String qtyB = (String) params.get("qtyB");
-		String remark = (String) params.get("remark");
+		String code = (String) params.get("code");
+		String name = (String) params.get("name");
 		String clientId = (String) params.get("clientId");
 
-		if (StringUtils.isBlank(unitAId)) {
+		if (StringUtils.isBlank(code)) {
 			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入甲单位！");
+			rbody.setMsg("请输入尺码编码！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(qtyA)) {
+		if (StringUtils.isBlank(name)) {
 			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入甲单位数量！");
-			return rbody;
-		}
-		if (StringUtils.isBlank(unitBId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入乙单位！");
-			return rbody;
-		}
-		if (StringUtils.isBlank(qtyB)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入乙单位数量！");
+			rbody.setMsg("请输入尺码名称！");
 			return rbody;
 		}
 		if (StringUtils.isBlank(clientId)) {
@@ -182,24 +166,15 @@ public class UnitConversionController extends AbstractController {
 			Client client = new Client();
 			client.setId(clientId);
 
-			Unit unitA = new Unit();
-			unitA.setId(unitAId);
+			Size size = new Size();
+			size.setId(UUID.randomUUID().toString());
+			size.setCode(code);
+			size.setName(name);
+			size.setClient(client);
+			size.setCreated(new Date());
+			size.setCreator(account.getId());
 
-			Unit unitB = new Unit();
-			unitB.setId(unitBId);
-
-			UnitConversion addUnitConversion = new UnitConversion();
-			addUnitConversion.setId(UUID.randomUUID().toString());
-			addUnitConversion.setUnitA(unitA);
-			addUnitConversion.setQtyA(new BigDecimal(qtyA));
-			addUnitConversion.setUnitB(unitB);
-			addUnitConversion.setQtyB(new BigDecimal(qtyB));
-			addUnitConversion.setRemark(remark);
-			addUnitConversion.setClient(client);
-			addUnitConversion.setCreated(new Date());
-			addUnitConversion.setCreator(account.getId());
-
-			unitConversionService.insertUnitConversion(addUnitConversion);
+			sizeService.insertSize(size);
 			rbody.setStatus(ResponseState.SUCCESS);
 		} else {
 			rbody.setStatus(ResponseState.ERROR);
@@ -210,14 +185,14 @@ public class UnitConversionController extends AbstractController {
 	}
 
 	/**
-	 * 更新品牌信息.
+	 * 更新颜色信息.
 	 * 
 	 * @param paramsBody
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = { "/unitConversion/update" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/size/update" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
 	public ReturnBody update(@RequestBody ParamsBody paramsBody,
@@ -226,11 +201,8 @@ public class UnitConversionController extends AbstractController {
 		// 参数校验
 		Map params = paramsBody.getBody();
 		String id = (String) params.get("id");
-		String unitAId = (String) params.get("unitAId");
-		String qtyA = (String) params.get("qtyA");
-		String unitBId = (String) params.get("unitBId");
-		String qtyB = (String) params.get("qtyB");
-		String remark = (String) params.get("remark");
+		String code = (String) params.get("code");
+		String name = (String) params.get("name");
 		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
@@ -239,24 +211,14 @@ public class UnitConversionController extends AbstractController {
 			rbody.setMsg("记录唯一信息缺失，请刷新页面！");
 			return rbody;
 		}
-		if (!StringUtils.isNumeric(unitAId)) {
+		if (StringUtils.isBlank(code)) {
 			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入甲单位！");
+			rbody.setMsg("请输入尺码编码！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(qtyA)) {
+		if (StringUtils.isBlank(name)) {
 			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入甲单位数量！");
-			return rbody;
-		}
-		if (!StringUtils.isNumeric(unitBId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入乙单位！");
-			return rbody;
-		}
-		if (StringUtils.isBlank(qtyB)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入乙单位数量！");
+			rbody.setMsg("请输入尺码名称！");
 			return rbody;
 		}
 		if (StringUtils.isBlank(clientId)) {
@@ -278,25 +240,16 @@ public class UnitConversionController extends AbstractController {
 			Client client = new Client();
 			client.setId(clientId);
 
-			Unit unitA = new Unit();
-			unitA.setId(unitAId);
+			Size size = new Size();
+			size.setId(id);
+			size.setCode(code);
+			size.setName(name);
+			size.setClient(client);
+			size.setStatus(status);
+			size.setModified(new Date());
+			size.setEditor(account.getId());
 
-			Unit unitB = new Unit();
-			unitB.setId(unitBId);
-
-			UnitConversion updateUnitConversion = new UnitConversion();
-			updateUnitConversion.setId(id);
-			updateUnitConversion.setUnitA(unitA);
-			updateUnitConversion.setQtyA(new BigDecimal(qtyA));
-			updateUnitConversion.setUnitB(unitA);
-			updateUnitConversion.setQtyB(new BigDecimal(qtyB));
-			updateUnitConversion.setRemark(remark);
-			updateUnitConversion.setClient(client);
-			updateUnitConversion.setStatus(status);
-			updateUnitConversion.setModified(new Date());
-			updateUnitConversion.setEditor(account.getId());
-
-			unitConversionService.updateUnitConversion(updateUnitConversion);
+			sizeService.updateSize(size);
 			rbody.setStatus(ResponseState.SUCCESS);
 		} else {
 			rbody.setStatus(ResponseState.ERROR);
@@ -307,14 +260,14 @@ public class UnitConversionController extends AbstractController {
 	}
 
 	/**
-	 * 删除品牌信息.
+	 * 删除颜色信息.
 	 * 
 	 * @param paramsBody
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = { "/unitConversion/delete" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/size/delete" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
 	public ReturnBody delete(@RequestBody ParamsBody paramsBody,
@@ -332,7 +285,7 @@ public class UnitConversionController extends AbstractController {
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
-			unitConversionService.deleteUnitConversionByID(id);
+			sizeService.deleteSizeByID(id);
 			rbody.setStatus(ResponseState.SUCCESS);
 		} else {
 			rbody.setStatus(ResponseState.ERROR);
