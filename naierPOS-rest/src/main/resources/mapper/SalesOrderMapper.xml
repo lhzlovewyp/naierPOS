@@ -19,7 +19,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="salesDate" column="SalesDate"/>
 		<result property="code" column="Code"/>
 		<result property="originOrder.id" column="OriginOrder"/>
-		<result property="member" column="Member"/>
+		<result property="member.member" column="Member"/>
+		<result property="member.memberCode" column="MemberCode"/>
+		<result property="member.memberName" column="MemberName"/>
+		<result property="member.memberMobile" column="MemberMobile"/>
+		<result property="member.memberGrade" column="MemberGrade"/>
 		<result property="shoppingGuide.id" column="ShoppingGuide"/>
 		<result property="quantity" column="Quantity"/>
 		<result property="amount" column="Amount"/>
@@ -33,6 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="creator" column="Creator"/>
 		<result property="created" column="Created"/>
 		<result property="finished" column="Finished"/>
+		<result property="toBaison" column="ToBaison"/>
 	</resultMap>
 	
 	<resultMap type="salesOrderDetails" id="salesOrderDetails">
@@ -94,28 +99,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
     <select id="getSalesInfo"  resultMap="salesOrderSum">
 		SELECT Store ,SUM(Amount) AS Amount,COUNT(1) AS Num FROM SalesOrder
-		WHERE Store=#{storeId} AND Client=#{clientId} and SalesDate=#{salesDate,jdbcType=DATE} 
+		WHERE Store=#{storeId} AND Client=#{clientId} and SalesDate=#{salesDate,jdbcType=DATE}  and Status=1 and TransClass='SO'
 		 GROUP BY Store
 	</select>
 	
 	<select id="getSalesOrderPageByCondition" resultMap="salesOrder" parameterType="java.util.Map">
-		select * from SalesOrder where TransClass='SO'
-		and Store=#{storeId} and Client=#{clientId}
+		select so.*,sg.name as ShoppingGuideName from SalesOrder so
+		left join 
+		ShoppingGuide sg 
+		ON so.ShoppingGuide=sg.id 
+		where so.TransClass='SO'
+		and so.Store=#{storeId} and so.Client=#{clientId}
 		<if test="id != null">
-				and ID=#{id}
+				and so.ID=#{id}
 		</if>
 		
 		<if test="startDate != null">
-				<![CDATA[  and Finished>=#{startDate} ]]>
+				<![CDATA[  and so.Finished>=#{startDate} ]]>
 		</if>
 		<if test="endDate != null">
-				<![CDATA[  and Finished<=#{endDate}]]>
+				<![CDATA[  and so.Finished<=#{endDate}]]>
 		</if>
-		<if test="Status != null">
-				<![CDATA[  and Status=#{stauts}]]>
+		<if test="status != null">
+				<![CDATA[  and so.Status=#{stauts}]]>
 		</if>
-		
-		
+		<if test="memberMobile != null">
+				<![CDATA[  and so.MemberMobile=#{memberMobile}]]>
+		</if>
 		order by Finished desc
 		<if test="start != null and limit != null">
 				limit #{start},#{limit}
@@ -168,7 +178,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
               <if test= "salesDate != null">SalesDate=#{salesDate},</if>
               <if test= "code != null">Code=#{code},</if>
               <if test= "originOrder != null">OriginOrder=#{originOrder.id},</if>
-              <if test= "member != null">Member=#{member},</if>
+              <if test= "member !=null and  member.member != null">Member=#{member.member},</if>
+              <if test= "member !=null and member.memberCode != null">Member=#{member.memberCode},</if>
+              <if test= "member !=null and member.memberName!= null">Member=#{member.memberName},</if>
+              <if test= "member !=null and member.memberMobile!= null">Member=#{member.memberMobile},</if>
+              <if test= "member !=null and member.memberGrade!= null">Member=#{member.memberGrade},</if>
               <if test= "shoppingGuide != null">ShoppingGuide=#{shoppingGuide.id},</if>
               <if test= "quantity != null">Quantity=#{quantity},</if>
               <if test= "amount != null">Amount=#{amount},</if>

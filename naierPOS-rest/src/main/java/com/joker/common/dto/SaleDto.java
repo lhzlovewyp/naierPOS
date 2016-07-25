@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.joker.common.model.ClientPayment;
-import com.joker.common.model.Payment;
+import com.joker.common.model.Member;
 import com.joker.common.model.ShoppingGuide;
 import com.joker.common.model.promotion.Promotion;
 
@@ -14,7 +14,8 @@ public class SaleDto {
 	//当前营业日期.
 	private Date saleDate;
 	//会员
-	private String member;
+	private Member member;
+	
 	//导购
 	private ShoppingGuide shoppingGuide;
 	
@@ -53,10 +54,11 @@ public class SaleDto {
 	public void setSaleDate(Date saleDate) {
 		this.saleDate = saleDate;
 	}
-	public String getMember() {
+	
+	public Member getMember() {
 		return member;
 	}
-	public void setMember(String member) {
+	public void setMember(Member member) {
 		this.member = member;
 	}
 	public ShoppingGuide getShoppingGuide() {
