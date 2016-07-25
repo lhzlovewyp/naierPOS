@@ -10,6 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="client.id" column="Client" />
 		<result property="code" column="Code" />
 		<result property="name" column="Name" />
+		<result property="parent.id" column="Super" />
 		<result property="status" column="Status" />
 		<result property="creator" column="Creator" />
 		<result property="created" column="Created" />
@@ -23,14 +24,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
 	<select id="getMaterialCategoryByID" parameterType="string" resultMap="materialCategory">
 		SELECT 
-			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+			a.ID,a.Client,a.Code,a.Name,a.Super,a.Status,a.Creator,a.Created,a.Editor,a.Modified
 		FROM MaterialCategory a
 		WHERE a.ID=#{id} 
 	</select>
 	
 	<select id="getMaterialCategoryPageByCondition" parameterType="java.util.Map" resultMap="materialCategoryPage">
 		SELECT 
-			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified,c.Name ClientName
+			a.ID,a.Client,a.Code,a.Name,a.Super,a.Status,a.Creator,a.Created,a.Editor,a.Modified,c.Name ClientName
 		FROM MaterialCategory a left outer join Client c
 		on a.Client = c.id and c.status = 1  
 		WHERE 

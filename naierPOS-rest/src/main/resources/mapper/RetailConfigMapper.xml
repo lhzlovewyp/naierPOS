@@ -15,11 +15,75 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="saleRoundDown" column="SaleRoundDown" />
 	</resultMap>
 	
+	<resultMap type="retailConfig" id="retailConfigPage" extends="retailConfig">
+		<result property="client.name" column="ClientName" />
+	</resultMap>
+	
 	<select id="getRetailConfig" resultMap="retailConfig"> 
 		select * from RetailConfig where Client=#{clientId}
 	</select>
     
     
+	<select id="getRetailConfigByID" parameterType="string" resultMap="retailConfig">
+		SELECT 
+			a.ID,a.Client,a.priceDecimal,a.itemDecimal,a.itemRoundDown,a.transDecimal,a.saleRoundDown
+		FROM RetailConfig a
+		WHERE a.ID=#{id} 
+	</select>
 	
+	<select id="getRetailConfigPageByCondition" parameterType="java.util.Map" resultMap="retailConfigPage">
+		SELECT 
+			a.ID,a.Client,a.priceDecimal,a.itemDecimal,a.itemRoundDown,a.transDecimal,a.saleRoundDown,c.Name ClientName
+		FROM RetailConfig a left outer join Client c
+		on a.Client = c.id and c.status = 1 
+		WHERE 
+			1 = 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
+			order by a.ID desc
+			<if test="start != null and limit != null">
+				limit #{start},#{limit}
+			</if>
+	</select>
+	
+	<select id="getRetailConfigCountByCondition" parameterType="java.util.Map" resultType="int">
+		SELECT count(1)
+		FROM RetailConfig a WHERE 
+			1 = 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
+	</select>
+	
+	<delete id="deleteRetailConfigByID" parameterType="string">
+		DELETE FROM RetailConfig where ID =#{id}
+	</delete>
+	
+	<insert id="insertRetailConfig" parameterType="retailConfig">
+		insert into RetailConfig <include refid="retailConfigSet" />
+	</insert>
+	
+	<update id="updateRetailConfig" parameterType="retailConfig" >
+		UPDATE RetailConfig <include refid="retailConfigSet" /> WHERE ID = #{id}
+	</update>
+    
+    <sql id="retailConfigSet">
+		<set >
+			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
+			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
+			<if test= "priceDecimal != null">PriceDecimal=#{priceDecimal},</if >
+			<if test= "itemDecimal != null">ItemDecimal=#{itemDecimal},</if >
+			<if test= "itemRoundDown != null">ItemRoundDown=#{itemRoundDown},</if >
+			<if test= "transDecimal != null">TransDecimal=#{transDecimal},</if >
+			<if test= "saleRoundDown != null">SaleRoundDown=#{saleRoundDown},</if >
+		</set>
+	</sql >
 
 </mapper>

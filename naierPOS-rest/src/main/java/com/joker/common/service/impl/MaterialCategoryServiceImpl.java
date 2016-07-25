@@ -30,7 +30,18 @@ public class MaterialCategoryServiceImpl implements MaterialCategoryService {
 
 	@Override
 	public MaterialCategory getMaterialCategoryByID(String id) {
-		return mapper.getMaterialCategoryByID(id);
+		MaterialCategory materialCategory = mapper.getMaterialCategoryByID(id);
+		if (materialCategory != null && materialCategory.getParent() != null
+				&& StringUtils.isNotBlank(materialCategory.getParent().getId())
+				&& !"0".equals(materialCategory.getParent().getId())) {
+			MaterialCategory parent = mapper
+					.getMaterialCategoryByID(materialCategory.getParent()
+							.getId());
+			if (parent != null) {
+				materialCategory.setParent(parent);
+			}
+		}
+		return materialCategory;
 	}
 
 	/**
@@ -48,11 +59,6 @@ public class MaterialCategoryServiceImpl implements MaterialCategoryService {
 		if (map == null) {
 			map = new HashMap<String, Object>();
 		}
-		String clientId = null;
-		if (map.containsKey("clientId")) {
-			clientId = (String) map.get("clientId");
-		}
-		map.put("clientId", clientId);
 		map.put("start", start);
 		map.put("limit", limit);
 		Page<MaterialCategory> page = new Page<MaterialCategory>();
@@ -64,6 +70,20 @@ public class MaterialCategoryServiceImpl implements MaterialCategoryService {
 		page.setTotalRecord(totalRecord);
 		page.setResults(list);
 		return page;
+	}
+
+	/**
+	 * 根据商户查询用户信息.
+	 * 
+	 * @param map
+	 * @return
+	 */
+	@Override
+	public List<MaterialCategory> getMaterialCategoryPageByCondition(
+			Map<String, Object> map) {
+		List<MaterialCategory> list = mapper
+				.getMaterialCategoryPageByCondition(map);
+		return list;
 	}
 
 	@Override

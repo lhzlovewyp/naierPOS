@@ -19,6 +19,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="editor" column="Editor" />
 		<result property="modified" column="Modified" />
 	</resultMap>
+	
+	<resultMap type="retailPrice" id="retailPricePage" extends="retailPrice">
+		<result property="client.name" column="ClientName" />
+		<result property="store.name" column="StoreName" />
+	</resultMap>
     
     <select id="getMaterialPrice" resultMap="retailPrice">
     	select ID,Client,Store,Material,Unit,Price,EffectiveDate,ExpiryDate
@@ -30,5 +35,71 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     	]]>
     </select>
 	
+	<select id="geTretailPriceByID" parameterType="string" resultMap="retailPrice">
+		SELECT 
+			a.ID,a.Client,a.Store,a.Material,a.Unit,a.Price,a.EffectiveDate,a.ExpiryDate,a.Creator,a.Created,a.Editor,a.Modified
+		FROM RetailPrice a
+		WHERE a.ID=#{id} 
+	</select>
+	
+	<select id="getRetailPricePageByCondition" parameterType="java.util.Map" resultMap="retailPricePage">
+		SELECT 
+			a.ID,a.Client,a.Store,a.Material,a.Unit,a.Price,a.EffectiveDate,a.ExpiryDate,a.Creator,a.Created,a.Editor,a.Modified
+			,c.Name ClientName,s.Name StoreName
+		FROM RetailPrice a left outer join Client c
+		on a.Client = c.id and c.status = 1 
+		left outer join Store s
+		on a.Store = s.id and s.status = 1 
+		WHERE 
+			a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			order by a.ID desc
+			<if test="start != null and limit != null">
+				limit #{start},#{limit}
+			</if>
+	</select>
+	
+	<select id="getRetailPriceCountByCondition" parameterType="java.util.Map" resultType="int">
+		SELECT count(1)
+		FROM RetailPrice a WHERE 
+			a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
+	</select>
+	
+	<delete id="deleteRetailPriceByID" parameterType="string">
+		DELETE FROM RetailPrice where ID =#{id}f
+	</delete>
+	
+	<insert id="insertRetailPrice" parameterType="retailPrice">
+		insert into RetailPrice <include refid="retailPriceSet" />
+	</insert>
+	
+	<update id="updateRetailPrice" parameterType="retailPrice" >
+		UPDATE RetailPrice <include refid="retailPriceSet" /> WHERE ID = #{id}
+	</update>
+    
+    <sql id="retailPriceSet">
+		<set >
+			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
+			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
+			<if test= "store != null">Store=#{store.id,jdbcType=VARCHAR},</if >
+			<if test= "material != null">Material=#{material.id,jdbcType=VARCHAR},</if >
+			<if test= "unit != null">Unit=#{unit.id,jdbcType=VARCHAR},</if >
+			<if test= "price != null">Price=#{price},</if >
+			<if test= "effectiveDate != null">EffectiveDate=#{effectiveDate},</if >
+			<if test= "expiryDate != null">ExpiryDate=#{expiryDate},</if >
+			<if test= "creator != null">Creator=#{creator},</if >
+			<if test= "created != null">Created=#{created},</if >
+			<if test= "editor != null">Editor=#{editor,jdbcType=VARCHAR},</if >
+			<if test= "modified != null">Modified=#{modified},</if >
+		</set>
+	</sql >
 
 </mapper>

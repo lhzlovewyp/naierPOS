@@ -3,6 +3,7 @@
  */
 package com.joker.common.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.joker.common.model.Unit;
@@ -32,6 +33,8 @@ public interface UnitService {
 	 */
 	public Page<Unit> getUnitPageByCondition(Map<String, Object> map,
 			int pageNo, int limit);
+
+	public List<Unit> getUnitPageByCondition(Map<String, Object> map);
 
 	/**
 	 * 删除计量单位信息.

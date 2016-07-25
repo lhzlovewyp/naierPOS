@@ -146,11 +146,6 @@ public class MaterialServiceImpl implements MaterialService {
 		if (map == null) {
 			map = new HashMap<String, Object>();
 		}
-		String clientId = null;
-		if (map.containsKey("clientId")) {
-			clientId = (String) map.get("clientId");
-		}
-		map.put("clientId", clientId);
 		map.put("start", start);
 		map.put("limit", limit);
 		Page<Material> page = new Page<Material>();
@@ -161,6 +156,12 @@ public class MaterialServiceImpl implements MaterialService {
 		page.setTotalRecord(totalRecord);
 		page.setResults(list);
 		return page;
+	}
+	
+	@Override
+	public List<Material> getMaterialPageByCondition(Map<String, Object> map) {
+		List<Material> list = mapper.getMaterialPageByCondition(map);
+		return list;
 	}
 
 	@Override

@@ -66,4 +66,10 @@ public class StoreServiceImpl implements StoreService {
 		page.setResults(list);
 		return page;
 	}
+
+	@Override
+	public List<Store> getStorePageByCondition(Map<String, Object> map) {
+		List<Store> list = mapper.getStorePageByCondition(map);
+		return list;
+	}
 }

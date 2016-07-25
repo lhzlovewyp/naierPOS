@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.TerminalMapper">
+     
+    
+    <resultMap type="terminal" id="terminal">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="store.id" column="Store" />
+		<result property="name" column="Name" />
+		<result property="code" column="Code" />
+		<result property="status" column="Status" />
+		<result property="creator" column="Creator" />
+		<result property="created" column="Created" />
+		<result property="editor" column="Editor" />
+		<result property="modified" column="Modified" />
+	</resultMap>
+    
+    <resultMap type="terminal" id="terminalPage" extends="terminal">
+		<result property="client.name" column="ClientName" />
+		<result property="store.name" column="StoreName" />
+	</resultMap>
+    
+	<select id="getTerminalByID" parameterType="string" resultMap="terminal">
+		SELECT 
+			a.ID,a.Client,a.Store,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+		FROM Terminal a
+		WHERE a.ID=#{id} 
+	</select>
+	
+	<select id="getTerminalPageByCondition" parameterType="java.util.Map" resultMap="terminalPage">
+		SELECT 
+			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified,c.Name ClientName
+			,s.Name StoreName
+		FROM Terminal a left outer join Client c
+		on a.Client = c.id and c.status = 1 
+		left outer join Store s
+		on a.Store = s.id and s.status = 1 
+		WHERE 
+			a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
+			order by a.ID desc
+			<if test="start != null and limit != null">
+				limit #{start},#{limit}
+			</if>
+	</select>
+	
+	<select id="getTerminalCountByCondition" parameterType="java.util.Map" resultType="int">
+		SELECT count(1)
+		FROM Terminal a WHERE 
+			a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
+	</select>
+	
+	<delete id="deleteTerminalByID" parameterType="string">
+		DELETE FROM Terminal where ID =#{id}
+	</delete>
+	
+	<insert id="insertTerminal" parameterType="terminal">
+		insert into Terminal <include refid="terminalSet" />
+	</insert>
+	
+	<update id="updateTerminal" parameterType="terminal" >
+		UPDATE Terminal <include refid="terminalSet" /> WHERE ID = #{id}
+	</update>
+    
+    <sql id="terminalSet">
+		<set >
+			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
+			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
+			<if test= "store != null">Store=#{store.id,jdbcType=VARCHAR},</if >
+			<if test= "code != null">Code=#{code,jdbcType=VARCHAR},</if >
+			<if test= "name != null">Name=#{name,jdbcType=VARCHAR},</if >
+			<if test= "status != null">Status=#{status},</if >
+			<if test= "creator != null">Creator=#{creator},</if >
+			<if test= "created != null">Created=#{created},</if >
+			<if test= "editor != null">Editor=#{editor,jdbcType=VARCHAR},</if >
+			<if test= "modified != null">Modified=#{modified},</if >
+		</set>
+	</sql >
+    
+</mapper>

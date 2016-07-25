@@ -326,7 +326,7 @@ public class UnitConversionController extends AbstractController {
 
 		if (StringUtils.isBlank(id)) {
 			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请勾选需要删除的账号！");
+			rbody.setMsg("请勾选需要删除的记录！");
 			return rbody;
 		}
 		String token = paramsBody.getToken();

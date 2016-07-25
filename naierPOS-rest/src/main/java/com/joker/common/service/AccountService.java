@@ -60,7 +60,7 @@ public interface AccountService {
 	 */
 	public Page<Account> getAccountPageByCondition(Map<String, Object> map,
 			int pageNo, int limit);
-
+	
 	/**
 	 * 删除账户信息.
 	 * 

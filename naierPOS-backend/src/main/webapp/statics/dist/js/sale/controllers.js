@@ -109,7 +109,7 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 	}
 }]);
 
-app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','BasicsService',function($scope,$location,$routeParams,BasicsService){
+app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDialog','BasicsService',function($scope,$location,$routeParams,ngDialog,BasicsService){
 	var allStatus = [
 		        	    {value : "1", show : "有效"},
 		        	    {value : "0", show : "无效"}
@@ -131,7 +131,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','Basics
 				$scope.selUnitA = selectInfoMap[selUnitAValue];
 				var selUnitBValue = data.unitB.id;
 				$scope.selUnitB = selectInfoMap[selUnitBValue];
-			}else if(routePath == 'account' && allSelectInfoMap['store']){
+			}else if((routePath == 'account' || routePath == 'terminal') && allSelectInfoMap['store']){
 				var selectInfoMap = allSelectInfoMap['store'];
 				var selStoreValue = data.store.id;
 				$scope.selstore = selectInfoMap[selStoreValue];
@@ -155,6 +155,9 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','Basics
 					break;
 				}
 			}
+			if(routePath == 'materialCategory'){
+				data.parentId = data.parent.id;
+			}
 			$scope.form = data;
 			completeQueryById = true;
 			setSelectedInfo();
@@ -165,15 +168,14 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','Basics
 		var pageBody = {};
 		pageBody.pageNo = 1;
 		pageBody.limit = 2147483647;
-		BasicsService.queryByPage(pageBody,type).then(function(data){
-    		if(data && data.results && data.results.length > 0){
-    			var result = data.results;
-    			var len = result.length;
+		BasicsService.queryByList(pageBody,type).then(function(data){
+    		if(data && data.length > 0){
+    			var len = data.length;
     			var allSelect = [];
     			var selectInfoMap = {};
     			for ( var i = 0; i < len; i++) {
-    				var id = result[i].id;
-    				var name = result[i].name;
+    				var id = data[i].id;
+    				var name = data[i].name;
 					var selectObj = {"value":id,"show":name};
 					allSelect.push(selectObj);
 					selectInfoMap[id] = selectObj;
@@ -194,6 +196,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','Basics
 		}else if(routePath == 'account'){
 			querySelectInfo('store','stores',1);
 			querySelectInfo('role','roles',1);
+		}else if(routePath == 'terminal'){
+			querySelectInfo('store','stores',1);
 		}
 		queryBasicsInfoById();
 	}else{
@@ -203,6 +207,9 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','Basics
 		}else if(routePath == 'account'){
 			querySelectInfo('store','stores');
 			querySelectInfo('role','roles');
+		}
+		else if(routePath == 'terminal'){
+			querySelectInfo('store','stores');
 		}
 	}
 	
@@ -232,6 +239,12 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','Basics
 					$scope.form.unitBId = selUnitB.value;
 				}
 			}
+			if(routePath == 'materialCategory'){
+				if($scope.form.parent.id)
+					$scope.form.parentId = $scope.form.parent.id;
+				else
+					$scope.form.parentId = "0";
+			}
 			if($scope.editType == 'add'){
 				BasicsService.add($scope.form,routePath).then(function(data){
 					if(data && data.error){
@@ -258,6 +271,49 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','Basics
             });
         }
 	}
+	
+	//导购员信息查询.
+	$scope.openMaterialCategoryTree = function(){
+		
+		ngDialog.open({
+            template: '/backend/view/template/materialCategoryTree.html',
+            scope: $scope,
+            closeByEscape: false,
+            controller: 'materialCategoryTreeCtrl'
+        });
+	}
+}]);
+
+app.controller("materialCategoryTreeCtrl",['$scope','$location','LoginService','ngDialog','BasicsService',function($scope,$location,LoginService,ngDialog,BasicsService){
+	var selectedNode = {};
+	
+	
+	//表格渲染完成后执行
+	$scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
+		var body = {};
+		BasicsService.queryTree(body,'materialCategory').then(function(data){
+			var tree = data;
+			$('#materialCategoryTree').treeview({
+				data: tree,
+				onNodeSelected: function(event, node) {
+					selectedNode = node;
+	            }}
+			);
+        });
+	});
+	$scope.close=function(){
+		ngDialog.close();
+	};
+	
+	$scope.selectMCTree=function(){
+		if(!$scope.form.parent){
+			$scope.form.parent = {};
+		}
+		$scope.form.parent.id = selectedNode.id;
+		$scope.form.parent.name = selectedNode.text;
+		selectedNode = {};
+		ngDialog.close();
+	};
 }]);
 
 app.controller("headNavCtrl",['$scope','$location','LoginService',function($scope,$location,LoginService){

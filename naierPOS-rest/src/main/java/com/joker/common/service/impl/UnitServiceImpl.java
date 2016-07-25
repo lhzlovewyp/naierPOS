@@ -48,11 +48,6 @@ public class UnitServiceImpl implements UnitService {
 		if (map == null) {
 			map = new HashMap<String, Object>();
 		}
-		String clientId = null;
-		if (map.containsKey("clientId")) {
-			clientId = (String) map.get("clientId");
-		}
-		map.put("clientId", clientId);
 		map.put("start", start);
 		map.put("limit", limit);
 		Page<Unit> page = new Page<Unit>();
@@ -63,6 +58,18 @@ public class UnitServiceImpl implements UnitService {
 		page.setTotalRecord(totalRecord);
 		page.setResults(list);
 		return page;
+	}
+
+	/**
+	 * 根据商户查询计量单位信息.
+	 * 
+	 * @param map
+	 * @return
+	 */
+	@Override
+	public List<Unit> getUnitPageByCondition(Map<String, Object> map) {
+		List<Unit> list = mapper.getUnitPageByCondition(map);
+		return list;
 	}
 
 	@Override

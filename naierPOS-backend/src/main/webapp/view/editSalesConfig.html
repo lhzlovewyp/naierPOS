@@ -1,0 +1,65 @@
+<section class="content">
+	<div class="box">
+		<div class="box-header">
+			<h3 class="box-title">销售交易设定</h3>
+		</div>
+		<div class="box-body">
+			<form class="form-horizontal" role="form" method="post"  name="basicsForm" id="basicsForm" ng-submit="edit(basicsForm.$valid)" novalidate>
+				<div class="form-group">
+					<label for="ID" class="col-sm-2 control-label">GUID</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="ID" name="ID"
+							placeholder="GUID" ng-model="form.id">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="Client" class="col-sm-2 control-label">商户</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="Client" name="Client"
+							placeholder="商户" value="0" ng-model="form.clientId">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="Store" class="col-sm-2 control-label">门店</label>
+					<div class="col-sm-10">
+						<select id="storeId" name="storeId" class="form-control" ng-model="selstore" ng-options="x.show for x in stores">
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="terminalId" class="col-sm-2 control-label">收银终端</label>
+					<div class="col-sm-10">
+						<select id="terminalId" name="terminalId" class="form-control" ng-model="selterminal" ng-options="x.show for x in terminals">
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="SalesDate" class="col-sm-2 control-label">营业日期</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="SalesDate"
+							name="SalesDate" placeholder="营业日期" ng-model="form.salesDate">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="MaxCode" class="col-sm-2 control-label">销售最大交易序号</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="MaxCode"
+							name="MaxCode" placeholder="销售最大交易序号" ng-model="form.maxCode">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="Flag" class="col-sm-2 control-label">编号标记</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="Flag" name="Flag"
+							placeholder="编号标记" ng-model="form.flag">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="button" class="btn btn-danger" ng-click="edit(basicsForm.$valid)">提交</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</section>

@@ -48,11 +48,6 @@ public class BrandServiceImpl implements BrandService {
 		if (map == null) {
 			map = new HashMap<String, Object>();
 		}
-		String clientId = null;
-		if (map.containsKey("clientId")) {
-			clientId = (String) map.get("clientId");
-		}
-		map.put("clientId", clientId);
 		map.put("start", start);
 		map.put("limit", limit);
 		Page<Brand> page = new Page<Brand>();
@@ -63,6 +58,18 @@ public class BrandServiceImpl implements BrandService {
 		page.setTotalRecord(totalRecord);
 		page.setResults(list);
 		return page;
+	}
+
+	/**
+	 * 根据商户查询品牌信息.
+	 * 
+	 * @param map
+	 * @return
+	 */
+	@Override
+	public List<Brand> getBrandPageByCondition(Map<String, Object> map) {
+		List<Brand> list = mapper.getBrandPageByCondition(map);
+		return list;
 	}
 
 	@Override

@@ -1,7 +1,11 @@
 package com.joker.common.service;
 
+import java.util.List;
+import java.util.Map;
+
 import com.joker.common.model.Account;
 import com.joker.common.model.SalesConfig;
+import com.joker.core.dto.Page;
 
 public interface SalesConfigService {
 	/**
@@ -13,10 +17,10 @@ public interface SalesConfigService {
 	
 	/**
 	 * 更新销售编号.
-	 * @param username
+	 * @param salesConfig
 	 * @return
 	 */
-	public int updateSalesConfig(SalesConfig salesConfig);
+	public void updateSalesConfig(SalesConfig salesConfig);
 	
 	
 	/**
@@ -32,4 +36,33 @@ public interface SalesConfigService {
 	 * @return
 	 */
 	public int getSaleMaxCode(Account account);
+	
+	/**
+	 * 根据id查询销售交易信息.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public SalesConfig getSalesConfigByID(String id);
+
+	/**
+	 * 根据商户查询销售交易信息.
+	 * 
+	 * @param map
+	 * @param pageNo
+	 * @param limit
+	 * @return
+	 */
+	public Page<SalesConfig> getSalesConfigPageByCondition(Map<String, Object> map,
+			int pageNo, int limit);
+
+	public List<SalesConfig> getSalesConfigPageByCondition(Map<String, Object> map);
+
+	/**
+	 * 删除销售交易信息.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public void deleteSalesConfigByID(String id);
 }

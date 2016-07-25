@@ -1,4 +1,4 @@
-var app=angular.module('mainApp',['ngRoute','tm.pagination']);
+var app=angular.module('mainApp',['ngRoute','tm.pagination','ngDialog']);
 
 //app.factory('statusInterceptor', ['$q','$location',function($q,$location) {
 //    var statusInterceptor = {
@@ -60,3 +60,30 @@ app.config(['$routeProvider','$locationProvider','$httpProvider', function ($rou
             controller: 'routeEditBasicsCtl'
         })
 }]);
+
+app.config(['ngDialogProvider', function (ngDialogProvider) {
+    ngDialogProvider.setDefaults({
+        className: 'ngdialog-theme-default',
+        plain: false,
+        showClose: true,
+        closeByDocument: true,
+        closeByEscape: true,
+        appendTo: false,
+        preCloseCallback: function () {
+            //console.log('default pre-close callback');
+        }
+    });
+}]);
+
+app.directive('onRenderFinish', function ($timeout) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attr) {
+            if (scope.$last === true) {
+                $timeout(function() {
+                    scope.$emit('ngRepeatFinished');
+                });
+            }
+        }
+    };
+});
