@@ -76,15 +76,14 @@
                 <li><input type="text" value="" data-provide="datepicker-inline" data-date-format="yyyy-mm-dd" class="form-control" /></li>
                 <li>-</li>
                 <li><input type="text" value="" data-provide="datepicker-inline" data-date-format="yyyy-mm-dd" class="form-control" /></li>
-                <li style="width:50px;"></li>
+                <li style="width:20px;"></li>
                 <li>销售单号: </li>
+                <li><input type="text" name="salesOrder" class="form-control pull-right"></li>
+                <li style="width:20px;"></li>
+                <li>手机号码: </li>
+                <li><input type="text" name="mobile" class="form-control pull-right"></li>
                 <li>
-                <div class="input-group input-group-sm" style="width:250px;">
-                  <input type="text" name="table_search" class="form-control pull-right">
-                  <div class="input-group-btn">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
-                  </div>
-                </div>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> 搜索</button>
                </li>
             </ul>
           </form>
@@ -93,9 +92,9 @@
         	<table id="table1" class="table table-bordered table-hover cursor">
             	<tr>
                 <th>销售单号</th>
-                <th>销售时间</th>
-                <th>状态</th>
-                <th>顾客手机号</th>
+                <th>销售日期</th>
+                <th>导购</th>
+                <th>会员手机号</th>
                 <th>总数量</th>
                 <th>总金额</th>
                 <th>操作</th>
@@ -103,29 +102,29 @@
                 <tr data-toggle="modal" data-target="#myModal">
                 <td>30409583</td>
                 <td>2016-5-25 10:00:01</td>
-                <td><span class="label label-warning">未提货</span></td>
+                <td>张三</td>
                 <td>13918888888</td>
                 <td>20</td>
                 <td>300</td>
-                <td><a class="btn btn-primary btn-flat" href="#">整单退</a> <a class="btn btn-info btn-flat" href="#">单项退</a></td>
+                <td><a class="btn btn-primary btn-flat" href="#">整单退货</a></td>
                 </tr>
                 <tr data-toggle="modal" data-target="#myModal">
                 <td>30409583</td>
                 <td>2016-5-25 10:00:01</td>
-                <td><span class="label label-info">已付款</span></td>
+                <td>张三</td>
                 <td>13918888888</td>
                 <td>20</td>
                 <td>300</td>
-                <td><a class="btn btn-primary btn-flat" href="#">整单退</a> <a class="btn btn-info btn-flat" href="#">单项退</a></td>
+                <td><a class="btn btn-primary btn-flat" href="#">整单退货</a></td>
                 </tr>
                 <tr data-toggle="modal" data-target="#myModal">
                 <td>30409583</td>
                 <td>2016-5-25 10:00:01</td>
-                <td><span class="label label-success">已完成</span></td>
+                <td>张三</td>
                 <td>13918888888</td>
                 <td>20</td>
                 <td>300</td>
-                <td><a class="btn btn-primary btn-flat" href="#">整单退</a> <a class="btn btn-info btn-flat" href="#">单项退</a></td>
+                <td><a class="btn btn-primary btn-flat" href="#">整单退货</a></td>
                 </tr>
             </table>
             <div class="pull-right"><ul class="pagination"><li class="paginate_button previous disabled"><a href="#">上一页</a></li><li class="paginate_button active"><a href="#">1</a></li><li class="paginate_button "><a href="#">2</a></li><li class="paginate_button "><a href="#">3</a></li><li class="paginate_button "><a href="#">4</a></li><li class="paginate_button "><a href="#">5</a></li><li class="paginate_button "><a href="#">6</a></li><li class="paginate_button next"><a href="#">下一页</a></li></ul></div>
@@ -139,72 +138,127 @@
 <!-- ./wrapper -->
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog sales-refuse" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">订单详情</h4>
+        <h4 class="modal-title" id="myModalLabel">销售详情</h4>
       </div>
       <div class="modal-body">
         <div class="margin-bottom">
-        	<table class="table">
+        	<table class="table text-right">
             	<tr>
-                <th>订单编号</th><td><input type="text" class="form-control" value="30409583"></td>
-                <th>订单时间</th><td><input type="text" class="form-control" value="2016-5-25 10:00:01"></td>
+                <td>交易序号</td><td><input type="text" class="form-control" value=""></td>
+                <td>销售日期</td><td><input type="text" class="form-control" value=""></td>
+                <td>导购</td><td><input type="text" class="form-control" value=""></td>
                 </tr>
                 <tr>
-                <th>手机号</th><td><input type="text" class="form-control" value="139188888888"></td>
-                <th>&nbsp;</th><td>&nbsp;</td>
+                <td>会员姓名</td><td><input type="text" class="form-control" value=""></td>
+                <td>会员等级</td><td><input type="text" class="form-control" value=""></td>
+                <td>会员手机号码</td><td><input type="text" class="form-control" value=""></td>
                 </tr>
                 <tr>
-                <th>总数量</th><td><input type="text" class="form-control" value="300"></td>
-                <th>总金额</th><td><input type="text" class="form-control" value="20"></td>
+                <td>总数量</td><td><input type="text" class="form-control" value=""></td>
+                <td>总金额</td><td><input type="text" class="form-control" value=""></td>
+                <td>总折扣金额</td><td><input type="text" class="form-control" value=""></td>
+                </tr>
+                <tr>
+                <td>抹零金额</td><td><input type="text" class="form-control" value=""></td>
+                <td>&nbsp;</td><td>&nbsp;</td>
+                <td>应付金额</td><td><input type="text" class="form-control" value=""></td>
                 </tr>
             </table>
         </div>
         <div>
         	<table class="table table-bordered table-hover">
             	<tr>
+                <th>序号</th>
                 <th>货号</th>
                 <th>品名</th>
                 <th>属性</th>
                 <th>单价</th>
                 <th>数量</th>
                 <th>金额</th>
+                <th>促销活动</th>
                 </tr>
                 <tr>
+                <td>1</td>
                 <td>33121-1</td>
                 <td>全棉提花女船袜</td>
-                <td class="editable">咖啡/22-24</td>
+                <td>咖啡/22-24</td>
                 <td>¥7.00/双</td>
-                <td class="editable">3双</td>
-                <td class="editable">¥21.00</td>
+                <td>3双</td>
+                <td>¥21.00</td>
+                <td>&nbsp;</td>
                 </tr>
                 <tr>
-                <tr>
+                <td>2</td>
                 <td>33121-1</td>
                 <td>全棉提花女船袜</td>
-                <td class="editable">咖啡/22-24</td>
+                <td>咖啡/22-24</td>
                 <td>¥7.00/双</td>
-                <td class="editable">3双</td>
-                <td class="editable">¥21.00</td>
+                <td>3双</td>
+                <td>¥21.00</td>
+                <td>&nbsp;</td>
                 </tr>
                 <tr>
-                <tr>
+                <td>2</td>
                 <td>33121-1</td>
                 <td>全棉提花女船袜</td>
-                <td class="editable">咖啡/22-24</td>
+                <td>咖啡/22-24</td>
                 <td>¥7.00/双</td>
-                <td class="editable">3双</td>
-                <td class="editable">¥21.00</td>
+                <td>3双</td>
+                <td>¥21.00</td>
+                <td>&nbsp;</td>
                 </tr>
-                <tr>
              </table>
         </div>
       </div>
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">支付详情</h4>
+      </div>
+      <div class="modal-body">
+        <div class="margin-bottom">
+        	<table class="table">
+                <tr>
+                <td width="40%"></td>
+                <td>溢收金额</td><td><input type="text" class="form-control" value=""></td>
+                <td>实付金额</td><td><input type="text" class="form-control" value=""></td>
+                </tr>
+            </table>
+        </div>
+         <div>
+        	<table class="table table-bordered table-hover">
+            	<tr>
+                <th>序号</th>
+                <th>支付方式</th>
+                <th>支付金额</th>
+                <th>找零</th>
+                <th>溢收</th>
+                <th>交易流水号</th>
+                </tr>
+                <tr>
+                <td>1</td>
+                <td>储值卡</td>
+                <td>20.00</td>
+                <td>0.00</td>
+                <td>0.00</td> 
+                <td>&nbsp;</td>
+                </tr>
+                <tr>
+                <td>2</td>
+                <td>现金</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td> 
+                <td>&nbsp;</td>
+                </tr>
+            </table>
+        </div>
+       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default">提货</button>
-        <button type="button" class="btn btn-primary">配送</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary">整单退货</button>
       </div>
     </div>
   </div>
