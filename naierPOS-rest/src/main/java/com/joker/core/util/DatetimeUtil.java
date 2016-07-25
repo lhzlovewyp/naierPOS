@@ -116,6 +116,15 @@ public class DatetimeUtil {
 		return output;
 	}
 
+	public static Date toDate(String dateStr, String format) {
+        SimpleDateFormat df = new SimpleDateFormat(format);
+        try {
+            return df.parse(dateStr);
+        } catch (ParseException e) {
+            return new Date();
+        }
+    }
+	
 	/**
 	 * 为日期加上时间,不然统计会少一天
 	 */
@@ -255,6 +264,18 @@ public class DatetimeUtil {
 		calFrom.setTime(dtFrom);
 		return (calEnd.get(Calendar.YEAR) - calFrom.get(Calendar.YEAR));
 	}
+	
+	public static String formatDateToString(Date date,String format) {
+        if(date==null){
+            date=new Date();
+        }
+        if(format==null){
+           format="MM月dd日";
+        }
+        SimpleDateFormat df = new SimpleDateFormat(format);
+        String time = df.format(date);
+        return time;
+    }
 
 	/**
 	 * 格式化

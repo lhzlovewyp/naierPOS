@@ -131,7 +131,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 				$scope.selUnitA = selectInfoMap[selUnitAValue];
 				var selUnitBValue = data.unitB.id;
 				$scope.selUnitB = selectInfoMap[selUnitBValue];
-			}else if((routePath == 'account' || routePath == 'terminal') && allSelectInfoMap['store']){
+			}else if((routePath == 'account' || routePath == 'terminal' || routePath == 'salesConfig') && allSelectInfoMap['store']){
 				var selectInfoMap = allSelectInfoMap['store'];
 				var selStoreValue = data.store.id;
 				$scope.selstore = selectInfoMap[selStoreValue];
@@ -139,7 +139,12 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 				var selectInfoMap = allSelectInfoMap['role'];
 				var selRoleValue = data.role.id;
 				$scope.selrole = selectInfoMap[selRoleValue];
+			}else if(routePath == 'salesConfig' && allSelectInfoMap['terminal']){
+				var selectInfoMap = allSelectInfoMap['terminal'];
+				var selTerminalValue = data.terminal.id;
+				$scope.selterminal = selectInfoMap[selTerminalValue];
 			}
+			
 		}
 	}
 	
@@ -198,6 +203,9 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			querySelectInfo('role','roles',1);
 		}else if(routePath == 'terminal'){
 			querySelectInfo('store','stores',1);
+		}else if(routePath == 'salesConfig'){
+			querySelectInfo('store','stores');
+			querySelectInfo('terminal','terminals');
 		}
 		queryBasicsInfoById();
 	}else{
@@ -207,9 +215,11 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		}else if(routePath == 'account'){
 			querySelectInfo('store','stores');
 			querySelectInfo('role','roles');
-		}
-		else if(routePath == 'terminal'){
+		}else if(routePath == 'terminal'){
 			querySelectInfo('store','stores');
+		}else if(routePath == 'salesConfig'){
+			querySelectInfo('store','stores');
+			querySelectInfo('terminal','terminals');
 		}
 	}
 	
@@ -245,6 +255,20 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 				else
 					$scope.form.parentId = "0";
 			}
+			
+			if(routePath == 'terminal' || routePath == 'salesConfig'){
+				var selstore = $scope.selstore;
+				if(selstore){
+					$scope.form.storeId = selstore.value;
+				}
+			}
+			if(routePath == 'salesConfig'){
+				var selterminal = $scope.selterminal;
+				if(selterminal){
+					$scope.form.terminalId = selterminal.value;
+				}
+			}
+			
 			if($scope.editType == 'add'){
 				BasicsService.add($scope.form,routePath).then(function(data){
 					if(data && data.error){

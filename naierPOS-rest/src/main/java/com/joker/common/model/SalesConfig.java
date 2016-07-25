@@ -5,28 +5,30 @@ package com.joker.common.model;
 
 import java.util.Date;
 
+import com.joker.core.util.DatetimeUtil;
+
 /**
  * @author lvhaizhen
- *
+ * 
  */
-public class SalesConfig extends BaseModel{
+public class SalesConfig extends BaseModel {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7083852360212571168L;
 
-	//商户
+	// 商户
 	private Client client;
-	//门店
+	// 门店
 	private Store store;
-	//销售终端
+	// 销售终端
 	private Terminal terminal;
-	//营业日期
+	// 营业日期
 	private Date salesDate;
-	//流水编号
+	// 流水编号
 	private Integer maxCode;
-	//并发标记
+	// 并发标记
 	private Integer flag;
 
 	public Client getClient() {
@@ -76,6 +78,12 @@ public class SalesConfig extends BaseModel{
 	public void setFlag(Integer flag) {
 		this.flag = flag;
 	}
-	
-	
+
+	public String getSalesDateStr() {
+		String dateStr = "";
+		if (salesDate != null) {
+			dateStr = DatetimeUtil.formatDateToString(salesDate, DatetimeUtil.DATE);
+		}
+		return dateStr;
+	}
 }
