@@ -735,7 +735,7 @@ app.controller("pinBackCtl",['$scope','$location','PinBackService','ngDialog','P
             template: '/front/view/template/back.html',
             scope: $scope,
             closeByDocument: false,
-            width:700,
+            width:'100%',
             controller: 'backCtrl'
         });
 	}
@@ -750,6 +750,7 @@ app.controller("pinBackCtl",['$scope','$location','PinBackService','ngDialog','P
 			body.startDate=$scope.selectForm.startDate;
 			body.endDate=$scope.selectForm.endDate;
 			body.id=$scope.selectForm.id;
+			body.tel=$scope.selectForm.tel;
 		}
 		
 		PinBackService.getSalesOrder(body).then(function(obj){
@@ -797,6 +798,9 @@ app.controller("backCtrl",['$scope','$location','PinBackService','ngDialog','Pay
 			}
 		});
 	};
+	$scope.close=function(){
+		ngDialog.close;
+	}
 	
 }]);
 //定义各控制器公用方法，方便控制器进行通用调用.

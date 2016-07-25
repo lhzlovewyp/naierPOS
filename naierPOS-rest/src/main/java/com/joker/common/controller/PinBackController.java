@@ -56,6 +56,7 @@ public class PinBackController extends AbstractController{
 		String id=(String)params.get("id");
 		String startDate=(String)params.get("startDate");
 		String endDate=(String)params.get("endDate");
+		String mobile=(String)params.get("tel");
 		pageNo = (pageNo == null ? 1 : pageNo);
 		limit = (limit == null ? 10 : limit);
 		
@@ -75,7 +76,9 @@ public class PinBackController extends AbstractController{
 			if(StringUtils.isNotBlank(id)){
 				map.put("id", id);
 			}
-			
+			if(StringUtils.isNotBlank(mobile)){
+				map.put("memberMobile", mobile);
+			}
 			
 			Page<SalesOrder> page = salesOrderService.getSalesOrderPageByClient(map, pageNo, limit);
 			rbody.setData(page);

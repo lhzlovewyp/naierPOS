@@ -5,7 +5,7 @@
     <artifactId>naierPOS-front</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>saleSystem-front Maven Webapp</name>
+    <name>naierPOS-front Maven Webapp</name>
     <url>http://maven.apache.org</url>
     
     <properties>

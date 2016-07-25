@@ -30,9 +30,10 @@ public class SalesOrder extends BaseModel{
 	//交易序号
 	private int code;
 	//原始单号 交易类型为RTN时才需要，关联SalesOrder.ID
-	private SalesOrder originOrder;
-	//会员编号
-	private String member;
+	private SalesOrder originOrder; 
+	
+	private Member member;
+	
 	//导购员
 	private ShoppingGuide shoppingGuide;
 	//销售总数
@@ -51,6 +52,8 @@ public class SalesOrder extends BaseModel{
 	private BigDecimal excess;
 	//取消促销
 	private String cancelPromotion;
+	//是否已传百胜.
+	private Integer toBaison;
 	//完成时间
 	private Date finished;
 	
@@ -110,13 +113,7 @@ public class SalesOrder extends BaseModel{
 		this.originOrder = originOrder;
 	}
 
-	public String getMember() {
-		return member;
-	}
-
-	public void setMember(String member) {
-		this.member = member;
-	}
+	
 
 	public ShoppingGuide getShoppingGuide() {
 		return shoppingGuide;
@@ -228,6 +225,26 @@ public class SalesOrder extends BaseModel{
 
 	public void setCashFlag(String cashFlag) {
 		this.cashFlag = cashFlag;
+	}
+
+	
+
+	
+
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
+
+	public Integer getToBaison() {
+		return toBaison;
+	}
+
+	public void setToBaison(Integer toBaison) {
+		this.toBaison = toBaison;
 	}
 	
 	

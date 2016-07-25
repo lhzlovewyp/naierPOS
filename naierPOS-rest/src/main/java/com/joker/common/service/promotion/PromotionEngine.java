@@ -125,11 +125,11 @@ public class PromotionEngine {
 	private boolean memberAvailable(Promotion promotion){
 		boolean result =true;
 		
-		if(Constants.PROMOTION_MEMBER_ONLY.equals(promotion.getMemberRestrict()) && StringUtils.isEmpty(saleDto.getMember())){
+		if(Constants.PROMOTION_MEMBER_ONLY.equals(promotion.getMemberRestrict()) && saleDto.getMember()==null){
 			result = false;
 		}
 		
-		if(Constants.PROMOTION_MEMBER_NON.equals(promotion.getMemberRestrict()) && StringUtils.isNotEmpty(saleDto.getMember())){
+		if(Constants.PROMOTION_MEMBER_NON.equals(promotion.getMemberRestrict()) && saleDto.getMember()!=null){
 			result = false;
 		}
 		return result;
