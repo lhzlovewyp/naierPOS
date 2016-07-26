@@ -121,6 +121,11 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 	var selectComplete = {};
 	var allSelectInfoMap = {};
 	var completeQueryById = false;
+	//绑定时间控件.
+	$scope.$on('$viewContentLoaded', function(){
+		$('[data-provide="datepicker-inline"]').datepicker();
+	});
+	
 	
 	function setSelectedInfo(){
 		var data = $scope.form;
@@ -156,7 +161,9 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		var body = {};
 		body.id = id;
 		BasicsService.queryById(body,routePath).then(function(data){
-			data.clientId = data.client.id;
+			if(data.client){
+				data.clientId = data.client.id;
+			}
 			var selStatusValue = data.status;
 			for ( var i = 0; i < allStatus.length; i++) {
 				if(allStatus[i].value == selStatusValue){
@@ -166,7 +173,12 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			}
 			if(routePath == 'materialCategory'){
 				data.parentId = data.parent.id;
+			}else if(routePath == 'store'){
+				if(data.opened){
+					data.opened=new Date(data.opened).format('yyyy-MM-dd');
+				}
 			}
+			
 			$scope.form = data;
 			completeQueryById = true;
 			setSelectedInfo();
@@ -311,6 +323,10 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
                 }
             });
         }
+	}
+	
+	$scope.cancel=function(){
+		$location.path('/backend/list/'+routePath);
 	}
 	
 	//导购员信息查询.

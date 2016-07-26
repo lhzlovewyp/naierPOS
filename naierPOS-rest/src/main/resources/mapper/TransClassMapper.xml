@@ -2,10 +2,10 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.joker.common.mapper.PaymentMapper">
+<mapper namespace="com.joker.common.mapper.TransClassMapper">
      
     
-    <resultMap type="payment" id="payment">
+    <resultMap type="transClass" id="transClass">
 		<result property="code" column="Code" />
 		<result property="name" column="Name" />
 		<result property="status" column="Status" />
@@ -15,28 +15,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="modified" column="Modified" />
 	</resultMap>
 	
-	<select id="getPaymentPageByCondition" parameterType="java.util.Map" resultMap="payment">
-		SELECT 
-			a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
-		FROM Payment a
-		WHERE 
-			a.Status= 1
-			order by a.Code desc
-			<if test="start != null and limit != null">
-				limit #{start},#{limit}
-			</if>
-	</select>
 	
-	<select id="getPaymentByCode" parameterType="string" resultMap="payment">
+	<select id="getTransClassByCode" parameterType="string" resultMap="transClass">
 		SELECT 
 			*
-		FROM Payment 
+		FROM TransClass 
 		WHERE Code=#{code} 
 	</select>
 	
-	<select id="getPaymentByCondition" parameterType="java.util.Map" resultMap="payment">
+	<select id="getTransClassByCondition" parameterType="java.util.Map" resultMap="transClass">
 		SELECT 
-			* from Payment a 
+			* from TransClass a 
 		WHERE 1=1
 			<if test="code != null">
 				and a.Code=#{code}
@@ -49,9 +38,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			</if>
 	</select>
 	
-	<select id="getPaymentCountByCondition" parameterType="java.util.Map" resultType="int">
+	<select id="getTransClassCountByCondition" parameterType="java.util.Map" resultType="int">
 		SELECT count(1)
-		FROM Payment a WHERE 1=1
+		FROM TransClass a WHERE 1=1
 			<if test="code != null">
 				and a.Code=#{code}
 			</if>
@@ -63,19 +52,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			</if>
 	</select>
 	
-	<delete id="deletePaymentByCode" parameterType="string">
-		DELETE FROM Payment where Code =#{code}
+	<delete id="deleteTransClassByCode" parameterType="string">
+		DELETE FROM TransClass where Code =#{code}
 	</delete>
 	
-	<insert id="insertPayment" parameterType="payment">
-		insert into Payment <include refid="paymentSet" />
+	<insert id="insertTransClass" parameterType="transClass">
+		insert into TransClass <include refid="transClassSet" />
 	</insert>
 	
-	<update id="updatePayment" parameterType="payment" >
-		UPDATE Payment <include refid="paymentSet" /> WHERE Code = #{code}
+	<update id="updateTransClass" parameterType="TransClass" >
+		UPDATE TransClass <include refid="transClassSet" /> WHERE Code = #{code}
 	</update>
     
-    <sql id="paymentSet">
+    <sql id="transClassSet">
 		<set >
 			<if test= "code != null">Code=#{code,jdbcType=VARCHAR},</if >
 			<if test= "name != null">Name=#{name,jdbcType=VARCHAR},</if >

@@ -32,9 +32,64 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</where>
 	</select>
 	
+	<select id="getShoppingGuideByID" parameterType="string" resultMap="shoppingGuide">
+		SELECT 
+			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+		FROM ShoppingGuide a
+		WHERE a.ID=#{id} 
+	</select>
+	
+	<select id="getShoppingGuidePageByCondition" parameterType="java.util.Map" resultMap="shoppingGuide">
+		SELECT 
+			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified,c.Name ClientName
+		FROM ShoppingGuide a left outer join Client c
+		on a.Client = c.id and c.status = 1 
+		WHERE 1=1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
+			<if test="code != null">
+				and a.Code=#{code}
+			</if>
+			order by a.ID desc
+			<if test="start != null and limit != null">
+				limit #{start},#{limit}
+			</if>
+	</select>
+	
+	<select id="getShoppingGuideCountByCondition" parameterType="java.util.Map" resultType="int">
+		SELECT count(1)
+		FROM ShoppingGuide a WHERE 1=1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="code != null">
+				and a.Code=#{code}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
+	</select>
+	
+	<delete id="deleteShoppingGuideByID" parameterType="string">
+		DELETE FROM ShoppingGuide where ID =#{id}
+	</delete>
+	
+	<insert id="insertShoppingGuide" parameterType="shoppingGuide">
+		insert into ShoppingGuide <include refid="shoppingGuideSet" />
+	</insert>
+	
+	<update id="updateShoppingGuide" parameterType="shoppingGuide" >
+		UPDATE ShoppingGuide <include refid="shoppingGuideSet" /> WHERE ID = #{id}
+	</update>
+    
+    
 	
     
-    <sql id="storeSet">
+    <sql id="shoppingGuideSet">
 		<set >
 			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
 			<if test= "code != null">Code=#{code,jdbcType=VARCHAR},</if >
