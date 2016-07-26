@@ -16,6 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<resultMap type="salesConfig" id="salesConfigPage" extends="salesConfig">
 		<result property="client.name" column="ClientName" />
+		<result property="store.name" column="StoreName" />
 	</resultMap>
 	
     <select id="getCurrentSalesConfig" parameterType="string" resultMap="salesConfig">
@@ -34,15 +35,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getSalesConfigPageByCondition" parameterType="java.util.Map" resultMap="salesConfigPage">
 		SELECT 
 			a.ID,a.Client,a.Store,a.SalesDate,a.MaxCode,a.Flag,c.Name ClientName
+			,s.Name StoreName
 		FROM SalesConfig a left outer join Client c
 		on a.Client = c.id and c.status = 1 
+		left outer join Store s
+		on a.Store = s.id and s.status = 1 
 		WHERE 
 			1 = 1
 			<if test="clientId != null">
 				and a.Client=#{clientId}
-			</if>
-			<if test="likeName != null">
-				and a.name like CONCAT('%','${likeName}','%' )  
 			</if>
 			order by a.ID desc
 			<if test="start != null and limit != null">
@@ -57,9 +58,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="clientId != null">
 				and a.Client=#{clientId}
 			</if>
-			<if test="likeName != null">
-				and a.name like CONCAT('%','${likeName}','%' )  
-			</if>
 	</select>
 	
 	<delete id="deleteSalesConfigByID" parameterType="string">
@@ -71,6 +69,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     	update SalesConfig set MaxCode=#{maxCode} ,Flag=Flag+1 where Flag=#{flag} and ID=#{id}
     </update>
     
+    <update id="updateSalesConfig" parameterType="salesConfig">
+    	update SalesConfig  <include refid="salesConfigSet" /> WHERE ID = #{id}
+    </update>
+    
     <insert id="insertSalesConfig" parameterType="salesConfig">
     	insert into SalesConfig <include refid="salesConfigSet" />
     </insert>
@@ -78,8 +80,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <sql id="salesConfigSet">
 		<set >
 			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
-			<if test= "client.id != null">Client=#{client.id,jdbcType=VARCHAR},</if >
-			<if test= "store.id != null">Store=#{store.id,jdbcType=VARCHAR},</if >
+			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
+			<if test= "store != null">Store=#{store.id,jdbcType=VARCHAR},</if >
+			<if test= "terminal.id != null">Terminal=#{terminal.id,jdbcType=VARCHAR},</if >
 			<if test= "salesDate != null">SalesDate=#{salesDate},</if >
 			<if test= "maxCode != null">MaxCode=#{maxCode},</if >
 			<if test= "flag != null">Flag=#{flag},</if >
