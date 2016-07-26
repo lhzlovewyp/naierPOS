@@ -19,11 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
-
 import com.joker.common.model.Account;
-import com.joker.common.model.Payment;
-import com.joker.common.service.PaymentService;
+import com.joker.common.model.ItemClass;
+import com.joker.common.service.ItemClassService;
 import com.joker.core.annotation.NotNull;
 import com.joker.core.cache.CacheFactory;
 import com.joker.core.constant.ResponseState;
@@ -37,40 +35,10 @@ import com.joker.core.dto.ReturnBody;
  * 
  */
 @Controller
-public class PaymentController extends AbstractController {
+public class ItemClassController extends AbstractController {
 
 	@Autowired
-	PaymentService paymentService;
-
-	/**
-	 * 查询品牌信息.
-	 * 
-	 * @param paramsBody
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value = { "/payment/queryByList" }, method = RequestMethod.POST)
-	@NotNull(value = "token")
-	@ResponseBody
-	public ReturnBody getPaymentByList(@RequestBody ParamsBody paramsBody,
-			HttpServletRequest request, HttpServletResponse response) {
-		ReturnBody rbody = new ReturnBody();
-		String token = paramsBody.getToken();
-		Object user = CacheFactory.getCache().get(token);
-		if (user != null) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			List<Payment> list = paymentService.getPaymentPageByCondition(map);
-			rbody.setData(list);
-			rbody.setStatus(ResponseState.SUCCESS);
-			return rbody;
-		} else {
-			rbody.setStatus(ResponseState.ERROR);
-			rbody.setMsg("请登录！");
-		}
-		// 数据返回时永远返回true.
-		return rbody;
-	}
+	ItemClassService itemClassService;
 	
 	/**
 	 * 查询颜色信息.
@@ -80,7 +48,7 @@ public class PaymentController extends AbstractController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = { "/payment/queryByPage" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/itemClass/queryByPage" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
 	public ReturnBody getColorByPage(@RequestBody ParamsBody paramsBody,
@@ -102,7 +70,7 @@ public class PaymentController extends AbstractController {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("clientId", clientId);
 			map.put("likeName", likeName);
-			Page<Payment> page = paymentService.getPaymentByCondition(map,
+			Page<ItemClass> page = itemClassService.getItemClassByCondition(map,
 					pageNo, limit);
 			rbody.setData(page);
 			rbody.setStatus(ResponseState.SUCCESS);
@@ -123,7 +91,7 @@ public class PaymentController extends AbstractController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = { "/payment/queryById" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/itemClass/queryById" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
 	public ReturnBody getColorById(@RequestBody ParamsBody paramsBody,
@@ -141,8 +109,8 @@ public class PaymentController extends AbstractController {
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
-			Payment payment = paymentService.getPaymentByCode(code);
-			rbody.setData(payment);
+			ItemClass ItemClass = itemClassService.getItemClassByCode(code);
+			rbody.setData(ItemClass);
 			rbody.setStatus(ResponseState.SUCCESS);
 			return rbody;
 		} else {
@@ -161,7 +129,7 @@ public class PaymentController extends AbstractController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = { "/payment/add" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/itemClass/add" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
 	public ReturnBody add(@RequestBody ParamsBody paramsBody,
@@ -188,13 +156,13 @@ public class PaymentController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 			
-			Payment payment = new Payment();
-			payment.setCode(code);
-			payment.setName(name);
-			payment.setCreated(new Date());
-			payment.setCreator(account.getId());
+			ItemClass itemClass = new ItemClass();
+			itemClass.setCode(code);
+			itemClass.setName(name);
+			itemClass.setCreated(new Date());
+			itemClass.setCreator(account.getId());
 
-			paymentService.insertPayment(payment);
+			itemClassService.insertItemClass(itemClass);
 			rbody.setStatus(ResponseState.SUCCESS);
 		} else {
 			rbody.setStatus(ResponseState.ERROR);
@@ -212,7 +180,7 @@ public class PaymentController extends AbstractController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = { "/payment/update" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/itemClass/update" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
 	public ReturnBody update(@RequestBody ParamsBody paramsBody,
@@ -248,14 +216,14 @@ public class PaymentController extends AbstractController {
 			Account account = (Account) user;
 
 
-			Payment payment = new Payment();
-			payment.setCode(code);
-			payment.setName(name);
-			payment.setStatus(status);
-			payment.setModified(new Date());
-			payment.setEditor(account.getId());
+			ItemClass itemClass = new ItemClass();
+			itemClass.setCode(code);
+			itemClass.setName(name);
+			itemClass.setStatus(status);
+			itemClass.setModified(new Date());
+			itemClass.setEditor(account.getId());
 
-			paymentService.updatePayment(payment);
+			itemClassService.updateItemClass(itemClass);
 			rbody.setStatus(ResponseState.SUCCESS);
 		} else {
 			rbody.setStatus(ResponseState.ERROR);
@@ -273,7 +241,7 @@ public class PaymentController extends AbstractController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = { "/payment/delete" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/itemClass/delete" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
 	public ReturnBody delete(@RequestBody ParamsBody paramsBody,
@@ -291,7 +259,7 @@ public class PaymentController extends AbstractController {
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
-			paymentService.deletePaymentByCode(code);
+			itemClassService.deleteItemClassByCode(code);
 			rbody.setStatus(ResponseState.SUCCESS);
 		} else {
 			rbody.setStatus(ResponseState.ERROR);

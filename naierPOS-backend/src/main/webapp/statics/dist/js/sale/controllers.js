@@ -147,7 +147,9 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		var body = {};
 		body.id = id;
 		BasicsService.queryById(body,routePath).then(function(data){
-			data.clientId = data.client.id;
+			if(data.client){
+				data.clientId = data.client.id;
+			}
 			var selStatusValue = data.status;
 			for ( var i = 0; i < allStatus.length; i++) {
 				if(allStatus[i].value == selStatusValue){
@@ -270,6 +272,10 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
                 }
             });
         }
+	}
+	
+	$scope.cancel=function(){
+		$location.path('/backend/list/'+routePath);
 	}
 	
 	//导购员信息查询.
