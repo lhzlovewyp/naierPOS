@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.joker.common.Constant.Constants;
 import com.joker.common.mapper.StoreMapper;
 import com.joker.common.model.Store;
 import com.joker.common.service.StoreService;
@@ -30,7 +32,14 @@ public class StoreServiceImpl implements StoreService {
 
 	@Override
 	public void deleteStoreById(String id) {
-		mapper.deleteStoreById(id);
+		if (StringUtils.isNotBlank(id)) {
+			String[] ids = id.split(Constants.COMMA);
+			for (String oneId : ids) {
+				if (StringUtils.isNotBlank(oneId)) {
+					mapper.deleteStoreById(oneId);
+				}
+			}
+		}
 	}
 
 	@Override

@@ -19,5 +19,58 @@ public interface ShoppingGuideMapper {
 	@DataSource("slave")
 	public List<ShoppingGuide> getShoppingGuideByCondition(Map<String,String> map);
 	
+	/**
+	 * 根据id查询颜色信息.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@DataSource("slave")
+	public ShoppingGuide getShoppingGuideByID(String id);
+
+	/**
+	 * 查询颜色信息.
+	 * 
+	 * @param map
+	 * @return
+	 */
+	@DataSource("slave")
+	public List<ShoppingGuide> getShoppingGuidePageByCondition(Map<String, Object> map);
+
+	/**
+	 * 查询颜色信息.
+	 * 
+	 * @param map
+	 * @return
+	 */
+	@DataSource("slave")
+	public int getShoppingGuideCountByCondition(Map<String, Object> map);
+
+	/**
+	 * 删除颜色信息.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@DataSource("master")
+	public void deleteShoppingGuideByID(String id);
+
+	/**
+	 * 修改颜色信息.
+	 * 
+	 * @param ShoppingGuide
+	 * @return
+	 */
+	@DataSource("master")
+	public void updateShoppingGuide(ShoppingGuide shoppingGuide);
+
+	/**
+	 * 保存颜色信息.
+	 * 
+	 * @param ShoppingGuide
+	 * @return
+	 */
+	@DataSource("master")
+	public void insertShoppingGuide(ShoppingGuide shoppingGuide);
 	
 }

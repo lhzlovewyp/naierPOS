@@ -121,6 +121,11 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 	var selectComplete = {};
 	var allSelectInfoMap = {};
 	var completeQueryById = false;
+	//绑定时间控件.
+	$scope.$on('$viewContentLoaded', function(){
+		$('[data-provide="datepicker-inline"]').datepicker();
+	});
+	
 	
 	function setSelectedInfo(){
 		var data = $scope.form;
@@ -164,7 +169,12 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			}
 			if(routePath == 'materialCategory'){
 				data.parentId = data.parent.id;
+			}else if(routePath == 'store'){
+				if(data.opened){
+					data.opened=new Date(data.opened).format('yyyy-MM-dd');
+				}
 			}
+			
 			$scope.form = data;
 			completeQueryById = true;
 			setSelectedInfo();

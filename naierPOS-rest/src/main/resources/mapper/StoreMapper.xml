@@ -13,26 +13,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="address" column="Address" />
 		<result property="contacts" column="Contacts" />
 		<result property="client.id" column="ClientID" />
+		<result property="status" column="Status" />
 		<result property="creator" column="Creator" />
 		<result property="created" column="Created" />
 		<result property="editor" column="Editor" />
 		<result property="modified" column="Modified" />
 	</resultMap>
     <select id="getStoreById" parameterType="string" resultMap="store">
-		SELECT s.ID,s.Code,s.Name,s.Opened,s.Address,s.Contacts,s.Client as ClientID ,s.Creator,s.Created,s.Editor,s.Modified
-		FROM Store s left join Client c on c.id=s.Client WHERE s.Status = 1 and s.ID = #{id}
+		SELECT s.ID,s.Code,s.Name,s.Opened,s.Address,s.Contacts,s.Client as ClientID ,s.Status,s.Creator,s.Created,s.Editor,s.Modified
+		FROM Store s left join Client c on c.id=s.Client WHERE  s.ID = #{id}
 	</select>
 	
 	<select id="getStoreByClientAndCode" parameterType="map" resultMap="store">
-		SELECT s.ID,s.Code,s.Name,s.Opened,s.Address,s.Contacts,s.Client as ClientID ,s.Creator,s.Created,s.Editor,s.Modified
+		SELECT s.ID,s.Code,s.Name,s.Opened,s.Address,s.Contacts,s.Client as ClientID ,s.Status,s.Creator,s.Created,s.Editor,s.Modified
 		FROM Store s left join Client c on c.id=s.Client WHERE s.Status = 1 and s.Code = #{code} and s.Client = #{client.ID}
 	</select>
 	
 	<select id="getStorePageByCondition" parameterType="java.util.Map" resultMap="store">
 		SELECT 
-			s.ID,s.Code,s.Name,s.Opened,s.Address,s.Contacts,s.Client as ClientID ,s.Creator,s.Created,s.Editor,s.Modified
+			s.ID,s.Code,s.Name,s.Opened,s.Address,s.Contacts,s.Client as ClientID ,s.Status,s.Creator,s.Created,s.Editor,s.Modified
 		FROM Store s left join Client c on s.Client = c.id and c.status = 1 
-		WHERE s.Status = 1
+		WHERE 1 = 1
 			<if test="clientId != null">
 				and s.Client=#{clientId}
 			</if>
@@ -67,6 +68,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
 			<if test= "code != null">Code=#{code,jdbcType=VARCHAR},</if >
 			<if test= "name != null">Name=#{name,jdbcType=VARCHAR},</if >
+			<if test= "status != null">Status=#{status,jdbcType=VARCHAR},</if >
 			<if test= "opened != null">Opened=#{opened},</if >
 			<if test= "address != null">Address=#{address,jdbcType=VARCHAR},</if >
 			<if test= "contacts != null">Contacts=#{contacts,jdbcType=VARCHAR},</if >
