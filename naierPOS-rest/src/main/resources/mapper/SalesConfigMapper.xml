@@ -17,6 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<resultMap type="salesConfig" id="salesConfigPage" extends="salesConfig">
 		<result property="client.name" column="ClientName" />
 		<result property="store.name" column="StoreName" />
+		<result property="terminal.name" column="TerminalName" />
 	</resultMap>
 	
     <select id="getCurrentSalesConfig" parameterType="string" resultMap="salesConfig">
@@ -35,11 +36,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getSalesConfigPageByCondition" parameterType="java.util.Map" resultMap="salesConfigPage">
 		SELECT 
 			a.ID,a.Client,a.Store,a.SalesDate,a.MaxCode,a.Flag,c.Name ClientName
-			,s.Name StoreName
+			,s.Name StoreName,t.Name TerminalName
 		FROM SalesConfig a left outer join Client c
 		on a.Client = c.id and c.status = 1 
 		left outer join Store s
 		on a.Store = s.id and s.status = 1 
+		left outer join Terminal t
+		on a.Terminal = t.id and t.status = 1 
 		WHERE 
 			1 = 1
 			<if test="clientId != null">
@@ -82,7 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
 			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
 			<if test= "store != null">Store=#{store.id,jdbcType=VARCHAR},</if >
-			<if test= "terminal.id != null">Terminal=#{terminal.id,jdbcType=VARCHAR},</if >
+			<if test= "terminal != null">Terminal=#{terminal.id,jdbcType=VARCHAR},</if >
 			<if test= "salesDate != null">SalesDate=#{salesDate},</if >
 			<if test= "maxCode != null">MaxCode=#{maxCode},</if >
 			<if test= "flag != null">Flag=#{flag},</if >

@@ -143,6 +143,10 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 				var selectInfoMap = allSelectInfoMap['terminal'];
 				var selTerminalValue = data.terminal.id;
 				$scope.selterminal = selectInfoMap[selTerminalValue];
+			}else if(routePath == 'clientPayment' && allSelectInfoMap['payment']){
+				var selectInfoMap = allSelectInfoMap['payment'];
+				var selPaymentValue = data.terminal.id;
+				$scope.selPayment = selectInfoMap[selPaymentValue];
 			}
 			
 		}
@@ -180,6 +184,9 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
     			var selectInfoMap = {};
     			for ( var i = 0; i < len; i++) {
     				var id = data[i].id;
+    				if(type == 'payment'){
+    					id = data[i].code;
+    				}
     				var name = data[i].name;
 					var selectObj = {"value":id,"show":name};
 					allSelect.push(selectObj);
@@ -206,6 +213,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		}else if(routePath == 'salesConfig'){
 			querySelectInfo('store','stores');
 			querySelectInfo('terminal','terminals');
+		}else if(routePath == 'clientPayment'){
+			querySelectInfo('payment','Payments');
 		}
 		queryBasicsInfoById();
 	}else{
@@ -220,6 +229,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		}else if(routePath == 'salesConfig'){
 			querySelectInfo('store','stores');
 			querySelectInfo('terminal','terminals');
+		}else if(routePath == 'clientPayment'){
+			querySelectInfo('payment','Payments');
 		}
 	}
 	
@@ -266,6 +277,12 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 				var selterminal = $scope.selterminal;
 				if(selterminal){
 					$scope.form.terminalId = selterminal.value;
+				}
+			}
+			if(routePath == 'clientPayment'){
+				var selPayment = $scope.selPayment;
+				if(selPayment){
+					$scope.form.paymentCode = selPayment.value;
 				}
 			}
 			

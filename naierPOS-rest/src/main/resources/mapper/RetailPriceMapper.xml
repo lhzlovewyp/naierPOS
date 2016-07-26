@@ -51,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		left outer join Store s
 		on a.Store = s.id and s.status = 1 
 		WHERE 
-			a.Status= 1
+			1 = 1
 			<if test="clientId != null">
 				and a.Client=#{clientId}
 			</if>
@@ -64,12 +64,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getRetailPriceCountByCondition" parameterType="java.util.Map" resultType="int">
 		SELECT count(1)
 		FROM RetailPrice a WHERE 
-			a.Status= 1
+			1 = 1
 			<if test="clientId != null">
 				and a.Client=#{clientId}
-			</if>
-			<if test="likeName != null">
-				and a.name like CONCAT('%','${likeName}','%' )  
 			</if>
 	</select>
 	
