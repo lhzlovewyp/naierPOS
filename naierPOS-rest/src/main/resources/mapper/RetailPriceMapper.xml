@@ -35,7 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     	]]>
     </select>
 	
-	<select id="geTretailPriceByID" parameterType="string" resultMap="retailPrice">
+	<select id="getRetailPriceByID" parameterType="string" resultMap="retailPrice">
 		SELECT 
 			a.ID,a.Client,a.Store,a.Material,a.Unit,a.Price,a.EffectiveDate,a.ExpiryDate,a.Creator,a.Created,a.Editor,a.Modified
 		FROM RetailPrice a

@@ -173,11 +173,26 @@ public class RetailConfigController extends AbstractController {
 		ReturnBody rbody = new ReturnBody();
 		// 参数校验
 		Map params = paramsBody.getBody();
-		String priceDecimal = (String) params.get("priceDecimal");
-		String itemDecimal = (String) params.get("itemDecimal");
-		String itemRoundDown = (String) params.get("itemRoundDown");
-		String transDecimal = (String) params.get("transDecimal");
-		String saleRoundDown = (String) params.get("saleRoundDown");
+		String priceDecimal = null;
+		if (params.get("priceDecimal") != null) {
+			priceDecimal = String.valueOf(params.get("priceDecimal"));
+		}
+		String itemDecimal = null;
+		if (params.get("itemDecimal") != null) {
+			itemDecimal = String.valueOf(params.get("itemDecimal"));
+		}
+		String itemRoundDown = null;
+		if (params.get("itemRoundDown") != null) {
+			itemRoundDown = String.valueOf(params.get("itemRoundDown"));
+		}
+		String transDecimal = null;
+		if (params.get("transDecimal") != null) {
+			transDecimal = String.valueOf(params.get("transDecimal"));
+		}
+		String saleRoundDown = null;
+		if (params.get("saleRoundDown") != null) {
+			saleRoundDown = String.valueOf(params.get("saleRoundDown"));
+		}
 		String clientId = (String) params.get("clientId");
 
 		if (!StringUtils.isNumeric(priceDecimal)) {
@@ -257,11 +272,26 @@ public class RetailConfigController extends AbstractController {
 		// 参数校验
 		Map params = paramsBody.getBody();
 		String id = (String) params.get("id");
-		String priceDecimal = (String) params.get("priceDecimal");
-		String itemDecimal = (String) params.get("itemDecimal");
-		String itemRoundDown = (String) params.get("itemRoundDown");
-		String transDecimal = (String) params.get("transDecimal");
-		String saleRoundDown = (String) params.get("saleRoundDown");
+		String priceDecimal = null;
+		if (params.get("priceDecimal") != null) {
+			priceDecimal = String.valueOf(params.get("priceDecimal"));
+		}
+		String itemDecimal = null;
+		if (params.get("itemDecimal") != null) {
+			itemDecimal = String.valueOf(params.get("itemDecimal"));
+		}
+		String itemRoundDown = null;
+		if (params.get("itemRoundDown") != null) {
+			itemRoundDown = String.valueOf(params.get("itemRoundDown"));
+		}
+		String transDecimal = null;
+		if (params.get("transDecimal") != null) {
+			transDecimal = String.valueOf(params.get("transDecimal"));
+		}
+		String saleRoundDown = null;
+		if (params.get("saleRoundDown") != null) {
+			saleRoundDown = String.valueOf(params.get("saleRoundDown"));
+		}
 		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(id)) {

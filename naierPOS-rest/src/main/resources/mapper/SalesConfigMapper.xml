@@ -9,6 +9,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="id" column="ID" />
 		<result property="client.id" column="Client" />
 		<result property="store.id" column="Store" />
+		<result property="terminal.id" column="Terminal" />
 		<result property="salesDate" column="SalesDate" />
 		<result property="maxCode" column="MaxCode" />
 		<result property="flag" column="Flag" />
@@ -21,21 +22,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 	
     <select id="getCurrentSalesConfig" parameterType="string" resultMap="salesConfig">
-    	SELECT s.ID,s.Client,s.Store,s.SalesDate,s.MaxCode,s.Flag from SalesConfig s,
+    	SELECT s.ID,s.Client,s.Store,a.Terminal,s.SalesDate,s.MaxCode,s.Flag from SalesConfig s,
     	(SELECT Store,max(SalesDate) as SalesDate FROM SalesConfig WHERE Store = #{storeId} group by Store) b
     	where s.Store=b.Store and s.SalesDate=b.SalesDate and s.Store=#{storeId}
     </select>
     
     <select id="getSalesConfigByID" parameterType="string" resultMap="salesConfig">
 		SELECT 
-			a.ID,a.Client,a.Store,a.SalesDate,a.MaxCode,a.Flag
+			a.ID,a.Client,a.Store,a.Terminal,a.SalesDate,a.MaxCode,a.Flag
 		FROM SalesConfig a
 		WHERE a.ID=#{id} 
 	</select>
 	
 	<select id="getSalesConfigPageByCondition" parameterType="java.util.Map" resultMap="salesConfigPage">
 		SELECT 
-			a.ID,a.Client,a.Store,a.SalesDate,a.MaxCode,a.Flag,c.Name ClientName
+			a.ID,a.Client,a.Store,a.Terminal,a.SalesDate,a.MaxCode,a.Flag,c.Name ClientName
 			,s.Name StoreName,t.Name TerminalName
 		FROM SalesConfig a left outer join Client c
 		on a.Client = c.id and c.status = 1 

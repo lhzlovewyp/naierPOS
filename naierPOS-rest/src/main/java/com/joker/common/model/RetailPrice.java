@@ -3,32 +3,35 @@ package com.joker.common.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.joker.core.util.DatetimeUtil;
+
 /**
  * 商品价格管理.
+ * 
  * @author lvhaizhen
- *
+ * 
  */
-public class RetailPrice extends BaseModel{
+public class RetailPrice extends BaseModel {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -4503839587871351573L;
 
-	//商户
+	// 商户
 	private Client client;
-	//门店
+	// 门店
 	private Store store;
-	//物料
+	// 物料
 	private Material material;
-	//单位
+	// 单位
 	private Unit unit;
-	//销售价格.
+	// 销售价格.
 	private BigDecimal price;
-	//生效日期
+	// 生效日期
 	private Date effectiveDate;
-	//失效日期.
-	private Date ExpiryDate;
+	// 失效日期.
+	private Date expiryDate;
 
 	public Client getClient() {
 		return client;
@@ -53,8 +56,6 @@ public class RetailPrice extends BaseModel{
 	public void setMaterial(Material material) {
 		this.material = material;
 	}
-
-	
 
 	public Unit getUnit() {
 		return unit;
@@ -81,13 +82,29 @@ public class RetailPrice extends BaseModel{
 	}
 
 	public Date getExpiryDate() {
-		return ExpiryDate;
+		return expiryDate;
 	}
 
 	public void setExpiryDate(Date expiryDate) {
-		ExpiryDate = expiryDate;
+		this.expiryDate = expiryDate;
 	}
-	
-	
-	
+
+	public String getEffectiveDateStr() {
+		String dateStr = "";
+		if (effectiveDate != null) {
+			dateStr = DatetimeUtil.formatDateToString(effectiveDate,
+					DatetimeUtil.DATE);
+		}
+		return dateStr;
+	}
+
+	public String getExpiryDateStr() {
+		String dateStr = "";
+		if (expiryDate != null) {
+			dateStr = DatetimeUtil.formatDateToString(expiryDate,
+					DatetimeUtil.DATE);
+		}
+		return dateStr;
+	}
+
 }

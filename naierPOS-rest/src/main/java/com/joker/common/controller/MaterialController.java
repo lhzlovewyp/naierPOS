@@ -223,7 +223,10 @@ public class MaterialController extends AbstractController {
 		ReturnBody rbody = new ReturnBody();
 		// 参数校验
 		Map params = paramsBody.getBody();
-		String unitNum = (String) params.get("unitNum");
+		String unitNum = null;
+		if (params.get("unitNum") != null) {
+			unitNum = String.valueOf(params.get("unitNum"));
+		}
 		String name = (String) params.get("name");
 		String clientId = (String) params.get("clientId");
 
@@ -285,7 +288,10 @@ public class MaterialController extends AbstractController {
 		// 参数校验
 		Map params = paramsBody.getBody();
 		String id = (String) params.get("id");
-		String unitNum = (String) params.get("unitNum");
+		String unitNum = null;
+		if (params.get("unitNum") != null) {
+			unitNum = String.valueOf(params.get("unitNum"));
+		}
 		String name = (String) params.get("name");
 		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");

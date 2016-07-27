@@ -132,26 +132,56 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		if(data && completeQueryById){
 			if(routePath == 'unitConversion' && allSelectInfoMap['unit']){
 				var selectInfoMap = allSelectInfoMap['unit'];
-				var selUnitAValue = data.unitA.id;
-				$scope.selUnitA = selectInfoMap[selUnitAValue];
-				var selUnitBValue = data.unitB.id;
-				$scope.selUnitB = selectInfoMap[selUnitBValue];
-			}else if((routePath == 'account' || routePath == 'terminal' || routePath == 'salesConfig') && allSelectInfoMap['store']){
+				if(data.unitA && data.unitA.id){
+					var selUnitAValue = data.unitA.id;
+					$scope.selUnitA = selectInfoMap[selUnitAValue];
+				}
+				if(data.unitB && data.unitB.id){
+					var selUnitBValue = data.unitB.id;
+					$scope.selUnitB = selectInfoMap[selUnitBValue];
+				}
+			}
+			if((routePath == 'account' || routePath == 'terminal' || routePath == 'salesConfig'|| routePath == 'retailPrice') && allSelectInfoMap['store']){
 				var selectInfoMap = allSelectInfoMap['store'];
-				var selStoreValue = data.store.id;
-				$scope.selstore = selectInfoMap[selStoreValue];
-			}else if(routePath == 'account' && allSelectInfoMap['role']){
+				if(data.store && data.store.id){
+					var selStoreValue = data.store.id;
+					$scope.selstore = selectInfoMap[selStoreValue];
+				}
+			}
+			if(routePath == 'account' && allSelectInfoMap['role']){
 				var selectInfoMap = allSelectInfoMap['role'];
-				var selRoleValue = data.role.id;
-				$scope.selrole = selectInfoMap[selRoleValue];
-			}else if(routePath == 'salesConfig' && allSelectInfoMap['terminal']){
+				if(data.role && data.role.id){
+					var selRoleValue = data.role.id;
+					$scope.selrole = selectInfoMap[selRoleValue];
+				}
+			}
+			if(routePath == 'salesConfig' && allSelectInfoMap['terminal']){
 				var selectInfoMap = allSelectInfoMap['terminal'];
-				var selTerminalValue = data.terminal.id;
-				$scope.selterminal = selectInfoMap[selTerminalValue];
-			}else if(routePath == 'clientPayment' && allSelectInfoMap['payment']){
+				if(data.terminal && data.terminal.id){
+					var selTerminalValue = data.terminal.id;
+					$scope.selterminal = selectInfoMap[selTerminalValue];
+				}
+			}
+			if(routePath == 'clientPayment' && allSelectInfoMap['payment']){
 				var selectInfoMap = allSelectInfoMap['payment'];
-				var selPaymentValue = data.terminal.id;
-				$scope.selPayment = selectInfoMap[selPaymentValue];
+				if(data.payment && data.payment.id){
+					var selPaymentValue = data.payment.id;
+					$scope.selPayment = selectInfoMap[selPaymentValue];
+				}
+			}
+			if(routePath == 'retailPrice' && allSelectInfoMap['material']){
+				var selectInfoMap = allSelectInfoMap['material'];
+				if(data.material && data.material.id){
+					var selMaterialValue = data.material.id;
+					$scope.selMaterial = selectInfoMap[selMaterialValue];
+				}
+			}
+			if(routePath == 'retailPrice' && allSelectInfoMap['unit']){
+				var selectInfoMap = allSelectInfoMap['unit'];
+				if(data.unit && data.unit.id){
+					var selUnitValue = data.unit.id;
+					$scope.selUnit = selectInfoMap[selUnitValue];
+				}
 			}
 			
 		}
@@ -223,10 +253,14 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		}else if(routePath == 'terminal'){
 			querySelectInfo('store','stores',1);
 		}else if(routePath == 'salesConfig'){
-			querySelectInfo('store','stores');
-			querySelectInfo('terminal','terminals');
+			querySelectInfo('store','stores',1);
+			querySelectInfo('terminal','terminals',1);
 		}else if(routePath == 'clientPayment'){
-			querySelectInfo('payment','Payments');
+			querySelectInfo('payment','Payments',1);
+		}else if(routePath == 'retailPrice'){
+			querySelectInfo('store','stores',1);
+			querySelectInfo('material','materials',1);
+			querySelectInfo('unit','units',1);
 		}
 		queryBasicsInfoById();
 	}else{
@@ -243,6 +277,10 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			querySelectInfo('terminal','terminals');
 		}else if(routePath == 'clientPayment'){
 			querySelectInfo('payment','Payments');
+		}else if(routePath == 'retailPrice'){
+			querySelectInfo('store','stores');
+			querySelectInfo('material','materials');
+			querySelectInfo('unit','units');
 		}
 	}
 	
@@ -279,7 +317,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					$scope.form.parentId = "0";
 			}
 			
-			if(routePath == 'terminal' || routePath == 'salesConfig'){
+			if(routePath == 'terminal' || routePath == 'salesConfig' || routePath == 'retailPrice'){
 				var selstore = $scope.selstore;
 				if(selstore){
 					$scope.form.storeId = selstore.value;
@@ -295,6 +333,16 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 				var selPayment = $scope.selPayment;
 				if(selPayment){
 					$scope.form.paymentCode = selPayment.value;
+				}
+			}
+			if(routePath == 'retailPrice'){
+				var selUnit = $scope.selUnit;
+				if(selUnit){
+					$scope.form.unitId = selUnit.value;
+				}
+				var selMaterial = $scope.selMaterial;
+				if(selMaterial){
+					$scope.form.materialId = selMaterial.value;
 				}
 			}
 			
