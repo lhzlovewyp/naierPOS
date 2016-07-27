@@ -2,6 +2,10 @@ package com.joker.common.model;
 
 public class Role extends BaseModel{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5208818486383289270L;
 	//商户号
 	private Client client;
 	//编码

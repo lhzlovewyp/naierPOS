@@ -191,25 +191,42 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		var body = {};
 		body.id = id;
 		BasicsService.queryById(body,routePath).then(function(data){
-			if(data.client){
-				data.clientId = data.client.id;
-			}
-			var selStatusValue = data.status;
-			for ( var i = 0; i < allStatus.length; i++) {
-				if(allStatus[i].value == selStatusValue){
-					$scope.selstatus = allStatus[i];	
-					break;
+			if(data){
+				if(data.client){
+					data.clientId = data.client.id;
 				}
-			}
-			if(routePath == 'materialCategory'){
-				data.parentId = data.parent.id;
-			}else if(routePath == 'store'){
-				if(data.opened){
-					data.opened=new Date(data.opened).format('yyyy-MM-dd');
+				var selStatusValue = data.status;
+				for ( var i = 0; i < allStatus.length; i++) {
+					if(allStatus[i].value == selStatusValue){
+						$scope.selstatus = allStatus[i];	
+						break;
+					}
 				}
+				if(routePath == 'materialCategory'){
+					data.parentId = data.parent.id;
+				}else if(routePath == 'store'){
+					if(data.opened){
+						data.opened=new Date(data.opened).format('yyyy-MM-dd');
+					}
+				}
+				
+				if(routePath == 'role'){
+					if(data.loginTerminal == 1){
+						data.loginTerminal = true;
+					}
+					if(data.loginAdmin == 1){
+						data.loginAdmin = true;
+					}
+					if(data.itemDISC == 1){
+						data.itemDISC = true;
+					}
+					if(data.allDISC == 1){
+						data.allDISC = true;
+					}
+				}
+				
+				$scope.form = data;
 			}
-			
-			$scope.form = data;
 			completeQueryById = true;
 			setSelectedInfo();
         });
@@ -344,6 +361,25 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 				if(selMaterial){
 					$scope.form.materialId = selMaterial.value;
 				}
+			}
+			
+			if(routePath == 'role'){
+				if($scope.form.loginTerminal)
+					$scope.form.loginTerminal = "1";
+				else
+					$scope.form.loginTerminal = "0";
+				if($scope.form.loginAdmin)
+					$scope.form.loginAdmin = "1";
+				else
+					$scope.form.loginAdmin = "0";
+				if($scope.form.itemDISC)
+					$scope.form.itemDISC = "1";
+				else
+					$scope.form.itemDISC = "0";
+				if($scope.form.allDISC)
+					$scope.form.allDISC = "1";
+				else
+					$scope.form.allDISC = "0";
 			}
 			
 			if($scope.editType == 'add'){
