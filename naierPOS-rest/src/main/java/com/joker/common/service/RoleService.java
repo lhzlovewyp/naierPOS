@@ -25,7 +25,7 @@ public interface RoleService {
 	public List<Role> getRoleByAccountId(String accountId);
 
 	/**
-	 * 查询门店信息.
+	 * 查询角色信息.
 	 * 
 	 * @param map
 	 * @param pageNo
@@ -36,10 +36,42 @@ public interface RoleService {
 			int pageNo, int limit);
 	
 	/**
-	 * 查询门店信息.
+	 * 查询角色信息.
 	 * 
 	 * @param map
 	 * @return
 	 */
 	public List<Role> getRolePageByCondition(Map<String, Object> map);
+	
+	/**
+	 * 根据id查询角色信息.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Role getRoleByID(String id);
+	
+	/**
+	 * 删除角色信息.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public void deleteRoleByID(String id);
+
+	/**
+	 * 修改角色信息.
+	 * 
+	 * @param brand
+	 * @return
+	 */
+	public void updateRole(Role role);
+
+	/**
+	 * 保存角色信息.
+	 * 
+	 * @param brand
+	 * @return
+	 */
+	public void insertRole(Role role);
 }

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import com.joker.common.Constant.Constants;
 import com.joker.common.mapper.PaymentMapper;
-import com.joker.common.model.Color;
 import com.joker.common.model.Payment;
 import com.joker.common.service.PaymentService;
 import com.joker.core.dto.Page;

@@ -73,8 +73,8 @@ public class UnitController extends AbstractController {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("clientId", clientId);
 			map.put("likeName", likeName);
-			Page<Unit> page = unitService.getUnitPageByCondition(map,
-					pageNo, limit);
+			Page<Unit> page = unitService.getUnitPageByCondition(map, pageNo,
+					limit);
 			rbody.setData(page);
 			rbody.setStatus(ResponseState.SUCCESS);
 			return rbody;
@@ -85,7 +85,7 @@ public class UnitController extends AbstractController {
 		// 数据返回时永远返回true.
 		return rbody;
 	}
-	
+
 	/**
 	 * 查询品牌信息.
 	 * 
@@ -173,7 +173,10 @@ public class UnitController extends AbstractController {
 		ReturnBody rbody = new ReturnBody();
 		// 参数校验
 		Map params = paramsBody.getBody();
-		String unitNum = (String) params.get("unitNum");
+		String unitNum = null;
+		if (params.get("unitNum") != null) {
+			unitNum = String.valueOf(params.get("unitNum"));
+		}
 		String name = (String) params.get("name");
 		String clientId = (String) params.get("clientId");
 
@@ -236,7 +239,10 @@ public class UnitController extends AbstractController {
 		// 参数校验
 		Map params = paramsBody.getBody();
 		String id = (String) params.get("id");
-		String unitNum = (String) params.get("unitNum");
+		String unitNum = null;
+		if (params.get("unitNum") != null) {
+			unitNum = String.valueOf(params.get("unitNum"));
+		}
 		String name = (String) params.get("name");
 		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");

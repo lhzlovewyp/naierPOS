@@ -31,16 +31,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			a.ID,a.Client,a.Payment,a.Status,a.Creator,a.Created,a.Editor,a.Modified
 			,p.Name AS PaymentName
 		FROM ClientPayment a left outer join Payment p
-		on a.Payment = p.id and p.status = 1 
+		on a.Payment = p.code and p.status = 1 
 		WHERE a.ID=#{id} 
 	</select>
 	
 	<select id="getClientPaymentPageByCondition" parameterType="java.util.Map" resultMap="clientPaymentPage">
 		SELECT 
 			a.ID,a.Client,a.Payment,a.Status,a.Creator,a.Created,a.Editor,a.Modified
-			,p.Name AS PaymentName
+			,p.Name AS PaymentName,c.Name ClientName
 		FROM ClientPayment a left outer join Payment p
-		on a.Payment = p.id and p.status = 1 
+		on a.Payment = p.code and p.status = 1 
+		left outer join Client c
+		on a.Client = c.id and c.status = 1 
 		WHERE 
 			a.Status= 1
 			<if test="clientId != null">
@@ -76,6 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <sql id="clientPaymentSet">
 		<set >
 			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
+			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
 			<if test= "payment != null">Payment=#{payment.code,jdbcType=VARCHAR},</if >
 			<if test= "status != null">Status=#{status},</if >
 			<if test= "creator != null">Creator=#{creator},</if >

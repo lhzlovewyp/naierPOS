@@ -270,6 +270,7 @@ function modalSubmit3(obj, options){
 
 //完成付款
 function modalSubmit4(obj, options){
+	$('.payment-detail').remove();
 	$(options.selector).modal('hide');
 	$('#btn1, #btn2').hide();
 	$('#table1 tr').each(function(index, element) {
@@ -300,6 +301,124 @@ function setDetails(){
 	$('#discount').html('-¥'+discount.toFixed(2));
 	$('#final_total').html('¥'+final_total.toFixed(2));
 	$('#need_pay').html('¥'+final_total.toFixed(2));
+}
+
+function showPaymentDetail(paymentType){
+	$('.payment-detail').remove();
+	var payment_detail_html = '';
+	//现金
+	if(paymentType == 1){
+		payment_detail_html += '<div class="form-group">';
+        payment_detail_html += '<label class="col-sm-4 control-label">支付金额</label>';
+        payment_detail_html += '<div class="col-sm-7">';
+        payment_detail_html += '<input type="text" class="form-control" value="0.00">';
+        payment_detail_html += '</div>';
+        payment_detail_html += '</div>';
+	}
+	//储值卡
+	if(paymentType == 2){
+		payment_detail_html += '<div class="form-group">';
+        payment_detail_html += '<label class="col-sm-5 control-label">卡号</label>';
+        payment_detail_html += '<div class="col-sm-7">';
+        payment_detail_html += '<input type="text" class="form-control" value="">';
+        payment_detail_html += '</div>';
+        payment_detail_html += '</div>';
+		payment_detail_html += '<div class="form-group">';
+        payment_detail_html += '<label class="col-sm-5 control-label">卡余额</label>';
+        payment_detail_html += '<div class="col-sm-7">';
+        payment_detail_html += '25.00';
+        payment_detail_html += '</div>';
+        payment_detail_html += '</div>';
+		payment_detail_html += '<div class="form-group">';
+        payment_detail_html += '<label class="col-sm-5 control-label">本次支付金额</label>';
+        payment_detail_html += '<div class="col-sm-7">';
+        payment_detail_html += '<input type="text" class="form-control" value="20.00">';
+        payment_detail_html += '</div>';
+        payment_detail_html += '</div>';
+	}
+	//银联卡
+	if(paymentType == 3){
+		payment_detail_html += '<div class="form-group">';
+        payment_detail_html += '<label class="col-sm-4 control-label">支付金额</label>';
+        payment_detail_html += '<div class="col-sm-7">';
+        payment_detail_html += '<input type="text" class="form-control" value="0.00">';
+        payment_detail_html += '</div>';
+        payment_detail_html += '</div>';
+	}
+	//电子券
+	if(paymentType == 4){
+		payment_detail_html += '<div class="form-group">';
+        payment_detail_html += '<label class="col-sm-4 control-label">券号</label>';
+        payment_detail_html += '<div class="col-sm-7">';
+        payment_detail_html += '<input type="text" class="form-control" value="0.00">';
+        payment_detail_html += '</div>';
+        payment_detail_html += '</div>';
+		payment_detail_html += '<div class="form-group">';
+        payment_detail_html += '<label class="col-sm-4 control-label">面值</label>';
+        payment_detail_html += '<div class="col-sm-7">';
+        payment_detail_html += '100.00';
+        payment_detail_html += '</div>';
+        payment_detail_html += '</div>';
+	}
+	//支付宝
+	if(paymentType == 5){
+		payment_detail_html += '<div class="form-group">';
+        payment_detail_html += '<label class="col-sm-4 control-label">账户</label>';
+        payment_detail_html += '<div class="col-sm-7">';
+        payment_detail_html += '<input type="text" class="form-control" value="">';
+        payment_detail_html += '</div>';
+        payment_detail_html += '</div>';
+	}
+	//会员积分
+	if(paymentType == 6){
+		payment_detail_html += '<div class="form-group">';
+        payment_detail_html += '<label class="col-sm-5 control-label">积分余额</label>';
+        payment_detail_html += '<div class="col-sm-7">';
+        payment_detail_html += '3450';
+        payment_detail_html += '</div>';
+        payment_detail_html += '</div>';
+		payment_detail_html += '<div class="form-group">';
+        payment_detail_html += '<label class="col-sm-5 control-label">共可抵用现金</label>';
+        payment_detail_html += '<div class="col-sm-7">';
+        payment_detail_html += '34.50';
+        payment_detail_html += '</div>';
+        payment_detail_html += '</div>';
+		payment_detail_html += '<div class="form-group">';
+        payment_detail_html += '<label class="col-sm-5 control-label">本次支付积分</label>';
+        payment_detail_html += '<div class="col-sm-7">';
+        payment_detail_html += '<input type="text" class="form-control" value="0.00">';
+        payment_detail_html += '</div>';
+        payment_detail_html += '</div>';
+		payment_detail_html += '<div class="form-group">';
+        payment_detail_html += '<label class="col-sm-5 control-label">本次抵用现金</label>';
+        payment_detail_html += '<div class="col-sm-7">';
+        payment_detail_html += '34.50';
+        payment_detail_html += '</div>';
+        payment_detail_html += '</div>';
+	}
+	//微信支付
+	if(paymentType == 7){
+		payment_detail_html += '<div class="form-group">';
+        payment_detail_html += '<label class="col-sm-4 control-label">账户</label>';
+        payment_detail_html += '<div class="col-sm-7">';
+        payment_detail_html += '<input type="text" class="form-control" value="">';
+        payment_detail_html += '</div>';
+        payment_detail_html += '</div>';
+	}
+	
+	var html = '';
+	html += '<div class="payment-detail">';
+	html += '<form class="form-horizontal">';
+    html += '<div class="box-body detail-'+paymentType+'">';
+    html += payment_detail_html;
+    html += '</div>';
+    html += '<div class="box-footer">';
+    html += '<button class="btn btn-default" type="submit" onclick="$(\'.payment-detail\').remove()">取消</button>';
+    html += '<button class="btn btn-info pull-right" type="submit" onclick="$(\'.payment-detail\').remove()">确认</button>';
+    html += '</div>';
+    html += '</form>';
+	html += '</div>';
+	$('.modal-content').append(html);
 }
 
 $(function(){

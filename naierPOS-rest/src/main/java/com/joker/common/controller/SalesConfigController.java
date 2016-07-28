@@ -177,7 +177,7 @@ public class SalesConfigController extends AbstractController {
 		Map params = paramsBody.getBody();
 		String storeId = (String) params.get("storeId");
 		String terminalId = (String) params.get("terminalId");
-		String salesDate = (String) params.get("salesDate");
+		String salesDateStr = (String) params.get("salesDateStr");
 		String maxCode = null;
 		if(params.get("maxCode") != null){
 			maxCode = String.valueOf(params.get("maxCode"));
@@ -188,7 +188,7 @@ public class SalesConfigController extends AbstractController {
 		}
 		String clientId = (String) params.get("clientId");
 
-		if (StringUtils.isBlank(salesDate)) {
+		if (StringUtils.isBlank(salesDateStr)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入营业日期！");
 			return rbody;
@@ -221,7 +221,8 @@ public class SalesConfigController extends AbstractController {
 			salesConfig.setId(UUID.randomUUID().toString());
 			salesConfig.setFlag(Integer.valueOf(flag));
 			salesConfig.setMaxCode(Integer.valueOf(maxCode));
-			salesConfig.setSalesDate(new Date());
+			salesConfig.setSalesDate(DatetimeUtil.toDate(salesDateStr,
+					DatetimeUtil.DATE));
 			salesConfig.setClient(client);
 			salesConfig.setCreated(new Date());
 			salesConfig.setCreator(account.getId());
