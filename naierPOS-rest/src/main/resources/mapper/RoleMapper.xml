@@ -20,6 +20,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="editor" column="Editor" />
 		<result property="modified" column="Modified" />
 	</resultMap>
+	
+	<resultMap type="role" id="rolePage" extends="role">
+		<result property="client.name" column="ClientName" />
+	</resultMap>
+	
+	<select id="getRoleByID" parameterType="string" resultMap="role">
+		SELECT 
+			r.ID,r.Client,r.Code,r.Name,r.LoginTerminal,r.LoginAdmin,r.ItemDISC,r.ALLDISC,r.Status,r.Creator,r.Created,r.Editor,r.Modified
+		FROM Role r
+		WHERE r.ID=#{id} 
+	</select>
+	
     <select id="getRoleByAccountId" parameterType="string" resultMap="role">
 		SELECT 
 			r.ID,r.Client,r.Code,r.Name,r.LoginTerminal,r.LoginAdmin,r.ItemDISC,r.ALLDISC,r.Status,r.Creator,r.Created,r.Editor,r.Modified
@@ -28,13 +40,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			r.ID=ar.Role and ar.Account =#{accountId}
 	</select>
 	
-	<select id="getRolePageByCondition" parameterType="java.util.Map" resultMap="role">
+	<select id="getRolePageByCondition" parameterType="java.util.Map" resultMap="rolePage">
 		SELECT 
 			r.ID,r.Client,r.Code,r.Name,r.LoginTerminal,r.LoginAdmin,r.ItemDISC,r.ALLDISC,r.Status,r.Creator,r.Created,r.Editor,r.Modified
+			,c.Name ClientName
 		FROM Role r left join Client c on r.Client = c.id and c.status = 1 
 		WHERE r.Status = 1
 			<if test="clientId != null">
 				and r.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and r.name like CONCAT('%','${likeName}','%' )  
 			</if>
 			order by r.ID desc
 			<if test="start != null and limit != null">
@@ -48,5 +64,38 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="clientId != null">
 				and r.Client=#{clientId}
 			</if>
+			<if test="likeName != null">
+				and r.name like CONCAT('%','${likeName}','%' )  
+			</if>
 	</select>
+	
+	<delete id="deleteRoleByID" parameterType="string">
+		DELETE FROM Role where ID =#{id}
+	</delete>
+	
+	<insert id="insertRole" parameterType="role">
+		insert into Role <include refid="roleSet" />
+	</insert>
+	
+	<update id="updateRole" parameterType="role" >
+		UPDATE Role <include refid="roleSet" /> WHERE ID = #{id}
+	</update>
+	
+	<sql id="roleSet">
+		<set >
+			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
+			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
+			<if test= "code != null">Code=#{code,jdbcType=VARCHAR},</if >
+			<if test= "name != null">Name=#{name,jdbcType=VARCHAR},</if >
+			<if test= "loginTerminal != null">LoginTerminal=#{loginTerminal},</if >
+			<if test= "loginAdmin != null">LoginAdmin=#{loginAdmin},</if >
+			<if test= "itemDISC != null">ItemDISC=#{itemDISC},</if >
+			<if test= "allDISC != null">ALLDISC=#{allDISC},</if >
+			<if test= "status != null">Status=#{status},</if >
+			<if test= "creator != null">Creator=#{creator},</if >
+			<if test= "created != null">Created=#{created},</if >
+			<if test= "editor != null">Editor=#{editor,jdbcType=VARCHAR},</if >
+			<if test= "modified != null">Modified=#{modified},</if >
+		</set>
+	</sql >
 </mapper>

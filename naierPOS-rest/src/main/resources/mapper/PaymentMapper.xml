@@ -21,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM Payment a
 		WHERE 
 			a.Status= 1
-			order by a.ID desc
+			order by a.Code desc
 			<if test="start != null and limit != null">
 				limit #{start},#{limit}
 			</if>

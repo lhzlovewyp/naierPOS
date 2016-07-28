@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +36,7 @@ import com.joker.core.controller.AbstractController;
 import com.joker.core.dto.Page;
 import com.joker.core.dto.ParamsBody;
 import com.joker.core.dto.ReturnBody;
+import com.joker.core.util.DatetimeUtil;
 
 /**
  * @author zhangfei
@@ -57,7 +59,7 @@ public class RetailPriceController extends AbstractController {
 	@RequestMapping(value = { "/retailPrice/queryByPage" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
-	public ReturnBody getTerminalByPage(@RequestBody ParamsBody paramsBody,
+	public ReturnBody getRetailPriceByPage(@RequestBody ParamsBody paramsBody,
 			HttpServletRequest request, HttpServletResponse response) {
 		ReturnBody rbody = new ReturnBody();
 		// 参数校验
@@ -98,7 +100,7 @@ public class RetailPriceController extends AbstractController {
 	@RequestMapping(value = { "/retailPrice/queryByList" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
-	public ReturnBody getTerminalByList(@RequestBody ParamsBody paramsBody,
+	public ReturnBody getRetailPriceByList(@RequestBody ParamsBody paramsBody,
 			HttpServletRequest request, HttpServletResponse response) {
 		ReturnBody rbody = new ReturnBody();
 
@@ -133,7 +135,7 @@ public class RetailPriceController extends AbstractController {
 	@RequestMapping(value = { "/retailPrice/queryById" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
-	public ReturnBody getTerminalById(@RequestBody ParamsBody paramsBody,
+	public ReturnBody getRetailPriceById(@RequestBody ParamsBody paramsBody,
 			HttpServletRequest request, HttpServletResponse response) {
 		ReturnBody rbody = new ReturnBody();
 		// 参数校验
@@ -179,9 +181,12 @@ public class RetailPriceController extends AbstractController {
 		String storeId = (String) params.get("storeId");
 		String materialId = (String) params.get("materialId");
 		String unitId = (String) params.get("unitId");
-		String price = (String) params.get("price");
-		String effectiveDate = (String) params.get("effectiveDate");
-		String expiryDate = (String) params.get("expiryDate");
+		String price = null;
+		if (params.get("price") != null) {
+			price = String.valueOf(params.get("price"));
+		}
+		String effectiveDateStr = (String) params.get("effectiveDateStr");
+		String expiryDateStr = (String) params.get("expiryDateStr");
 		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(storeId)) {
@@ -204,12 +209,12 @@ public class RetailPriceController extends AbstractController {
 			rbody.setMsg("请输入销售价格！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(effectiveDate)) {
+		if (StringUtils.isBlank(effectiveDateStr)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入生效日期！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(expiryDate)) {
+		if (StringUtils.isBlank(expiryDateStr)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入失效日期！");
 			return rbody;
@@ -231,8 +236,10 @@ public class RetailPriceController extends AbstractController {
 			RetailPrice retailPrice = new RetailPrice();
 			retailPrice.setId(UUID.randomUUID().toString());
 			retailPrice.setPrice(new BigDecimal(price));
-			retailPrice.setExpiryDate(new Date());
-			retailPrice.setEffectiveDate(new Date());
+			retailPrice.setExpiryDate(DatetimeUtil.toDate(expiryDateStr,
+					DatetimeUtil.DATE));
+			retailPrice.setEffectiveDate(DatetimeUtil.toDate(effectiveDateStr,
+					DatetimeUtil.DATE));
 			retailPrice.setClient(client);
 			retailPrice.setCreated(new Date());
 			retailPrice.setCreator(account.getId());
@@ -279,9 +286,13 @@ public class RetailPriceController extends AbstractController {
 		String storeId = (String) params.get("storeId");
 		String materialId = (String) params.get("materialId");
 		String unitId = (String) params.get("unitId");
-		String price = (String) params.get("price");
-		String effectiveDate = (String) params.get("effectiveDate");
-		String expiryDate = (String) params.get("expiryDate");
+		String price = null;
+		if (params.get("price") != null) {
+			price = String.valueOf(params.get("price"));
+		}
+
+		String effectiveDateStr = (String) params.get("effectiveDateStr");
+		String expiryDateStr = (String) params.get("expiryDateStr");
 		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(id)) {
@@ -304,17 +315,17 @@ public class RetailPriceController extends AbstractController {
 			rbody.setMsg("请输入销售单位！");
 			return rbody;
 		}
-		if (!StringUtils.isNumeric(price)) {
+		if (!NumberUtils.isNumber(price)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入销售价格！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(effectiveDate)) {
+		if (StringUtils.isBlank(effectiveDateStr)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入生效日期！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(expiryDate)) {
+		if (StringUtils.isBlank(expiryDateStr)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入失效日期！");
 			return rbody;
@@ -336,8 +347,10 @@ public class RetailPriceController extends AbstractController {
 			RetailPrice retailPrice = new RetailPrice();
 			retailPrice.setId(id);
 			retailPrice.setPrice(new BigDecimal(price));
-			retailPrice.setExpiryDate(new Date());
-			retailPrice.setEffectiveDate(new Date());
+			retailPrice.setExpiryDate(DatetimeUtil.toDate(expiryDateStr,
+					DatetimeUtil.DATE));
+			retailPrice.setEffectiveDate(DatetimeUtil.toDate(effectiveDateStr,
+					DatetimeUtil.DATE));
 			retailPrice.setClient(client);
 			retailPrice.setModified(new Date());
 			retailPrice.setEditor(account.getId());

@@ -46,9 +46,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE a.ID=#{id} 
 	</select>
 	
-	<select id="getMaterialPageByClient" parameterType="string" resultMap="materialPage">
+	<select id="getMaterialPageByCondition" parameterType="string" resultMap="materialPage">
 		SELECT 
-			ID,Client,Code,Name,Abbr,MaterialCategory,Brand,BasicUnit,SalesUnit,RetailPrice,BarCode,Property,Status,Creator,Created,Editor,Modified
+			a.ID,a.Client,a.Code,a.Name,a.Abbr,a.MaterialCategory,a.Brand,a.BasicUnit,a.SalesUnit,a.RetailPrice
+			,a.BarCode,a.Property,a.Status,a.Creator,a.Created,a.Editor,a.Modified
 			,c.Name ClientName
 		FROM Material a left outer join Client c
 		on a.Client = c.id and c.status = 1 

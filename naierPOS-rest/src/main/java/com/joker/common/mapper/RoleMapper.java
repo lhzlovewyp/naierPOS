@@ -20,7 +20,7 @@ public interface RoleMapper {
 	public List<Role> getRoleByAccountId(String accountId);
 	
 	/**
-	 * 查询门店信息.
+	 * 查询角色信息.
 	 * 
 	 * @param map
 	 * @return
@@ -29,11 +29,47 @@ public interface RoleMapper {
 	public List<Role> getRolePageByCondition(Map<String, Object> map);
 	
 	/**
-	 * 查询门店信息.
+	 * 查询角色信息.
 	 * 
 	 * @param map
 	 * @return
 	 */
 	@DataSource("slave")
 	public int getRoleCountByCondition(Map<String, Object> map);
+	
+	/**
+	 * 根据id查询角色信息.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@DataSource("slave")
+	public Role getRoleByID(String id);
+	
+	/**
+	 * 删除角色信息.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@DataSource("master")
+	public void deleteRoleByID(String id);
+
+	/**
+	 * 修改角色信息.
+	 * 
+	 * @param role
+	 * @return
+	 */
+	@DataSource("master")
+	public void updateRole(Role role);
+
+	/**
+	 * 保存角色信息.
+	 * 
+	 * @param role
+	 * @return
+	 */
+	@DataSource("master")
+	public void insertRole(Role role);
 }
