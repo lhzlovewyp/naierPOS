@@ -299,7 +299,27 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog','Pa
 	
 	
 }]);
-app.controller("memberCtrl",['$scope','$location','SaleService','ngDialog',function($scope,$location,SaleService,ngDialog){
+app.controller("memberCtrl",['$scope','$location','MemberService','ngDialog',function($scope,$location,MemberService,ngDialog){
+	$scope.search = function(){
+		var form=$scope.memberForm;
+		if(!form){
+			return;
+		}
+		MemberService.getSinglerMember(form).then(function(obj){
+			var dto=obj.data.data;
+			if(obj.data.status==Status.SUCCESS){
+                $scope.member=dto;
+            }else{
+            	$scope.member=null;
+            }
+		});
+	};
+	
+	$scope.choose=function(member){
+		ngDialog.close();
+		var info=$scope.info || {};
+		info.member=member;
+	}
 	
 }]);
 
@@ -537,7 +557,62 @@ app.controller("discCtrl",['$scope','$location','SaleService','ngDialog',functio
 		ngDialog.close();
 	}
 }]);
+app.controller("payBarcodeCtrl",['$scope','$location','PayService','SaleService','ngDialog','$timeout',function($scope,$location,PayService,SaleService,ngDialog,$timeout){
 
+	$scope.submit=function(){
+		var channel=$scope.payChannel;
+		var payment=$scope.currPayment;
+		var barcode=$scope.barcode;
+		aliPay(channel,payment,barcode);
+	}
+	//支付宝支付.
+	function aliPay(channel,payment,barcode){
+		var code="01";
+		if(channel==2){
+			code="04"
+		}
+		var amount=payment.amount;
+		var success = function(data){
+			//支付成功,存储当前支付的流水号，退款使用.
+			payment.tradeNo=data.trade_no;
+			$scope.closeThisDialog();
+		};
+		var error = function(data){
+			payment.selected=0;
+			$scope.closeThisDialog();
+		}
+		basicPay(channel,code,null,barcode,amount,success,error);
+	}
+	
+	//微信支付宝基础支付方法.
+	function basicPay(channel,code,tradeNo,barcode,amount,success,error){
+		var payInfo={};
+		var id = $scope.info.id;
+		var salesDate=$scope.info.salesDate;
+		payInfo.channel=channel;
+		payInfo.code=code;
+		payInfo.salesDtoId=id;
+		payInfo.salesDate=salesDate;
+		payInfo.tradeNo=tradeNo;
+		payInfo.barcode=barcode;
+		payInfo.amount=amount;
+		PayService.aliPay(payInfo).then(function(obj){
+			var dto=obj.data.data;
+			if(obj.data.status==Status.SUCCESS){
+                if(func){
+                	func(dto);
+                }
+            }else{
+            	if(error){
+            		error(data);
+            	}
+            	alert(obj.data.msg);
+            	
+            }
+		});
+	}
+	
+}]);	
 app.controller("payCtrl",['$scope','$location','PayService','SaleService','ngDialog','$timeout',function($scope,$location,PayService,SaleService,ngDialog,$timeout){
 	
 	$scope.close=function(){
@@ -578,13 +653,50 @@ app.controller("payCtrl",['$scope','$location','PayService','SaleService','ngDia
 					  return false;
 				 }
 				//支付宝支付只能作为最后一个支付渠道
+				//aliPay(payment,barcode,amount);
+				$scope.payChannel=1;
+				$scope.currPayment=payment.payment;
+				openPay();
 				
 			}else if(Status.WXPAY == payment.payment.code){//微信支付.
 				//微信支付只能作为最后一个支付渠道
+				if(!checkPayEmpty(payment)){
+					  return false;
+				 }
+				//wechatPay(payment,barcode);
+				$scope.payChannel=2;
+				$scope.currPayment=payment.payment;
+				openPay();
 			}
 		}
 		
 	}
+	//打开支付.
+	function openPay(){
+		ngDialog.open({
+			template:"payBarcode",
+			controller:"payBarcodeCtrl",
+			scope:$scope,
+			preCloseCallback:function(value){
+				//关闭支付之前,判断是否已经支付完成，如果没有支付，则把当前payment设置为未支付状态.
+				var payment=$scope.currPayment;
+				var tradeNo=payment.tradeNo;
+				if(tradeNo){
+					payment.selected=1;
+				}else{
+					payment.selected=0;
+				}
+				$scope.payChannel=null;
+				$scope.currPayment=null;
+				$scope.barcode=null;
+				loadPayInfo();
+			}
+			
+		});
+	}
+	
+	
+	
 	$scope.submit=function(){
 		var info=$scope.info;
 		//如果支付没有完成，不允许提交.
@@ -799,7 +911,7 @@ app.controller("backCtrl",['$scope','$location','PinBackService','ngDialog','Pay
 		});
 	};
 	$scope.close=function(){
-		ngDialog.close;
+		ngDialog.close();
 	}
 	
 }]);

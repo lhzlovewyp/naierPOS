@@ -11,6 +11,7 @@ import com.joker.common.model.promotion.Promotion;
 
 public class SaleDto {
 
+	private String id;
 	//当前营业日期.
 	private Date saleDate;
 	//会员
@@ -144,6 +145,12 @@ public class SaleDto {
 	}
 	public void setPayments(List<ClientPayment> payments) {
 		this.payments = payments;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 	

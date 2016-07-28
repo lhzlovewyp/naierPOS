@@ -1,1 +1,45 @@
-this is a test
+<div class="modal-content">
+	<div class="modal-header">
+		<h4 class="modal-title">会员</h4>
+	</div>
+	<div class="modal-body">
+		<div class="box no-border no-shadow">
+			<div class="box-header">
+				<div style="width: 250px;" class="input-group input-group-sm">
+					<input type="text" placeholder="输入会员编号或者会员手机号" class="form-control pull-right"
+						name="table_search" ng-model="memberForm.memNo">
+					<div class="input-group-btn">
+						<button class="btn btn-primary" type="button" ng-click="search();">提交</button>
+					</div>
+				</div>
+			</div>
+			<div class="box-body">
+				<table id="table1" class="table table-bordered table-hover cursor">
+					<tbody>
+						<tr>
+							<th>会员编号</th>
+							<th>姓名</th>
+							<th>手机号</th>
+							<th>生日</th>
+							<th>积分</th>
+						</tr>
+						<tr ng-click="choose(member);" ng-show="member!=null">
+							<td>{{member.memberCode}}</td>
+							<td>{{member.memberName}}</td>
+							<td>{{member.memberMobile}}</td>
+							<td>{{member.memberBirthDay}}</td>
+							<td>{{member.memberPoint}}</td>
+						</tr>
+						<tr ng-show="member==null" >
+							<td colspan="5">没有此会员</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-default" ng-click="closeThisDialog();">取消</button>
+		<button type="submit" class="btn btn-primary">提交</button>
+	</div>
+</div>

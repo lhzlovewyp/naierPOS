@@ -28,6 +28,7 @@ import com.joker.core.constant.ResponseState;
 import com.joker.core.controller.AbstractController;
 import com.joker.core.dto.ParamsBody;
 import com.joker.core.dto.ReturnBody;
+import com.joker.core.util.RandomCodeFactory;
 
 @RestController
 public class SaleController extends AbstractController{
@@ -62,6 +63,7 @@ public class SaleController extends AbstractController{
 			Account account = (Account) user;
 			SalesConfig config = salesConfigService.getCurrentSalesConfig(account);
 			SaleDto dto = new SaleDto();
+			dto.setId(RandomCodeFactory.defaultGenerateMixed());
 			dto.setSaleDate(config.getSalesDate());
 			dto.setAllDISC(account.getAllDISC());
 			dto.setItemDISC(account.getItemDISC());
