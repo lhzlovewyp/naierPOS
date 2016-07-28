@@ -62,6 +62,7 @@ jQuery.fn.extend({
 		var obj = $(this);
 		$(options.selector).find('.btn-default').text(options.btnCancelText).bind('click', function(){
 			$(options.selector).modal('hide');
+			$('.payment-detail').remove();
 		})
 		if(options.type == 'discount'){
 			$(options.selector).find('.modal-body').html('<div class="row">'
@@ -99,13 +100,13 @@ jQuery.fn.extend({
 			$(options.selector).find('.modal-body').html('<div class="row">'
 			  +'  <div>'
 			  +'      <ul class="payment-ul">'
-			  +'<li><a class="btn btn-default btn-flat" href="#">现金</a> <input type="text" class="form-control" value="¥7.00" /> </li>'
-			  +'<li><a class="btn btn-default btn-flat" href="#">储值卡</a> <input type="text" class="form-control" value="¥7.00" /> </li>'
-			  +'<li><a class="btn btn-default btn-flat" href="#">银联卡</a> <input type="text" class="form-control" value="¥7.00" /> </li>'
-			  +'<li><a class="btn btn-default btn-flat" href="#">电子券</a> <input type="text" class="form-control" value="¥7.00" /> </li>'
-			  +'<li><a class="btn btn-default btn-flat" href="#">支付宝</a> <input type="text" class="form-control" value="¥7.00" /> </li>'
-			  +'<li><a class="btn btn-default btn-flat" href="#">会员积分</a> <input type="text" class="form-control" value="¥7.00" /> </li>'
-			  +'<li><a class="btn btn-default btn-flat" href="#">微信支付</a> <input type="text" class="form-control" value="¥7.00" /> </li>'
+			  +'<li><a class="btn btn-default btn-flat" href="javascript:;" onClick="showPaymentDetail(1)">现金</a> <input type="text" class="form-control" value="¥7.00" /> </li>'
+			  +'<li><a class="btn btn-default btn-flat" href="javascript:;" onClick="showPaymentDetail(2)">储值卡</a> <input type="text" class="form-control" value="¥7.00" /> </li>'
+			  +'<li><a class="btn btn-default btn-flat" href="javascript:;" onClick="showPaymentDetail(3)">银联卡</a> <label class="form-control">¥7.00</label></li>'
+			  +'<li><a class="btn btn-default btn-flat" href="javascript:;" onClick="showPaymentDetail(4)">电子券</a> <input type="text" class="form-control" value="¥7.00" /> </li>'
+			  +'<li><a class="btn btn-default btn-flat" href="javascript:;" onClick="showPaymentDetail(5)">支付宝</a> <input type="text" class="form-control" value="¥7.00" /> </li>'
+			  +'<li><a class="btn btn-default btn-flat" href="javascript:;" onClick="showPaymentDetail(6)">会员积分</a> <input type="text" class="form-control" value="¥7.00" /> </li>'
+			  +'<li><a class="btn btn-default btn-flat" href="javascript:;" onClick="showPaymentDetail(7)">微信支付</a> <input type="text" class="form-control" value="¥7.00" /> </li>'
 			  +'      </ul>' 
 			  +'  </div>'
 			  +'</div>');
