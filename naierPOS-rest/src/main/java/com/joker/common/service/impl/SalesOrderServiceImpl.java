@@ -159,7 +159,8 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 	//创建销售单.
 	private SalesOrder createSaleOrder(SaleDto saleDto,Account account){
 		SalesOrder salesOrder=new SalesOrder();
-		salesOrder.setId(RandomCodeFactory.defaultGenerateMixed());
+		//salesOrder.setId(RandomCodeFactory.defaultGenerateMixed());
+		salesOrder.setId(saleDto.getId());
 		salesOrder.setClient(account.getClient());
 		salesOrder.setTransClass(Constants.ORDER_TYPE_SO);
 		salesOrder.setStore(account.getStore());

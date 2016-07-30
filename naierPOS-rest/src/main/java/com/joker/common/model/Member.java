@@ -1,5 +1,7 @@
 package com.joker.common.model;
 
+import java.math.BigDecimal;
+
 public class Member {
 
 	// 会员编号
@@ -12,6 +14,20 @@ public class Member {
 	private String memberMobile;
 	// 会员登记.
 	private String memberGrade;
+	
+	private BigDecimal memberPoint;
+	
+	private BigDecimal memberBalance;
+	
+	private String memberBirthDay;
+	
+	
+	public String getMemberBirthDay() {
+		return memberBirthDay;
+	}
+	public void setMemberBirthDay(String memberBirthDay) {
+		this.memberBirthDay = memberBirthDay;
+	}
 	public String getMember() {
 		return member;
 	}
@@ -41,6 +57,18 @@ public class Member {
 	}
 	public void setMemberGrade(String memberGrade) {
 		this.memberGrade = memberGrade;
+	}
+	public BigDecimal getMemberPoint() {
+		return memberPoint;
+	}
+	public void setMemberPoint(BigDecimal memberPoint) {
+		this.memberPoint = memberPoint;
+	}
+	public BigDecimal getMemberBalance() {
+		return memberBalance;
+	}
+	public void setMemberBalance(BigDecimal memberBalance) {
+		this.memberBalance = memberBalance;
 	}
 	
 	

@@ -127,6 +127,7 @@ app.factory('SaleService',['$q','$location','$http','BaseService',function($q,$l
                 	info.saleDate=dto.saleDate;
                 	info.itemDISC=dto.itemDISC;
                 	info.allDISC=dto.allDISC;
+                	info.id=dto.id;
                 	deferred.resolve(info);
                 }
             });
@@ -205,6 +206,19 @@ app.factory('SaleService',['$q','$location','$http','BaseService',function($q,$l
 		}
 	}
 }]);	
+app.factory('MemberService',['$q','$location','$http','BaseService',function($q,$location,$http,BaseService){
+	return {
+		getSinglerMember:function(condition){
+			var token=$.cookie("token");
+			condition.token=token;
+			var deferred = $q.defer();
+			BaseService.post('/rest/member/getSingleMember',condition).then(function(obj){
+                deferred.resolve(obj);
+            });
+			return deferred.promise;
+		}
+	}
+}]);	
 
 app.factory('PayService',['$q','$location','$http','BaseService',function($q,$location,$http,BaseService){
 	return {
@@ -222,6 +236,19 @@ app.factory('PayService',['$q','$location','$http','BaseService',function($q,$lo
                     info.data=dto;
                 	deferred.resolve(info);
                 }
+            });
+			return deferred.promise;
+		},
+		aliPay : function(condition){
+			if(!condition){
+				condition={};
+			}
+			var token=$.cookie("token");
+			condition.token=token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/pay/aliPay',condition).then(function(obj){
+                	deferred.resolve(obj);
             });
 			return deferred.promise;
 		}

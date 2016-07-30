@@ -179,10 +179,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
               <if test= "code != null">Code=#{code},</if>
               <if test= "originOrder != null">OriginOrder=#{originOrder.id},</if>
               <if test= "member !=null and  member.member != null">Member=#{member.member},</if>
-              <if test= "member !=null and member.memberCode != null">Member=#{member.memberCode},</if>
-              <if test= "member !=null and member.memberName!= null">Member=#{member.memberName},</if>
-              <if test= "member !=null and member.memberMobile!= null">Member=#{member.memberMobile},</if>
-              <if test= "member !=null and member.memberGrade!= null">Member=#{member.memberGrade},</if>
+              <if test= "member !=null and member.memberCode != null">MemberCode=#{member.memberCode},</if>
+              <if test= "member !=null and member.memberName!= null">MemberName=#{member.memberName},</if>
+              <if test= "member !=null and member.memberMobile!= null">MemberMobile=#{member.memberMobile},</if>
+              <if test= "member !=null and member.memberGrade!= null">MemberGrade=#{member.memberGrade},</if>
               <if test= "shoppingGuide != null">ShoppingGuide=#{shoppingGuide.id},</if>
               <if test= "quantity != null">Quantity=#{quantity},</if>
               <if test= "amount != null">Amount=#{amount},</if>
