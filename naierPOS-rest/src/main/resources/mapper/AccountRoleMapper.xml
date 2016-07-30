@@ -10,11 +10,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="client.id" column="Client" />
 		<result property="role.id" column="Role" />
 		<result property="account.id" column="Account" />
-		<result property="status" column="Status" />
+		<result property="creator" column="Creator" />
+		<result property="created" column="Created" />
 	</resultMap>
 	
 	<delete id="deleteAccountRoleByID" parameterType="string">
 		DELETE FROM AccountRole where ID =#{id}
+	</delete>
+	
+	<delete id="deleteAccountRoleByCondition" parameterType="accountRole">
+		DELETE FROM AccountRole where Account=#{account.id}
 	</delete>
 	
 	<insert id="insertAccountRole" parameterType="accountRole">
@@ -27,11 +32,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <sql id="accountRoleSet">
 		<set >
-			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
-			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
-			<if test= "role != null">Name=#{role.id,jdbcType=VARCHAR},</if >
-			<if test= "account != null">Nick=#{account.id,jdbcType=VARCHAR},</if >
-			<if test= "status != null">Status=#{status},</if >			
+			<include refid="accountRoleCondition" />
 		</set>
+	</sql >
+	
+	<sql id="accountRoleCondition">
+		<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
+		<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
+		<if test= "role != null">Role=#{role.id,jdbcType=VARCHAR},</if >
+		<if test= "account != null">Account=#{account.id,jdbcType=VARCHAR},</if >
+		<if test= "creator != null">Creator=#{creator},</if >
+		<if test= "created != null">Created=#{created},</if >	
 	</sql >
 </mapper>

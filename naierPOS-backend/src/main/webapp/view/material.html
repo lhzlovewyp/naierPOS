@@ -60,8 +60,7 @@
 		                <td>{{result.materialCategory.name}}</td>
 		                <td>{{result.brand.name}}</td>
 		                <td>{{result.retailPrice}}</td>
-						<td ng-if="result.status == 1">有效</td>
-						<td ng-if="!result.status || result.status != 1">无效</td>
+						<td>{{showStatusDesc(result.status)}}</td>
 						<td><a href="/backend/edit/brand/{{result.id}}" class="btn btn-info btn-xs">编辑</a></td>
 		            </tr>
 				</table>

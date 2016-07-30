@@ -17,6 +17,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		DELETE FROM AccountStore where ID =#{id}
 	</delete>
 	
+	<delete id="deleteAccountStoreByCondition" parameterType="accountStore">
+		DELETE FROM AccountStore where Account=#{account.id}
+	</delete>
+	
 	<insert id="insertAccountStore" parameterType="accountStore">
 		insert into AccountStore <include refid="accountStoreSet" />
 	</insert>
@@ -27,11 +31,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <sql id="accountStoreSet">
 		<set >
-			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
-			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
-			<if test= "store != null">Name=#{store.id,jdbcType=VARCHAR},</if >
-			<if test= "account != null">Nick=#{account.id,jdbcType=VARCHAR},</if >
-			<if test= "status != null">Status=#{status},</if >			
+			<include refid="accountStoreCondition" />
 		</set>
+	</sql >
+	
+	<sql id="accountStoreCondition">
+		<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
+		<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
+		<if test= "store != null">Store=#{store.id,jdbcType=VARCHAR},</if >
+		<if test= "account != null">Account=#{account.id,jdbcType=VARCHAR},</if >
+		<if test= "status != null">Status=#{status},</if >
 	</sql >
 </mapper>

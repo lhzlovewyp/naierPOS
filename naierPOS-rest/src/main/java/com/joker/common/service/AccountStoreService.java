@@ -20,6 +20,14 @@ public interface AccountStoreService {
 	public void deleteAccountStoreByID(String id);
 
 	/**
+	 * 删除账户和门店关联信息.
+	 * 
+	 * @param accountStore
+	 * @return
+	 */
+	public void deleteAccountStoreByCondition(AccountStore accountStore);
+
+	/**
 	 * 修改账户和门店关联信息.
 	 * 
 	 * @param accountStore

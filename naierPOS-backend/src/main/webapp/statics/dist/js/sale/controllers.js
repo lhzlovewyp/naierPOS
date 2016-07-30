@@ -107,6 +107,28 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
         	selectedId = selectedId.replace(val+",","");
         }
 	}
+	
+	$scope.showYesOrNo = function(value){
+		if(value == "1"){
+			return "是";
+		}else{
+			return "否";
+		}
+	}
+	$scope.showStatusDesc = function(value){
+		if(value == "1"){
+			return "有效";
+		}else{
+			return "无效";
+		}
+	}
+	$scope.showAllowDesc = function(value){
+		if(value == "1"){
+			return "允许";
+		}else{
+			return "不允许";
+		}
+	}
 }]);
 
 app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDialog','BasicsService',function($scope,$location,$routeParams,ngDialog,BasicsService){
@@ -150,9 +172,12 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			}
 			if(routePath == 'account' && allSelectInfoMap['role']){
 				var selectInfoMap = allSelectInfoMap['role'];
-				if(data.role && data.role.id){
-					var selRoleValue = data.role.id;
-					$scope.selrole = selectInfoMap[selRoleValue];
+				if(data.roles && data.roles.length > 0){
+					for(var roleIndex =0 ; roleIndex < data.roles.length; roleIndex++){
+						var selRole = data.roles[roleIndex];
+						var selRoleValue = selRole.id;
+						selectInfoMap[selRoleValue].ticked = true;
+					}
 				}
 			}
 			if(routePath == 'salesConfig' && allSelectInfoMap['terminal']){
@@ -210,6 +235,12 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					}
 				}
 				
+				if(routePath == 'account'){
+					if(data.changePWD == 1){
+						data.changePWD = true;
+					}
+				}
+				
 				if(routePath == 'role'){
 					if(data.loginTerminal == 1){
 						data.loginTerminal = true;
@@ -234,8 +265,6 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 	
 	function querySelectInfo(type,selectParam,queryBasics){
 		var pageBody = {};
-		pageBody.pageNo = 1;
-		pageBody.limit = 2147483647;
 		BasicsService.queryByList(pageBody,type).then(function(data){
     		if(data && data.length > 0){
     			var len = data.length;
@@ -266,7 +295,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			querySelectInfo('unit','units',1);
 		}else if(routePath == 'account'){
 			querySelectInfo('store','stores',1);
-			querySelectInfo('role','roles',1);
+			querySelectInfo('role','modernRoles',1);
 		}else if(routePath == 'terminal'){
 			querySelectInfo('store','stores',1);
 		}else if(routePath == 'salesConfig'){
@@ -286,7 +315,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			querySelectInfo('unit','units');
 		}else if(routePath == 'account'){
 			querySelectInfo('store','stores');
-			querySelectInfo('role','roles');
+			querySelectInfo('role','modernRoles');
 		}else if(routePath == 'terminal'){
 			querySelectInfo('store','stores');
 		}else if(routePath == 'salesConfig'){
@@ -315,6 +344,16 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					$scope.form.changePWD = "1";
 				else
 					$scope.form.changePWD = "0";
+				
+				if($scope.outputRoles){
+					var finalRole = "";
+					for(var roleIndex =0 ; roleIndex < $scope.outputRoles.length; roleIndex++){
+						var selRole = $scope.outputRoles[roleIndex];
+						var selRoleValue = selRole.value;
+						finalRole += selRoleValue + ',';
+					}
+					$scope.form.roleId = finalRole;
+				}
 			}
 			
 			if(routePath == 'unitConversion'){
@@ -334,7 +373,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					$scope.form.parentId = "0";
 			}
 			
-			if(routePath == 'terminal' || routePath == 'salesConfig' || routePath == 'retailPrice'){
+			if(routePath == 'terminal' || routePath == 'salesConfig' || routePath == 'retailPrice' || routePath == 'account'){
 				var selstore = $scope.selstore;
 				if(selstore){
 					$scope.form.storeId = selstore.value;

@@ -16,6 +16,15 @@ public interface AccountStoreMapper {
 	 */
 	@DataSource("master")
 	public void deleteAccountStoreByID(String id);
+	
+	/**
+	 * 删除账户和门店关联信息.
+	 * 
+	 * @param AccountStore accountStore
+	 * @return
+	 */
+	@DataSource("master")
+	public void deleteAccountStoreByCondition(AccountStore accountStore);
 
 	/**
 	 * 修改账户和门店关联信息.
