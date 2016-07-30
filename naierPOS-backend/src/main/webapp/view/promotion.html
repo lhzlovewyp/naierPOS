@@ -1,0 +1,76 @@
+<style>
+    .page-list .pagination {float:left;}
+    .page-list .pagination span {cursor: pointer;}
+    .page-list .pagination .separate span{cursor: default; border-top:none;border-bottom:none;}
+    .page-list .pagination .separate span:hover {background: none;}
+    .page-list .page-total {float:left; margin: 25px 20px;}
+    .page-list .page-total input, .page-list .page-total select{height: 26px; border: 1px solid #ddd;}
+    .page-list .page-total input {width: 40px; padding-left:3px;}
+    .page-list .page-total select {width: 50px;}
+</style>
+<section class="content">
+	<div class="box">
+		<div class="box-header">
+			<h3 class="box-title">促销活动管理</h3>
+			<div class="box-tools">
+				<a class="btn btn-primary btn-flat" href="/backend/add/promotion"><i
+					class="fa fa-plus"></i> 添加</a> <a class="btn btn-danger btn-flat"
+					href="javascript:void(0)" ng-click="del()"><i class="fa fa-minus"></i> 删除</a>
+			</div>
+		</div>
+		<div class="box-header">
+			<div class="input-group input-group-sm" style="width: 250px;">
+				<input type="text" name="table_search"
+					class="form-control pull-right" placeholder="搜索" id="input1" ng-model="likeName">
+				<div class="input-group-btn">
+					<button type="submit" class="btn btn-primary" ng-click="queryByPage()">
+						<i class="fa fa-search"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="box-body">
+			<div class="table-responsive mailbox-messages">
+				<table class="table table-hover">
+					<tr>
+						<th width="30"><button type="button"
+								class="btn btn-default btn-sm checkbox-toggle">
+								<i class="fa fa-square-o"></i>
+							</button></th>
+						<th>GUID</th>
+						<th>商户</th>
+						<th>促销编码</th>
+						<th>促销名称</th>
+						<th>促销说明</th>
+						<th>生效日期</th>
+						<th>失效日期</th>
+						<th>生效时间</th>
+						<th>失效时间</th>
+						<th>操作</th>
+					</tr>
+					<tr ng-repeat="result in basicsInfo.results"  on-render-finish>
+						<td align="center"><input type="checkbox" ng-click="check(result.id,chk)" ng-model="chk"></td>
+		                <td>{{result.id}}</td>
+		                <td>{{result.client.name}}</td>
+		                <td>{{result.code}}</td>
+		                <td>{{result.name}}</td>
+		                <td>{{result.memo}}</td>
+		                <td>{{result.effectiveDate}}</td>
+		                <td>{{result.expiryDate}}</td>
+		                <td>{{result.effectiveTime}}</td>
+		                <td>{{result.expiryTime}}</td>
+						<td>{{showStatusDesc(result.status)}}</td>
+						<td><a href="/backend/edit/promotion/{{result.id}}" class="btn btn-info btn-xs">编辑</a></td>
+		            </tr>
+				</table>
+			</div>
+			<div class="row">
+				<div class="col-sm-5">
+					<div class="dataTables_info">{{basicsInfo.pageNo}}/{{basicsInfo.totalPage}}</div>
+				</div>
+				<tm-pagination conf="paginationConf"></tm-pagination>
+			</div>
+		</div>
+		<!-- /.box-body -->
+	</div>
+</section>

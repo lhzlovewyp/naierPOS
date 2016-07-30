@@ -1,0 +1,146 @@
+<section class="content">
+	<div class="box">
+		<div class="box-header">
+			<h3 class="box-title">促销活动管理</h3>
+		</div>
+		<div class="box-body">
+			<ul class="nav nav-tabs" id="myTab">
+				<li class="active"><a href="#detail">基本信息</a></li>
+			</ul>
+			<form class="form-horizontal" role="form" method="post"  name="basicsForm" id="basicsForm" ng-submit="edit(basicsForm.$valid)" novalidate>
+				<div class="tab-content" style="margin-top: 20px;">
+					<div class="tab-pane active" id="detail">
+						<div class="form-group">
+							<label for="ID" class="col-sm-2 control-label">GUID</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="ID" name="ID"
+									placeholder="GUID" ng-model="form.id">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="Client" class="col-sm-2 control-label">商户</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="Client"
+									name="Client" placeholder="商户" value="0" ng-model="form.clientId">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="Code" class="col-sm-2 control-label">促销编码</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="Code" name="Code"
+									placeholder="促销编码" ng-model="form.code">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="Name" class="col-sm-2 control-label">促销名称</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="Name" name="Name"
+									placeholder="促销名称" ng-model="form.name">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="Memo" class="col-sm-2 control-label">促销说明</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="Memo" name="Memo"
+									placeholder="促销说明" ng-model="form.memo">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="EffectiveDate" class="col-sm-2 control-label">生效日期</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="EffectiveDate"
+									name="EffectiveDate" placeholder="生效日期"
+									data-provide="datepicker-inline" data-date-format="yyyy-mm-dd" ng-model="form.effDate">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="ExpiryDate" class="col-sm-2 control-label">失效日期</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="ExpiryDate"
+									name="ExpiryDate" placeholder="失效日期"
+									data-provide="datepicker-inline" data-date-format="yyyy-mm-dd" ng-model="form.expDate">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="EffectiveTime" class="col-sm-2 control-label">生效时间</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="EffectiveTime"
+									name="EffectiveTime" placeholder="生效时间" ng-model="form.effTime">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="ExpiryTime" class="col-sm-2 control-label">失效时间</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="ExpiryTime"
+									name="ExpiryTime" placeholder="失效时间" ng-model="form.expTime">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="Week" class="col-sm-2 control-label">限定星期</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="Week" name="Week"
+									placeholder="限定星期" ng-model="form.week">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="Days" class="col-sm-2 control-label">限定日期</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="Days" name="Days"
+									placeholder="限定日期" ng-model="form.days">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="OfferRelation" class="col-sm-2 control-label">优惠关系</label>
+							<div class="col-sm-10">
+								<select id="OfferRelation" name="OfferRelation" class="form-control" ng-model="selOfferRelation" ng-options="x.show for x in offerRelations">
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="PaymentRestrict" class="col-sm-2 control-label">支付方式限制条件</label>
+							<div class="col-sm-10">
+								<select id="PaymentRestrict" name="PaymentRestrict" class="form-control" ng-model="selPaymentRestrict" ng-options="x.show for x in paymentRestricts">
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="MemberRestrict" class="col-sm-2 control-label">会员限制条件</label>
+							<div class="col-sm-10">
+								<select id="MemberRestrict" name="MemberRestrict" class="form-control" ng-model="selMemberRestrict" ng-options="x.show for x in memberRestricts">
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="Excluded" class="col-sm-2 control-label">互斥促销活动</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="Excluded"
+									name="Excluded" placeholder="互斥促销活动" ng-model="form.excluded">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="Status" class="col-sm-2 control-label">状态</label>
+							<div class="col-sm-10">
+								<select id="status" name="status" class="form-control" ng-model="selstatus" ng-options="x.show for x in statuses">
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<div class="checkbox">
+									<label class="icheckbox"> <input type="checkbox"
+										value="1" name="Repeat" ng-model="form.repeat"> 多次生效
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="button" class="btn btn-danger" ng-click="edit(basicsForm.$valid)">提交</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</section>

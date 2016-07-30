@@ -136,6 +136,20 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		        	    {value : "1", show : "有效"},
 		        	    {value : "0", show : "无效"}
 		        	];
+	var allOfferRelation = [
+		        	    {value : "SIN", show : "只享受一个"},
+		        	    {value : "ALL", show : "同时享受"}
+		        	];
+	var allPaymentRestrict = [
+		        	    {value : "NON", show : "不限制"},
+		        	    {value : "INCL", show : "包含"},
+		        	    {value : "EXCL", show : "排除"}
+		        	];
+	var allMemberRestrict = [
+		        	    {value : "ALL", show : "会员能参加"},
+		        	    {value : "ONLY", show : "只能会员参加"},
+		        	    {value : "NON", show : "会员不能参加"}
+		        	];
 	$scope.statuses = allStatus;
 	$scope.editType = 'add';
 	var id = $routeParams.id;
@@ -149,6 +163,12 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 	});
 	
 	$scope.routePath = routePath;
+	
+	if(routePath == 'promotion'){
+		$scope.offerRelations = allOfferRelation;
+		$scope.paymentRestricts = allPaymentRestrict;
+		$scope.memberRestricts = allMemberRestrict;
+	}
 	
 	function setSelectedInfo(){
 		var data = $scope.form;
@@ -275,6 +295,32 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 				if(routePath == 'material'){
 					if(data.property == 1){
 						data.property = true;
+					}
+				}
+				if(routePath == 'promotion'){
+					var selOfferRelation = data.offerRelation;
+					for ( var i = 0; i < allOfferRelation.length; i++) {
+						if(allOfferRelation[i].value == selOfferRelation){
+							$scope.selOfferRelation = allOfferRelation[i];	
+							break;
+						}
+					}
+					var selPaymentRestrict = data.paymentRestrict;
+					for ( var i = 0; i < allPaymentRestrict.length; i++) {
+						if(allPaymentRestrict[i].value == selPaymentRestrict){
+							$scope.selPaymentRestrict = allPaymentRestrict[i];	
+							break;
+						}
+					}
+					var selMemberRestrict = data.memberRestrict;
+					for ( var i = 0; i < allMemberRestrict.length; i++) {
+						if(allMemberRestrict[i].value == selMemberRestrict){
+							$scope.selMemberRestrict = allMemberRestrict[i];	
+							break;
+						}
+					}
+					if(data.repeat == 1){
+						data.repeat = true;
 					}
 				}
 				
