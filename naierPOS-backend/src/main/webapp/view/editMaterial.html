@@ -50,16 +50,14 @@
 						<div class="form-group">
 							<label for="MaterialCategory" class="col-sm-2 control-label">品类</label>
 							<div class="col-sm-10">
-								<label id="MaterialCategory" class="col-sm-2 control-label" style="text-align:left" ng-model="form.materialCategoryId">{{form.parent.name}}</label>
+								<label id="MaterialCategory" class="col-sm-2 control-label" style="text-align:left" ng-model="form.category.id">{{form.category.name}}</label>
 								<a href="javascript:void(0)" class="btn btn-info btn-xs" ng-click="openMaterialCategoryTree()"><i class="fa"></i>编辑</a>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="Brand" class="col-sm-2 control-label">品牌</label>
 							<div class="col-sm-10">
-								<select id="Brand" name="Brand" class="form-control">
-									<option value="1">优衣库</option>
-									<option value="0">美邦</option>
+								<select id="Brand" name="Brand" class="form-control" ng-model="selBrand" ng-options="x.show for x in brands">
 								</select>
 							</div>
 						</div>
@@ -95,7 +93,7 @@
 							<label for="Barcode" class="col-sm-2 control-label">条码</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control" id="Barcode"
-									name="Barcode" placeholder="条码" ng-model="form.barcode">
+									name="Barcode" placeholder="条码" ng-model="form.barCode">
 							</div>
 						</div>
 						<div class="form-group">
@@ -116,7 +114,7 @@
 							<div class="col-sm-offset-2 col-sm-10">
 								<div class="checkbox">
 									<label class="icheckbox"> <input type="checkbox"
-										value="1" name="Property"> 需要维护属性
+										value="1" name="Property" ng-model="form.property"> 需要维护属性
 									</label>
 								</div>
 							</div>

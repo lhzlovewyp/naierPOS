@@ -148,6 +148,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		$('[data-provide="datepicker-inline"]').datepicker();
 	});
 	
+	$scope.routePath = routePath;
 	
 	function setSelectedInfo(){
 		var data = $scope.form;
@@ -208,7 +209,24 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					$scope.selUnit = selectInfoMap[selUnitValue];
 				}
 			}
-			
+			if(routePath == 'material' && allSelectInfoMap['brand']){
+				var selectInfoMap = allSelectInfoMap['brand'];
+				if(data.brand && data.brand.id){
+					var selBrandValue = data.brand.id;
+					$scope.selBrand = selectInfoMap[selBrandValue];
+				}
+			}
+			if(routePath == 'material' && allSelectInfoMap['unit']){
+				var selectInfoMap = allSelectInfoMap['unit'];
+				if(data.basicUnit && data.basicUnit.id){
+					var selBasicUnitValue = data.basicUnit.id;
+					$scope.selBasicUnit = selectInfoMap[selBasicUnitValue];
+				}
+				if(data.salesUnit && data.salesUnit.id){
+					var selSalesUnitValue = data.salesUnit.id;
+					$scope.selSalesUnit = selectInfoMap[selSalesUnitValue];
+				}
+			}
 		}
 	}
 	
@@ -227,9 +245,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 						break;
 					}
 				}
-				if(routePath == 'materialCategory'){
-					data.parentId = data.parent.id;
-				}else if(routePath == 'store'){
+				if(routePath == 'store'){
 					if(data.opened){
 						data.opened=new Date(data.opened).format('yyyy-MM-dd');
 					}
@@ -253,6 +269,12 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					}
 					if(data.allDISC == 1){
 						data.allDISC = true;
+					}
+				}
+				
+				if(routePath == 'material'){
+					if(data.property == 1){
+						data.property = true;
 					}
 				}
 				
@@ -307,6 +329,9 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			querySelectInfo('store','stores',1);
 			querySelectInfo('material','materials',1);
 			querySelectInfo('unit','units',1);
+		}else if(routePath == 'material'){
+			querySelectInfo('brand','brands');
+			querySelectInfo('unit','units');
 		}
 		queryBasicsInfoById();
 	}else{
@@ -326,6 +351,9 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		}else if(routePath == 'retailPrice'){
 			querySelectInfo('store','stores');
 			querySelectInfo('material','materials');
+			querySelectInfo('unit','units');
+		}else if(routePath == 'material'){
+			querySelectInfo('brand','brands');
 			querySelectInfo('unit','units');
 		}
 	}
@@ -421,6 +449,29 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					$scope.form.allDISC = "0";
 			}
 			
+			if(routePath == 'material'){
+				if($scope.form.category.id)
+					$scope.form.categoryId = $scope.form.category.id;
+				else
+					$scope.form.categoryId = "";
+				var selBrand = $scope.selBrand;
+				if(selBrand){
+					$scope.form.brandId = selBrand.value;
+				}
+				var selBasicUnit = $scope.selBasicUnit;
+				if(selBasicUnit){
+					$scope.form.basicUnitId = selBasicUnit.value;
+				}
+				var selSalesUnit = $scope.selSalesUnit;
+				if(selSalesUnit){
+					$scope.form.salesUnitId = selSalesUnit.value;
+				}
+				if($scope.form.property)
+					$scope.form.property = "1";
+				else
+					$scope.form.property = "0";
+			}
+			
 			if($scope.editType == 'add'){
 				BasicsService.add($scope.form,routePath).then(function(data){
 					if(data && data.error){
@@ -486,11 +537,19 @@ app.controller("materialCategoryTreeCtrl",['$scope','$location','LoginService','
 	};
 	
 	$scope.selectMCTree=function(){
-		if(!$scope.form.parent){
-			$scope.form.parent = {};
+		if($scope.routePath == 'materialCategory'){
+			if(!$scope.form.parent){
+				$scope.form.parent = {};
+			}
+			$scope.form.parent.id = selectedNode.id;
+			$scope.form.parent.name = selectedNode.text;
+		}else if($scope.routePath == 'material'){
+			if(!$scope.form.category){
+				$scope.form.category = {};
+			}
+			$scope.form.category.id = selectedNode.id;
+			$scope.form.category.name = selectedNode.text;
 		}
-		$scope.form.parent.id = selectedNode.id;
-		$scope.form.parent.name = selectedNode.text;
 		selectedNode = {};
 		ngDialog.close();
 	};

@@ -15,8 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joker.common.Constant.Constants;
+import com.joker.common.mapper.BrandMapper;
+import com.joker.common.mapper.MaterialCategoryMapper;
 import com.joker.common.mapper.MaterialMapper;
+import com.joker.common.model.Brand;
 import com.joker.common.model.Material;
+import com.joker.common.model.MaterialCategory;
 import com.joker.common.model.MaterialProperty;
 import com.joker.common.model.Unit;
 import com.joker.common.model.UnitConversion;
@@ -46,9 +50,15 @@ public class MaterialServiceImpl implements MaterialService {
 
 	@Autowired
 	UnitConversionService unitConversionService;
-	
+
 	@Autowired
 	UnitService unitService;
+
+	@Autowired
+	MaterialCategoryMapper materialCategoryMapper;
+
+	@Autowired
+	BrandMapper brandMapper;
 
 	@Override
 	public Material getMaterialByCode(String clientId, String code) {
@@ -104,17 +114,17 @@ public class MaterialServiceImpl implements MaterialService {
 		if (mat.getSalesConversion() != null) {
 			return;
 		}
-		
-		Unit basicUnit=unitService.getUnitByID(mat.getBasicUnit().getId());
-		if(basicUnit!=null){
+
+		Unit basicUnit = unitService.getUnitByID(mat.getBasicUnit().getId());
+		if (basicUnit != null) {
 			mat.setBasicUnit(basicUnit);
 		}
-		
-		Unit salesUnit=unitService.getUnitByID(mat.getSalesUnit().getId());
-		if(salesUnit!=null){
+
+		Unit salesUnit = unitService.getUnitByID(mat.getSalesUnit().getId());
+		if (salesUnit != null) {
 			mat.setSalesUnit(salesUnit);
 		}
-		
+
 		// 如果销售单位=基本单位，设置为1.
 		if (mat.getBasicUnit().getId().equals(mat.getSalesUnit().getId())) {
 			mat.setSalesConversion(new BigDecimal(1));
@@ -136,7 +146,17 @@ public class MaterialServiceImpl implements MaterialService {
 
 	@Override
 	public Material getMaterialByID(String id) {
-		return mapper.getMaterialByID(id);
+		Material material = mapper.getMaterialByID(id);
+		if (material != null && material.getCategory() != null
+				&& StringUtils.isNotBlank(material.getCategory().getId())
+				&& !"0".equals(material.getCategory().getId())) {
+			MaterialCategory category = materialCategoryMapper
+					.getMaterialCategoryByID(material.getCategory().getId());
+			if (category != null) {
+				material.setCategory(category);
+			}
+		}
+		return material;
 	}
 
 	@Override
@@ -151,13 +171,57 @@ public class MaterialServiceImpl implements MaterialService {
 		Page<Material> page = new Page<Material>();
 		int totalRecord = mapper.getMaterialCountByCondition(map);
 		List<Material> list = mapper.getMaterialPageByCondition(map);
+		if (CollectionUtils.isNotEmpty(list)) {
+			Map<String, MaterialCategory> cacheMap = new HashMap<String, MaterialCategory>();
+			Map<String, Brand> cacheBrandMap = new HashMap<String, Brand>();
+			for (Material material : list) {
+				if (material != null) {
+					if (material.getCategory() != null
+							&& StringUtils.isNotBlank(material.getCategory()
+									.getId())) {
+						String categoryId = material.getCategory().getId();
+						MaterialCategory materialCategory = null;
+						if (cacheMap.containsKey(categoryId)) {
+							materialCategory = cacheMap.get(categoryId);
+						} else {
+							materialCategory = materialCategoryMapper
+									.getMaterialCategoryByID(categoryId);
+							if (materialCategory != null) {
+								cacheMap.put(categoryId, materialCategory);
+							}
+						}
+						if (materialCategory != null) {
+							material.setCategory(materialCategory);
+						}
+					}
+
+					if (material.getBrand() != null
+							&& StringUtils.isNotBlank(material.getBrand()
+									.getId())) {
+						String brandId = material.getBrand().getId();
+						Brand brand = null;
+						if (cacheBrandMap.containsKey(brandId)) {
+							brand = cacheBrandMap.get(brandId);
+						} else {
+							brand = brandMapper.getBrandByID(brandId);
+							if (brand != null) {
+								cacheBrandMap.put(brandId, brand);
+							}
+						}
+						if (brand != null) {
+							material.setBrand(brand);
+						}
+					}
+				}
+			}
+		}
 		page.setPageNo(start + 1);
 		page.setPageSize(limit);
 		page.setTotalRecord(totalRecord);
 		page.setResults(list);
 		return page;
 	}
-	
+
 	@Override
 	public List<Material> getMaterialPageByCondition(Map<String, Object> map) {
 		List<Material> list = mapper.getMaterialPageByCondition(map);

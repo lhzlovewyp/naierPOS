@@ -144,8 +144,7 @@ public class AccountServiceImpl implements AccountService {
 						if (cacheMap.containsKey(storeId)) {
 							store = cacheMap.get(storeId);
 						} else {
-							store = storeMapper.getStoreById(account.getStore()
-									.getId());
+							store = storeMapper.getStoreById(storeId);
 							if (store != null) {
 								cacheMap.put(storeId, store);
 							}
