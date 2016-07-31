@@ -247,6 +247,20 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					$scope.selSalesUnit = selectInfoMap[selSalesUnitValue];
 				}
 			}
+			if(routePath == 'promotionPayment' && allSelectInfoMap['promotion']){
+				var selectInfoMap = allSelectInfoMap['promotion'];
+				if(data.promotion && data.promotion.id){
+					var selPromotionValue = data.promotion.id;
+					$scope.selPromotion = selectInfoMap[selPromotionValue];
+				}
+			}
+			if(routePath == 'promotionPayment' && allSelectInfoMap['clientPayment']){
+				var selectInfoMap = allSelectInfoMap['clientPayment'];
+				if(data.clientPayment && data.clientPayment.id){
+					var selClientPaymentValue = data.clientPayment.id;
+					$scope.selClientPayment = selectInfoMap[selClientPaymentValue];
+				}
+			}
 		}
 	}
 	
@@ -365,6 +379,9 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
     					id = data[i].code;
     				}
     				var name = data[i].name;
+    				if(type == 'clientPayment'){
+    					name = data[i].payment.name;
+    				}
 					var selectObj = {"value":id,"show":name};
 					allSelect.push(selectObj);
 					selectInfoMap[id] = selectObj;
@@ -399,6 +416,9 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		}else if(routePath == 'material'){
 			querySelectInfo('brand','brands');
 			querySelectInfo('unit','units');
+		}else if(routePath == 'promotionPayment'){
+			querySelectInfo('clientPayment','clientPayments');
+			querySelectInfo('promotion','promotions');
 		}
 		queryBasicsInfoById();
 	}else{
@@ -422,6 +442,9 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		}else if(routePath == 'material'){
 			querySelectInfo('brand','brands');
 			querySelectInfo('unit','units');
+		}else if(routePath == 'promotionPayment'){
+			querySelectInfo('clientPayment','clientPayments');
+			querySelectInfo('promotion','promotions');
 		}
 	}
 	
@@ -555,6 +578,16 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					$scope.form.repeatEffect = "1";
 				else
 					$scope.form.repeatEffect = "0";
+			}
+			if(routePath == 'promotionPayment'){
+				var selPromotion = $scope.selPromotion;
+				if(selPromotion){
+					$scope.form.promotionId = selPromotion.value;
+				}
+				var selClientPayment = $scope.selClientPayment;
+				if(selClientPayment){
+					$scope.form.clientPaymentId = selClientPayment.value;
+				}
 			}
 			
 			if($scope.editType == 'add'){
