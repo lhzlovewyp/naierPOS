@@ -271,6 +271,21 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					}
 				}
 				
+				if(routePath == 'salesConfig'){
+					if(data.salesDate){
+						data.salesDate=new Date(data.salesDate).format('yyyy-MM-dd');
+					}
+				}
+				
+				if(routePath == 'retailPrice'){
+					if(data.effectiveDate){
+						data.effectiveDate=new Date(data.effectiveDate).format('yyyy-MM-dd');
+					}
+					if(data.expiryDate){
+						data.expiryDate=new Date(data.expiryDate).format('yyyy-MM-dd');
+					}
+				}
+				
 				if(routePath == 'account'){
 					if(data.changePWD == 1){
 						data.changePWD = true;
@@ -319,8 +334,14 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 							break;
 						}
 					}
-					if(data.repeat == 1){
-						data.repeat = true;
+					if(data.repeatEffect == 1){
+						data.repeatEffect = true;
+					}
+					if(data.effDate){
+						data.effDate=new Date(data.effDate).format('yyyy-MM-dd');
+					}
+					if(data.expDate){
+						data.expDate=new Date(data.expDate).format('yyyy-MM-dd');
 					}
 				}
 				
@@ -516,6 +537,24 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					$scope.form.property = "1";
 				else
 					$scope.form.property = "0";
+			}
+			if(routePath == 'promotion'){
+				var selOfferRelation = $scope.selOfferRelation;
+				if(selOfferRelation){
+					$scope.form.offerRelationId = selOfferRelation.value;
+				}
+				var selPaymentRestrict = $scope.selPaymentRestrict;
+				if(selPaymentRestrict){
+					$scope.form.paymentRestrictId = selPaymentRestrict.value;
+				}
+				var selMemberRestrict = $scope.selMemberRestrict;
+				if(selMemberRestrict){
+					$scope.form.memberRestrictId = selMemberRestrict.value;
+				}
+				if($scope.form.repeatEffect)
+					$scope.form.repeatEffect = "1";
+				else
+					$scope.form.repeatEffect = "0";
 			}
 			
 			if($scope.editType == 'add'){

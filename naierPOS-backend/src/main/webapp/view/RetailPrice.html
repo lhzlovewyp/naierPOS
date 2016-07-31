@@ -44,8 +44,8 @@
 		                <td>{{result.material.name}}</td>
 		                <td>{{result.unit.name}}</td>
 		                <td>{{result.price}}</td>
-		                <td>{{result.effectiveDateStr}}</td>
-		                <td>{{result.expiryDateStr}}</td>
+		                <td>{{result.effectiveDate | date:'yyyy-MM-dd'}}</td>
+		                <td>{{result.expiryDate | date:'yyyy-MM-dd'}}</td>
 						<td><a href="/backend/edit/retailPrice/{{result.id}}" class="btn btn-info btn-xs">编辑</a></td>
 		            </tr>
 				</table>

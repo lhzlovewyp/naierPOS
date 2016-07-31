@@ -46,6 +46,7 @@
 						<th>失效日期</th>
 						<th>生效时间</th>
 						<th>失效时间</th>
+						<th>状态</th>
 						<th>操作</th>
 					</tr>
 					<tr ng-repeat="result in basicsInfo.results"  on-render-finish>
@@ -55,10 +56,10 @@
 		                <td>{{result.code}}</td>
 		                <td>{{result.name}}</td>
 		                <td>{{result.memo}}</td>
-		                <td>{{result.effectiveDate}}</td>
-		                <td>{{result.expiryDate}}</td>
-		                <td>{{result.effectiveTime}}</td>
-		                <td>{{result.expiryTime}}</td>
+		                <td>{{result.effDate | date:'yyyy-MM-dd'}}</td>
+		                <td>{{result.expDate | date:'yyyy-MM-dd'}}</td>
+		                <td>{{result.effTime | date:'HH:mm:ss'}}</td>
+		                <td>{{result.expTime | date:'HH:mm:ss'}}</td>
 						<td>{{showStatusDesc(result.status)}}</td>
 						<td><a href="/backend/edit/promotion/{{result.id}}" class="btn btn-info btn-xs">编辑</a></td>
 		            </tr>

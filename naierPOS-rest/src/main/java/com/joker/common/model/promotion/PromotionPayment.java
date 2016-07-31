@@ -6,7 +6,6 @@ package com.joker.common.model.promotion;
 import com.joker.common.model.BaseModel;
 import com.joker.common.model.Client;
 import com.joker.common.model.ClientPayment;
-import com.joker.common.model.Payment;
 
 /**
  * @author lvhaizhen

@@ -48,7 +48,7 @@ public class Promotion extends BaseModel{
 	private String expTime;
 	
 	//多次生效
-	private int repeat;
+	private int repeatEffect;
 	
 	//限定星期
 	private String week;
@@ -131,11 +131,11 @@ public class Promotion extends BaseModel{
 	public void setExpTime(String expTime) {
 		this.expTime = expTime;
 	}
-	public int getRepeat() {
-		return repeat;
+	public int getRepeatEffect() {
+		return repeatEffect;
 	}
-	public void setRepeat(int repeat) {
-		this.repeat = repeat;
+	public void setRepeatEffect(int repeatEffect) {
+		this.repeatEffect = repeatEffect;
 	}
 	public String getWeek() {
 		return week;

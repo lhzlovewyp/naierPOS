@@ -16,7 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="expDate" column="ExpiryDate" />
 		<result property="effTime" column="EffectiveTime" />
 		<result property="expTime" column="ExpiryTime" />
-		<result property="repeat" column="Repeat" />
+		<result property="repeatEffect" column="RepeatEffect" />
 		<result property="week" column="Week" />
 		<result property="days" column="Days" />
 		<result property="paymentRestrict" column="PaymentRestrict" />
@@ -115,7 +115,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getPromotionByID" parameterType="string" resultMap="promotion">
 		SELECT 
 			a.ID,a.Client,a.Code,a.Name,a.Memo,a.EffectiveDate,a.ExpiryDate,a.EffectiveTime,a.ExpiryTime
-			,a.Repeat,a.Week,a.Days,a.PaymentRestrict,a.MemberRestrict,a.OfferRelation,a.Excluded
+			,a.RepeatEffect,a.Week,a.Days,a.PaymentRestrict,a.MemberRestrict,a.OfferRelation,a.Excluded
 			,a.Status,a.Creator,a.Created,a.Editor,a.Modified
 		FROM Promotion a
 		WHERE a.ID=#{id} 
@@ -124,7 +124,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getPromotionPageByCondition" parameterType="java.util.Map" resultMap="promotionPage">
 		SELECT 
 			a.ID,a.Client,a.Code,a.Name,a.Memo,a.EffectiveDate,a.ExpiryDate,a.EffectiveTime,a.ExpiryTime
-			,a.Repeat,a.Week,a.Days,a.PaymentRestrict,a.MemberRestrict,a.OfferRelation,a.Excluded
+			,a.RepeatEffect,a.Week,a.Days,a.PaymentRestrict,a.MemberRestrict,a.OfferRelation,a.Excluded
 			,a.Status,a.Creator,a.Created,a.Editor,a.Modified,c.Name ClientName
 		FROM Promotion a left outer join Client c
 		on a.Client = c.id and c.status = 1 
@@ -173,11 +173,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test= "code != null">Code=#{code,jdbcType=VARCHAR},</if >
 			<if test= "name != null">Name=#{name,jdbcType=VARCHAR},</if >
 			<if test= "memo != null">Memo=#{memo},</if >
-			<if test= "effectiveDate != null">EffectiveDate=#{effectiveDate},</if >
-			<if test= "expiryDate != null">ExpiryDate=#{expiryDate},</if >
-			<if test= "effectiveTime != null">EffectiveTime=#{effectiveTime},</if >
-			<if test= "expiryTime != null">ExpiryTime=#{expiryTime},</if >
-			<if test= "repeat != null">Repeat=#{repeat},</if >
+			<if test= "effDate != null">EffectiveDate=#{effDate},</if >
+			<if test= "expDate != null">ExpiryDate=#{expDate},</if >
+			<if test= "effTime != null">EffectiveTime=#{effTime},</if >
+			<if test= "expTime != null">ExpiryTime=#{expTime},</if >
+			<if test= "repeatEffect != null">RepeatEffect=#{repeatEffect},</if >
 			<if test= "week != null">Week=#{week},</if >
 			<if test= "days != null">Days=#{days},</if >
 			<if test= "paymentRestrict != null">PaymentRestrict=#{paymentRestrict},</if >

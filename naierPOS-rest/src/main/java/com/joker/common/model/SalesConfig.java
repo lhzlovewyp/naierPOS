@@ -78,12 +78,4 @@ public class SalesConfig extends BaseModel {
 	public void setFlag(Integer flag) {
 		this.flag = flag;
 	}
-
-	public String getSalesDateStr() {
-		String dateStr = "";
-		if (salesDate != null) {
-			dateStr = DatetimeUtil.formatDateToString(salesDate, DatetimeUtil.DATE);
-		}
-		return dateStr;
-	}
 }
