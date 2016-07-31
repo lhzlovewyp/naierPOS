@@ -6,7 +6,6 @@
 		<div class="box-body">
 			<ul class="nav nav-tabs" id="myTab">
 				<li class="active"><a href="#Material">基本信息</a></li>
-				<li><a href="#MaterialProperty">属性</a></li>
 			</ul>
 
 			<form class="form-horizontal" role="form" method="post"  name="basicsForm" id="basicsForm" ng-submit="edit(basicsForm.$valid)" novalidate>
@@ -119,36 +118,6 @@
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="tab-pane" id="MaterialProperty">
-						<a class="btn btn-info btn-flat btn-xs" href="#"
-							onClick="addMaterialProperty()"><i class="fa fa-plus"></i>
-							添加属性</a>
-						<table class="table">
-							<tr>
-								<td width="60"><a class="btn btn-danger btn-flat btn-xs"
-									href="#" onClick="$(this).parent().parent().remove();"> 删除</a></td>
-								<td width="50">颜色</td>
-								<td><select id="Color2" name="Color[]" class="form-control">
-										<option value="">颜色1</option>
-										<option value="">颜色2</option>
-								</select></td>
-								<td width="50">尺码</td>
-								<td><select id="Size1" name="Size[]" class="form-control">
-										<option value="">尺码1</option>
-										<option value="">尺码2</option>
-								</select></td>
-								<td width="50">条码</td>
-								<td><input type="text" class="form-control" id="Barcode1"
-									name="Barcode[]" placeholder="条码"></td>
-								<td width="50">状态</td>
-								<td><select id="Status1" name="Status[]"
-									class="form-control">
-										<option value="">有效</option>
-										<option value="">无效</option>
-								</select></td>
-							</tr>
-						</table>
 					</div>
 				</div>
 				<div class="form-group">

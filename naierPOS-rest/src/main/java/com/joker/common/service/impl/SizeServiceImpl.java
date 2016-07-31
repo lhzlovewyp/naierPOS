@@ -61,6 +61,12 @@ public class SizeServiceImpl implements SizeService {
 	}
 
 	@Override
+	public List<Size> getSizePageByCondition(Map<String, Object> map) {
+		List<Size> list = mapper.getSizePageByCondition(map);
+		return list;
+	}
+
+	@Override
 	public void deleteSizeByID(String id) {
 		if (StringUtils.isNotBlank(id)) {
 			String[] ids = id.split(Constants.COMMA);

@@ -22,6 +22,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="editor" column="Editor" />
 		<result property="modified" column="Modified" />
 	</resultMap>
+	
+	<resultMap type="materialProperty" id="materialPropertyPage" extends="materialProperty">
+		<result property="client.name" column="ClientName" />
+	</resultMap>
+	
 	<select id="getMaterialPropertyByCondition" resultMap="materialProperty">
 		SELECT mp.ID,mp.Client,mp.Material,mp.Color,mp.Size,mp.Barcode,mp.Status,size.code as SizeCode,size.name as SizeName,
 		color.code as ColorCode,color.name as ColorName
@@ -34,4 +39,58 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="barCode !=null"> and mp.Barcode=#{barCode}</if>		
 	</select>
 
+	<select id="getMaterialPropertyByID" parameterType="string" resultMap="materialProperty">
+		SELECT 
+			a.ID,a.Client,a.Material,a.Color,a.Size,a.Barcode,a.Status
+		FROM MaterialProperty a
+		WHERE a.ID=#{id} 
+	</select>
+	
+	<select id="getMaterialPropertyPageByCondition" parameterType="java.util.Map" resultMap="materialPropertyPage">
+		SELECT 
+			a.ID,a.Client,a.Material,a.Color,a.Size,a.Barcode,a.Status,c.Name ClientName
+		FROM MaterialProperty a left outer join Client c
+		on a.Client = c.id and c.status = 1  
+		WHERE 
+			a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			order by a.ID desc
+			<if test="start != null and limit != null">
+				limit #{start},#{limit}
+			</if>
+	</select>
+	
+	<select id="getMaterialPropertyCountByCondition" parameterType="java.util.Map" resultType="int">
+		SELECT count(1)
+		FROM MaterialProperty a WHERE a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+	</select>
+	
+	<delete id="deleteMaterialPropertyByID" parameterType="string">
+		DELETE FROM MaterialProperty where ID =#{id}
+	</delete>
+	
+	<insert id="insertMaterialProperty" parameterType="materialProperty">
+		insert into MaterialProperty <include refid="materialPropertySet" />
+	</insert>
+	
+	<update id="updateMaterialProperty" parameterType="materialProperty" >
+		UPDATE MaterialProperty <include refid="materialPropertySet" /> WHERE ID = #{id}
+	</update>
+    
+    <sql id="materialPropertySet">
+		<set >
+			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
+			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
+			<if test= "material != null">Material=#{material.id,jdbcType=VARCHAR},</if >
+			<if test= "color != null">Color=#{color.id,jdbcType=VARCHAR},</if >
+			<if test= "size != null">Size=#{size.id,jdbcType=VARCHAR},</if >
+			<if test= "barCode != null">Barcode=#{barCode},</if >
+			<if test= "status != null">Status=#{status},</if >
+		</set>
+	</sql >
 </mapper>

@@ -1,0 +1,68 @@
+<style>
+    .page-list .pagination {float:left;}
+    .page-list .pagination span {cursor: pointer;}
+    .page-list .pagination .separate span{cursor: default; border-top:none;border-bottom:none;}
+    .page-list .pagination .separate span:hover {background: none;}
+    .page-list .page-total {float:left; margin: 25px 20px;}
+    .page-list .page-total input, .page-list .page-total select{height: 26px; border: 1px solid #ddd;}
+    .page-list .page-total input {width: 40px; padding-left:3px;}
+    .page-list .page-total select {width: 50px;}
+</style>
+<section class="content">
+	<div class="box">
+		<div class="box-header">
+			<h3 class="box-title">物料属性管理</h3>
+			<div class="box-tools">
+				<a class="btn btn-primary btn-flat" href="/backend/add/materialProperty"><i
+					class="fa fa-plus"></i> 添加</a> <a class="btn btn-danger btn-flat"
+					href="javascript:void(0)" ng-click="del()"><i class="fa fa-minus"></i> 删除</a>
+			</div>
+		</div>
+		<div class="box-header">
+			<div class="input-group input-group-sm" style="width: 250px;">
+				<input type="text" name="table_search"
+					class="form-control pull-right" placeholder="搜索" id="input1" ng-model="likeName">
+				<div class="input-group-btn">
+					<button type="submit" class="btn btn-primary" ng-click="queryByPage()">
+						<i class="fa fa-search"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="box-body">
+			<div class="table-responsive mailbox-messages">
+				<table class="table table-hover">
+					<tr>
+						<th width="30"><button type="button"
+								class="btn btn-default btn-sm checkbox-toggle">
+								<i class="fa fa-square-o"></i>
+							</button></th>
+						<th>GUID</th>
+						<th>商户</th>
+						<th>物料</th>
+						<th>颜色</th>
+						<th>尺码</th>
+						<th>条码</th>
+						<th>状态</th>
+						<th>操作</th>
+					</tr>
+					<tr ng-repeat="result in basicsInfo.results"  on-render-finish>
+						<td align="center"><input type="checkbox" ng-click="check(result.id,chk)" ng-model="chk"></td>
+		                <td>{{result.id}}</td>
+		                <td>{{result.client.name}}</td>
+		                <td>{{result.material.name}}</td>
+		                <td>{{result.color.name}}</td>
+		                <td>{{result.size.name}}</td>
+		                <td>{{result.barCode}}</td>
+						<td>{{showStatusDesc(result.status)}}</td>
+						<td><a href="/backend/edit/materialProperty/{{result.id}}" class="btn btn-info btn-xs">编辑</a></td>
+		            </tr>
+				</table>
+			</div>
+			<div class="row">
+				<tm-pagination conf="paginationConf"></tm-pagination>
+			</div>
+		</div>
+		<!-- /.box-body -->
+	</div>
+</section>

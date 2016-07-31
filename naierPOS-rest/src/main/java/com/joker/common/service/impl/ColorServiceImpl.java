@@ -37,7 +37,6 @@ public class ColorServiceImpl implements ColorService {
 	 * 根据商户查询颜色信息.
 	 * 
 	 * @param map
-	 * @param clientId
 	 * @param pageNo
 	 * @param limit
 	 * @return
@@ -59,6 +58,18 @@ public class ColorServiceImpl implements ColorService {
 		page.setTotalRecord(totalRecord);
 		page.setResults(list);
 		return page;
+	}
+
+	/**
+	 * 根据商户查询颜色信息.
+	 * 
+	 * @param map
+	 * @return
+	 */
+	@Override
+	public List<Color> getColorPageByCondition(Map<String, Object> map) {
+		List<Color> list = mapper.getColorPageByCondition(map);
+		return list;
 	}
 
 	@Override

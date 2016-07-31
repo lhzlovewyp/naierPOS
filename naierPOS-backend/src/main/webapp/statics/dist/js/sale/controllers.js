@@ -261,6 +261,27 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					$scope.selClientPayment = selectInfoMap[selClientPaymentValue];
 				}
 			}
+			if(routePath == 'materialProperty' && allSelectInfoMap['material']){
+				var selectInfoMap = allSelectInfoMap['material'];
+				if(data.material && data.material.id){
+					var selMaterialValue = data.material.id;
+					$scope.selMaterial = selectInfoMap[selMaterialValue];
+				}
+			}
+			if(routePath == 'materialProperty' && allSelectInfoMap['color']){
+				var selectInfoMap = allSelectInfoMap['color'];
+				if(data.color && data.color.id){
+					var selColorValue = data.color.id;
+					$scope.selColor = selectInfoMap[selColorValue];
+				}
+			}
+			if(routePath == 'materialProperty' && allSelectInfoMap['size']){
+				var selectInfoMap = allSelectInfoMap['size'];
+				if(data.size && data.size.id){
+					var selSizeValue = data.size.id;
+					$scope.selSize = selectInfoMap[selSizeValue];
+				}
+			}
 		}
 	}
 	
@@ -414,11 +435,15 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			querySelectInfo('material','materials',1);
 			querySelectInfo('unit','units',1);
 		}else if(routePath == 'material'){
-			querySelectInfo('brand','brands');
-			querySelectInfo('unit','units');
+			querySelectInfo('brand','brands',1);
+			querySelectInfo('unit','units',1);
 		}else if(routePath == 'promotionPayment'){
-			querySelectInfo('clientPayment','clientPayments');
-			querySelectInfo('promotion','promotions');
+			querySelectInfo('clientPayment','clientPayments',1);
+			querySelectInfo('promotion','promotions',1);
+		}else if(routePath == 'materialProperty'){
+			querySelectInfo('material','materials',1);
+			querySelectInfo('color','colors',1);
+			querySelectInfo('size','sizes',1);
 		}
 		queryBasicsInfoById();
 	}else{
@@ -445,6 +470,10 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		}else if(routePath == 'promotionPayment'){
 			querySelectInfo('clientPayment','clientPayments');
 			querySelectInfo('promotion','promotions');
+		}else if(routePath == 'materialProperty'){
+			querySelectInfo('material','materials');
+			querySelectInfo('color','colors');
+			querySelectInfo('size','sizes');
 		}
 	}
 	
@@ -587,6 +616,20 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 				var selClientPayment = $scope.selClientPayment;
 				if(selClientPayment){
 					$scope.form.clientPaymentId = selClientPayment.value;
+				}
+			}
+			if(routePath == 'materialProperty'){
+				var selMaterial = $scope.selMaterial;
+				if(selMaterial){
+					$scope.form.materialId = selMaterial.value;
+				}
+				var selColor = $scope.selColor;
+				if(selColor){
+					$scope.form.colorId = selColor.value;
+				}
+				var selSize = $scope.selSize;
+				if(selSize){
+					$scope.form.sizeId = selSize.value;
 				}
 			}
 			
