@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.joker.common.dto.MemberDto;
@@ -55,6 +56,9 @@ public class MemberService {
 				}
 
 				MemberDto memberDto = memberReturn.getData();
+				if(StringUtils.isEmpty(memberDto.getUser_id())){
+					return null;
+				}
 				Member member=new Member();
 				member.setMemberCode(memberDto.getCard_no());
 				member.setMember(memberDto.getUser_id());

@@ -22,10 +22,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 	
     <select id="getCurrentSalesConfig" parameterType="string" resultMap="salesConfig">
-    	SELECT s.ID,s.Client,s.Store,a.Terminal,s.SalesDate,s.MaxCode,s.Flag from SalesConfig s,
+    	SELECT s.ID,s.Client,s.Store,s.Terminal,s.SalesDate,s.MaxCode,s.Flag from SalesConfig s,
     	(SELECT Store,max(SalesDate) as SalesDate FROM SalesConfig WHERE Store = #{storeId} group by Store) b
     	where s.Store=b.Store and s.SalesDate=b.SalesDate and s.Store=#{storeId}
     </select>
+    
     
     <select id="getSalesConfigByID" parameterType="string" resultMap="salesConfig">
 		SELECT 

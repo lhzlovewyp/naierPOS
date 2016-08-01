@@ -22,6 +22,7 @@
 							<th>手机号</th>
 							<th>生日</th>
 							<th>积分</th>
+							<th>余额</th>
 						</tr>
 						<tr ng-click="choose(member);" ng-show="member!=null">
 							<td>{{member.memberCode}}</td>
@@ -29,6 +30,7 @@
 							<td>{{member.memberMobile}}</td>
 							<td>{{member.memberBirthDay}}</td>
 							<td>{{member.memberPoint}}</td>
+							<td>{{member.memberBalance}}</td>
 						</tr>
 						<tr ng-show="member==null" >
 							<td colspan="5">没有此会员</td>

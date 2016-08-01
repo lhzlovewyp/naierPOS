@@ -557,8 +557,45 @@ app.controller("discCtrl",['$scope','$location','SaleService','ngDialog',functio
 		ngDialog.close();
 	}
 }]);
-app.controller("payBarcodeCtrl",['$scope','$location','PayService','SaleService','ngDialog','$timeout',function($scope,$location,PayService,SaleService,ngDialog,$timeout){
+app.controller("payingCtrl",['$scope','$location','PayService','SaleService','MemberService','ngDialog','$timeout',function($scope,$location,PayService,SaleService,MemberService,ngDialog,$timeout){
 
+	$scope.searchMember=function(){
+		var value=$("#memberCode").val();
+		if(!value){
+			alert("请输入会员号");
+			return;
+		}
+		var form={memNo:value};
+		MemberService.getSinglerMember(form).then(function(obj){
+			var dto=obj.data.data;
+			if(obj.data.status==Status.SUCCESS && dto){
+                $scope.info.member=dto;
+            }else{
+            	$scope.info.member=null;
+            	alert('找不到会员.');
+            	return;
+            }
+		});
+		
+	}
+	
+	//现金和银行卡支付.
+	$scope.payCash=function(payment){
+		var form=$scope.cashForm;
+		if(!form || isNaN(form.amount)){
+			alert("请输入金额.");
+			return ;
+		}
+		//如果金额超过需要支付的金额，进行提示.
+		var amount=form.amount;
+		if((amount-0)> $scope.info.needPay){
+			alert("超出需要支付的金额.");
+			return;
+		}
+		payment.amount=amount;
+		$scope.loadPayInfo();
+		$scope.closeThisDialog();
+	}
 	$scope.submit=function(){
 		var channel=$scope.payChannel;
 		var payment=$scope.currPayment;
@@ -615,67 +652,49 @@ app.controller("payBarcodeCtrl",['$scope','$location','PayService','SaleService'
 }]);	
 app.controller("payCtrl",['$scope','$location','PayService','SaleService','ngDialog','$timeout',function($scope,$location,PayService,SaleService,ngDialog,$timeout){
 	
+	$scope.$watch("payments", function(newValue, oldValue){
+		loadPayInfo();
+	},true);
+	
+	
 	$scope.close=function(){
 		loadPayInfo();
 		ngDialog.close();
 	}
 	
 	$scope.pay=function(payment){
-		if(payment.selected==1){
-			payment.selected=0;
-			loadPayInfo();
-			return;
-		}else{
-			payment.selected=1;
-		}
-		//如果是select状态,需要判断支付类型.
-		if(payment.selected==1){
-			if(Status.CASH == payment.payment.code || Status.UNIONPAY_OFF == payment.payment.code){//现金支付 银行卡支付
-				loadPayInfo();
-			}else if(Status.BS_PREPAID == payment.payment.code){//百胜储值卡
-				  //支付金额为空判断.
-				  if(!checkPayEmpty(payment)){
-					  return false;
-				  }
-				  //百盛储值卡支付
-			}else if(Status.BS_COUPON == payment.payment.code){//百胜电子券
-				if(!checkPayEmpty(payment)){
-					  return false;
-				 }
-				//百盛电子券支付.
-			}else if(Status.BS_POINT == payment.payment.code){//百胜会员积分
-				if(!checkPayEmpty(payment)){
-					  return false;
-				 }
-				//百盛电子券支付.
-			}else if(Status.ALIPAY == payment.payment.code){//支付宝支付
-				if(!checkPayEmpty(payment)){
-					  return false;
-				 }
-				//支付宝支付只能作为最后一个支付渠道
-				//aliPay(payment,barcode,amount);
-				$scope.payChannel=1;
-				$scope.currPayment=payment.payment;
-				openPay();
-				
-			}else if(Status.WXPAY == payment.payment.code){//微信支付.
-				//微信支付只能作为最后一个支付渠道
-				if(!checkPayEmpty(payment)){
-					  return false;
-				 }
-				//wechatPay(payment,barcode);
-				$scope.payChannel=2;
-				$scope.currPayment=payment.payment;
-				openPay();
-			}
-		}
-		
+		openPay(payment);
 	}
 	//打开支付.
-	function openPay(){
+	function openPay(payment){
+		var paymentCode=payment.payment.code;
+		var payTemplate="";
+		$scope.currPayment=payment;
+		switch(paymentCode)
+		{
+		case Status.CASH://现金支付
+		case Status.UNIONPAY_OFF://银行卡支付
+			payPayment="payCash";
+		  	break;
+		case Status.BS_PREPAID://百胜储值卡
+			payPayment="payPrepaid";	
+			  break;
+		case Status.BS_COUPON://百胜电子券
+			payPayment="payCoupon";
+			  break;
+		case Status.BS_POINT://百胜会员积分.
+			payPayment="payPoint";
+			  break;
+		case Status.ALIPAY://支付宝支付.
+		case Status.WXPAY://微信支付.
+			payPayment="payAlipay";
+			  break;
+		default:
+		  break;
+		}	
 		ngDialog.open({
-			template:"payBarcode",
-			controller:"payBarcodeCtrl",
+			template:payPayment,
+			controller:"payingCtrl",
 			scope:$scope,
 			preCloseCallback:function(value){
 				//关闭支付之前,判断是否已经支付完成，如果没有支付，则把当前payment设置为未支付状态.
@@ -730,6 +749,8 @@ app.controller("payCtrl",['$scope','$location','PayService','SaleService','ngDia
 		payment.selected=1;
 		return true;
 	}
+	
+	$scope.loadPayInfo=loadPayInfo;
 	//基于目前的支付信息，刷新支付数据.
 	function loadPayInfo(){
 		var info=$scope.info;
@@ -741,8 +762,11 @@ app.controller("payCtrl",['$scope','$location','PayService','SaleService','ngDia
 		var payed=0;
 		for(var i=0;i<payments.length;i++){
 			var payment=payments[i];
-			if(payment.selected ==1 ){
+			if(payment.amount && payment.amount >0){
+				payment.selected=1;
 				payed += parseFloat(payment.amount || 0);
+			}else{
+				payment.selected=0;
 			}
 		}
 		info.payed=payed.toFixed(2);

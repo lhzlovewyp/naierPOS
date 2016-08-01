@@ -7,26 +7,146 @@
 		<div class="row">
 			<div>
 				<ul class="payment-ul">
-					<li ng-repeat="payment in payments"
-						id="payment_{{payment.payment.code}}">
-						<a class="btn btn-default btn-flat" href="javascript:;;" ng-click="pay(payment);">
-							<i class="fa fa-check" ng-show="payment.selected==1"></i>
-							{{payment.payment.name}}</a> 
-						     <input type="text" class="form-control" value="{{payment.amount}}" ng-model="payment.amount">
-						</li>
+					<li ng-repeat="payment in payments" id="payment_{{payment.payment.code}}">
+						<a class="btn btn-default btn-flat" href="javascript:;;" ng-click="pay(payment);">{{payment.payment.name}}</a> 
+						<input type="text" readonly class="form-control" ng-model="payment.amount">
+ 					</li>
 				</ul>
 			</div>
 		</div>
 	</div>
 	<div class="modal-footer">
-		<button type="button" id="payClose" class="btn btn-default" ng-click="close();">取消付款</button>
+		<button type="button" id="payClose" class="btn btn-default"
+			ng-click="close();">取消付款</button>
 		<button type="submit" class="btn btn-primary" ng-click="submit();">完成付款</button>
 	</div>
 </div>
 
-<script type="text/ng-template" id="payBarcode">
-	<div>
-		<input type="text" value="" ng-model="barcode">
-        <button type="button" value="提交" ng-click="submit();">提交</buttont>
-   </div>
+<script type="text/ng-template" id="payCash">
+<div class="payment-detail">
+	<form class="form-horizontal">
+		<div class="box-body detail-1">
+			<div class="form-group">
+				<label class="col-sm-4 control-label">支付金额</label>
+				<div class="col-sm-7">
+					<input type="text" class="form-control"  value="0.00" ng-model="cashForm.amount">
+				</div>
+			</div>
+		</div>
+		<div>
+			<button class="btn btn-default" type="submit" ng-click="cliseThisDialog();">取消</button>
+			<button class="btn btn-info pull-right" type="submit" ng-click="payCash(currPayment)">确认</button>
+		</div>
+	</form>
+</div>
+</script>
+
+<script type="text/ng-template" id="payPrepaid">
+<div class="payment-detail">
+	<form class="form-horizontal">
+		<div class="box-body detail-2">
+			<div class="form-group">
+				<label class="col-sm-5 control-label">卡号</label>
+				<div>
+					<input type="text" class="" value="{{info.member.memberCode}}" id="memberCode" name="memberCode">
+					<button  type="submit" ng-click="searchMember();">查询</button>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-5 control-label">卡余额</label>
+				<div class="col-sm-7">{{info.member.memberBalance}}</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-5 control-label">本次支付金额</label>
+				<div class="col-sm-7">
+					<input type="text" class="form-control" value="" ng-model="prepaidForm.amount">
+				</div>
+			</div>
+		</div>
+		<div>
+			<button class="btn btn-default" type="submit" ng-click="closeThisDialog();">取消</button>
+			<button class="btn btn-info pull-right" type="submit" ng-click="prepaidPay(currPayment);">确认</button>
+		</div>
+	</form>
+</div>
+</script>
+
+<script type="text/ng-template" id="payCoupon">
+	<div class="payment-detail">
+		<form class="form-horizontal">
+			<div class="box-body detail-4">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">券号</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" value="0.00">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label">面值</label>
+					<div class="col-sm-7">100.00</div>
+				</div>
+			</div>
+			<div>
+				<button class="btn btn-default" type="submit" ng-click="closeThisDialog();">取消</button>
+				<button class="btn btn-info pull-right" type="submit" onclick="$('.payment-detail').remove()">确认</button>
+			</div>
+		</form>
+	</div>
+</script>
+
+<script type="text/ng-template" id="payPoint">
+	<div class="payment-detail">
+		<form class="form-horizontal">
+			<div class="box-body detail-6">
+				<div class="form-group">
+					<label class="col-sm-5 control-label">积分余额</label>
+					<div class="col-sm-7">3450</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-5 control-label">共可抵用现金</label>
+					<div class="col-sm-7">34.50</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-5 control-label">本次支付积分</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" value="0.00">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-5 control-label">本次抵用现金</label>
+					<div class="col-sm-7">34.50</div>
+				</div>
+			</div>
+			
+			<div>
+				<button class="btn btn-default" type="submit" ng-click="closeThisDialog();">取消</button>
+				<button class="btn btn-info pull-right" type="submit" >确认</button>
+			</div>
+		</form>
+	</div>
+</script>
+
+<script type="text/ng-template" id="payAlipay">
+	<div class="payment-detail">
+		<form class="form-horizontal">
+			<div class="box-body detail-5">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">账户</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" value="">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label">支付金额</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" value="{{info.needPay || 0}}" readonly>
+					</div>
+				</div>
+			</div>
+			<div>
+				<button class="btn btn-default" type="submit" ng-click="closeThisDialog();">取消</button>
+				<button class="btn btn-info pull-right" type="submit" ng-click="">确认</button>
+			</div>
+		</form>
+	</div>
 </script>
