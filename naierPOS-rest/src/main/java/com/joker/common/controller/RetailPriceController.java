@@ -185,8 +185,8 @@ public class RetailPriceController extends AbstractController {
 		if (params.get("price") != null) {
 			price = String.valueOf(params.get("price"));
 		}
-		String effectiveDateStr = (String) params.get("effectiveDateStr");
-		String expiryDateStr = (String) params.get("expiryDateStr");
+		String effectiveDate = (String) params.get("effectiveDate");
+		String expiryDate = (String) params.get("expiryDate");
 		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(storeId)) {
@@ -209,12 +209,12 @@ public class RetailPriceController extends AbstractController {
 			rbody.setMsg("请输入销售价格！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(effectiveDateStr)) {
+		if (StringUtils.isBlank(effectiveDate)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入生效日期！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(expiryDateStr)) {
+		if (StringUtils.isBlank(expiryDate)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入失效日期！");
 			return rbody;
@@ -236,9 +236,9 @@ public class RetailPriceController extends AbstractController {
 			RetailPrice retailPrice = new RetailPrice();
 			retailPrice.setId(UUID.randomUUID().toString());
 			retailPrice.setPrice(new BigDecimal(price));
-			retailPrice.setExpiryDate(DatetimeUtil.toDate(expiryDateStr,
+			retailPrice.setExpiryDate(DatetimeUtil.toDate(expiryDate,
 					DatetimeUtil.DATE));
-			retailPrice.setEffectiveDate(DatetimeUtil.toDate(effectiveDateStr,
+			retailPrice.setEffectiveDate(DatetimeUtil.toDate(effectiveDate,
 					DatetimeUtil.DATE));
 			retailPrice.setClient(client);
 			retailPrice.setCreated(new Date());
@@ -291,8 +291,8 @@ public class RetailPriceController extends AbstractController {
 			price = String.valueOf(params.get("price"));
 		}
 
-		String effectiveDateStr = (String) params.get("effectiveDateStr");
-		String expiryDateStr = (String) params.get("expiryDateStr");
+		String effectiveDate = (String) params.get("effectiveDate");
+		String expiryDate = (String) params.get("expiryDate");
 		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(id)) {
@@ -320,12 +320,12 @@ public class RetailPriceController extends AbstractController {
 			rbody.setMsg("请输入销售价格！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(effectiveDateStr)) {
+		if (StringUtils.isBlank(effectiveDate)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入生效日期！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(expiryDateStr)) {
+		if (StringUtils.isBlank(expiryDate)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入失效日期！");
 			return rbody;
@@ -347,9 +347,9 @@ public class RetailPriceController extends AbstractController {
 			RetailPrice retailPrice = new RetailPrice();
 			retailPrice.setId(id);
 			retailPrice.setPrice(new BigDecimal(price));
-			retailPrice.setExpiryDate(DatetimeUtil.toDate(expiryDateStr,
+			retailPrice.setExpiryDate(DatetimeUtil.toDate(expiryDate,
 					DatetimeUtil.DATE));
-			retailPrice.setEffectiveDate(DatetimeUtil.toDate(effectiveDateStr,
+			retailPrice.setEffectiveDate(DatetimeUtil.toDate(effectiveDate,
 					DatetimeUtil.DATE));
 			retailPrice.setClient(client);
 			retailPrice.setModified(new Date());

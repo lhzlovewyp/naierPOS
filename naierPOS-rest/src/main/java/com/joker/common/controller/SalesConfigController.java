@@ -177,18 +177,18 @@ public class SalesConfigController extends AbstractController {
 		Map params = paramsBody.getBody();
 		String storeId = (String) params.get("storeId");
 		String terminalId = (String) params.get("terminalId");
-		String salesDateStr = (String) params.get("salesDateStr");
+		String salesDate = (String) params.get("salesDate");
 		String maxCode = null;
-		if(params.get("maxCode") != null){
+		if (params.get("maxCode") != null) {
 			maxCode = String.valueOf(params.get("maxCode"));
 		}
 		String flag = null;
-		if(params.get("flag") != null){
+		if (params.get("flag") != null) {
 			flag = String.valueOf(params.get("flag"));
 		}
 		String clientId = (String) params.get("clientId");
 
-		if (StringUtils.isBlank(salesDateStr)) {
+		if (StringUtils.isBlank(salesDate)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入营业日期！");
 			return rbody;
@@ -221,7 +221,7 @@ public class SalesConfigController extends AbstractController {
 			salesConfig.setId(UUID.randomUUID().toString());
 			salesConfig.setFlag(Integer.valueOf(flag));
 			salesConfig.setMaxCode(Integer.valueOf(maxCode));
-			salesConfig.setSalesDate(DatetimeUtil.toDate(salesDateStr,
+			salesConfig.setSalesDate(DatetimeUtil.toDate(salesDate,
 					DatetimeUtil.DATE));
 			salesConfig.setClient(client);
 			salesConfig.setCreated(new Date());
@@ -266,13 +266,13 @@ public class SalesConfigController extends AbstractController {
 		String id = (String) params.get("id");
 		String storeId = (String) params.get("storeId");
 		String terminalId = (String) params.get("terminalId");
-		String salesDateStr = (String) params.get("salesDateStr");
+		String salesDate = (String) params.get("salesDate");
 		String maxCode = null;
-		if(params.get("maxCode") != null){
+		if (params.get("maxCode") != null) {
 			maxCode = String.valueOf(params.get("maxCode"));
 		}
 		String flag = null;
-		if(params.get("flag") != null){
+		if (params.get("flag") != null) {
 			flag = String.valueOf(params.get("flag"));
 		}
 		String clientId = (String) params.get("clientId");
@@ -282,7 +282,7 @@ public class SalesConfigController extends AbstractController {
 			rbody.setMsg("记录唯一信息缺失，请刷新页面！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(salesDateStr)) {
+		if (StringUtils.isBlank(salesDate)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入营业日期！");
 			return rbody;
@@ -315,7 +315,7 @@ public class SalesConfigController extends AbstractController {
 			salesConfig.setId(id);
 			salesConfig.setFlag(Integer.valueOf(flag));
 			salesConfig.setMaxCode(Integer.valueOf(maxCode));
-			salesConfig.setSalesDate(DatetimeUtil.toDate(salesDateStr,
+			salesConfig.setSalesDate(DatetimeUtil.toDate(salesDate,
 					DatetimeUtil.DATE));
 			salesConfig.setClient(client);
 			salesConfig.setModified(new Date());

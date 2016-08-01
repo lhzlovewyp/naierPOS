@@ -3,6 +3,7 @@
  */
 package com.joker.common.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.joker.common.model.Color;
@@ -32,6 +33,14 @@ public interface ColorService {
 	 */
 	public Page<Color> getColorPageByCondition(Map<String, Object> map,
 			int pageNo, int limit);
+
+	/**
+	 * 查询颜色信息.
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public List<Color> getColorPageByCondition(Map<String, Object> map);
 
 	/**
 	 * 删除颜色信息.

@@ -54,20 +54,11 @@
 		                <td>{{result.client.name}}</td>
 		                <td>{{result.code}}</td>
 		                <td>{{result.name}}</td>
-		                <td ng-if="result.loginTerminal == 1">允许</td>
-						<td ng-if="!result.loginTerminal || result.loginTerminal != 1">不允许</td>
-						
-						<td ng-if="result.loginAdmin == 1">允许</td>
-						<td ng-if="!result.loginAdmin || result.loginAdmin != 1">不允许</td>
-						
-						<td ng-if="result.itemDISC == 1">允许</td>
-						<td ng-if="!result.itemDISC || result.itemDISC != 1">不允许</td>
-						
-						<td ng-if="result.allDISC == 1">允许</td>
-						<td ng-if="!result.allDISC || result.allDISC != 1">不允许</td>
-						
-						<td ng-if="result.status == 1">有效</td>
-						<td ng-if="!result.status || result.status != 1">无效</td>
+						<td>{{showAllowDesc(result.loginTerminal)}}</td>
+						<td>{{showAllowDesc(result.loginAdmin)}}</td>
+						<td>{{showAllowDesc(result.itemDISC)}}</td>
+						<td>{{showAllowDesc(result.allDISC)}}</td>
+						<td>{{showStatusDesc(result.status)}}</td>
 						<td><a href="/backend/edit/role/{{result.id}}" class="btn btn-info btn-xs">编辑</a></td>
 		            </tr>
 				</table>

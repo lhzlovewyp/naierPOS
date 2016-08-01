@@ -27,6 +27,11 @@ public class AccountStoreServiceImpl implements AccountStoreService {
 	}
 
 	@Override
+	public void deleteAccountStoreByCondition(AccountStore accountStore) {
+		mapper.deleteAccountStoreByCondition(accountStore);
+	}
+	
+	@Override
 	public void updateAccountStore(AccountStore accountStore) {
 		mapper.updateAccountStore(accountStore);
 

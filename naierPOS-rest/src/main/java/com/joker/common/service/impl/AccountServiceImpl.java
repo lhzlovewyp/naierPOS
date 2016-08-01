@@ -101,7 +101,15 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public Account getAccountByID(String id) {
-		return mapper.getAccountByID(id);
+		Account account = mapper.getAccountByID(id);
+		if (account != null) {
+			// 获取账号对应的角色信息.
+			List<Role> roles = roleService.getRoleByAccountId(id);
+			if (CollectionUtils.isNotEmpty(roles)) {
+				account.setRoles(roles);
+			}
+		}
+		return account;
 	}
 
 	/**
@@ -127,21 +135,32 @@ public class AccountServiceImpl implements AccountService {
 		if (CollectionUtils.isNotEmpty(list)) {
 			Map<String, Store> cacheMap = new HashMap<String, Store>();
 			for (Account account : list) {
-				if (account != null && account.getStore() != null
-						&& StringUtils.isNotBlank(account.getStore().getId())) {
-					String storeId = account.getStore().getId();
-					Store store = null;
-					if (cacheMap.containsKey(storeId)) {
-						store = cacheMap.get(storeId);
-					} else {
-						store = storeMapper.getStoreById(account.getStore()
-								.getId());
+				if (account != null) {
+					if (account.getStore() != null
+							&& StringUtils.isNotBlank(account.getStore()
+									.getId())) {
+						String storeId = account.getStore().getId();
+						Store store = null;
+						if (cacheMap.containsKey(storeId)) {
+							store = cacheMap.get(storeId);
+						} else {
+							store = storeMapper.getStoreById(storeId);
+							if (store != null) {
+								cacheMap.put(storeId, store);
+							}
+						}
 						if (store != null) {
-							cacheMap.put(storeId, store);
+							account.setStore(store);
 						}
 					}
-					if (store != null) {
-						account.setStore(store);
+
+					if (account.getId() != null) {
+						// 获取账号对应的角色信息.
+						List<Role> roles = roleService
+								.getRoleByAccountId(account.getId());
+						if (CollectionUtils.isNotEmpty(roles)) {
+							account.setRoles(roles);
+						}
 					}
 				}
 			}
@@ -170,6 +189,45 @@ public class AccountServiceImpl implements AccountService {
 	public void updateAccount(Account account) {
 		mapper.updateAccount(account);
 
+		if (account.getClient() != null
+				&& StringUtils.isNotBlank(account.getClient().getId())) {
+			Client client = account.getClient();
+			AccountStore delBean = new AccountStore();
+			delBean.setAccount(account);
+			accountStoreMapper.deleteAccountStoreByCondition(delBean);
+
+			if (account.getStore() != null
+					&& StringUtils.isNotBlank(account.getStore().getId())) {
+				AccountStore accountStore = new AccountStore();
+				if (StringUtils.isBlank(accountStore.getId())) {
+					accountStore.setId(UUID.randomUUID().toString());
+				}
+				accountStore.setClient(client);
+				accountStore.setStatus(Constants.STATUS_SUCCESS);
+				accountStore.setStore(account.getStore());
+				accountStore.setAccount(account);
+				accountStoreMapper.insertAccountStore(accountStore);
+			}
+
+			AccountRole delRoleBean = new AccountRole();
+			delRoleBean.setAccount(account);
+			accountRoleMapper.deleteAccountRoleByCondition(delRoleBean);
+			if (CollectionUtils.isNotEmpty(account.getRoles())) {
+				Date createTime = account.getCreated();
+				String creator = account.getCreator();
+				for (Role role : account.getRoles()) {
+					AccountRole accountRole = new AccountRole();
+					accountRole.setId(UUID.randomUUID().toString());
+					accountRole.setAccount(account);
+					accountRole.setClient(client);
+					accountRole.setRole(role);
+					accountRole.setStatus(Constants.STATUS_SUCCESS);
+					accountRole.setCreated(createTime);
+					accountRole.setCreator(creator);
+					accountRoleMapper.insertAccountRole(accountRole);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -191,6 +249,7 @@ public class AccountServiceImpl implements AccountService {
 				accountStore.setClient(client);
 				accountStore.setStatus(Constants.STATUS_SUCCESS);
 				accountStore.setStore(account.getStore());
+				accountStore.setAccount(account);
 				accountStoreMapper.insertAccountStore(accountStore);
 			}
 

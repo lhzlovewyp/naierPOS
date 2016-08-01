@@ -6,45 +6,45 @@ package com.joker.common.model;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
-
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author lvhaizhen
- *
+ * 
  */
-public class Account extends BaseModel{
+public class Account extends BaseModel {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7785689455622734636L;
 
-	//商户
+	// 商户
 	private Client client;
-	//门店
+	// 门店
 	private Store store;
-	//用户名
+	// 用户名
 	private String name;
-	//昵称
+	// 昵称
 	private String nick;
-	//密码
+	// 密码
 	private String password;
-	//修改密码
+	// 修改密码
 	private String changePWD;
-	//图片信息
+	// 图片信息
 	private String displayPhoto;
-	//token
+	// token
 	private String token;
-	
-	private String loginPOS="0";
-	
-	private String loginAdmin="0";
-	
-	private String itemDISC="0";
-	
-	private String allDISC="0";
-	
-	//当前用户下所属的角色.
+
+	private String loginPOS = "0";
+
+	private String loginAdmin = "0";
+
+	private String itemDISC = "0";
+
+	private String allDISC = "0";
+
+	// 当前用户下所属的角色.
 	private List<Role> roles;
 
 	public Client getClient() {
@@ -78,8 +78,6 @@ public class Account extends BaseModel{
 	public void setNick(String nick) {
 		this.nick = nick;
 	}
-
-	
 
 	public String getPassword() {
 		return password;
@@ -123,19 +121,19 @@ public class Account extends BaseModel{
 
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
-		
-		if(CollectionUtils.isNotEmpty(roles)){
-			for(Role role:roles){
-				if(role.getLoginTerminal().equals("1")){
+
+		if (CollectionUtils.isNotEmpty(roles)) {
+			for (Role role : roles) {
+				if ("1".equals(role.getLoginTerminal())) {
 					this.setLoginPOS("1");
 				}
-				if(role.getLoginAdmin().equals("1")){
+				if ("1".equals(role.getLoginAdmin())) {
 					this.setLoginAdmin("1");
 				}
-				if(role.getItemDISC().equals("1")){
+				if ("1".equals(role.getItemDISC())) {
 					this.setItemDISC("1");
 				}
-				if(role.getAllDISC().equals("1")){
+				if ("1".equals(role.getAllDISC())) {
 					this.setAllDISC("1");
 				}
 			}
@@ -173,6 +171,19 @@ public class Account extends BaseModel{
 	public void setAllDISC(String allDISC) {
 		this.allDISC = allDISC;
 	}
-	
-	
+
+	public String getAllRoleName() {
+		String roleName = "";
+		if (CollectionUtils.isNotEmpty(roles)) {
+			for (Role role : roles) {
+				if (role != null && StringUtils.isNotBlank(role.getName())) {
+					if (StringUtils.isNotBlank(roleName)) {
+						roleName += ",";
+					}
+					roleName += role.getName();
+				}
+			}
+		}
+		return roleName;
+	}
 }

@@ -1,5 +1,8 @@
 package com.joker.common.mapper;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Repository;
 
 import com.joker.common.model.Client;
@@ -23,6 +26,8 @@ public interface ClientMapper {
 	 */
 	@DataSource("slave")
 	public Client getClientByCode(String code);
+	
+	public List<Client> getClientPageByCondition(Map<String, Object> map);
 	
 	/**
 	 * 根据code删除商户信息.

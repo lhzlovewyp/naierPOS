@@ -28,7 +28,7 @@ public class PromotionParserFactory {
 		//当前促销活动是否可以同时享受 0-不行 1-可以.
 		String offerRelation=promotion.getOfferRelation();
 		//促销优惠是否可以叠加.0-否 1-是.
-		int repeat=promotion.getRepeat();
+		int repeatEffect=promotion.getRepeatEffect();
 		//获取所有的促销活动.
 		List<PromotionOffer> offers=promotion.getPromotionOffers();
 		

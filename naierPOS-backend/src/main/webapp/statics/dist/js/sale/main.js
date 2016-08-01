@@ -20,7 +20,7 @@ Date.prototype.format = function (format) {
     }
 
 
-var app=angular.module('mainApp',['ngRoute','tm.pagination','ngDialog']);
+var app=angular.module('mainApp',['ngRoute','tm.pagination','ngDialog', 'isteven-multi-select']);
 
 //app.factory('statusInterceptor', ['$q','$location',function($q,$location) {
 //    var statusInterceptor = {

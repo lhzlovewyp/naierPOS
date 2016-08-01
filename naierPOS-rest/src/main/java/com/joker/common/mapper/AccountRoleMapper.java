@@ -16,6 +16,15 @@ public interface AccountRoleMapper {
 	 */
 	@DataSource("master")
 	public void deleteAccountRoleByID(String id);
+	
+	/**
+	 * 删除账户和门店关联信息.
+	 * 
+	 * @param accountRole
+	 * @return
+	 */
+	@DataSource("master")
+	public void deleteAccountRoleByCondition(AccountRole accountRole);
 
 	/**
 	 * 修改账户和门店关联信息.

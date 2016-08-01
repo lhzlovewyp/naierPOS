@@ -16,7 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="expDate" column="ExpiryDate" />
 		<result property="effTime" column="EffectiveTime" />
 		<result property="expTime" column="ExpiryTime" />
-		<result property="repeat" column="Repeat" />
+		<result property="repeatEffect" column="RepeatEffect" />
 		<result property="week" column="Week" />
 		<result property="days" column="Days" />
 		<result property="paymentRestrict" column="PaymentRestrict" />
@@ -27,6 +27,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="created" column="Created" />
 		<result property="editor" column="Editor" />
 		<result property="modified" column="Modified" />
+	</resultMap>
+	
+	<resultMap type="promotion" id="promotionPage" extends="promotion">
+		<result property="client.name" column="ClientName" />
 	</resultMap>
 	
 	<resultMap type="promotionPayment" id="promotionPayment">
@@ -107,7 +111,84 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE pcmc.promotionCondition=#{conditionId}
     	
     </select>
-    
 	
-
+	<select id="getPromotionByID" parameterType="string" resultMap="promotion">
+		SELECT 
+			a.ID,a.Client,a.Code,a.Name,a.Memo,a.EffectiveDate,a.ExpiryDate,a.EffectiveTime,a.ExpiryTime
+			,a.RepeatEffect,a.Week,a.Days,a.PaymentRestrict,a.MemberRestrict,a.OfferRelation,a.Excluded
+			,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+		FROM Promotion a
+		WHERE a.ID=#{id} 
+	</select>
+	
+	<select id="getPromotionPageByCondition" parameterType="java.util.Map" resultMap="promotionPage">
+		SELECT 
+			a.ID,a.Client,a.Code,a.Name,a.Memo,a.EffectiveDate,a.ExpiryDate,a.EffectiveTime,a.ExpiryTime
+			,a.RepeatEffect,a.Week,a.Days,a.PaymentRestrict,a.MemberRestrict,a.OfferRelation,a.Excluded
+			,a.Status,a.Creator,a.Created,a.Editor,a.Modified,c.Name ClientName
+		FROM Promotion a left outer join Client c
+		on a.Client = c.id and c.status = 1 
+		WHERE 
+			a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
+			order by a.ID desc
+			<if test="start != null and limit != null">
+				limit #{start},#{limit}
+			</if>
+	</select>
+	
+	<select id="getPromotionCountByCondition" parameterType="java.util.Map" resultType="int">
+		SELECT count(1)
+		FROM Promotion a WHERE 
+			a.Status= 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="likeName != null">
+				and a.name like CONCAT('%','${likeName}','%' )  
+			</if>
+	</select>
+	
+	<delete id="deletePromotionByID" parameterType="string">
+		DELETE FROM Promotion where ID =#{id}
+	</delete>
+	
+	<insert id="insertPromotion" parameterType="promotion">
+		insert into Promotion <include refid="promotionSet" />
+	</insert>
+	
+	<update id="updatePromotion" parameterType="promotion" >
+		UPDATE Promotion <include refid="promotionSet" /> WHERE ID = #{id}
+	</update>
+    
+    <sql id="promotionSet">
+		<set >
+			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
+			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
+			<if test= "code != null">Code=#{code,jdbcType=VARCHAR},</if >
+			<if test= "name != null">Name=#{name,jdbcType=VARCHAR},</if >
+			<if test= "memo != null">Memo=#{memo},</if >
+			<if test= "effDate != null">EffectiveDate=#{effDate},</if >
+			<if test= "expDate != null">ExpiryDate=#{expDate},</if >
+			<if test= "effTime != null">EffectiveTime=#{effTime},</if >
+			<if test= "expTime != null">ExpiryTime=#{expTime},</if >
+			<if test= "repeatEffect != null">RepeatEffect=#{repeatEffect},</if >
+			<if test= "week != null">Week=#{week},</if >
+			<if test= "days != null">Days=#{days},</if >
+			<if test= "paymentRestrict != null">PaymentRestrict=#{paymentRestrict},</if >
+			<if test= "memberRestrict != null">MemberRestrict=#{memberRestrict},</if >
+			<if test= "offerRelation != null">OfferRelation=#{offerRelation},</if >
+			<if test= "excluded != null">Excluded=#{excluded},</if >
+			<if test= "status != null">Status=#{status},</if >
+			<if test= "creator != null">Creator=#{creator},</if >
+			<if test= "created != null">Created=#{created},</if >
+			<if test= "editor != null">Editor=#{editor,jdbcType=VARCHAR},</if >
+			<if test= "modified != null">Modified=#{modified},</if >
+		</set>
+	</sql >
 </mapper>

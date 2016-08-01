@@ -28,6 +28,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM Client WHERE Status = 1 and Code = #{code}
 	</select>
 	
+	<select id="getClientPageByCondition" parameterType="java.util.Map" resultMap="client">
+		SELECT 
+			a.ID,a.Code,a.Name,a.Address,a.Contacts,a.MAXStore,a.MAXTerminal,a.Creator
+			,a.created,a.Editor,a.Modified,c.Name ClientName
+		FROM Client a
+		WHERE 
+			a.Status= 1
+			order by a.ID desc
+			<if test="start != null and limit != null">
+				limit #{start},#{limit}
+			</if>
+	</select>
+	
 	<delete id="deleteClientByCode" parameterType="string">
 		DELETE FROM Client where Code =#{code}
 	</delete>

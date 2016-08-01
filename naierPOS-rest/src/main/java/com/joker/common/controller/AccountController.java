@@ -224,7 +224,6 @@ public class AccountController extends AbstractController {
 		String clientId = (String) params.get("clientId");
 		String storeId = (String) params.get("storeId");
 		String roleId = (String) params.get("roleId");
-		String status = (String) params.get("status");
 
 		if (StringUtils.isBlank(name)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -264,7 +263,6 @@ public class AccountController extends AbstractController {
 			addAccount.setPassword(password);
 			addAccount.setCreated(new Date());
 			addAccount.setCreator(account.getId());
-			addAccount.setStatus(status);
 
 			if (StringUtils.isNotBlank(storeId)) {
 				Store store = new Store();
@@ -272,14 +270,121 @@ public class AccountController extends AbstractController {
 				addAccount.setStore(store);
 			}
 			if (StringUtils.isNotBlank(roleId)) {
-				Role role = new Role();
-				role.setId(roleId);
+				String[] roleIdArr = roleId.split(",");
 				List<Role> roles = new ArrayList<Role>();
-				roles.add(role);
+				for (int i = 0; i < roleIdArr.length; i++) {
+					String oneRoleId = roleIdArr[i];
+					Role role = new Role();
+					role.setId(oneRoleId);
+					roles.add(role);
+				}
 				addAccount.setRoles(roles);
 			}
 
 			accountService.insertAccount(addAccount);
+			rbody.setStatus(ResponseState.SUCCESS);
+		}else{
+			rbody.setStatus(ResponseState.ERROR);
+			rbody.setMsg("请登录！");
+		}
+		// 数据返回时永远返回true.
+		return rbody;
+	}
+	
+	/**
+	 * 更新账户信息.
+	 * 
+	 * @param paramsBody
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = { "/account/update" }, method = RequestMethod.POST)
+	@NotNull(value = "token")
+	@ResponseBody
+	public ReturnBody update(@RequestBody ParamsBody paramsBody,
+			HttpServletRequest request, HttpServletResponse response) {
+		ReturnBody rbody = new ReturnBody();
+		// 参数校验
+		Map params = paramsBody.getBody();
+		String id = (String) params.get("id");
+		String name = (String) params.get("name");
+		String nick = (String) params.get("nick");
+		String password = (String) params.get("password");
+		String changePWD = (String) params.get("changePWD");
+		String clientId = (String) params.get("clientId");
+		String storeId = (String) params.get("storeId");
+		String roleId = (String) params.get("roleId");
+		String status = (String) params.get("status");
+
+		if (StringUtils.isBlank(id)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("记录唯一信息缺失，请刷新页面！");
+			return rbody;
+		}
+		if (StringUtils.isBlank(name)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入账户！");
+			return rbody;
+		}
+		if (StringUtils.isBlank(nick)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入昵称！");
+			return rbody;
+		}
+		if (StringUtils.isBlank(password)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入密码！");
+			return rbody;
+		}
+		if (StringUtils.isBlank(clientId)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入商户！");
+			return rbody;
+		}
+		if (StringUtils.isBlank(status)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入状态！");
+			return rbody;
+		}
+
+		String token = paramsBody.getToken();
+		Object user = CacheFactory.getCache().get(token);
+		if (user != null) {
+			Account loginAccount = (Account) user;
+
+			Client client = new Client();
+			client.setId(clientId);
+
+			Account account = new Account();
+			account.setId(id);
+			account.setChangePWD(changePWD);
+			account.setName(name);
+			account.setNick(nick);
+			account.setClient(client);
+			account.setPassword(password);
+			account.setCreated(new Date());
+			account.setCreator(loginAccount.getId());
+			account.setStatus(status);
+
+			if (StringUtils.isNotBlank(storeId)) {
+				Store store = new Store();
+				store.setId(storeId);
+				account.setStore(store);
+			}
+			if (StringUtils.isNotBlank(roleId)) {
+				String[] roleIdArr = roleId.split(",");
+				List<Role> roles = new ArrayList<Role>();
+				for (int i = 0; i < roleIdArr.length; i++) {
+					String oneRoleId = roleIdArr[i];
+					Role role = new Role();
+					role.setId(oneRoleId);
+					roles.add(role);
+				}
+				account.setRoles(roles);
+			}
+
+			accountService.updateAccount(account);
 			rbody.setStatus(ResponseState.SUCCESS);
 		}else{
 			rbody.setStatus(ResponseState.ERROR);

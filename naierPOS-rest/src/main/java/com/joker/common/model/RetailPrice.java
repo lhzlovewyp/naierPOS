@@ -88,23 +88,4 @@ public class RetailPrice extends BaseModel {
 	public void setExpiryDate(Date expiryDate) {
 		this.expiryDate = expiryDate;
 	}
-
-	public String getEffectiveDateStr() {
-		String dateStr = "";
-		if (effectiveDate != null) {
-			dateStr = DatetimeUtil.formatDateToString(effectiveDate,
-					DatetimeUtil.DATE);
-		}
-		return dateStr;
-	}
-
-	public String getExpiryDateStr() {
-		String dateStr = "";
-		if (expiryDate != null) {
-			dateStr = DatetimeUtil.formatDateToString(expiryDate,
-					DatetimeUtil.DATE);
-		}
-		return dateStr;
-	}
-
 }

@@ -1,5 +1,6 @@
 package com.joker.common.controller;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +20,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.joker.common.model.Account;
+import com.joker.common.model.Brand;
 import com.joker.common.model.Client;
 import com.joker.common.model.Material;
+import com.joker.common.model.MaterialCategory;
 import com.joker.common.model.RetailPrice;
 import com.joker.common.model.SalesConfig;
 import com.joker.common.model.Unit;
@@ -223,21 +227,58 @@ public class MaterialController extends AbstractController {
 		ReturnBody rbody = new ReturnBody();
 		// 参数校验
 		Map params = paramsBody.getBody();
-		String unitNum = null;
-		if (params.get("unitNum") != null) {
-			unitNum = String.valueOf(params.get("unitNum"));
-		}
+		String code = (String) params.get("code");
 		String name = (String) params.get("name");
+		String abbr = (String) params.get("abbr");
+		String categoryId = (String) params.get("categoryId");
+		String brandId = (String) params.get("brandId");
+		String basicUnitId = (String) params.get("basicUnitId");
+		String salesUnitId = (String) params.get("salesUnitId");
+		String salesConversion = null;
+		if (params.get("salesConversion") != null) {
+			salesConversion = String.valueOf(params.get("salesConversion"));
+		}
+		String retailPrice = null;
+		if (params.get("retailPrice") != null) {
+			retailPrice = String.valueOf(params.get("retailPrice"));
+		}
+		String barCode = (String) params.get("barCode");
+		String property = (String) params.get("property");
 		String clientId = (String) params.get("clientId");
 
-		if (!StringUtils.isNumeric(unitNum)) {
+		if (StringUtils.isBlank(code)) {
 			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入小数位！");
+			rbody.setMsg("请输入物料编码！");
 			return rbody;
 		}
 		if (StringUtils.isBlank(name)) {
 			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入单位描述！");
+			rbody.setMsg("请输入物料名称！");
+			return rbody;
+		}
+		if (StringUtils.isBlank(abbr)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入简称！");
+			return rbody;
+		}
+		if (StringUtils.isBlank(basicUnitId)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入基本单位！");
+			return rbody;
+		}
+		if (StringUtils.isBlank(salesUnitId)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入销售单位！");
+			return rbody;
+		}
+		if (!NumberUtils.isNumber(salesConversion)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请正确输入与基本单位换算率！");
+			return rbody;
+		}
+		if (!NumberUtils.isNumber(retailPrice)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请正确输入标准零售价！");
 			return rbody;
 		}
 		if (StringUtils.isBlank(clientId)) {
@@ -254,12 +295,37 @@ public class MaterialController extends AbstractController {
 			Client client = new Client();
 			client.setId(clientId);
 
+			Unit basicUnit = new Unit();
+			basicUnit.setId(basicUnitId);
+
+			Unit salesUnit = new Unit();
+			salesUnit.setId(salesUnitId);
+
 			Material material = new Material();
 			material.setId(UUID.randomUUID().toString());
+			material.setCode(code);
 			material.setName(name);
+			material.setAbbr(abbr);
+			material.setBasicUnit(basicUnit);
+			material.setSalesUnit(salesUnit);
+			material.setSalesConversion(new BigDecimal(salesConversion));
+			material.setRetailPrice(new BigDecimal(retailPrice));
+			material.setBarCode(barCode);
+			material.setProperty(property);
 			material.setClient(client);
 			material.setCreated(new Date());
 			material.setCreator(account.getId());
+
+			if (StringUtils.isNotBlank(categoryId)) {
+				MaterialCategory materialCategory = new MaterialCategory();
+				materialCategory.setId(categoryId);
+				material.setCategory(materialCategory);
+			}
+			if (StringUtils.isNotBlank(brandId)) {
+				Brand brand = new Brand();
+				brand.setId(brandId);
+				material.setBrand(brand);
+			}
 
 			materialService.insertMaterial(material);
 			rbody.setStatus(ResponseState.SUCCESS);
@@ -288,11 +354,23 @@ public class MaterialController extends AbstractController {
 		// 参数校验
 		Map params = paramsBody.getBody();
 		String id = (String) params.get("id");
-		String unitNum = null;
-		if (params.get("unitNum") != null) {
-			unitNum = String.valueOf(params.get("unitNum"));
-		}
+		String code = (String) params.get("code");
 		String name = (String) params.get("name");
+		String abbr = (String) params.get("abbr");
+		String categoryId = (String) params.get("categoryId");
+		String brandId = (String) params.get("brandId");
+		String basicUnitId = (String) params.get("basicUnitId");
+		String salesUnitId = (String) params.get("salesUnitId");
+		String salesConversion = null;
+		if (params.get("salesConversion") != null) {
+			salesConversion = String.valueOf(params.get("salesConversion"));
+		}
+		String retailPrice = null;
+		if (params.get("retailPrice") != null) {
+			retailPrice = String.valueOf(params.get("retailPrice"));
+		}
+		String barCode = (String) params.get("barcode");
+		String property = (String) params.get("property");
 		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
@@ -301,14 +379,44 @@ public class MaterialController extends AbstractController {
 			rbody.setMsg("记录唯一信息缺失，请刷新页面！");
 			return rbody;
 		}
-		if (!StringUtils.isNumeric(unitNum)) {
+		if (StringUtils.isBlank(code)) {
 			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入小数位！");
+			rbody.setMsg("请输入物料编码！");
 			return rbody;
 		}
 		if (StringUtils.isBlank(name)) {
 			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入单位描述！");
+			rbody.setMsg("请输入物料名称！");
+			return rbody;
+		}
+		if (StringUtils.isBlank(abbr)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入简称！");
+			return rbody;
+		}
+		if (StringUtils.isBlank(basicUnitId)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入基本单位！");
+			return rbody;
+		}
+		if (StringUtils.isBlank(salesUnitId)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入销售单位！");
+			return rbody;
+		}
+		if (!NumberUtils.isNumber(salesConversion)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请正确输入与基本单位换算率！");
+			return rbody;
+		}
+		if (!NumberUtils.isNumber(retailPrice)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请正确输入标准零售价！");
+			return rbody;
+		}
+		if (StringUtils.isBlank(property)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入是否需要维护属性！");
 			return rbody;
 		}
 		if (StringUtils.isBlank(clientId)) {
@@ -330,13 +438,38 @@ public class MaterialController extends AbstractController {
 			Client client = new Client();
 			client.setId(clientId);
 
+			Unit basicUnit = new Unit();
+			basicUnit.setId(basicUnitId);
+
+			Unit salesUnit = new Unit();
+			salesUnit.setId(salesUnitId);
+
 			Material material = new Material();
 			material.setId(id);
+			material.setCode(code);
 			material.setName(name);
+			material.setAbbr(abbr);
+			material.setBasicUnit(basicUnit);
+			material.setSalesUnit(salesUnit);
+			material.setSalesConversion(new BigDecimal(salesConversion));
+			material.setRetailPrice(new BigDecimal(retailPrice));
+			material.setBarCode(barCode);
+			material.setProperty(property);
 			material.setClient(client);
 			material.setStatus(status);
 			material.setModified(new Date());
 			material.setEditor(account.getId());
+
+			if (StringUtils.isNotBlank(categoryId)) {
+				MaterialCategory materialCategory = new MaterialCategory();
+				materialCategory.setId(categoryId);
+				material.setCategory(materialCategory);
+			}
+			if (StringUtils.isNotBlank(brandId)) {
+				Brand brand = new Brand();
+				brand.setId(brandId);
+				material.setBrand(brand);
+			}
 
 			materialService.updateMaterial(material);
 			rbody.setStatus(ResponseState.SUCCESS);
