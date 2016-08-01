@@ -150,13 +150,20 @@ public class PinBackController extends AbstractController{
 		
 		if (user != null) {
 			Account account = (Account) user;
-			String result = salesOrderService.addRefund(account.getClient().getId(), account.getStore().getId(), salesOrderId);
-			if(StringUtils.isEmpty(result)){
-				rbody.setStatus(ResponseState.SUCCESS);
-			}else{
+			String result;
+			try {
+				result = salesOrderService.addRefund(account,account.getClient().getId(), account.getStore().getId(), salesOrderId);
+				if(StringUtils.isEmpty(result)){
+					rbody.setStatus(ResponseState.SUCCESS);
+				}else{
+					rbody.setStatus(ResponseState.FAILED);
+					rbody.setMsg("找不到记录.");
+				}
+			} catch (Exception e) {
 				rbody.setStatus(ResponseState.FAILED);
-				rbody.setMsg("找不到记录.");
+				rbody.setMsg(" 退款失败.");
 			}
+			
 		}else{
 			rbody.setStatus(ResponseState.ERROR);
 			rbody.setMsg("请登录！");

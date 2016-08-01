@@ -37,7 +37,7 @@ public interface SalesOrderService {
 	 * @param id
 	 * @return
 	 */
-	public String addRefund(String clientId,String storeId,String id);
+	public String addRefund(Account account,String clientId,String storeId,String id) throws Exception;
 	
 	/**
 	 * 

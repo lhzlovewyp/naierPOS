@@ -35,8 +35,12 @@ import com.joker.common.model.Size;
 import com.joker.common.service.MaterialService;
 import com.joker.common.service.SalesConfigService;
 import com.joker.common.service.SalesOrderService;
+import com.joker.common.third.pay.aliweixin.AliPayService;
+import com.joker.common.third.pay.aliweixin.PayParamsVo;
+import com.joker.common.third.pay.aliweixin.PayReturnVo;
 import com.joker.core.dto.Page;
 import com.joker.core.util.RandomCodeFactory;
+import com.joker.core.util.SystemUtil;
 
 /**
  * @author lvhaizhen
@@ -393,7 +397,7 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 	}
 
 	@Override
-	public String addRefund(String clientId, String storeId, String id) {
+	public String addRefund(Account account,String clientId, String storeId, String id) throws Exception {
 		SalesOrder salesOrder=this.getSalesOrderById(clientId, storeId, id);
 		if(salesOrder == null){
 			return "-1";
@@ -412,6 +416,7 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 		salesOrder.setExcess(salesOrder.getExcess().negate());
 		salesOrder.setFinished(new Date());
 		salesOrder.setCreated(new Date());
+		salesOrder.setCreator(account.getId());
 		salesOrder.setTransClass(Constants.ORDER_TYPE_RTN);
 		//修改销售单明细.
 		if(CollectionUtils.isNotEmpty(salesOrder.getSalesOrderDetails())){
@@ -435,6 +440,34 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 				pay.setAmount(pay.getAmount().negate());
 				pay.setChange(pay.getChanged());
 				pay.setExcess(pay.getExcess());
+				//对于非现金银行卡支付的支付方式进行退款处理.
+				if(pay.getPayment().getCode().equals(Constants.PAYMENT_ALIPAY)){//支付宝支付
+					PayParamsVo payParamsVo=new PayParamsVo();
+					payParamsVo.setChannel("1");
+					payParamsVo.setCode("03");
+					payParamsVo.setOut_trade_no(id);
+					payParamsVo.setSubject("test");
+					payParamsVo.setOperator_id(account.getId());
+					payParamsVo.setTrade_no(pay.getTransNo());
+					payParamsVo.setTotal_fee(pay.getAmount().abs().toString());
+					PayReturnVo returnVo=AliPayService.pay(payParamsVo);
+					if(returnVo == null || !returnVo.getState().equals("100")){
+						throw new Exception("支付宝退款出现问题.");
+					}
+				}else if(pay.getPayment().getCode().equals(Constants.PAYMENT_WXPAY)){//微信支付
+					PayParamsVo payParamsVo=new PayParamsVo();
+					payParamsVo.setChannel("2");
+					payParamsVo.setCode("06");
+					payParamsVo.setOut_trade_no(id);
+					payParamsVo.setSubject("test");
+					payParamsVo.setOperator_id(account.getId());
+					payParamsVo.setTrade_no(pay.getTransNo());
+					payParamsVo.setTotal_fee(pay.getAmount().abs().toString());
+					PayReturnVo returnVo=AliPayService.pay(payParamsVo);
+					if(returnVo == null || !returnVo.getState().equals("100")){
+						throw new Exception("微信退款出现问题.");
+					}
+				}
 			}
 		}
 		//修改折扣明细

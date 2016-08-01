@@ -1,5 +1,6 @@
 package com.joker.common.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,6 +28,7 @@ import com.joker.core.controller.AbstractController;
 import com.joker.core.dto.ParamsBody;
 import com.joker.core.dto.ReturnBody;
 import com.joker.core.util.Configer;
+import com.joker.core.util.DatetimeUtil;
 
 /**
  * @author lvhaizhen
@@ -68,33 +71,35 @@ public class PayController extends AbstractController {
 		String token = paramsBody.getToken();
 		Map<String,Object> body=paramsBody.getBody();
 		Object user = CacheFactory.getCache().get(token);
-		String channel=(String)body.get("channel");//支付管道 2-微信\1-支付宝.
+		Integer channel=(Integer)body.get("channel");//支付管道 2-微信\1-支付宝.
 		String code=(String)body.get("code");
 		String salesDtoId=(String)body.get("salesDtoId");//销售单号.
 		String tradeNo=(String)body.get("tradeNo");//交易号.
 		String barcode=(String)body.get("barcode");
 		String amount=(String)body.get("amount");//金额
-		String salesDate=(String)body.get("salesDate");
 		if (user != null) {
 			Account account = (Account) user;
 			PayParamsVo vo=new PayParamsVo();
 			vo.setPartner(Configer.get("partner"));
-			vo.setChannel(channel);
+			vo.setChannel(channel.toString());
 			vo.setCode(code);
-			vo.setOut_trade_no(salesDate+"_"+salesDtoId);
+			vo.setOut_trade_no(salesDtoId);
 			vo.setTrade_no(tradeNo);
 			vo.setBarcode(barcode);
-			vo.setSubject(salesDate+"_"+salesDtoId);
+			//vo.setSubject(DatetimeUtil.formatDateToString(new Date(salesDate), DatetimeUtil.DATE)+"_"+salesDtoId);
+			vo.setSubject("test");
 			vo.setTotal_fee(amount);
 			vo.setOperator_id(account.getId());
 			
 			PayReturnVo returnVo=AliPayService.pay(vo);
 			if(returnVo == null){
 				rbody.setStatus(ResponseState.ERROR);
+				rbody.setMsg("系统内部错误.");
 				return rbody;
 			}
 			if(returnVo.getState().equals("100")){
 				rbody.setStatus(ResponseState.SUCCESS);
+				rbody.setMsg(returnVo.getMsg());
 				rbody.setData(returnVo);
 			}else{
 				rbody.setStatus(ResponseState.FAILED);

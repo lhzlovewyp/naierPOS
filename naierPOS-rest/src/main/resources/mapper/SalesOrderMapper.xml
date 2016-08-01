@@ -144,7 +144,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="getSalesOrderCountByCondition" parameterType="java.util.Map" resultType="int">
-		select count(1) from SalesOrder where TransClass='SO' and Status=1
+		select count(1) from SalesOrder where TransClass='SO'
 		and Store=#{storeId} and Client=#{clientId}
 		
 		<if test="id != null">

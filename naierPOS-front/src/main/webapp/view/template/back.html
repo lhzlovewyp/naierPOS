@@ -7,7 +7,7 @@
 			<table class="table text-right">
             	<tbody><tr>
                 <td>交易序号</td><td><input type="text" class="form-control" value="{{salesOrder.code}}"></td>
-                <td>销售日期</td><td><input type="text" class="form-control" value="{{salesOrder.finished | date:'yyyy-MM-dd hh:mm:ss'}}"></td>
+                <td>销售日期</td><td><input type="text" class="form-control" value="{{salesOrder.finished | date:'yyyy-MM-dd HH:mm:ss'}}"></td>
                 <td>导购</td><td><input type="text" class="form-control" value="{{salesOrder.shoppingGuide.name}}"></td>
                 </tr>
                 <tr>
@@ -58,8 +58,8 @@
 	<div class="modal-header">
         <h4 class="modal-title" id="myModalLabel">支付详情</h4>
     </div>
-	<div class="modal-body">
-        <div class="margin-bottom">
+	<div class="">
+        <div class="">
         	<table class="table">
                 <tbody><tr>
                 <td width="40%"></td>

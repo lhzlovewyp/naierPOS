@@ -42,6 +42,17 @@ public class PayParamsVo {
 	private String total_fee;
 	/**操作员号，取当前登录的账号.*/
 	private String operator_id;
+	
+	private String sign;
+	
+	
+	
+	public String getSign() {
+		return sign;
+	}
+	public void setSign(String sign) {
+		this.sign = sign;
+	}
 	public String getPartner() {
 		return partner;
 	}

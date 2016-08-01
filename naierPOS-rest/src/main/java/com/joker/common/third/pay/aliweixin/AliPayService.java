@@ -15,7 +15,9 @@ import org.apache.http.protocol.BasicHttpContext;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.joker.common.third.member.BaseService;
 import com.joker.core.util.Configer;
+import com.joker.core.util.EncryptUtil;
 
 /**
  * 
@@ -24,7 +26,7 @@ import com.joker.core.util.Configer;
  * @author lvhaizhen
  *
  */
-public class AliPayService {
+public class AliPayService extends BaseService {
 
 	
 	/**
@@ -36,8 +38,19 @@ public class AliPayService {
 	public static PayReturnVo pay(PayParamsVo payParamsVo){
 		
 		String url=Configer.get("alipayUrl");
-		JSONObject obj=(JSONObject) JSONObject.toJSON(payParamsVo);
-		return processRequest(url, obj);
+		
+		String privatekey = "www.yuwin.com.cn";
+		String sign;
+		try {
+			sign = EncryptUtil.md5Encode(payParamsVo.getPartner() + privatekey);
+			payParamsVo.setSign(sign);
+			JSONObject obj=(JSONObject) JSONObject.toJSON(payParamsVo);
+			return processRequest(url, obj);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 		
 	}
 	

@@ -63,7 +63,7 @@ public class SaleController extends AbstractController{
 			Account account = (Account) user;
 			SalesConfig config = salesConfigService.getCurrentSalesConfig(account);
 			SaleDto dto = new SaleDto();
-			dto.setId(RandomCodeFactory.defaultGenerateMixed());
+			dto.setId(RandomCodeFactory.generateMixed(32));
 			dto.setSaleDate(config.getSalesDate());
 			dto.setAllDISC(account.getAllDISC());
 			dto.setItemDISC(account.getItemDISC());

@@ -9,7 +9,7 @@ public class BaseService {
 	private final static char[] dictionary = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D',
 			'E', 'F' };
 
-	public String md5(String str) {
+	public static String md5(String str) {
 		String md5str = "";
 		try {
 			md5str = code(str, 32);
@@ -53,7 +53,7 @@ public class BaseService {
 		return str;
 	}
 
-	public String code(String str, int bit) throws Exception {
+	public static String code(String str, int bit) throws Exception {
 		try {
 			MessageDigest md = MessageDigest.getInstance(System.getProperty("MD5.algorithm", "MD5"));
 			if (bit == 16)

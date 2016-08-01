@@ -263,7 +263,8 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog','Pa
 				            scope: $scope,
 				            closeByDocument: false,
 				            width:700,
-				            controller: 'payCtrl'
+				            controller: 'payCtrl',
+				            showClose:false
 				        });
 				 }else{
 					 PayService.initPay().then(function(data){
@@ -274,7 +275,8 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog','Pa
 					            scope: $scope,
 					            closeByDocument: false,
 					            width:700,
-					            controller: 'payCtrl'
+					            controller: 'payCtrl',
+					            showClose:false
 					        });
 					 });
 				 }
@@ -577,7 +579,7 @@ app.controller("payingCtrl",['$scope','$location','PayService','SaleService','Me
             }
 		});
 		
-	}
+	};
 	
 	//现金和银行卡支付.
 	$scope.payCash=function(payment){
@@ -595,59 +597,33 @@ app.controller("payingCtrl",['$scope','$location','PayService','SaleService','Me
 		payment.amount=amount;
 		$scope.loadPayInfo();
 		$scope.closeThisDialog();
-	}
-	$scope.submit=function(){
-		var channel=$scope.payChannel;
-		var payment=$scope.currPayment;
-		var barcode=$scope.barcode;
-		aliPay(channel,payment,barcode);
-	}
-	//支付宝支付.
-	function aliPay(channel,payment,barcode){
-		var code="01";
-		if(channel==2){
-			code="04"
-		}
-		var amount=payment.amount;
-		var success = function(data){
-			//支付成功,存储当前支付的流水号，退款使用.
-			payment.tradeNo=data.trade_no;
-			$scope.closeThisDialog();
-		};
-		var error = function(data){
-			payment.selected=0;
-			$scope.closeThisDialog();
-		}
-		basicPay(channel,code,null,barcode,amount,success,error);
-	}
+	};
 	
-	//微信支付宝基础支付方法.
-	function basicPay(channel,code,tradeNo,barcode,amount,success,error){
-		var payInfo={};
-		var id = $scope.info.id;
-		var salesDate=$scope.info.salesDate;
-		payInfo.channel=channel;
-		payInfo.code=code;
-		payInfo.salesDtoId=id;
-		payInfo.salesDate=salesDate;
-		payInfo.tradeNo=tradeNo;
-		payInfo.barcode=barcode;
-		payInfo.amount=amount;
-		PayService.aliPay(payInfo).then(function(obj){
-			var dto=obj.data.data;
-			if(obj.data.status==Status.SUCCESS){
-                if(func){
-                	func(dto);
-                }
-            }else{
-            	if(error){
-            		error(data);
-            	}
-            	alert(obj.data.msg);
-            	
-            }
-		});
-	}
+	$scope.payAlipay=function(payment){
+		var form=$scope.alipayForm;
+		if(!form || !form.account){//如果没有输入账号，提示错误.
+			alert("请输入用户账号.");
+			return ;
+		}
+		var amount=$scope.info.needPay;
+		if(amount == 0){
+			alert("支付金额不能为0");
+			return ;
+		}
+		var barcode=form.account;
+		var paymentCode=payment.payment.code;
+		var channel='';
+		var code='';
+		if(paymentCode == Status.ALIPAY){//支付宝支付.
+			channel=1;
+			code="01";
+		}else{//微信支付.
+			channel=2;
+			code="04";
+		}
+		aliPay(PayService,$scope,channel,code,payment,barcode,amount);
+	};
+	
 	
 }]);	
 app.controller("payCtrl",['$scope','$location','PayService','SaleService','ngDialog','$timeout',function($scope,$location,PayService,SaleService,ngDialog,$timeout){
@@ -656,10 +632,52 @@ app.controller("payCtrl",['$scope','$location','PayService','SaleService','ngDia
 		loadPayInfo();
 	},true);
 	
-	
+	//取消支付,如果涉及到接口的,则需要调用退款逻辑.
 	$scope.close=function(){
+		var payments=$scope.payments;
+		for(var i=0;i<payments.length;i++){
+			var payment=payments[i];
+			var amount=payment.amount;
+			var transNo = payment.transNo;
+			var barcode=payment.barcode;
+			if(!amount || amount==0){
+				continue;
+			}else{
+				var paymentCode=payment.payment.code;
+				switch(paymentCode)
+				{
+				case Status.CASH://现金支付
+				case Status.UNIONPAY_OFF://银行卡支付
+					payment.amount=0;
+				  	break;
+				case Status.BS_PREPAID://百胜储值卡
+					//payPayment="payPrepaid";	
+					  break;
+				case Status.BS_COUPON://百胜电子券
+					//payPayment="payCoupon";
+					  break;
+				case Status.BS_POINT://百胜会员积分.
+					//payPayment="payPoint";
+					  break;
+				case Status.ALIPAY://支付宝退款.
+					var channel=1,code="02";
+					aliPay(PayService,$scope,channel,code,payment,barcode,amount,transNo);
+					break;
+				case Status.WXPAY://微信支付.
+					var channel=2,code="05";
+					aliPay(PayService,$scope,channel,code,payment,barcode,amount,transNo);
+					  break;
+				default:
+				  break;
+				}	
+			}
+		}
 		loadPayInfo();
 		ngDialog.close();
+		//销售单初始化
+		$timeout(function(){
+			$("#cancelSale").trigger("click");
+		});
 	}
 	
 	$scope.pay=function(payment){
@@ -699,8 +717,8 @@ app.controller("payCtrl",['$scope','$location','PayService','SaleService','ngDia
 			preCloseCallback:function(value){
 				//关闭支付之前,判断是否已经支付完成，如果没有支付，则把当前payment设置为未支付状态.
 				var payment=$scope.currPayment;
-				var tradeNo=payment.tradeNo;
-				if(tradeNo){
+				var transNo=payment.transNo;
+				if(transNo){
 					payment.selected=1;
 				}else{
 					payment.selected=0;
@@ -1111,6 +1129,62 @@ function cacAllDisc(allDisc,saleInfos){
 			saleInfo.allDiscount=saleInfoDisc;
 		}
 	}
+}
+
+
+
+//支付宝支付.
+function aliPay(PayService,$scope,channel,code,payment,barcode,amount,transNo){
+	var success = function(data){
+		//支付成功,存储当前支付的流水号，退款使用.
+		if(code=="01" || code=="04"){
+			payment.transNo=data.trade_no;
+			payment.barcode=barcode;
+			payment.amount=amount;
+			$scope.closeThisDialog();
+			alert('支付成功.');
+		}else{
+			payment.transNo='';
+			payment.barcode='';
+			payment.amount=0;
+			alert('退款成功');
+		}
+		$scope.loadPayInfo();
+		
+	};
+	var error = function(data){
+		payment.selected=0;
+		//$scope.closeThisDialog();
+	}
+	basicPay(PayService,$scope,channel,code,transNo,barcode,amount,success,error);
+}
+
+//微信支付宝基础支付方法.
+function basicPay(PayService,$scope,channel,code,transNo,barcode,amount,success,error){
+	var payInfo={};
+	var id = $scope.info.id;
+	var salesDate=$scope.info.saleDate;
+	payInfo.channel=channel;
+	payInfo.code=code;
+	payInfo.salesDtoId=id;
+	payInfo.salesDate=salesDate;
+	payInfo.transNo=transNo;
+	payInfo.barcode=barcode;
+	payInfo.amount=amount;
+	PayService.aliPay(payInfo).then(function(obj){
+		var dto=obj.data.data;
+		if(obj.data.status==Status.SUCCESS){
+            if(success){
+            	success(dto);
+            }
+        }else{
+        	if(error){
+        		error(dto);
+        	}
+        	alert(obj.data.msg);
+        	
+        }
+	});
 }
 
 
