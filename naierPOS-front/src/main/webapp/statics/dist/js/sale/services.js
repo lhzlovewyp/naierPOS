@@ -8,9 +8,9 @@ app.factory('LoginService',['$q','$location','$http','BaseService',function($q,$
                     loginInfo = obj.data.data;
                     loginInfo.hasLogin = true;
                     loginInfo.loginerror = false;
-                    $.cookie('userId',loginInfo.userId,{expires: 1});
-                    $.cookie('nickName',loginInfo.nickName,{expires: 1});
-                    $.cookie('token',loginInfo.token,{expires: 1});
+                    $.cookie('userId',loginInfo.userId,{expires: 1,path:"/"});
+                    $.cookie('nickName',loginInfo.nickName,{expires: 1,path:"/"});
+                    $.cookie('token',loginInfo.token,{expires: 1,path:"/"});
                     $http.defaults.headers.common.token = loginInfo.token;
                 }else{
                     loginInfo.hasLogin = false;
@@ -68,9 +68,8 @@ app.factory('LoginService',['$q','$location','$http','BaseService',function($q,$
         	var obj={"token":token};
             BaseService.post('/rest/login/logout',obj).then(function(obj){
                 if(obj.data.status==Status.SUCCESS){
-                    $.cookie('token', '', { expires: -1 });
-                    $.cookie('nickName',loginInfo.nickName,{expires: 1});
-                    $.cookie('token',loginInfo.token,{expires: 1});
+                    $.cookie('token', '', { expires: -1,path:"/"});
+                    $.cookie('nickName',loginInfo.nickName,{expires: 1,path:"/"});
                     location.href = '/front/login.html'
                 }
             });

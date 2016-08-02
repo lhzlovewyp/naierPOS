@@ -18,7 +18,7 @@
 
 
     <welcome-file-list>
-        <welcome-file>login.html</welcome-file>
+        <welcome-file>home.html</welcome-file>
     </welcome-file-list>
 
 
