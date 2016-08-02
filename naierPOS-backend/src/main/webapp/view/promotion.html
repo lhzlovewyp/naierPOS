@@ -61,7 +61,12 @@
 		                <td>{{result.effTime | date:'HH:mm:ss'}}</td>
 		                <td>{{result.expTime | date:'HH:mm:ss'}}</td>
 						<td>{{showStatusDesc(result.status)}}</td>
-						<td><a href="/backend/edit/promotion/{{result.id}}" class="btn btn-info btn-xs">编辑</a></td>
+						<td>
+							<a href="/backend/edit/promotion/{{result.id}}" class="btn btn-info btn-xs">编辑基本信息</a>
+							<a href="/backend/list/promotionPayment?promotionId={{result.id}}" class="btn btn-info btn-xs">编辑支付限制</a>
+							<a href="/backend/list/promotionOffer?promotionId={{result.id}}" class="btn btn-info btn-xs">编辑促销优惠</a>
+							<a href="/backend/list/PromotionStore?promotionId={{result.id}}" class="btn btn-info btn-xs">编辑促销门店</a>
+						</td>
 		            </tr>
 				</table>
 			</div>

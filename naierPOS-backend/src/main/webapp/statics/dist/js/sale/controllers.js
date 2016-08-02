@@ -61,11 +61,18 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 	var selectedId ="";
 	$scope.chk = false;
 	var routePath = $routeParams.routePath;
+	var promotionId = $location.search()['promotionId'];
+	if(promotionId){
+		$scope.promotionId = promotionId;
+	}
 	function goPage(pageNo){
 		var body = {};
 		body.pageNo = pageNo;
 		body.limit = $scope.paginationConf.itemsPerPage;
 		body.likeName = $scope.likeName;
+		if(promotionId){
+			body.promotionId = promotionId;
+		}
 		BasicsService.queryByPage(body,routePath).then(function(data){
     		$scope.basicsInfo = data;
     		$scope.paginationConf.totalItems = data.totalRecord;
@@ -154,6 +161,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 	$scope.editType = 'add';
 	var id = $routeParams.id;
 	var routePath = $routeParams.routePath;
+	var promotionId = $location.search()['promotionId'];
 	var selectComplete = {};
 	var allSelectInfoMap = {};
 	var completeQueryById = false;
@@ -249,7 +257,10 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			}
 			if(routePath == 'promotionPayment' && allSelectInfoMap['promotion']){
 				var selectInfoMap = allSelectInfoMap['promotion'];
-				if(data.promotion && data.promotion.id){
+				if(promotionId){
+					$scope.selPromotion = selectInfoMap[promotionId];
+					$("#Promotion").attr("disabled","disabled");
+				}else if(data.promotion && data.promotion.id){
 					var selPromotionValue = data.promotion.id;
 					$scope.selPromotion = selectInfoMap[selPromotionValue];
 				}
@@ -470,6 +481,9 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		}else if(routePath == 'promotionPayment'){
 			querySelectInfo('clientPayment','clientPayments');
 			querySelectInfo('promotion','promotions');
+			if(promotionId){
+				completeQueryById = true;
+			}
 		}else if(routePath == 'materialProperty'){
 			querySelectInfo('material','materials');
 			querySelectInfo('color','colors');
