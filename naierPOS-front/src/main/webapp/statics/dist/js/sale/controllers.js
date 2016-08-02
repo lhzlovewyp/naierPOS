@@ -63,6 +63,10 @@ app.controller("headNavCtrl",['$scope','$location','LoginService',function($scop
 		$scope.loginInfo = data;
 	});
 	
+	$scope.changePassword=function(){
+		location.href="changePWD.html";
+	}
+	
 	$scope.logout = function(){
 		LoginService.logOff();
 	}
@@ -174,6 +178,7 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog','Pa
             if(data.data.property=="1"){//需要维护属性.
             	
             	$scope.tempMat=data.data;
+            	$scope.matForm={};
             	ngDialog.open({
                     template: '/front/view/template/matAttr.html',
                     scope: $scope,
@@ -192,6 +197,7 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog','Pa
             		mat.sort=saleInfos.length;
             	}
         		saleInfos.push(mat);
+        		$scope.matForm={};
             }
         });
 	}

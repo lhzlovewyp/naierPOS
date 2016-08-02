@@ -111,9 +111,9 @@ public class MaterialServiceImpl implements MaterialService {
 	}
 
 	private void initUnitConversion(Material mat) {
-		if (mat.getSalesConversion() != null) {
-			return;
-		}
+//		if (mat.getSalesConversion() != null) {
+//			return;
+//		}
 
 		Unit basicUnit = unitService.getUnitByID(mat.getBasicUnit().getId());
 		if (basicUnit != null) {
