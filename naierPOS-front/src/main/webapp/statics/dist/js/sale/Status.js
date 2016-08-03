@@ -8,6 +8,7 @@ var Status = (function() {
         FAILED : 1003,
         INVALID_TOKEN : 1004,
         INVALID_USER : 1005,
+        REDIRECT : 1006,
         
         
         CASH : "CASH",

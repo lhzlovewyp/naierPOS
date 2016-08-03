@@ -16,4 +16,6 @@ public class ResponseState {
     public static int INVALID_TOKEN = 1004;//无效token
 
     public static int INVALID_USER = 1005;//无效用户
+    
+    public static int REDIRECT = 1006;//无效用户
 }

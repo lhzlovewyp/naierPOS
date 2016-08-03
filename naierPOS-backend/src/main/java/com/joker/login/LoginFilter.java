@@ -1,6 +1,7 @@
 package com.joker.login;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -64,7 +65,9 @@ public class LoginFilter implements Filter{
 					body=RestUtil.post(url+"/login/validToken", params);
 				}
 				if(body == null || body.getStatus() != ResponseState.SUCCESS){
-					response.sendRedirect("/backend/login.html");
+//					response.sendRedirect("/backend/login.html");
+					returnJsonObject(response, "<script>window.location.href='/backend/login.html'</script>");
+
 					return;
 				}
 				
@@ -85,6 +88,27 @@ public class LoginFilter implements Filter{
 		chain.doFilter(request, response);
 
 	}
+	
+	 /**
+     * json对象返回
+     * @param response
+     * @param bean
+     */
+    public void returnJsonObject(HttpServletResponse response,String bean) {
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter pWriter = null;
+        try {
+            pWriter = response.getWriter();
+            pWriter.write(bean);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (pWriter != null) {
+                pWriter.flush();
+                pWriter.close();
+            }
+        }
+    }
 
 	public void init(FilterConfig config) throws ServletException {
 		excludeUrl = config.getInitParameter("excludeUrl");

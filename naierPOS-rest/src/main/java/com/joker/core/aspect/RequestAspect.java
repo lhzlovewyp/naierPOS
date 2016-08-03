@@ -99,7 +99,11 @@ public class RequestAspect {
                     for (String filed : fields) {
                         keyValue = params.get(filed);
                         if(StringUtils.isEmpty(keyValue)){
-                            returnbody.setStatus(ResponseState.FAILED);
+                        	if(filed.equals("token")){
+                        		returnbody.setStatus(ResponseState.INVALID_TOKEN);
+                        	}else{
+                        		returnbody.setStatus(ResponseState.FAILED);
+                        	}
                             returnbody.setMsg("入参" + filed + "值为空");
                             LogUtil.error(method.getName() + "入参" + filed + "值为空");
                             return returnbody;

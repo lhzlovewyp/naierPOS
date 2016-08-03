@@ -921,6 +921,9 @@ app.controller("pinBackCtl",['$scope','$location','PinBackService','ngDialog','P
 	             $scope.paginationConf.totalItems=dto.totalRecord;
 	             $scope.paginationConf.totalPage=dto.totalPage;
 	             $scope.paginationConf.pageNo=pageNo;
+	         }else if(data.status==Status.INVALID_TOKEN){
+	        	 alert(data.msg);
+	        	 location.href="/front/login.html";
 	         }else{
 	        	 alert(data.msg);
 	        	 return;

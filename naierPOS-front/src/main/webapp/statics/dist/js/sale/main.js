@@ -16,26 +16,33 @@ var app=angular.module('mainApp',['ngRoute','ngDialog']);
 //    var statusInterceptor = {
 //            response: function(response) {
 //                var deferred = $q.defer();
-//                if(response.data.status == Status.ERROR){//系统错误
-//                    $location.path('/error');
-//                    return deferred.promise;
-//                }else if(response.data.status == Status.FAILED){
-//                    //alert(response.data.msg);
-//                    //return deferred.promise;
-//                	return response;
-//                }else if(response.data.status == Status.INVALID_TOKEN){
-//                    $location.path('/login');
-//                    return deferred.promise;
-//                }else if(response.data.status == Status.INVALID_USER){
-//                    $location.path('/login');
-//                    return deferred.promise;
-//                }else{
-//                    return response;
+//                if(response.data.status==Status.REDIRECT){
+//                	$location.href=response.data.data;
 //                }
+////                if(response.data.status == Status.ERROR){//系统错误
+////                    $location.path('/error');
+////                    return deferred.promise;
+////                }else if(response.data.status == Status.FAILED){
+////                    //alert(response.data.msg);
+////                    //return deferred.promise;
+////                	return response;
+////                }else if(response.data.status == Status.INVALID_TOKEN){
+////                    $location.path('/login');
+////                    return deferred.promise;
+////                }else if(response.data.status == Status.INVALID_USER){
+////                    $location.path('/login');
+////                    return deferred.promise;
+////                }else{
+////                    return response;
+////                }
 //            }
 //        };
 //        return statusInterceptor;
 //}]);
+
+
+
+
 
 
 /****

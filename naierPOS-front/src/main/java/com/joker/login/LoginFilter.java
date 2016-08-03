@@ -1,6 +1,7 @@
 package com.joker.login;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -11,16 +12,15 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.joker.core.constant.Context;
 import com.joker.core.constant.ResponseState;
 import com.joker.core.dto.ParamsBody;
 import com.joker.core.dto.ReturnBody;
 import com.joker.core.model.Account;
-import com.joker.core.model.Role;
 import com.joker.core.util.CookieUtil;
 import com.joker.core.util.RestUtil;
 
@@ -66,7 +66,11 @@ public class LoginFilter implements Filter{
 					body=RestUtil.post(url+"/login/validToken", params);
 				}
 				if(body == null || body.getStatus() != ResponseState.SUCCESS){
-					response.sendRedirect("/front/login.html");
+					//response.sendRedirect("/front/login.html");
+//					ReturnBody vo=new ReturnBody();
+//					vo.setStatus(ResponseState.REDIRECT);
+//					vo.setData("/front/login.html");
+					returnJsonObject(response, "<script>window.location.href='/front/login.html'</script>");
 					return;
 				}
 				
@@ -84,6 +88,27 @@ public class LoginFilter implements Filter{
 		chain.doFilter(request, response);
 
 	}
+	
+	 /**
+     * json对象返回
+     * @param response
+     * @param bean
+     */
+    public void returnJsonObject(HttpServletResponse response,String bean) {
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter pWriter = null;
+        try {
+            pWriter = response.getWriter();
+            pWriter.write(bean);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (pWriter != null) {
+                pWriter.flush();
+                pWriter.close();
+            }
+        }
+    }
 
 	public void init(FilterConfig config) throws ServletException {
 		excludeUrl = config.getInitParameter("excludeUrl");
