@@ -67,6 +67,7 @@ public class MaterialCategoryController extends AbstractController {
 		Integer pageNo = (Integer) params.get("pageNo");
 		Integer limit = (Integer) params.get("limit");
 		String likeName = (String) params.get("likeName");
+		String code = (String) params.get("code");
 		pageNo = (pageNo == null ? 0 : pageNo);
 		limit = (limit == null ? 10 : limit);
 
@@ -77,7 +78,13 @@ public class MaterialCategoryController extends AbstractController {
 			String clientId = account.getClient().getId();
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("clientId", clientId);
-			map.put("likeName", likeName);
+			if(StringUtils.isNotBlank(likeName)){
+				map.put("likeName", likeName);
+			}
+			if(StringUtils.isNotBlank(code)){
+				map.put("code", code);
+			}
+			
 			Page<MaterialCategory> page = materialCategoryService
 					.getMaterialCategoryPageByCondition(map, pageNo, limit);
 			rbody.setData(page);
@@ -248,11 +255,7 @@ public class MaterialCategoryController extends AbstractController {
 			rbody.setMsg("请输入品类名称！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
+		
 		if (StringUtils.isBlank(parentId)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入上级品类！");
@@ -264,14 +267,12 @@ public class MaterialCategoryController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
 
 			MaterialCategory addMaterialCategory = new MaterialCategory();
 			addMaterialCategory.setId(UUID.randomUUID().toString());
 			addMaterialCategory.setCode(code);
 			addMaterialCategory.setName(name);
-			addMaterialCategory.setClient(client);
+			addMaterialCategory.setClient(account.getClient());
 			addMaterialCategory.setCreated(new Date());
 			addMaterialCategory.setCreator(account.getId());
 

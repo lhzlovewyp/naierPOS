@@ -62,6 +62,10 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 	$scope.chk = false;
 	var routePath = $routeParams.routePath;
 	function goPage(pageNo,selectForm){
+		var promotionId = $location.search()['promotionId'];
+		if(promotionId){
+			$scope.promotionId = promotionId;
+		}
 		var body = {};
 		body.pageNo = pageNo;
 		body.limit = $scope.paginationConf.itemsPerPage;
@@ -70,6 +74,9 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 		  body=$.extend(body,selectForm);
 		}
 		
+		if(promotionId){
+			body.promotionId = promotionId;
+		}
 		BasicsService.queryByPage(body,routePath).then(function(data){
     		$scope.basicsInfo = data;
     		$scope.paginationConf.totalItems = data.totalRecord;
@@ -92,16 +99,18 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 	};
 	
 	$scope.del = function(){
-		var body = {};
-		body.id = selectedId;
-		BasicsService.del(body,routePath).then(function(data){
-			if(data && data.delerror){
-				alert("删除数据出错:"+data.delerror);
-            }else{
-            	alert("删除数据成功");
-            	goPage($scope.paginationConf.currentPage);
-            }
-        });
+		if(confirm("确定执行删除?")){
+			var body = {};
+			body.id = selectedId;
+			BasicsService.del(body,routePath).then(function(data){
+				if(data && data.delerror){
+					alert("删除数据出错:"+data.delerror);
+	            }else{
+	            	alert("删除数据成功");
+	            	goPage($scope.paginationConf.currentPage);
+	            }
+	        });
+		}
 	};
 	
 	$scope.check = function(val,chk){
@@ -158,9 +167,20 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 	$scope.editType = 'add';
 	var id = $routeParams.id;
 	var routePath = $routeParams.routePath;
+	var promotionId = $location.search()['promotionId'];
 	var selectComplete = {};
 	var allSelectInfoMap = {};
 	var completeQueryById = false;
+	//默认设置状态为有效.
+	var selStatusValue = 1;
+	for ( var i = 0; i < allStatus.length; i++) {
+		if(allStatus[i].value == selStatusValue){
+			$scope.selstatus = allStatus[i];	
+			break;
+		}
+	}
+	
+	
 	//绑定时间控件.
 	$scope.$on('$viewContentLoaded', function(){
 		$('[data-provide="datepicker-inline"]').datepicker();
@@ -253,7 +273,10 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			}
 			if(routePath == 'promotionPayment' && allSelectInfoMap['promotion']){
 				var selectInfoMap = allSelectInfoMap['promotion'];
-				if(data.promotion && data.promotion.id){
+				if(promotionId){
+					$scope.selPromotion = selectInfoMap[promotionId];
+					$("#Promotion").attr("disabled","disabled");
+				}else if(data.promotion && data.promotion.id){
 					var selPromotionValue = data.promotion.id;
 					$scope.selPromotion = selectInfoMap[selPromotionValue];
 				}
@@ -474,6 +497,9 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		}else if(routePath == 'promotionPayment'){
 			querySelectInfo('clientPayment','clientPayments');
 			querySelectInfo('promotion','promotions');
+			if(promotionId){
+				completeQueryById = true;
+			}
 		}else if(routePath == 'materialProperty'){
 			querySelectInfo('material','materials');
 			querySelectInfo('color','colors');
@@ -640,7 +666,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			if($scope.editType == 'add'){
 				BasicsService.add($scope.form,routePath).then(function(data){
 					if(data && data.error){
-						$scope.info = data;
+						alert(data.error);
+						//$scope.info = data;
 	                }else{
 	                	$location.path('/backend/list/'+routePath);
 	                }
@@ -648,7 +675,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			}else if($scope.editType == 'update'){
 				BasicsService.update($scope.form,routePath).then(function(data){
 					if(data && data.error){
-						$scope.info = data;
+						alert(data.error);
+						//$scope.info = data;
 	                }else{
 	                	$location.path('/backend/list/'+routePath);
 	                }

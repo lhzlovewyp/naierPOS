@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.PromotionConditionMapper">
+     
+    
+    <resultMap type="promotionCondition" id="promotionCondition">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="promotionOffer.id" column="PromotionOffer" />
+		<result property="conditionType" column="ConditionType" />
+		<result property="condition" column="Condition" />
+		<result property="match" column="Match" />
+		<result property="matchType" column="MatchType" />
+	</resultMap>
+	
+	<resultMap type="promotionCondition" id="promotionConditionPage" extends="promotionCondition">
+		<result property="client.name" column="ClientName" />
+	</resultMap>
+	
+	<select id="getPromotionConditionByID" parameterType="string" resultMap="promotionCondition">
+		SELECT 
+			a.ID,a.Client,a.PromotionOffer,a.ConditionType,a.Condition,a.Match,a.MatchType
+		FROM PromotionCondition a
+		WHERE a.ID=#{id} 
+	</select>
+	
+	<select id="getPromotionConditionPageByCondition" parameterType="java.util.Map" resultMap="promotionConditionPage">
+		SELECT 
+			a.ID,a.Client,a.PromotionOffer,a.ConditionType,a.Condition,a.Match,a.MatchType,c.Name ClientName
+		FROM PromotionCondition a left outer join Client c
+		on a.Client = c.id and c.status = 1 
+		WHERE 
+			1 = 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="promotionOfferId != null">
+				and a.PromotionOffer=#{promotionOfferId}
+			</if>
+			order by a.ID desc
+			<if test="start != null and limit != null">
+				limit #{start},#{limit}
+			</if>
+	</select>
+	
+	<select id="getPromotionConditionCountByCondition" parameterType="java.util.Map" resultType="int">
+		SELECT count(1)
+		FROM PromotionCondition a WHERE 
+			1 = 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="promotionOfferId != null">
+				and a.PromotionOffer=#{promotionOfferId}
+			</if>
+	</select>
+	
+	<delete id="deletePromotionConditionByID" parameterType="string">
+		DELETE FROM PromotionCondition where ID =#{id}
+	</delete>
+	
+	<insert id="insertPromotionCondition" parameterType="promotionCondition">
+		insert into PromotionCondition <include refid="promotionConditionSet" />
+	</insert>
+	
+	<update id="updatePromotionCondition" parameterType="promotionCondition" >
+		UPDATE PromotionCondition <include refid="promotionConditionSet" /> WHERE ID = #{id}
+	</update>
+    
+    <sql id="promotionConditionSet">
+		<set >
+			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
+			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
+			<if test= "promotionOffer != null">PromotionOffer=#{promotionOffer.id,jdbcType=VARCHAR},</if >
+			<if test= "conditionType != null">ConditionType=#{conditionType,jdbcType=VARCHAR},</if >
+			<if test= "condition != null">Condition=#{condition},</if >
+			<if test= "match != null">Match=#{match},</if >
+			<if test= "matchType != null">MatchType=#{matchType},</if >
+		</set>
+	</sql >
+</mapper>

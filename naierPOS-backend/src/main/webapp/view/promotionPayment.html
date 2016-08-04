@@ -13,7 +13,7 @@
 		<div class="box-header">
 			<h3 class="box-title">促销支付限制</h3>
 			<div class="box-tools">
-				<a class="btn btn-primary btn-flat" href="/backend/add/promotionPayment"><i
+				<a class="btn btn-primary btn-flat" href="/backend/add/promotionPayment?promotionId={{promotionId}}"><i
 					class="fa fa-plus"></i> 添加</a> <a class="btn btn-danger btn-flat"
 					href="javascript:void(0)" ng-click="del()"><i class="fa fa-minus"></i> 删除</a>
 			</div>
@@ -38,7 +38,7 @@
 		                <td>{{result.client.name}}</td>
 		                <td>{{result.promotion.name}}</td>
 		                <td>{{result.clientPayment.payment.name}}</td>
-						<td><a href="/backend/edit/promotionPayment/{{result.id}}" class="btn btn-info btn-xs">编辑</a></td>
+						<td><a href="/backend/edit/promotionPayment/{{result.id}}?promotionId={{promotionId}}" class="btn btn-info btn-xs">编辑</a></td>
 		            </tr>
 				</table>
 			</div>

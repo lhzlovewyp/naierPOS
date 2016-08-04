@@ -18,7 +18,19 @@
 					 href="javascript:void(0)" ng-click="del()"><i class="fa fa-minus"></i> 删除</a>
 			</div>
 		</div>
-		
+		<div class="box-header">
+			<div class="input-group input-group-sm" style="width: 500px;">
+				<input type="text" name="table_search"
+					class="form-control pull-right" placeholder="名称" id="input1" ng-model="likeName" style="width:220px;">
+				<input type="text" name="table_search"
+					class="form-control pull-right" placeholder="编号" id="input2" ng-model="selectForm.code" style="width:220px;">
+				<div class="input-group-btn">
+					<button type="submit" class="btn btn-primary" ng-click="queryByPage()">
+						<i class="fa fa-search"></i>
+					</button>
+				</div>
+			</div>
+		</div>
 		<div class="box-body">
 			<div class="table-responsive mailbox-messages">
 				<table class="table table-hover">

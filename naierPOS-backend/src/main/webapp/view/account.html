@@ -51,7 +51,7 @@
 		                <td>{{result.name}}</td>
 		                <td>{{result.nick}}</td>
 		                <td><img alt="User Image" class="user-image"
-							src={{result.displayPhoto}} width="50"></td>
+							src="{{result.displayPhoto || '/backend/statics/dist/images/avatar.png'}}" width="50"></td>
 						<td>{{result.allRoleName}}</td>
 						<td>{{showStatusDesc(result.status)}}</td>
 						<td><a href="/backend/edit/account/{{result.id}}" class="btn btn-info btn-xs">编辑</a></td>

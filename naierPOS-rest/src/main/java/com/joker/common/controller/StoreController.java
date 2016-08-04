@@ -94,6 +94,8 @@ public class StoreController extends AbstractController {
 		Map params = paramsBody.getBody();
 		Integer pageNo = (Integer) params.get("pageNo");
 		Integer limit = (Integer) params.get("limit");
+		String likeName = (String) params.get("likeName");
+		String code = (String) params.get("code");
 		pageNo = (pageNo == null ? 0 : pageNo);
 		limit = (limit == null ? 10 : limit);
 
@@ -104,6 +106,12 @@ public class StoreController extends AbstractController {
 			String clientId = account.getClient().getId();
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("clientId", clientId);
+			if(StringUtils.isNotBlank(likeName)){
+				map.put("likeName", likeName);
+			}
+			if(StringUtils.isNotBlank(code)){
+				map.put("code",code);
+			}
 			Page<Store> page = storeService.getStorePageByCondition(map,
 					pageNo, limit);
 			rbody.setData(page);

@@ -49,6 +49,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="clientId != null">
 				and r.Client=#{clientId}
 			</if>
+			<if test="code != null">
+				and r.Code=#{code}
+			</if>
 			<if test="likeName != null">
 				and r.name like CONCAT('%','${likeName}','%' )  
 			</if>
@@ -63,6 +66,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM Role r WHERE r.Status= 1
 			<if test="clientId != null">
 				and r.Client=#{clientId}
+			</if>
+			<if test="code != null">
+				and r.Code=#{code}
 			</if>
 			<if test="likeName != null">
 				and r.name like CONCAT('%','${likeName}','%' )  

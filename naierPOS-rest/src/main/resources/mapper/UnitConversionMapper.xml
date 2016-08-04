@@ -47,9 +47,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="clientId != null">
 				and a.Client=#{clientId}
 			</if>
-			<if test="likeName != null">
-				and a.name like CONCAT('%','${likeName}','%' )  
-			</if>
 			order by a.ID desc
 			<if test="start != null and limit != null">
 				limit #{start},#{limit}

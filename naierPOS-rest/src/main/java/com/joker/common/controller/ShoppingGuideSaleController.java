@@ -88,8 +88,13 @@ public class ShoppingGuideSaleController extends AbstractController {
 			String clientId = account.getClient().getId();
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("clientId", clientId);
-			map.put("likeName", likeName);
-			map.put("code", code);
+			if(StringUtils.isNotBlank(likeName)){
+				map.put("likeName", likeName);
+			}
+			if(StringUtils.isNotBlank(code)){
+				map.put("code", code);
+			}
+			
 			Page<ShoppingGuide> page = shoppingGuideService.getShoppingGuidePageByCondition(map,
 					pageNo, limit);
 			rbody.setData(page);

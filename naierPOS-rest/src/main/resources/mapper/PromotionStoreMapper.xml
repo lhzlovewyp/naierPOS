@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.PromotionStoreMapper">
+     
+    
+    <resultMap type="promotionStore" id="promotionStore">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="promotion.id" column="Promotion" />
+		<result property="store.id" column="Store" />
+		<result property="effDate" column="EffectiveDate" />
+		<result property="expDate" column="ExpiryDate" />
+	</resultMap>
+	
+	<resultMap type="promotionStore" id="promotionStorePage" extends="promotionStore">
+		<result property="client.name" column="ClientName" />
+	</resultMap>
+	
+	<select id="getPromotionStoreByID" parameterType="string" resultMap="promotionStore">
+		SELECT 
+			a.ID,a.Client,a.Promotion,a.Store,a.effDate,a.expDate
+		FROM PromotionStore a
+		WHERE a.ID=#{id} 
+	</select>
+	
+	<select id="getPromotionStorePageByCondition" parameterType="java.util.Map" resultMap="promotionStorePage">
+		SELECT 
+			a.ID,a.Client,a.Promotion,a.Store,a.effDate,a.expDate,c.Name ClientName
+		FROM PromotionStore a left outer join Client c
+		on a.Client = c.id and c.status = 1 
+		WHERE 
+			1 = 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="promotionId != null">
+				and a.Promotion=#{promotionId}
+			</if>
+			order by a.ID desc
+			<if test="start != null and limit != null">
+				limit #{start},#{limit}
+			</if>
+	</select>
+	
+	<select id="getPromotionStoreCountByCondition" parameterType="java.util.Map" resultType="int">
+		SELECT count(1)
+		FROM PromotionStore a WHERE 
+			1 = 1
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="promotionId != null">
+				and a.Promotion=#{promotionId}
+			</if>
+	</select>
+	
+	<delete id="deletePromotionStoreByID" parameterType="string">
+		DELETE FROM PromotionStore where ID =#{id}
+	</delete>
+	
+	<insert id="insertPromotionStore" parameterType="promotionStore">
+		insert into PromotionStore <include refid="promotionStoreSet" />
+	</insert>
+	
+	<update id="updatePromotionStore" parameterType="promotionStore" >
+		UPDATE PromotionStore <include refid="promotionStoreSet" /> WHERE ID = #{id}
+	</update>
+    
+    <sql id="promotionStoreSet">
+		<set >
+			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
+			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
+			<if test= "promotion != null">Promotion=#{promotion.id,jdbcType=VARCHAR},</if >
+			<if test= "clientStore != null">Store=#{clientStore.id,jdbcType=VARCHAR},</if >
+			<if test= "effDate != null">EffectiveDate=#{effDate},</if >
+			<if test= "expDate != null">ExpiryDate=#{expDate},</if >
+		</set>
+	</sql >
+</mapper>

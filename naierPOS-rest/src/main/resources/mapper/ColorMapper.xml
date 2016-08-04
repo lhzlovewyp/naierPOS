@@ -37,6 +37,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="clientId != null">
 				and a.Client=#{clientId}
 			</if>
+			<if test="code != null">
+				and a.Code=#{code}
+			</if>
 			<if test="likeName != null">
 				and a.name like CONCAT('%','${likeName}','%' )  
 			</if>
@@ -51,6 +54,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM Color a WHERE a.Status= 1
 			<if test="clientId != null">
 				and a.Client=#{clientId}
+			</if>
+			<if test="code != null">
+				and a.Code=#{code}
 			</if>
 			<if test="likeName != null">
 				and a.name like CONCAT('%','${likeName}','%' )  

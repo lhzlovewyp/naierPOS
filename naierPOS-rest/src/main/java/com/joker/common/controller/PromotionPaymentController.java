@@ -63,7 +63,7 @@ public class PromotionPaymentController extends AbstractController {
 		Map params = paramsBody.getBody();
 		Integer pageNo = (Integer) params.get("pageNo");
 		Integer limit = (Integer) params.get("limit");
-		String likeName = (String) params.get("likeName");
+		String promotionId = (String) params.get("promotionId");
 		pageNo = (pageNo == null ? 0 : pageNo);
 		limit = (limit == null ? 10 : limit);
 
@@ -74,7 +74,7 @@ public class PromotionPaymentController extends AbstractController {
 			String clientId = account.getClient().getId();
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("clientId", clientId);
-			map.put("likeName", likeName);
+			map.put("promotionId", promotionId);
 			Page<PromotionPayment> page = promotionPaymentService
 					.getPromotionPaymentPageByCondition(map, pageNo, limit);
 			rbody.setData(page);

@@ -180,9 +180,9 @@ public class UnitController extends AbstractController {
 		String name = (String) params.get("name");
 		String clientId = (String) params.get("clientId");
 
-		if (!StringUtils.isNumeric(unitNum)) {
+		if (!StringUtils.isNumeric(unitNum) || Integer.parseInt(unitNum)<0 || Integer.parseInt(unitNum)>2) {
 			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入小数位！");
+			rbody.setMsg("小数位数输入错误！");
 			return rbody;
 		}
 		if (StringUtils.isBlank(name)) {
@@ -190,25 +190,19 @@ public class UnitController extends AbstractController {
 			rbody.setMsg("请输入单位描述！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
+		
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
 
 			Unit addUnit = new Unit();
 			addUnit.setId(UUID.randomUUID().toString());
 			addUnit.setName(name);
 			addUnit.setUnitNum(Integer.valueOf(unitNum));
-			addUnit.setClient(client);
+			addUnit.setClient(account.getClient());
 			addUnit.setCreated(new Date());
 			addUnit.setCreator(account.getId());
 
@@ -252,9 +246,9 @@ public class UnitController extends AbstractController {
 			rbody.setMsg("记录唯一信息缺失，请刷新页面！");
 			return rbody;
 		}
-		if (!StringUtils.isNumeric(unitNum)) {
+		if (!StringUtils.isNumeric(unitNum) || Integer.parseInt(unitNum)<0 || Integer.parseInt(unitNum)>2) {
 			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入小数位！");
+			rbody.setMsg("小数位数输入错误！");
 			return rbody;
 		}
 		if (StringUtils.isBlank(name)) {
