@@ -18,9 +18,12 @@
 			</div>
 		</div>
 		<div class="box-header">
-			<div class="input-group input-group-sm" style="width: 250px;">
+			<div class="input-group input-group-sm" style="width: 500px;">
+			<input type="text" name="table_search"
+					class="form-control pull-right" placeholder="请输入昵称" id="input2" ng-model="likeName" style="width:220px;">
 				<input type="text" name="table_search"
-					class="form-control pull-right" placeholder="搜索" id="input1">
+					class="form-control pull-right" placeholder="请输入账号" id="input1" ng-model="selectForm.name" style="width:220px;">
+				
 				<div class="input-group-btn">
 					<button type="submit" class="btn btn-primary" ng-click="queryByPage()">
 						<i class="fa fa-search"></i>
@@ -36,28 +39,19 @@
 								class="btn btn-default btn-sm checkbox-toggle">
 								<i class="fa fa-square-o"></i>
 							</button></th>
-						<th>GUID</th>
-						<th>商户</th>
 						<th>帐号</th>
 						<th>昵称</th>
-						<th>首次登录后强制修改密码</th>
 						<th>头像</th>
-						<th>所属门店</th>
 						<th>角色</th>
 						<th>状态</th>
 						<th>操作</th>
 					</tr>
 					<tr ng-repeat="result in basicsInfo.results"  on-render-finish>
 						<td align="center"><input type="checkbox" ng-click="check(result.id,chk)" ng-model="chk"></td>
-		                <td>{{result.id}}</td>
-		                <td>{{result.client.name}}</td>
 		                <td>{{result.name}}</td>
 		                <td>{{result.nick}}</td>
-		                <td>{{showYesOrNo(result.changePWD)}}</td>
 		                <td><img alt="User Image" class="user-image"
-							src={{result.displayPhoto}} width="50"> <a
-							href="avatar.html" class="btn btn-danger btn-xs">修改</a></td>
-						<td>{{result.store.name}}</td>
+							src={{result.displayPhoto}} width="50"></td>
 						<td>{{result.allRoleName}}</td>
 						<td>{{showStatusDesc(result.status)}}</td>
 						<td><a href="/backend/edit/account/{{result.id}}" class="btn btn-info btn-xs">编辑</a></td>

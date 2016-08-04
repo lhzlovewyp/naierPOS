@@ -61,11 +61,15 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 	var selectedId ="";
 	$scope.chk = false;
 	var routePath = $routeParams.routePath;
-	function goPage(pageNo){
+	function goPage(pageNo,selectForm){
 		var body = {};
 		body.pageNo = pageNo;
 		body.limit = $scope.paginationConf.itemsPerPage;
 		body.likeName = $scope.likeName;
+		if(selectForm){
+		  body=$.extend(body,selectForm);
+		}
+		
 		BasicsService.queryByPage(body,routePath).then(function(data){
     		$scope.basicsInfo = data;
     		$scope.paginationConf.totalItems = data.totalRecord;
@@ -79,12 +83,12 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
         perPageOptions: [10, 20, 30, 40, 50],
         rememberPerPage: 'perPageItems',
         onChange: function(){
-        	goPage($scope.paginationConf.currentPage);
+        	goPage($scope.paginationConf.currentPage,$scope.selectForm);
         }
     };
 	
 	$scope.queryByPage = function(){
-		goPage(1);
+		goPage(1,$scope.selectForm);
 	};
 	
 	$scope.del = function(){

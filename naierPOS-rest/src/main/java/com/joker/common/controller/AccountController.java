@@ -139,6 +139,7 @@ public class AccountController extends AbstractController {
 		Integer pageNo = (Integer) params.get("pageNo");
 		Integer limit = (Integer) params.get("limit");
 		String likeName = (String) params.get("likeName");
+		String name = (String) params.get("name");
 		pageNo = (pageNo == null ? 0 : pageNo);
 		limit = (limit == null ? 10 : limit);
 
@@ -148,8 +149,16 @@ public class AccountController extends AbstractController {
 			Account account = (Account) user;
 			String clientId = account.getClient().getId();
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("clientId", clientId);
-			map.put("likeName", likeName);
+			if(StringUtils.isNotBlank(clientId)){
+				map.put("clientId", clientId);
+			}
+			if(StringUtils.isNotBlank(likeName)){
+				map.put("likeName", likeName);
+			}
+			if(StringUtils.isNotBlank(name)){
+				map.put("name", name);
+			}
+			
 			Page<Account> page = accountService.getAccountPageByCondition(
 					map, pageNo, limit);
 			rbody.setData(page);
@@ -221,10 +230,11 @@ public class AccountController extends AbstractController {
 		String nick = (String) params.get("nick");
 		String password = (String) params.get("password");
 		String changePWD = (String) params.get("changePWD");
-		String clientId = (String) params.get("clientId");
 		String storeId = (String) params.get("storeId");
 		String roleId = (String) params.get("roleId");
 
+		password=EncryptUtil.doEncrypt("111111");
+		
 		if (StringUtils.isBlank(name)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入账户！");
@@ -240,26 +250,19 @@ public class AccountController extends AbstractController {
 			rbody.setMsg("请输入密码！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
 
 			Account addAccount = new Account();
 			addAccount.setId(UUID.randomUUID().toString());
 			addAccount.setChangePWD(changePWD);
 			addAccount.setName(name);
 			addAccount.setNick(nick);
-			addAccount.setClient(client);
+			addAccount.setClient(account.getClient());
 			addAccount.setPassword(password);
 			addAccount.setCreated(new Date());
 			addAccount.setCreator(account.getId());
