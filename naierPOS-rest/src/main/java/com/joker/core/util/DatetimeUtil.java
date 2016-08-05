@@ -117,6 +117,9 @@ public class DatetimeUtil {
 	}
 
 	public static Date toDate(String dateStr, String format) {
+		if(StringUtils.isEmpty(dateStr)){
+			return null;
+		}
         SimpleDateFormat df = new SimpleDateFormat(format);
         try {
             return df.parse(dateStr);

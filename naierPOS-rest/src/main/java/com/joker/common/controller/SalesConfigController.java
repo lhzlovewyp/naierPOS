@@ -63,6 +63,13 @@ public class SalesConfigController extends AbstractController {
 		Map params = paramsBody.getBody();
 		Integer pageNo = (Integer) params.get("pageNo");
 		Integer limit = (Integer) params.get("limit");
+		
+		String storeCode = (String) params.get("storeCode");
+		String storeName = (String) params.get("storeName");
+		String salesDate = (String) params.get("salesDate");
+		
+		
+		
 		pageNo = (pageNo == null ? 0 : pageNo);
 		limit = (limit == null ? 10 : limit);
 
@@ -73,6 +80,17 @@ public class SalesConfigController extends AbstractController {
 			String clientId = account.getClient().getId();
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("clientId", clientId);
+			
+			if(StringUtils.isNotBlank(storeCode)){
+				map.put("storeCode",storeCode);
+			}
+			if(StringUtils.isNotBlank(storeName)){
+				map.put("storeName",storeName);
+			}
+			if(StringUtils.isNotBlank(salesDate)){
+				map.put("salesDate",salesDate);
+			}
+			
 			Page<SalesConfig> page = salesConfigService
 					.getSalesConfigPageByCondition(map, pageNo, limit);
 			rbody.setData(page);

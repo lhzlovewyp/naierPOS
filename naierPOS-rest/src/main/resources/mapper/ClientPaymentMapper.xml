@@ -43,7 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		on a.Payment = p.code and p.status = 1 
 		left outer join Client c
 		on a.Client = c.id and c.status = 1 
-		WHERE 
+		WHERE 1=1
 			<if test="clientId != null">
 				and a.Client=#{clientId}
 			</if>
@@ -55,7 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="getClientPaymentCountByCondition" parameterType="java.util.Map" resultType="int">
 		SELECT count(1)
-		FROM ClientPayment a WHERE 
+		FROM ClientPayment a WHERE 1=1
 			<if test="clientId != null">
 				and a.Client=#{clientId}
 			</if>

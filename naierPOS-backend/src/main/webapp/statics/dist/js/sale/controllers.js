@@ -55,6 +55,12 @@ app.controller("changePWDCtrl",['$scope','$location','LoginService',function($sc
 }]);
 
 app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsService',function($scope,$location,$routeParams,BasicsService){
+	
+	//绑定时间控件.
+	$scope.$on('$viewContentLoaded', function(){
+		$('[data-provide="datepicker-inline"]').datepicker();
+	});
+	
 	var initItemsPerPage = 10;
 	var initCurrentPage = 1;
 	var totalItems = 0;

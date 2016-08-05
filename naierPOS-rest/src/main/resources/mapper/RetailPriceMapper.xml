@@ -50,11 +50,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		on a.Client = c.id and c.status = 1 
 		left outer join Store s
 		on a.Store = s.id and s.status = 1 
+		join Material m on m.ID=a.Material
 		WHERE 
 			1 = 1
-			<if test="clientId != null">
-				and a.Client=#{clientId}
+			<if test="storeCode != null">
+				and s.Code=#{storeCode}
 			</if>
+			<if test="storeName != null">
+				and s.Name like CONCAT('%','${storeName}','%' )  
+			</if>
+			<if test="mcode != null">
+				and m.Code=#{mcode}
+			</if>
+			<if test="mname != null">
+				and m.Name like CONCAT('%','${mname}','%' )  
+			</if>
+			<if test="effDate != null">
+				<![CDATA[  and a.EffectiveDate>=#{effDate}]]>
+			</if>
+			<if test="expDate != null">
+				<![CDATA[  and a.ExpiryDate<=#{expDate}]]>
+			</if>
+			
 			order by a.ID desc
 			<if test="start != null and limit != null">
 				limit #{start},#{limit}

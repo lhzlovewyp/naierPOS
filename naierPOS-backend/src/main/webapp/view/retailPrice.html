@@ -19,16 +19,25 @@
 			</div>
 		</div>
 		<div class="box-header">
-			<div class="input-group input-group-sm" style="width: 500px;">
+			
+			<div class="input-group input-group-sm" style="width: 80%">
 				<input type="text" name="table_search"
-					class="form-control pull-right" placeholder="门店编号" id="input1" ng-model="code" style="width:220px;">
+					class="form-control " placeholder="门店编号" id="input3" ng-model="selectForm.storeCode" style="width:20%">
 				<input type="text" name="table_search"
-					class="form-control pull-right" placeholder="营业日期" id="input2" ng-model="selectForm.salesDate" style="width:220px;">
-				<div class="input-group-btn">
-					<button type="submit" class="btn btn-primary" ng-click="queryByPage()">
+					class="form-control " placeholder="门店名称" id="input4" ng-model="selectForm.storeName" style="width:20%">
+				<input type="text" name="table_search"
+					class="form-control " placeholder="物料编号" id="input5" ng-model="selectForm.mcode" style="width:20%;">
+				<input type="text" name="table_search"
+					class="form-control " placeholder="物料名称" id="input6" ng-model="selectForm.mname" style="width:20%;">
+			</div>
+			<div class="input-group input-group-sm" style="width: 81%">
+				<input type="text" name="table_search"
+					class="form-control" placeholder="生效日期" id="input1" ng-model="selectForm.effDate" style="width:40%" data-provide="datepicker-inline" data-date-format="yyyy-mm-dd">
+				<input type="text" name="table_search"
+					class="form-control" placeholder="失效日期" id="input2" ng-model="selectForm.expDate" style="width:40%" data-provide="datepicker-inline" data-date-format="yyyy-mm-dd">
+				<button type="submit" class="btn btn-primary" ng-click="queryByPage()">
 						<i class="fa fa-search"></i>
-					</button>
-				</div>
+				</button>
 			</div>
 		</div>
 		<div class="box-body">
