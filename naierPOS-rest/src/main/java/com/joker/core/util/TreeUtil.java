@@ -66,7 +66,12 @@ public class TreeUtil {
 					}
 					childNodeList.add(newTreeNode);
 				} else {
-					List<TreeNode> childNodeList = new ArrayList<TreeNode>();
+					List<TreeNode> childNodeList = null;
+					if (parentNodeMap.containsKey(parentId)) {
+						childNodeList = parentNodeMap.get(parentId);
+					} else {
+						childNodeList = new ArrayList<TreeNode>();
+					}
 					childNodeList.add(newTreeNode);
 
 					// 查找是否有自己的孩子节点
