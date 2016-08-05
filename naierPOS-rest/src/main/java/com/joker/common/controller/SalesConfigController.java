@@ -203,19 +203,14 @@ public class SalesConfigController extends AbstractController {
 			rbody.setMsg("请输入门店！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
+		
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
+			
 
 			SalesConfig salesConfig = new SalesConfig();
 			salesConfig.setId(UUID.randomUUID().toString());
@@ -223,7 +218,7 @@ public class SalesConfigController extends AbstractController {
 			salesConfig.setMaxCode(Integer.valueOf(maxCode));
 			salesConfig.setSalesDate(DatetimeUtil.toDate(salesDate,
 					DatetimeUtil.DATE));
-			salesConfig.setClient(client);
+			salesConfig.setClient(account.getClient());
 			salesConfig.setCreated(new Date());
 			salesConfig.setCreator(account.getId());
 

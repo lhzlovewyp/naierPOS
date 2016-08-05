@@ -219,19 +219,14 @@ public class RetailPriceController extends AbstractController {
 			rbody.setMsg("请输入失效日期！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
+		
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
+			
 
 			RetailPrice retailPrice = new RetailPrice();
 			retailPrice.setId(UUID.randomUUID().toString());
@@ -240,7 +235,7 @@ public class RetailPriceController extends AbstractController {
 					DatetimeUtil.DATE));
 			retailPrice.setEffectiveDate(DatetimeUtil.toDate(effectiveDate,
 					DatetimeUtil.DATE));
-			retailPrice.setClient(client);
+			retailPrice.setClient(account.getClient());
 			retailPrice.setCreated(new Date());
 			retailPrice.setCreator(account.getId());
 

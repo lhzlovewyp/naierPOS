@@ -115,6 +115,7 @@ public class MaterialController extends AbstractController {
 		Integer pageNo = (Integer) params.get("pageNo");
 		Integer limit = (Integer) params.get("limit");
 		String likeName = (String) params.get("likeName");
+		String code = (String) params.get("code");
 		pageNo = (pageNo == null ? 0 : pageNo);
 		limit = (limit == null ? 10 : limit);
 
@@ -125,7 +126,13 @@ public class MaterialController extends AbstractController {
 			String clientId = account.getClient().getId();
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("clientId", clientId);
-			map.put("likeName", likeName);
+			if(StringUtils.isNotBlank(likeName)){
+				map.put("likeName", likeName);
+			}
+			if(StringUtils.isNotBlank(code)){
+				map.put("code", code);
+			}
+			
 			Page<Material> page = materialService.getMaterialPageByCondition(
 					map, pageNo, limit);
 			rbody.setData(page);
@@ -281,19 +288,14 @@ public class MaterialController extends AbstractController {
 			rbody.setMsg("请正确输入标准零售价！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
+		
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
+			
 
 			Unit basicUnit = new Unit();
 			basicUnit.setId(basicUnitId);
@@ -312,7 +314,7 @@ public class MaterialController extends AbstractController {
 			material.setRetailPrice(new BigDecimal(retailPrice));
 			material.setBarCode(barCode);
 			material.setProperty(property);
-			material.setClient(client);
+			material.setClient(account.getClient());
 			material.setCreated(new Date());
 			material.setCreator(account.getId());
 

@@ -220,19 +220,14 @@ public class RetailConfigController extends AbstractController {
 			rbody.setMsg("请输入销售单金额舍去值！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
+		
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
+			
 
 			RetailConfig retailConfig = new RetailConfig();
 			retailConfig.setId(UUID.randomUUID().toString());
@@ -241,7 +236,7 @@ public class RetailConfigController extends AbstractController {
 			retailConfig.setItemRoundDown(Integer.valueOf(itemRoundDown));
 			retailConfig.setTransDecimal(Integer.valueOf(transDecimal));
 			retailConfig.setSaleRoundDown(Integer.valueOf(saleRoundDown));
-			retailConfig.setClient(client);
+			retailConfig.setClient(account.getClient());
 			retailConfig.setCreated(new Date());
 			retailConfig.setCreator(account.getId());
 

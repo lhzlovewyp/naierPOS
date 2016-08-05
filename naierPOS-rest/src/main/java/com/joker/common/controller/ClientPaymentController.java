@@ -182,19 +182,14 @@ public class ClientPaymentController extends AbstractController {
 			rbody.setMsg("请输入支付方式！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
+		
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
+			
 
 			Payment payment = new Payment();
 			payment.setCode(paymentCode);
@@ -202,7 +197,7 @@ public class ClientPaymentController extends AbstractController {
 			ClientPayment clientPayment = new ClientPayment();
 			clientPayment.setId(UUID.randomUUID().toString());
 			clientPayment.setPayment(payment);
-			clientPayment.setClient(client);
+			clientPayment.setClient(account.getClient());
 			clientPayment.setCreated(new Date());
 			clientPayment.setCreator(account.getId());
 

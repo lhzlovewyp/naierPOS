@@ -37,15 +37,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="getUnitConversionPageByCondition" parameterType="java.util.Map" resultMap="unitConversionPage">
-		SELECT 
-			a.ID,a.Client,a.UnitA,a.QtyA,a.UnitB,a.QtyB,a.Remark,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+		select a.ID,a.Client,a.UnitA,u1.Name as u1Name,a.QtyA,a.UnitB,u2.Name as u2Name,a.QtyB,a.Remark,a.Status,a.Creator,a.Created,a.Editor,a.Modified
 			,c.Name ClientName
 		FROM UnitConversion a left outer join Client c
 		on a.Client = c.id and c.status = 1
+		left outer join Unit u1 on u1.ID=a.UnitA
+		left outer join Unit u2 on u2.ID=a.UnitB
 		WHERE 
 			a.Status= 1
 			<if test="clientId != null">
 				and a.Client=#{clientId}
+			</if>
+			<if test="uniA != null">
+				and u1.Name=#{uniA}
+			</if>
+			<if test="uniB != null">
+				and u2.Name=#{uniB}
 			</if>
 			order by a.ID desc
 			<if test="start != null and limit != null">
@@ -55,13 +62,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="getUnitConversionCountByCondition" parameterType="java.util.Map" resultType="int">
 		SELECT count(1)
-		FROM UnitConversion a WHERE 
+		FROM UnitConversion a left outer join Client c
+		on a.Client = c.id and c.status = 1
+		left outer join Unit u1 on u1.ID=a.UnitA
+		left outer join Unit u2 on u2.ID=a.UnitB
+		WHERE 
 			a.Status= 1
 			<if test="clientId != null">
 				and a.Client=#{clientId}
 			</if>
-			<if test="likeName != null">
-				and a.name like CONCAT('%','${likeName}','%' )  
+			<if test="clientId != null">
+				and a.Client=#{clientId}
+			</if>
+			<if test="uniA != null">
+				and u1.Name=#{uniA}
+			</if>
+			<if test="uniB != null">
+				and u2.Name=#{uniB}
 			</if>
 	</select>
 	

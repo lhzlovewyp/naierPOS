@@ -18,6 +18,19 @@
 					href="javascript:void(0)" ng-click="del()"><i class="fa fa-minus"></i> 删除</a>
 			</div>
 		</div>
+		<div class="box-header">
+			<div class="input-group input-group-sm" style="width: 500px;">
+				<input type="text" name="table_search"
+					class="form-control pull-right" placeholder="门店编号" id="input1" ng-model="code" style="width:220px;">
+				<input type="text" name="table_search"
+					class="form-control pull-right" placeholder="营业日期" id="input2" ng-model="selectForm.salesDate" style="width:220px;">
+				<div class="input-group-btn">
+					<button type="submit" class="btn btn-primary" ng-click="queryByPage()">
+						<i class="fa fa-search"></i>
+					</button>
+				</div>
+			</div>
+		</div>
 		<div class="box-body">
 			<div class="table-responsive mailbox-messages">
 				<table class="table table-hover">
@@ -26,8 +39,6 @@
 								class="btn btn-default btn-sm checkbox-toggle">
 								<i class="fa fa-square-o"></i>
 							</button></th>
-						<th>GUID</th>
-						<th>商户</th>
 						<th>门店</th>
 						<th>物料</th>
 						<th>销售单位</th>
@@ -38,8 +49,6 @@
 					</tr>
 					<tr ng-repeat="result in basicsInfo.results"  on-render-finish>
 						<td align="center"><input type="checkbox" ng-click="check(result.id,chk)" ng-model="chk"></td>
-		                <td>{{result.id}}</td>
-		                <td>{{result.client.name}}</td>
 		                <td>{{result.store.name}}</td>
 		                <td>{{result.material.name}}</td>
 		                <td>{{result.unit.name}}</td>

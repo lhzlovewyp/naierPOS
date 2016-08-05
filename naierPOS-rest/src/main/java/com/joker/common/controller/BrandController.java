@@ -61,6 +61,7 @@ public class BrandController extends AbstractController {
 		Integer pageNo = (Integer) params.get("pageNo");
 		Integer limit = (Integer) params.get("limit");
 		String likeName = (String) params.get("likeName");
+		String code = (String) params.get("code");
 		pageNo = (pageNo == null ? 0 : pageNo);
 		limit = (limit == null ? 10 : limit);
 
@@ -71,7 +72,13 @@ public class BrandController extends AbstractController {
 			String clientId = account.getClient().getId();
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("clientId", clientId);
-			map.put("likeName", likeName);
+			if(StringUtils.isNotBlank(likeName)){
+				map.put("likeName", likeName);
+			}
+			if(StringUtils.isNotBlank(code)){
+				map.put("code", code);
+			}
+			
 			Page<Brand> page = brandService.getBrandPageByCondition(map,
 					pageNo, limit);
 			rbody.setData(page);
@@ -187,25 +194,19 @@ public class BrandController extends AbstractController {
 			rbody.setMsg("请输入名称！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
+		
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
 
 			Brand addBrand = new Brand();
 			addBrand.setId(UUID.randomUUID().toString());
 			addBrand.setCode(code);
 			addBrand.setName(name);
-			addBrand.setClient(client);
+			addBrand.setClient(account.getClient());
 			addBrand.setCreated(new Date());
 			addBrand.setCreator(account.getId());
 
