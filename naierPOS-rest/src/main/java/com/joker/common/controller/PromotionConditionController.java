@@ -184,7 +184,7 @@ public class PromotionConditionController extends AbstractController {
 		String conditionType = (String) params.get("conditionType");
 		String condition = null;
 		if (params.get("condition") != null) {
-			condition = (String) params.get("condition");
+			condition = String.valueOf(params.get("condition"));
 		}
 		String match = (String) params.get("match");
 		String matchType = (String) params.get("matchType");
@@ -264,7 +264,7 @@ public class PromotionConditionController extends AbstractController {
 		String conditionType = (String) params.get("conditionType");
 		String condition = null;
 		if (params.get("condition") != null) {
-			condition = (String) params.get("condition");
+			condition = String.valueOf(params.get("condition"));
 		}
 		String match = (String) params.get("match");
 		String matchType = (String) params.get("matchType");

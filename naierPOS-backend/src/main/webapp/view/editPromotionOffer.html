@@ -15,7 +15,9 @@
 				<div class="form-group">
 					<label for="OfferType" class="col-sm-2 control-label">优惠方式</label>
 					<div class="col-sm-10">
-						<select id="OfferType" name="OfferType" class="form-control" ng-model="selOfferType" ng-options="x.show for x in offerTypes">
+						<select id="OfferType" name="OfferType" class="form-control" 
+							onChange="$('#OfferContent').attr('placeholder', $(this).children('option:selected').text())"
+							ng-model="selOfferType" ng-options="x.show for x in offerTypes">
 						</select>
 					</div>
 				</div>
@@ -23,7 +25,7 @@
 					<label for="OfferContent" class="col-sm-2 control-label">优惠值</label>
 					<div class="col-sm-10">
 						<input type="text" class="form-control" id="OfferContent"
-							name="OfferContent" placeholder="折扣率">
+							name="OfferContent" placeholder="折扣率" ng-model="form.offerContent">
 					</div>
 				</div>
 				<div class="form-group">

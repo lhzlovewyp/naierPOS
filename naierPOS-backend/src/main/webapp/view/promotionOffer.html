@@ -35,9 +35,9 @@
 					<tr ng-repeat="result in basicsInfo.results"  on-render-finish>
 						<td align="center"><input type="checkbox" ng-click="check(result.id,chk)" ng-model="chk"></td>
 		                <td>{{result.promotion.name}}</td>
-		                <td>{{result.offerType}}</td>
+		                <td>{{showOfferType(result.offerType)}}</td>
 						<td>{{result.offerContent}}</td>
-						<td>{{result.matchType}}</td>
+						<td>{{showMatchType(result.matchType)}}</td>
 						<td><a href="/backend/edit/promotionOffer/{{result.id}}?promotionId={{promotionId}}" class="btn btn-info btn-xs">编辑</a></td>
 					</tr>
 				</table>
