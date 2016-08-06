@@ -55,7 +55,7 @@ app.factory('LoginService',['$q','$location','$http','BaseService',function($q,$
         	BaseService.post('/rest/login/validToken', obj).then(function (data) {
         		if(data.data.status == Status.SUCCESS){
         			loginInfo.userName=data.data.data.nick;
-        			loginInfo.storeName=data.data.data.store.name;
+        			loginInfo.storeName=data.data.data.store ?data.data.data.store.name : '';
         			deferred.resolve(loginInfo);
         		}else{
         			location.href = '/backend/login.html';

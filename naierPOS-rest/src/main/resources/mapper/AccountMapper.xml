@@ -27,26 +27,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
     <select id="getAccountByClientAndName" parameterType="string" resultMap="account">
 		SELECT 
-			a.ID,a.Client,s.Store,a.Name,a.Nick,a.Password,a.ChangePWD,a.DisplayPhoto,a.Status,a.Creator,a.Created,a.Editor,a.Modified
-		FROM Account a,AccountStore s 
+			a.ID,a.Client,a.Name,a.Nick,a.Password,a.ChangePWD,a.DisplayPhoto,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+		FROM Account a 
 		WHERE 
-			a.ID=s.Account and a.Client=#{clientId} and a.Name=#{name}  
+			a.Client=#{clientId} and a.Name=#{name}  
 	</select>
 	
 	<select id="getAccountByID" parameterType="string" resultMap="account">
 		SELECT 
-			a.ID,a.Client,s.Store,a.Name,a.Nick,a.Password,a.ChangePWD,a.DisplayPhoto,a.Status,a.Creator,a.Created,a.Editor,a.Modified
-		FROM Account a,AccountStore s 
+			a.ID,a.Client,a.Name,a.Nick,a.Password,a.ChangePWD,a.DisplayPhoto,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+		FROM Account a
 		WHERE 
-			a.ID=s.Account and a.ID=#{id} 
+			 a.ID=#{id} 
 	</select>
 	
 	<select id="getAccountPageByCondition" parameterType="java.util.Map" resultMap="accountPage">
 		SELECT 
-			a.ID,a.Client,s.Store,a.Name,a.Nick,a.Password,a.ChangePWD,a.DisplayPhoto,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+			a.ID,a.Client,a.Name,a.Nick,a.Password,a.ChangePWD,a.DisplayPhoto,a.Status,a.Creator,a.Created,a.Editor,a.Modified
 			,c.Name ClientName
-		FROM Account a left outer join AccountStore s 
-		on a.ID=s.Account and s.Status = 1
+		FROM Account a 
 		left outer join Client c
 		on a.Client = c.id and c.status = 1 
 		WHERE 

@@ -40,8 +40,16 @@
         <property name="maxIdle" value="${jdbc.maxIdle}" />        <!-- 队列中的最大等待数 -->
         <property name="maxWait" value="${jdbc.maxWait}" />        <!-- 最长等待时间，单位毫秒 -->
         <property name="maxActive" value="${jdbc.maxActive}" />    <!-- 最大活跃数 -->
-        <property name="initialSize" value="${jdbc.initialSize}" /><!--
-            初始大小 -->
+        <property name="initialSize" value="${jdbc.initialSize}" /><!--初始大小 -->
+        <property name="removeAbandoned" value="true" />
+        <property name="removeAbandonedTimeout" value="180" />
+        <property name= "testWhileIdle"><value>true</value></property>
+		<property name= "testOnBorrow"><value>false</value></property>
+		<property name= "testOnReturn"><value>false</value></property>
+		<property name= "validationQuery"><value>select NOW() from DUAL</value></property>
+		<property name= "validationQueryTimeout" ><value>1</value></property>
+		<property name= "timeBetweenEvictionRunsMillis" ><value>30000</value></property>
+		<property name= "numTestsPerEvictionRun" ><value>16</value></property>
     </bean>
     <!-- slave -->
     <bean id="slavedataSource" class="org.apache.commons.dbcp.BasicDataSource"
@@ -56,6 +64,15 @@
         <property name="maxActive" value="${jdbc.maxActive}" />    <!-- 最大活跃数 -->
         <property name="initialSize" value="${jdbc.initialSize}" /><!--
             初始大小 -->
+        <property name="removeAbandoned" value="true" />
+        <property name="removeAbandonedTimeout" value="180" />
+        <property name= "testWhileIdle"><value>true</value></property>
+		<property name= "testOnBorrow"><value>false</value></property>
+		<property name= "testOnReturn"><value>false</value></property>
+		<property name= "validationQuery"><value>select NOW() from DUAL</value></property>
+		<property name= "validationQueryTimeout" ><value>1</value></property>
+		<property name= "timeBetweenEvictionRunsMillis" ><value>30000</value></property>
+		<property name= "numTestsPerEvictionRun" ><value>16</value></property>
     </bean>
 
     <bean id="dataSource" class="com.joker.core.interceptor.DynamicDataSource">

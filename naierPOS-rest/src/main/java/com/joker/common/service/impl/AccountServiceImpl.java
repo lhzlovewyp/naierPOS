@@ -65,20 +65,23 @@ public class AccountServiceImpl implements AccountService {
 			String token = UUID.randomUUID().toString();
 			account.setToken(token);
 
-			if (account.getStore() != null) {
-				// 获取门店信息
-				Store store = storeMapper.getStoreById(account.getStore()
-						.getId());
-				if (store != null) {
-					account.setStore(store);
+			// 获取门店信息
+			List<Store> stores=storeMapper.getStoresByAid(account.getId());
+			
+			if (CollectionUtils.isNotEmpty(stores)) {
+				account.setStores(stores);
+				//如果只存在一个门店信息,直接写入，不需要选择门店.
+				if(stores.size()==1){
+					account.setStore(stores.get(0));
 				}
+			}
+			
 
-				// 获取账号对应的角色信息.
-				List<Role> roles = roleService.getRoleByAccountId(account
-						.getId());
-				if (CollectionUtils.isNotEmpty(roles)) {
-					account.setRoles(roles);
-				}
+			// 获取账号对应的角色信息.
+			List<Role> roles = roleService.getRoleByAccountId(account
+					.getId());
+			if (CollectionUtils.isNotEmpty(roles)) {
+				account.setRoles(roles);
 			}
 
 			CacheFactory.getCache().put(account.getToken(), account,
@@ -107,6 +110,11 @@ public class AccountServiceImpl implements AccountService {
 			List<Role> roles = roleService.getRoleByAccountId(id);
 			if (CollectionUtils.isNotEmpty(roles)) {
 				account.setRoles(roles);
+			}
+			// 获取门店信息
+			List<Store> stores=storeMapper.getStoresByAid(account.getId());
+			if (CollectionUtils.isNotEmpty(stores)) {
+				account.setStores(stores);
 			}
 		}
 		return account;
@@ -179,7 +187,18 @@ public class AccountServiceImpl implements AccountService {
 			String[] ids = id.split(Constants.COMMA);
 			for (String oneId : ids) {
 				if (StringUtils.isNotBlank(oneId)) {
+					//删除账号.
 					mapper.deleteAccountByID(oneId);
+					//删除角色信息
+					AccountStore delBean = new AccountStore();
+					Account acc=new Account();
+					acc.setId(oneId);
+					delBean.setAccount(acc);
+					accountStoreMapper.deleteAccountStoreByCondition(delBean);
+					//删除所属门店信息.
+					AccountRole delRoleBean = new AccountRole();
+					delRoleBean.setAccount(acc);
+					accountRoleMapper.deleteAccountRoleByCondition(delRoleBean);
 				}
 			}
 		}
@@ -196,19 +215,23 @@ public class AccountServiceImpl implements AccountService {
 			delBean.setAccount(account);
 			accountStoreMapper.deleteAccountStoreByCondition(delBean);
 
-			if (account.getStore() != null
-					&& StringUtils.isNotBlank(account.getStore().getId())) {
-				AccountStore accountStore = new AccountStore();
-				if (StringUtils.isBlank(accountStore.getId())) {
+			if (CollectionUtils.isNotEmpty(account.getStores())) {
+				Date createTime = account.getCreated();
+				String creator = account.getCreator();
+				for (Store store : account.getStores()) {
+					AccountStore accountStore = new AccountStore();
 					accountStore.setId(UUID.randomUUID().toString());
+					accountStore.setAccount(account);
+					accountStore.setClient(client);
+					accountStore.setStore(store);
+					accountStore.setStatus(Constants.STATUS_SUCCESS);
+					accountStore.setCreated(createTime);
+					accountStore.setCreator(creator);
+					accountStoreMapper.insertAccountStore(accountStore);
 				}
-				accountStore.setClient(client);
-				accountStore.setStatus(Constants.STATUS_SUCCESS);
-				accountStore.setStore(account.getStore());
-				accountStore.setAccount(account);
-				accountStoreMapper.insertAccountStore(accountStore);
 			}
-
+			
+			
 			AccountRole delRoleBean = new AccountRole();
 			delRoleBean.setAccount(account);
 			accountRoleMapper.deleteAccountRoleByCondition(delRoleBean);
@@ -240,19 +263,23 @@ public class AccountServiceImpl implements AccountService {
 		if (account.getClient() != null
 				&& StringUtils.isNotBlank(account.getClient().getId())) {
 			Client client = account.getClient();
-			if (account.getStore() != null
-					&& StringUtils.isNotBlank(account.getStore().getId())) {
-				AccountStore accountStore = new AccountStore();
-				if (StringUtils.isBlank(accountStore.getId())) {
-					accountStore.setId(UUID.randomUUID().toString());
-				}
-				accountStore.setClient(client);
-				accountStore.setStatus(Constants.STATUS_SUCCESS);
-				accountStore.setStore(account.getStore());
-				accountStore.setAccount(account);
-				accountStoreMapper.insertAccountStore(accountStore);
-			}
 
+			if (CollectionUtils.isNotEmpty(account.getStores())) {
+				Date createTime = account.getCreated();
+				String creator = account.getCreator();
+				for (Store store : account.getStores()) {
+					AccountStore accountStore = new AccountStore();
+					accountStore.setId(UUID.randomUUID().toString());
+					accountStore.setAccount(account);
+					accountStore.setClient(client);
+					accountStore.setStore(store);
+					accountStore.setStatus(Constants.STATUS_SUCCESS);
+					accountStore.setCreated(createTime);
+					accountStore.setCreator(creator);
+					accountStoreMapper.insertAccountStore(accountStore);
+				}
+			}
+			
 			if (CollectionUtils.isNotEmpty(account.getRoles())) {
 				Date createTime = account.getCreated();
 				String creator = account.getCreator();

@@ -24,6 +24,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM Store s left join Client c on c.id=s.Client WHERE  s.ID = #{id}
 	</select>
 	
+	 <select id="getStoresByAid" parameterType="string" resultMap="store">
+	 	select s.*,a.* from Store s,AccountStore a where s.id=a.Store and a.Account=#{accountId}
+	 </select>
+	
 	<select id="getStoreByClientAndCode" parameterType="map" resultMap="store">
 		SELECT s.ID,s.Code,s.Name,s.Opened,s.Address,s.Contacts,s.Client as ClientID ,s.Status,s.Creator,s.Created,s.Editor,s.Modified
 		FROM Store s left join Client c on c.id=s.Client WHERE s.Status = 1 and s.Code = #{code} and s.Client = #{client.ID}

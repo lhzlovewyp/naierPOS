@@ -78,6 +78,10 @@ public class LoginFilter implements Filter{
 				if(body!=null && body.getData()!=null){
 					
 					Account account=JSON.parseObject(body.getData().toString(), Account.class);
+					if(account.getStore()==null){
+						returnJsonObject(response, "<script>window.location.href='/front/login.html'</script>");
+						return;
+					}
 					if(!account.getLoginPOS().equals("1")){
 						response.sendRedirect("/front/authorize.html");
 						return;

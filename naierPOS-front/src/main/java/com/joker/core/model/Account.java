@@ -46,6 +46,18 @@ public class Account extends BaseModel{
 	
 	//当前用户下所属的角色.
 	private List<Role> roles;
+	
+	private List<Store> stores;
+	
+	
+
+	public List<Store> getStores() {
+		return stores;
+	}
+
+	public void setStores(List<Store> stores) {
+		this.stores = stores;
+	}
 
 	public Client getClient() {
 		return client;

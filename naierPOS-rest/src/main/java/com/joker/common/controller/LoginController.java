@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.code.kaptcha.Constants;
 import com.joker.common.model.Account;
 import com.joker.common.model.Client;
+import com.joker.common.model.Store;
 import com.joker.common.service.AccountService;
 import com.joker.common.service.ClientService;
 import com.joker.core.annotation.NotNull;
@@ -97,6 +99,37 @@ public class LoginController extends AbstractController{
         }
         return rbody;
     }
+	
+	@RequestMapping(value = {"/login/chooseStore"},method = RequestMethod.POST)
+    @ResponseBody
+    @NotNull(value = "token")
+    public ReturnBody chooseStore(@RequestBody ParamsBody paramsBody,HttpServletRequest request, HttpServletResponse response){
+        ReturnBody rbody = new ReturnBody();
+        String token = paramsBody.getToken();
+        Map<String,String> map=(Map)paramsBody.getBody().get("store");
+        
+        //Store store=
+        
+        if(StringUtils.isNotBlank(token)){
+        	Object user = CacheFactory.getCache().get(token);
+        	if(user!=null){
+        		Account account=(Account)user;
+        		Store store=new Store();
+        		store.setId(map.get("id"));
+        		store.setName(map.get("name"));
+        		store.setCode(map.get("code"));
+        		
+        		account.setStore(store);
+        		CacheFactory.getCache().put(account.getToken(), account);
+        		rbody.setData(user);
+        		rbody.setStatus(ResponseState.SUCCESS);
+        		return rbody;
+        	}
+        }
+        rbody.setStatus(ResponseState.INVALID_TOKEN);
+        return rbody;
+    }
+	
 	
 	/**
 	 * 判断token是否有效以及返回当前用户信息.
