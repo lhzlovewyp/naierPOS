@@ -194,17 +194,16 @@ public class PromotionPaymentController extends AbstractController {
 			rbody.setMsg("请输入支付方式！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
 
+			if (StringUtils.isBlank(clientId)) {
+				clientId = account.getClient().getId();
+			}
+			
 			Client client = new Client();
 			client.setId(clientId);
 			
@@ -269,11 +268,6 @@ public class PromotionPaymentController extends AbstractController {
 			rbody.setMsg("请输入支付方式！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 		if (StringUtils.isBlank(status)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入状态！");
@@ -285,6 +279,10 @@ public class PromotionPaymentController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
+			if (StringUtils.isBlank(clientId)) {
+				clientId = account.getClient().getId();
+			}
+			
 			Client client = new Client();
 			client.setId(clientId);
 

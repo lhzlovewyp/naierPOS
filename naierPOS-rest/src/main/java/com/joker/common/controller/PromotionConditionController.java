@@ -63,7 +63,7 @@ public class PromotionConditionController extends AbstractController {
 		Map params = paramsBody.getBody();
 		Integer pageNo = (Integer) params.get("pageNo");
 		Integer limit = (Integer) params.get("limit");
-		String promotionId = (String) params.get("promotionId");
+		String promotionOfferId = (String) params.get("promotionOfferId");
 		pageNo = (pageNo == null ? 0 : pageNo);
 		limit = (limit == null ? 10 : limit);
 
@@ -74,7 +74,7 @@ public class PromotionConditionController extends AbstractController {
 			String clientId = account.getClient().getId();
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("clientId", clientId);
-			map.put("promotionId", promotionId);
+			map.put("promotionOfferId", promotionOfferId);
 			Page<PromotionCondition> page = promotionConditionService
 					.getPromotionConditionPageByCondition(map, pageNo, limit);
 			rbody.setData(page);
@@ -205,17 +205,16 @@ public class PromotionConditionController extends AbstractController {
 			rbody.setMsg("请输入条件内容！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
 
+			if (StringUtils.isBlank(clientId)) {
+				clientId = account.getClient().getId();
+			}
+			
 			Client client = new Client();
 			client.setId(clientId);
 
@@ -292,11 +291,6 @@ public class PromotionConditionController extends AbstractController {
 			rbody.setMsg("请输入条件内容！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 		if (StringUtils.isBlank(status)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入状态！");
@@ -308,6 +302,10 @@ public class PromotionConditionController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
+			if (StringUtils.isBlank(clientId)) {
+				clientId = account.getClient().getId();
+			}
+			
 			Client client = new Client();
 			client.setId(clientId);
 
