@@ -62,10 +62,6 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 	$scope.chk = false;
 	var routePath = $routeParams.routePath;
 	function goPage(pageNo,selectForm){
-		var promotionId = $location.search()['promotionId'];
-		if(promotionId){
-			$scope.promotionId = promotionId;
-		}
 		var body = {};
 		body.pageNo = pageNo;
 		body.limit = $scope.paginationConf.itemsPerPage;
@@ -74,9 +70,30 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 		  body=$.extend(body,selectForm);
 		}
 		
-		if(promotionId){
-			body.promotionId = promotionId;
+		if(routePath == 'promotionOffer' || routePath == 'promotionStore' || routePath == 'promotionPayment'){
+			var promotionId = $location.search()['promotionId'];
+			if(promotionId){
+				$scope.promotionId = promotionId;
+				body.promotionId = promotionId;
+			}
 		}
+		
+		if(routePath == 'promotionOfferMatchContent' || routePath == 'promotionCondition'){
+			var promotionOfferId = $location.search()['promotionOfferId'];
+			if(promotionOfferId){
+				$scope.promotionOfferId = promotionOfferId;
+				body.promotionOfferId = promotionOfferId;
+			}
+		}
+		
+		if(routePath == 'promotionConditionMatchContent'){
+			var promotionConditionId = $location.search()['promotionConditionId'];
+			if(promotionConditionId){
+				$scope.promotionConditionId = promotionConditionId;
+				body.promotionConditionId = promotionConditionId;
+			}
+		}
+		
 		BasicsService.queryByPage(body,routePath).then(function(data){
     		$scope.basicsInfo = data;
     		$scope.paginationConf.totalItems = data.totalRecord;
@@ -216,6 +233,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 	var id = $routeParams.id;
 	var routePath = $routeParams.routePath;
 	var promotionId = $location.search()['promotionId'];
+	var promotionOfferId = $location.search()['promotionOfferId'];
 	var selectComplete = {};
 	var allSelectInfoMap = {};
 	var completeQueryById = false;
@@ -388,6 +406,27 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					$scope.selPromotion = selectInfoMap[selPromotionValue];
 				}
 			}
+			if(routePath == 'promotionOfferMatchConent' && allSelectInfoMap['materialCategroy']){
+				var selectInfoMap = allSelectInfoMap['materialCategroy'];
+				if(data.matchContent && data.matchContent.id){
+					var selMatchContentValue = data.matchContent.id;
+					$scope.selMaterialCategroy = selectInfoMap[selMatchContentValue];
+				}
+			}
+			if(routePath == 'promotionOfferMatchConent' && allSelectInfoMap['brand']){
+				var selectInfoMap = allSelectInfoMap['brand'];
+				if(data.matchContent && data.matchContent.id){
+					var selMatchContentValue = data.matchContent.id;
+					$scope.selBrand = selectInfoMap[selMatchContentValue];
+				}
+			}
+			if(routePath == 'promotionOfferMatchConent' && allSelectInfoMap['material']){
+				var selectInfoMap = allSelectInfoMap['material'];
+				if(data.matchContent && data.matchContent.id){
+					var selMatchContentValue = data.matchContent.id;
+					$scope.selMaterial = selectInfoMap[selMatchContentValue];
+				}
+			}
 		}
 	}
 	
@@ -509,6 +548,12 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 						}
 					}
 				}
+				if(routePath == 'promotionOfferMatchContent'){
+					if(data.promotionOffer && data.promotionOffer.matchType){
+						$('.MatchContent').hide();
+						$('#'+data.promotionOffer.matchType).show();
+					}
+				}
 				
 				$scope.form = data;
 			}
@@ -579,6 +624,10 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			querySelectInfo('store','stores',1);
 		}else if(routePath == 'promotionOffer'){
 			querySelectInfo('promotion','promotions',1);
+		}else if(routePath == 'promotionOfferMatchContent'){
+			querySelectInfo('materialCategory','materialCategorys',1);
+			querySelectInfo('brand','brands',1);
+			querySelectInfo('material','materials',1);
 		}
 		queryBasicsInfoById();
 	}else{
@@ -623,6 +672,22 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			if(promotionId){
 				completeQueryById = true;
 			}
+		}else if(routePath == 'promotionOfferMatchContent'){
+			var body = {};
+			body.id = promotionOfferId;
+			BasicsService.queryById(body,'promotionOffer').then(function(data){
+				if(data && data.matchType){
+					if(data.matchType == 'MATCAT'){
+						querySelectInfo('materialCategory','materialCategorys');
+					}else if(data.matchType == 'BRAND'){
+						querySelectInfo('brand','brands');
+					}else if(data.matchType == 'MAT'){
+						querySelectInfo('material','materials');
+					}
+					$('.MatchContent').hide();
+					$('#'+data.matchType).show();
+				}				
+			})
 		}
 	}
 	
@@ -806,18 +871,28 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 				}
 			}
 			if(routePath == 'promotionOfferMatchContent'){
-				var selPromotion = $scope.selPromotion;
-				if(selPromotion){
-					$scope.form.promotionId = selPromotion.value;
-				}
-				var selOfferType = $scope.selOfferType;
-				if(selOfferType){
-					$scope.form.offerTypeId = selOfferType.value;
-				}
-				var selMatchType = $scope.selMatchType;
-				if(selMatchType){
-					$scope.form.matchTypeId = selMatchType.value;
-				}
+				$scope.form.promotionOfferId = promotionOfferId;
+				$('.MatchContent').each(function(){
+					if($(this).css('display') != 'none'){
+						var matchTypeId = $(this).attr('id');
+						if(matchTypeId == 'MATCAT'){
+							var selMaterialCategory = $scope.selMaterialCategory;
+							if(selMaterialCategory){
+								$scope.form.matchContent = selMaterialCategory.value;
+							}
+						}else if(matchTypeId == 'BRAND'){
+							var selBrand = $scope.selBrand;
+							if(selBrand){
+								$scope.form.matchContent = selBrand.value;
+							}
+						}else if(matchTypeId == 'MAT'){
+							var selMaterial = $scope.selMaterial;
+							if(selMaterial){
+								$scope.form.matchContent = selMaterial.value;
+							}
+						}
+					}
+				})
 			}
 			if(routePath == 'promotionCondition'){
 				var selPromotion = $scope.selPromotion;

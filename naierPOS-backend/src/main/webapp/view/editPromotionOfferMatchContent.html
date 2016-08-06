@@ -4,24 +4,36 @@
 			<h3 class="box-title">促销优惠匹配内容</h3>
 		</div>
 		<div class="box-body">
-			<form class="form-horizontal" role="form" method="post"  name="basicsForm" id="basicsForm" ng-submit="edit(basicsForm.$valid)" novalidate>
-				<div class="form-group">
-					<label for="PromotionOffer" class="col-sm-2 control-label">促销优惠</label>
-					<div class="col-sm-10">
-						<select id="PromotionOffer" name="PromotionOffer" class="form-control" ng-model="selPromotionOffer" ng-options="x.show for x in promotionOffers">
-						</select>
-					</div>
-				</div>
+			<form class="form-horizontal" role="form" method="post"
+				name="basicsForm" id="basicsForm"
+				ng-submit="edit(basicsForm.$valid)" novalidate>
 				<div class="form-group">
 					<label for="MatchContent" class="col-sm-2 control-label">优惠匹配内容</label>
 					<div class="col-sm-10">
-						<select id="MatchContent" name="MatchContent" class="form-control" ng-model="selMatchContent" ng-options="x.show for x in matchContents">
-						</select>
+						<div id="MATCAT" class="MatchContent">
+							<select id="MaterialCategory" name="MaterialCategory"
+								class="form-control" ng-model="selMaterialCategory"
+								ng-options="x.show for x in materialCategorys">
+							</select>
+						</div>
+						<div id="BRAND" class="MatchContent" style="display: none;">
+							<select id="Brand" name="Brand"
+								class="form-control" ng-model="selBrand"
+								ng-options="x.show for x in brands">
+							</select>
+						</div>
+						<div id="MAT" class="MatchContent" style="display: none;">
+							<select id="Material" name="Material"
+								class="form-control" ng-model="selMaterial"
+								ng-options="x.show for x in materials">
+							</select>
+						</div>
 					</div>
 				</div>
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-10">
-						<button type="button" class="btn btn-danger" ng-click="edit(basicsForm.$valid)">提交</button>
+						<button type="button" class="btn btn-danger"
+							ng-click="edit(basicsForm.$valid)">提交</button>
 						<button type="button" class="btn btn-danger" ng-click="cancel();">取消</button>
 					</div>
 				</div>

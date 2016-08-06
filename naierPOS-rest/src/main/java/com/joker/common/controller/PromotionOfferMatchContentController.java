@@ -246,7 +246,6 @@ public class PromotionOfferMatchContentController extends AbstractController {
 		// 参数校验
 		Map params = paramsBody.getBody();
 		String id = (String) params.get("id");
-		String promotionOfferId = (String) params.get("promotionOfferId");
 		String matchContent = (String) params.get("matchContent");
 		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
@@ -254,11 +253,6 @@ public class PromotionOfferMatchContentController extends AbstractController {
 		if (StringUtils.isBlank(id)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("记录唯一信息缺失，请刷新页面！");
-			return rbody;
-		}
-		if (StringUtils.isBlank(promotionOfferId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入促销优惠！");
 			return rbody;
 		}
 		if (StringUtils.isBlank(matchContent)) {
@@ -284,12 +278,8 @@ public class PromotionOfferMatchContentController extends AbstractController {
 			Client client = new Client();
 			client.setId(clientId);
 
-			PromotionOffer promotionOffer = new PromotionOffer();
-			promotionOffer.setId(promotionOfferId);
-
 			PromotionOfferMatchContent promotionOfferMatchContent = new PromotionOfferMatchContent();
 			promotionOfferMatchContent.setId(id);
-			promotionOfferMatchContent.setPromotionOffer(promotionOffer);
 			promotionOfferMatchContent.setMatchContent(matchContent);
 			promotionOfferMatchContent.setClient(client);
 			promotionOfferMatchContent.setStatus(status);
