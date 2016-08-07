@@ -185,6 +185,28 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 			return value;
 		}
 	};
+	$scope.showConditionType = function(value){
+		if(value == "MATQTY"){
+			return "商品数量";
+		}else if(value == "MATAMT"){
+			return "商品金额";
+		}else if(value == "TTLAMT"){
+			return "整单金额";
+		}else{
+			return value;
+		}
+	};
+	$scope.showMatch = function(value){
+		if(value == "ANY"){
+			return "任意";
+		}else if(value == "SAME"){
+			return "相同";
+		}else if(value == "DIFF"){
+			return "不同";
+		}else{
+			return value;
+		}
+	};
 }]);
 
 app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDialog','BasicsService',function($scope,$location,$routeParams,ngDialog,BasicsService){
@@ -234,6 +256,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 	var routePath = $routeParams.routePath;
 	var promotionId = $location.search()['promotionId'];
 	var promotionOfferId = $location.search()['promotionOfferId'];
+	var promotionConditionId = $location.search()['promotionConditionId'];
 	var selectComplete = {};
 	var allSelectInfoMap = {};
 	var completeQueryById = false;
@@ -261,6 +284,11 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 	}
 	if(routePath == 'promotionOffer'){
 		$scope.offerTypes = allOfferType;
+		$scope.matchTypes = allMatchType;
+	}
+	if(routePath == 'promotionCondition'){
+		$scope.conditionTypes = allConditionType;
+		$scope.matchs = allMatch;
 		$scope.matchTypes = allMatchType;
 	}
 	
@@ -406,21 +434,21 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					$scope.selPromotion = selectInfoMap[selPromotionValue];
 				}
 			}
-			if(routePath == 'promotionOfferMatchConent' && allSelectInfoMap['materialCategroy']){
+			if((routePath == 'promotionOfferMatchConent' || routePath == 'promotionConditionMatchConent') && allSelectInfoMap['materialCategroy']){
 				var selectInfoMap = allSelectInfoMap['materialCategroy'];
 				if(data.matchContent && data.matchContent.id){
 					var selMatchContentValue = data.matchContent.id;
 					$scope.selMaterialCategroy = selectInfoMap[selMatchContentValue];
 				}
 			}
-			if(routePath == 'promotionOfferMatchConent' && allSelectInfoMap['brand']){
+			if((routePath == 'promotionOfferMatchConent' || routePath == 'promotionConditionMatchConent') && allSelectInfoMap['brand']){
 				var selectInfoMap = allSelectInfoMap['brand'];
 				if(data.matchContent && data.matchContent.id){
 					var selMatchContentValue = data.matchContent.id;
 					$scope.selBrand = selectInfoMap[selMatchContentValue];
 				}
 			}
-			if(routePath == 'promotionOfferMatchConent' && allSelectInfoMap['material']){
+			if((routePath == 'promotionOfferMatchConent' || routePath == 'promotionConditionMatchConent') && allSelectInfoMap['material']){
 				var selectInfoMap = allSelectInfoMap['material'];
 				if(data.matchContent && data.matchContent.id){
 					var selMatchContentValue = data.matchContent.id;
@@ -548,7 +576,30 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 						}
 					}
 				}
-				if(routePath == 'promotionOfferMatchContent'){
+				if(routePath == 'promotionCondition'){
+					var selConditionType = data.conditionType;
+					for ( var i = 0; i < allConditionType.length; i++) {
+						if(allConditionType[i].value == selConditionType){
+							$scope.selConditionType = allConditionType[i];	
+							break;
+						}
+					}
+					var selMatch = data.match;
+					for ( var i = 0; i < allMatch.length; i++) {
+						if(allMatch[i].value == selMatch){
+							$scope.selMatch = allMatch[i];	
+							break;
+						}
+					}
+					var selMatchType = data.matchType;
+					for ( var i = 0; i < allMatchType.length; i++) {
+						if(allMatchType[i].value == selMatchType){
+							$scope.selMatchType = allMatchType[i];	
+							break;
+						}
+					}
+				}
+				if(routePath == 'promotionOfferMatchContent' || routePath == 'promotionConditionMatchContent'){
 					if(data.promotionOffer && data.promotionOffer.matchType){
 						$('.MatchContent').hide();
 						$('#'+data.promotionOffer.matchType).show();
@@ -624,7 +675,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			querySelectInfo('store','stores',1);
 		}else if(routePath == 'promotionOffer'){
 			querySelectInfo('promotion','promotions',1);
-		}else if(routePath == 'promotionOfferMatchContent'){
+		}else if(routePath == 'promotionOfferMatchContent' || routePath == 'promotionConditionMatchContent'){
 			querySelectInfo('materialCategory','materialCategorys',1);
 			querySelectInfo('brand','brands',1);
 			querySelectInfo('material','materials',1);
@@ -676,6 +727,22 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			var body = {};
 			body.id = promotionOfferId;
 			BasicsService.queryById(body,'promotionOffer').then(function(data){
+				if(data && data.matchType){
+					if(data.matchType == 'MATCAT'){
+						querySelectInfo('materialCategory','materialCategorys');
+					}else if(data.matchType == 'BRAND'){
+						querySelectInfo('brand','brands');
+					}else if(data.matchType == 'MAT'){
+						querySelectInfo('material','materials');
+					}
+					$('.MatchContent').hide();
+					$('#'+data.matchType).show();
+				}				
+			})
+		}else if(routePath == 'promotionConditionMatchContent'){
+			var body = {};
+			body.id = promotionConditionId;
+			BasicsService.queryById(body,'promotionCondition').then(function(data){
 				if(data && data.matchType){
 					if(data.matchType == 'MATCAT'){
 						querySelectInfo('materialCategory','materialCategorys');
@@ -895,13 +962,14 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 				})
 			}
 			if(routePath == 'promotionCondition'){
-				var selPromotion = $scope.selPromotion;
-				if(selPromotion){
-					$scope.form.promotionId = selPromotion.value;
+				$scope.form.promotionOfferId = promotionOfferId;
+				var selConditionType = $scope.selConditionType;
+				if(selConditionType){
+					$scope.form.conditionTypeId = selConditionType.value;
 				}
-				var selOfferType = $scope.selOfferType;
-				if(selOfferType){
-					$scope.form.offerTypeId = selOfferType.value;
+				var selMatch = $scope.selMatch;
+				if(selMatch){
+					$scope.form.matchId = selMatch.value;
 				}
 				var selMatchType = $scope.selMatchType;
 				if(selMatchType){
@@ -909,18 +977,28 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 				}
 			}
 			if(routePath == 'promotionConditionMatchContent'){
-				var selPromotion = $scope.selPromotion;
-				if(selPromotion){
-					$scope.form.promotionId = selPromotion.value;
-				}
-				var selOfferType = $scope.selOfferType;
-				if(selOfferType){
-					$scope.form.offerTypeId = selOfferType.value;
-				}
-				var selMatchType = $scope.selMatchType;
-				if(selMatchType){
-					$scope.form.matchTypeId = selMatchType.value;
-				}
+				$scope.form.promotionConditionId = promotionConditionId;
+				$('.MatchContent').each(function(){
+					if($(this).css('display') != 'none'){
+						var matchTypeId = $(this).attr('id');
+						if(matchTypeId == 'MATCAT'){
+							var selMaterialCategory = $scope.selMaterialCategory;
+							if(selMaterialCategory){
+								$scope.form.matchContent = selMaterialCategory.value;
+							}
+						}else if(matchTypeId == 'BRAND'){
+							var selBrand = $scope.selBrand;
+							if(selBrand){
+								$scope.form.matchContent = selBrand.value;
+							}
+						}else if(matchTypeId == 'MAT'){
+							var selMaterial = $scope.selMaterial;
+							if(selMaterial){
+								$scope.form.matchContent = selMaterial.value;
+							}
+						}
+					}
+				})
 			}
 			
 			if($scope.editType == 'add'){

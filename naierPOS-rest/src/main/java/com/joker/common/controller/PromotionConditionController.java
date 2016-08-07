@@ -181,13 +181,13 @@ public class PromotionConditionController extends AbstractController {
 		// 参数校验
 		Map params = paramsBody.getBody();
 		String promotionOfferId = (String) params.get("promotionOfferId");
-		String conditionType = (String) params.get("conditionType");
+		String conditionTypeId = (String) params.get("conditionTypeId");
 		String condition = null;
 		if (params.get("condition") != null) {
 			condition = String.valueOf(params.get("condition"));
 		}
-		String match = (String) params.get("match");
-		String matchType = (String) params.get("matchType");
+		String matchId = (String) params.get("matchId");
+		String matchTypeId = (String) params.get("matchTypeId");
 		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(promotionOfferId)) {
@@ -195,7 +195,7 @@ public class PromotionConditionController extends AbstractController {
 			rbody.setMsg("请输入促销优惠！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(conditionType)) {
+		if (StringUtils.isBlank(conditionTypeId)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入条件类型！");
 			return rbody;
@@ -224,10 +224,10 @@ public class PromotionConditionController extends AbstractController {
 			PromotionCondition promotionCondition = new PromotionCondition();
 			promotionCondition.setId(UUID.randomUUID().toString());
 			promotionCondition.setPromotionOffer(promotionOffer);
-			promotionCondition.setConditionType(conditionType);
+			promotionCondition.setConditionType(conditionTypeId);
 			promotionCondition.setCondition(new BigDecimal(condition));
-			promotionCondition.setMatch(match);
-			promotionCondition.setMatchType(matchType);
+			promotionCondition.setMatch(matchId);
+			promotionCondition.setMatchType(matchTypeId);
 			promotionCondition.setClient(client);
 			promotionCondition.setCreated(new Date());
 			promotionCondition.setCreator(account.getId());
@@ -260,14 +260,13 @@ public class PromotionConditionController extends AbstractController {
 		// 参数校验
 		Map params = paramsBody.getBody();
 		String id = (String) params.get("id");
-		String promotionOfferId = (String) params.get("promotionOfferId");
-		String conditionType = (String) params.get("conditionType");
+		String conditionTypeId = (String) params.get("conditionTypeId");
 		String condition = null;
 		if (params.get("condition") != null) {
 			condition = String.valueOf(params.get("condition"));
 		}
-		String match = (String) params.get("match");
-		String matchType = (String) params.get("matchType");
+		String matchId = (String) params.get("matchId");
+		String matchTypeId = (String) params.get("matchTypeId");
 		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
@@ -276,12 +275,7 @@ public class PromotionConditionController extends AbstractController {
 			rbody.setMsg("记录唯一信息缺失，请刷新页面！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(promotionOfferId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入促销优惠！");
-			return rbody;
-		}
-		if (StringUtils.isBlank(conditionType)) {
+		if (StringUtils.isBlank(conditionTypeId)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入条件类型！");
 			return rbody;
@@ -308,17 +302,13 @@ public class PromotionConditionController extends AbstractController {
 			
 			Client client = new Client();
 			client.setId(clientId);
-
-			PromotionOffer promotionOffer = new PromotionOffer();
-			promotionOffer.setId(promotionOfferId);
-
+			
 			PromotionCondition promotionCondition = new PromotionCondition();
 			promotionCondition.setId(id);
-			promotionCondition.setPromotionOffer(promotionOffer);
-			promotionCondition.setConditionType(conditionType);
+			promotionCondition.setConditionType(conditionTypeId);
 			promotionCondition.setCondition(new BigDecimal(condition));
-			promotionCondition.setMatch(match);
-			promotionCondition.setMatchType(matchType);
+			promotionCondition.setMatch(matchId);
+			promotionCondition.setMatchType(matchTypeId);
 			promotionCondition.setClient(client);
 			promotionCondition.setStatus(status);
 			promotionCondition.setModified(new Date());

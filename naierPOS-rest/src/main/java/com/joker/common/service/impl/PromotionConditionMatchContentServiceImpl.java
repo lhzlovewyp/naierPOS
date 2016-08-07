@@ -11,8 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joker.common.Constant.Constants;
+import com.joker.common.mapper.BrandMapper;
+import com.joker.common.mapper.MaterialCategoryMapper;
+import com.joker.common.mapper.MaterialMapper;
 import com.joker.common.mapper.PromotionConditionMapper;
 import com.joker.common.mapper.PromotionConditionMatchContentMapper;
+import com.joker.common.model.Brand;
+import com.joker.common.model.Material;
+import com.joker.common.model.MaterialCategory;
 import com.joker.common.model.promotion.PromotionCondition;
 import com.joker.common.model.promotion.PromotionConditionMatchContent;
 import com.joker.common.service.PromotionConditionMatchContentService;
@@ -27,6 +33,15 @@ public class PromotionConditionMatchContentServiceImpl implements
 
 	@Autowired
 	PromotionConditionMapper promotionConditionMapper;
+
+	@Autowired
+	MaterialCategoryMapper materialCategoryMapper;
+
+	@Autowired
+	BrandMapper brandMapper;
+
+	@Autowired
+	MaterialMapper materialMapper;
 
 	@Override
 	public PromotionConditionMatchContent getPromotionConditionMatchContentByID(
@@ -73,6 +88,47 @@ public class PromotionConditionMatchContentServiceImpl implements
 						if (promotionCondition != null) {
 							promotionConditionMatchContent
 									.setPromotionCondition(promotionCondition);
+							if (StringUtils
+									.isNotBlank(promotionConditionMatchContent
+											.getMatchContent())) {
+								if (Constants.PROMOTION_TYPE_MATCAT
+										.equals(promotionCondition
+												.getMatchType())) {
+									MaterialCategory materialCategory = materialCategoryMapper
+											.getMaterialCategoryByID(promotionConditionMatchContent
+													.getMatchContent());
+									if (materialCategory != null) {
+										promotionConditionMatchContent
+												.setMatchContentDesc(materialCategory
+														.getName());
+									}
+
+								} else if (Constants.PROMOTION_TYPE_BRAND
+										.equals(promotionCondition
+												.getMatchType())) {
+									Brand brand = brandMapper
+											.getBrandByID(promotionConditionMatchContent
+													.getMatchContent());
+									if (brand != null) {
+										promotionConditionMatchContent
+												.setMatchContentDesc(brand
+														.getName());
+									}
+
+								} else if (Constants.PROMOTION_TYPE_MAT
+										.equals(promotionCondition
+												.getMatchType())) {
+									Material material = materialMapper
+											.getMaterialByID(promotionConditionMatchContent
+													.getMatchContent());
+									if (material != null) {
+										promotionConditionMatchContent
+												.setMatchContentDesc(material
+														.getName());
+									}
+
+								}
+							}
 						}
 					}
 				}

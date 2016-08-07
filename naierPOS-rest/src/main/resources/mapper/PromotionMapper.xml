@@ -23,6 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="memberRestrict" column="MemberRestrict" />
 		<result property="offerRelation" column="OfferRelation" />
 		<result property="excluded" column="Excluded" />
+		<result property="status" column="Status" />
 		<result property="creator" column="Creator" />
 		<result property="created" column="Created" />
 		<result property="editor" column="Editor" />
@@ -62,8 +63,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="client.id" column="Client" />
 		<result property="promotionOffer.id" column="PromotionOffer" />
 		<result property="conditionType" column="ConditionType" />
-		<result property="condition" column="Condition" />
-		<result property="match" column="Match" />
+		<result property="condition" column="ProCondition" />
+		<result property="match" column="ProMatch" />
 		<result property="matchType" column="MatchType" />
 	</resultMap>
 	
@@ -76,7 +77,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	
     <select id="getPromotionsByStore" resultMap="promotion">
-		SELECT p.*,ps.Store FROM Promotion p, PromotionStore ps
+		SELECT p.ID,p.Client,p.Code,p.Name,pa.Memo,p.EffectiveDate,p.ExpiryDate,p.EffectiveTime,p.ExpiryTime
+			,p.RepeatEffect,p.Week,p.Days,p.PaymentRestrict,p.MemberRestrict,p.OfferRelation,p.Excluded
+			,p.Status,p.Creator,p.Created,p.Editor,p.Modified
+			,ps.Store FROM Promotion p, PromotionStore ps
 		WHERE p.id=ps.Promotion AND p.status=1 AND ps.Store=#{storeId} AND p.Client=#{clientId}
 		<![CDATA[  
     	and ps.EffectiveDate<=#{saleDate}
@@ -94,20 +98,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     	
     </select>
     <select id="getPromoOfferbyPromoId" resultMap="promotionOffer">
-    	SELECT * FROM PromotionOffer po
+    	SELECT po.ID,po.Client,po.Promotion,po.OfferType,po.OfferContent,po.MatchType
+    	 FROM PromotionOffer po
 		WHERE po.Promotion=#{promotionId}
     </select>
     <select id="getMatchContentByOfferId" resultMap="promotionOfferMatchContent">
-    	SELECT * FROM PromotionOfferMatchContent pomc
+    	SELECT pomc.ID,pomc.Client,pomc.PromotionOffer,pomc.MatchContent
+    	 FROM PromotionOfferMatchContent pomc
 		WHERE pomc.PromotionOffer=#{offerId}
     	
     </select>
     <select id="getConditionByOfferId" resultMap="promotionCondition">
-    	SELECT * FROM PromotionCondition pc
+    	SELECT pc.ID,pc.Client,pc.PromotionOffer,pc.ConditionType,pc.ProCondition
+    	,pc.ProMatch,pc.MatchType FROM PromotionCondition pc
 		WHERE pc.PromotionOffer=#{offerId}
     </select>
     <select id="getMatchContentByConditionId" resultMap="promotionConditionMatchContent">
-    	SELECT * FROM PromotionConditionMatchContent pcmc
+    	SELECT pcmc.ID,pcmc.Client,pcmc.PromotionCondition,pcmc.MatchContent
+    	 FROM PromotionConditionMatchContent pcmc
 		WHERE pcmc.promotionCondition=#{conditionId}
     	
     </select>

@@ -10,8 +10,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="client.id" column="Client" />
 		<result property="promotionOffer.id" column="PromotionOffer" />
 		<result property="conditionType" column="ConditionType" />
-		<result property="condition" column="Condition" />
-		<result property="match" column="Match" />
+		<result property="condition" column="ProCondition" />
+		<result property="match" column="ProMatch" />
 		<result property="matchType" column="MatchType" />
 	</resultMap>
 	
@@ -21,14 +21,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="getPromotionConditionByID" parameterType="string" resultMap="promotionCondition">
 		SELECT 
-			a.ID,a.Client,a.PromotionOffer,a.ConditionType,a.Condition,a.Match,a.MatchType
+			a.ID,a.Client,a.PromotionOffer,a.ConditionType,a.ProCondition,a.ProMatch,a.MatchType
 		FROM PromotionCondition a
 		WHERE a.ID=#{id} 
 	</select>
 	
 	<select id="getPromotionConditionPageByCondition" parameterType="java.util.Map" resultMap="promotionConditionPage">
 		SELECT 
-			a.ID,a.Client,a.PromotionOffer,a.ConditionType,a.Condition,a.Match,a.MatchType,c.Name ClientName
+			a.ID,a.Client,a.PromotionOffer,a.ConditionType,a.ProCondition,a.ProMatch,a.MatchType,c.Name ClientName
 		FROM PromotionCondition a left outer join Client c
 		on a.Client = c.id and c.status = 1 
 		WHERE 
@@ -75,8 +75,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
 			<if test= "promotionOffer != null">PromotionOffer=#{promotionOffer.id,jdbcType=VARCHAR},</if >
 			<if test= "conditionType != null">ConditionType=#{conditionType,jdbcType=VARCHAR},</if >
-			<if test= "condition != null">Condition=#{condition},</if >
-			<if test= "match != null">Match=#{match},</if >
+			<if test= "condition != null">ProCondition=#{condition},</if >
+			<if test= "match != null">ProMatch=#{match},</if >
 			<if test= "matchType != null">MatchType=#{matchType},</if >
 		</set>
 	</sql >

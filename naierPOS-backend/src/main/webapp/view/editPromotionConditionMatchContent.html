@@ -6,17 +6,26 @@
 		<div class="box-body">
 			<form class="form-horizontal" role="form" method="post"  name="basicsForm" id="basicsForm" ng-submit="edit(basicsForm.$valid)" novalidate>
 				<div class="form-group">
-					<label for="PromotionCondition" class="col-sm-2 control-label">促销条件</label>
-					<div class="col-sm-10">
-						<select id="PromotionCondition" name="PromotionCondition" class="form-control" ng-model="selPromotionCondition" ng-options="x.show for x in promotionConditions">
-						</select>
-					</div>
-				</div>
-				<div class="form-group">
 					<label for="MatchContent" class="col-sm-2 control-label">条件匹配内容</label>
 					<div class="col-sm-10">
-						<select id="MatchContent" name="MatchContent" class="form-control" ng-model="selMatchContent" ng-options="x.show for x in matchContents">
-						</select>
+						<div id="MATCAT" class="MatchContent">
+							<select id="MaterialCategory" name="MaterialCategory"
+								class="form-control" ng-model="selMaterialCategory"
+								ng-options="x.show for x in materialCategorys">
+							</select>
+						</div>
+						<div id="BRAND" class="MatchContent" style="display: none;">
+							<select id="Brand" name="Brand"
+								class="form-control" ng-model="selBrand"
+								ng-options="x.show for x in brands">
+							</select>
+						</div>
+						<div id="MAT" class="MatchContent" style="display: none;">
+							<select id="Material" name="Material"
+								class="form-control" ng-model="selMaterial"
+								ng-options="x.show for x in materials">
+							</select>
+						</div>
 					</div>
 				</div>
 				<div class="form-group">

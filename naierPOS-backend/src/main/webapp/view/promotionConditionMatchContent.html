@@ -26,15 +26,13 @@
 								class="btn btn-default btn-sm checkbox-toggle">
 								<i class="fa fa-square-o"></i>
 							</button></th>
-						<th>促销条件</th>
 						<th>条件匹配内容</th>
 						<th>操作</th>
 					</tr>
 					<tr ng-repeat="result in basicsInfo.results"  on-render-finish>
 						<td align="center"><input type="checkbox" ng-click="check(result.id,chk)" ng-model="chk"></td>
-		                <td>{{result.promotionCondition.name}}</td>
-		                <td>{{result.matchContent}}</td>
-						<td><a href="/backend/edit/promotionConditionMatchContent/{{result.id}}?promotionConditionId={{promotionConditionId}}" class="btn btn-info btn-xs">编辑</a></td>
+		                <td>{{result.matchContentDesc}}</td>
+						<td><a href="/backend/edit/promotionConditionMatchContent/{{result.id}}" class="btn btn-info btn-xs">编辑</a></td>
 					</tr>
 				</table>
 			</div>

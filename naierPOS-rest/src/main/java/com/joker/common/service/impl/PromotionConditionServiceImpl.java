@@ -45,35 +45,6 @@ public class PromotionConditionServiceImpl implements PromotionConditionService 
 		int totalRecord = mapper.getPromotionConditionCountByCondition(map);
 		List<PromotionCondition> list = mapper
 				.getPromotionConditionPageByCondition(map);
-		if (CollectionUtils.isNotEmpty(list)) {
-			Map<String, PromotionOffer> promotionCacheMap = new HashMap<String, PromotionOffer>();
-			for (PromotionCondition promotionCondition : list) {
-				if (promotionCondition != null) {
-					if (promotionCondition.getPromotionOffer() != null
-							&& StringUtils.isNotBlank(promotionCondition
-									.getPromotionOffer().getId())) {
-						String promotionOfferId = promotionCondition
-								.getPromotionOffer().getId();
-						PromotionOffer promotionOffer = null;
-						if (promotionCacheMap.containsKey(promotionOfferId)) {
-							promotionOffer = promotionCacheMap
-									.get(promotionOfferId);
-						} else {
-							promotionOffer = promotionOfferMapper
-									.getPromotionOfferByID(promotionOfferId);
-							if (promotionOffer != null) {
-								promotionCacheMap.put(promotionOfferId,
-										promotionOffer);
-							}
-						}
-						if (promotionOffer != null) {
-							promotionCondition
-									.setPromotionOffer(promotionOffer);
-						}
-					}
-				}
-			}
-		}
 		page.setPageNo(start + 1);
 		page.setPageSize(limit);
 		page.setTotalRecord(totalRecord);

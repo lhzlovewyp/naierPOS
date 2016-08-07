@@ -181,7 +181,7 @@ public class PromotionConditionMatchContentController extends AbstractController
 		// 参数校验
 		Map params = paramsBody.getBody();
 		String promotionConditionId = (String) params.get("promotionConditionId");
-		String matchContent = (String) params.get("MatchContent");
+		String matchContent = (String) params.get("matchContent");
 		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(promotionConditionId)) {
@@ -246,19 +246,13 @@ public class PromotionConditionMatchContentController extends AbstractController
 		// 参数校验
 		Map params = paramsBody.getBody();
 		String id = (String) params.get("id");
-		String promotionConditionId = (String) params.get("promotionConditionId");
-		String matchContent = (String) params.get("MatchContent");
+		String matchContent = (String) params.get("matchContent");
 		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
 		if (StringUtils.isBlank(id)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("记录唯一信息缺失，请刷新页面！");
-			return rbody;
-		}
-		if (StringUtils.isBlank(promotionConditionId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入促销条件！");
 			return rbody;
 		}
 		if (StringUtils.isBlank(matchContent)) {
@@ -284,12 +278,8 @@ public class PromotionConditionMatchContentController extends AbstractController
 			Client client = new Client();
 			client.setId(clientId);
 
-			PromotionCondition promotionCondition = new PromotionCondition();
-			promotionCondition.setId(promotionConditionId);
-
 			PromotionConditionMatchContent promotionConditionMatchContent = new PromotionConditionMatchContent();
 			promotionConditionMatchContent.setId(id);
-			promotionConditionMatchContent.setPromotionCondition(promotionCondition);
 			promotionConditionMatchContent.setMatchContent(matchContent);
 			promotionConditionMatchContent.setClient(client);
 			promotionConditionMatchContent.setStatus(status);
