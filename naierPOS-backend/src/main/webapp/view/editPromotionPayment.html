@@ -6,20 +6,6 @@
 		<div class="box-body">
 			<form class="form-horizontal" role="form" method="post"  name="basicsForm" id="basicsForm" ng-submit="edit(basicsForm.$valid)" novalidate>
 				<div class="form-group">
-					<label for="ID" class="col-sm-2 control-label">GUID</label>
-					<div class="col-sm-10">
-						<input type="text" class="form-control" id="ID" name="ID"
-							placeholder="GUID" ng-model="form.id">
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="Client" class="col-sm-2 control-label">商户</label>
-					<div class="col-sm-10">
-						<input type="text" class="form-control" id="Client" name="Client"
-							placeholder="商户" value="0" ng-model="form.clientId">
-					</div>
-				</div>
-				<div class="form-group">
 					<label for="Promotion" class="col-sm-2 control-label">促销活动</label>
 					<div class="col-sm-10">
 						<select id="Promotion" name="Promotion" class="form-control" ng-model="selPromotion" ng-options="x.show for x in promotions">

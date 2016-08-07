@@ -39,7 +39,7 @@
 		                <td>{{showMatch(result.match)}}</td>
 		                <td>{{showMatchType(result.matchType)}}</td>
 						<td>
-							<a href="/backend/edit/promotionCondition/{{result.id}}" class="btn btn-info btn-xs">编辑基本信息</a>
+							<a href="/backend/edit/promotionCondition/{{result.id}}?promotionOfferId={{promotionOfferId}}" class="btn btn-info btn-xs">编辑基本信息</a>
 							<a href="/backend/list/promotionConditionMatchContent?promotionConditionId={{result.id}}" class="btn btn-info btn-xs">编辑条件匹配内容</a>
 						</td>
 					</tr>

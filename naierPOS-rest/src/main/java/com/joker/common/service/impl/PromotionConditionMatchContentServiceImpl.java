@@ -46,7 +46,22 @@ public class PromotionConditionMatchContentServiceImpl implements
 	@Override
 	public PromotionConditionMatchContent getPromotionConditionMatchContentByID(
 			String id) {
-		return mapper.getPromotionConditionMatchContentByID(id);
+		PromotionConditionMatchContent promotionConditionMatchContent = mapper
+				.getPromotionConditionMatchContentByID(id);
+		if (promotionConditionMatchContent != null
+				&& promotionConditionMatchContent.getPromotionCondition() != null
+				&& StringUtils.isNotBlank(promotionConditionMatchContent
+						.getPromotionCondition().getId())) {
+			String promotionOfferId = promotionConditionMatchContent
+					.getPromotionCondition().getId();
+			PromotionCondition promotionCondition = promotionConditionMapper
+					.getPromotionConditionByID(promotionOfferId);
+			if (promotionCondition != null) {
+				promotionConditionMatchContent
+						.setPromotionCondition(promotionCondition);
+			}
+		}
+		return promotionConditionMatchContent;
 	}
 
 	@Override

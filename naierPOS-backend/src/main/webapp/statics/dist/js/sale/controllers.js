@@ -67,7 +67,7 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 		body.limit = $scope.paginationConf.itemsPerPage;
 		body.likeName = $scope.likeName;
 		if(selectForm){
-		  body=$.extend(body,selectForm);
+			body=$.extend(body,selectForm);
 		}
 		
 		if(routePath == 'promotionOffer' || routePath == 'promotionStore' || routePath == 'promotionPayment'){
@@ -75,6 +75,9 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 			if(promotionId){
 				$scope.promotionId = promotionId;
 				body.promotionId = promotionId;
+			}else{
+				$location.path('/backend/list/promotion');
+				return;
 			}
 		}
 		
@@ -83,6 +86,9 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 			if(promotionOfferId){
 				$scope.promotionOfferId = promotionOfferId;
 				body.promotionOfferId = promotionOfferId;
+			}else{
+				$location.path('/backend/list/promotion');
+				return;
 			}
 		}
 		
@@ -91,6 +97,9 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 			if(promotionConditionId){
 				$scope.promotionConditionId = promotionConditionId;
 				body.promotionConditionId = promotionConditionId;
+			}else{
+				$location.path('/backend/list/promotion');
+				return;
 			}
 		}
 		
@@ -254,9 +263,11 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 	$scope.editType = 'add';
 	var id = $routeParams.id;
 	var routePath = $routeParams.routePath;
+	
 	var promotionId = $location.search()['promotionId'];
 	var promotionOfferId = $location.search()['promotionOfferId'];
 	var promotionConditionId = $location.search()['promotionConditionId'];
+	
 	var selectComplete = {};
 	var allSelectInfoMap = {};
 	var completeQueryById = false;
@@ -292,6 +303,9 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		$scope.matchTypes = allMatchType;
 	}
 	
+	/**
+	 * 设置选择框中被选中的值
+	 */
 	function setSelectedInfo(){
 		var data = $scope.form;
 		if(data && completeQueryById){
@@ -434,30 +448,33 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					$scope.selPromotion = selectInfoMap[selPromotionValue];
 				}
 			}
-			if((routePath == 'promotionOfferMatchConent' || routePath == 'promotionConditionMatchConent') && allSelectInfoMap['materialCategroy']){
-				var selectInfoMap = allSelectInfoMap['materialCategroy'];
-				if(data.matchContent && data.matchContent.id){
-					var selMatchContentValue = data.matchContent.id;
-					$scope.selMaterialCategroy = selectInfoMap[selMatchContentValue];
+			if((routePath == 'promotionOfferMatchContent' || routePath == 'promotionConditionMatchContent') && allSelectInfoMap['materialCategory']){
+				var selectInfoMap = allSelectInfoMap['materialCategory'];
+				if(data.matchContent){
+					var selMatchContentValue = data.matchContent;
+					$scope.selMaterialCategory = selectInfoMap[selMatchContentValue];
 				}
 			}
-			if((routePath == 'promotionOfferMatchConent' || routePath == 'promotionConditionMatchConent') && allSelectInfoMap['brand']){
+			if((routePath == 'promotionOfferMatchContent' || routePath == 'promotionConditionMatchContent') && allSelectInfoMap['brand']){
 				var selectInfoMap = allSelectInfoMap['brand'];
-				if(data.matchContent && data.matchContent.id){
-					var selMatchContentValue = data.matchContent.id;
+				if(data.matchContent){
+					var selMatchContentValue = data.matchContent;
 					$scope.selBrand = selectInfoMap[selMatchContentValue];
 				}
 			}
-			if((routePath == 'promotionOfferMatchConent' || routePath == 'promotionConditionMatchConent') && allSelectInfoMap['material']){
+			if((routePath == 'promotionOfferMatchContent' || routePath == 'promotionConditionMatchContent') && allSelectInfoMap['material']){
 				var selectInfoMap = allSelectInfoMap['material'];
-				if(data.matchContent && data.matchContent.id){
-					var selMatchContentValue = data.matchContent.id;
+				if(data.matchContent){
+					var selMatchContentValue = data.matchContent;
 					$scope.selMaterial = selectInfoMap[selMatchContentValue];
 				}
 			}
 		}
 	}
 	
+	/**
+	 * 根据id查询明细
+	 */
 	function queryBasicsInfoById(){
 		var body = {};
 		body.id = id;
@@ -599,10 +616,16 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 						}
 					}
 				}
-				if(routePath == 'promotionOfferMatchContent' || routePath == 'promotionConditionMatchContent'){
+				if(routePath == 'promotionOfferMatchContent'){
 					if(data.promotionOffer && data.promotionOffer.matchType){
 						$('.MatchContent').hide();
 						$('#'+data.promotionOffer.matchType).show();
+					}
+				}
+				if(routePath == 'promotionConditionMatchContent'){
+					if(data.promotionCondition && data.promotionCondition.matchType){
+						$('.MatchContent').hide();
+						$('#'+data.promotionCondition.matchType).show();
 					}
 				}
 				
@@ -613,6 +636,9 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
         });
 	}
 	
+	/**
+	 * 获取下拉菜单
+	 */
 	function querySelectInfo(type,selectParam,queryBasics){
 		var pageBody = {};
 		BasicsService.queryByList(pageBody,type).then(function(data){
@@ -1031,10 +1057,24 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 	}
 	
 	$scope.cancel=function(){
+		if(routePath == 'promotionOffer' || routePath == 'promotionStore' || routePath == 'promotionPayment'){
+			$location.url('/backend/list/'+routePath+'?promotionId='+promotionId);
+			return;
+		}
+		
+		if(routePath == 'promotionOfferMatchContent' || routePath == 'promotionCondition'){
+			$location.url('/backend/list/'+routePath+'?promotionOfferId='+promotionOfferId);
+			return;
+		}
+		
+		if(routePath == 'promotionConditionMatchContent'){
+			$location.url('/backend/list/'+routePath+'?promotionConditionId='+promotionConditionId);
+			return;
+		}
 		$location.path('/backend/list/'+routePath);
 	}
 	
-	//导购员信息查询.
+	//品类信息查询.
 	$scope.openMaterialCategoryTree = function(){
 		
 		ngDialog.open({
