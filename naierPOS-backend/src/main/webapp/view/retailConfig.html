@@ -22,8 +22,7 @@
 			<div class="table-responsive mailbox-messages">
 				<table class="table table-hover">
 					<tr>
-						<th>GUID</th>
-						<th>商户</th>
+						<th></th>
 						<th>单价保留小数位数</th>
 						<th>商品金额保留小数位数</th>
 						<th>商品金额舍去值</th>
@@ -33,8 +32,6 @@
 					</tr>
 					<tr ng-repeat="result in basicsInfo.results"  on-render-finish>
 						<td align="center"><input type="checkbox" ng-click="check(result.id,chk)" ng-model="chk"></td>
-		                <td>{{result.id}}</td>
-		                <td>{{result.client.name}}</td>
 		                <td>{{result.priceDecimal}}</td>
 		                <td>{{result.itemDecimal}}</td>
 		                <td>{{result.itemRoundDown}}</td>

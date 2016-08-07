@@ -66,6 +66,15 @@ public class RetailPriceController extends AbstractController {
 		Map params = paramsBody.getBody();
 		Integer pageNo = (Integer) params.get("pageNo");
 		Integer limit = (Integer) params.get("limit");
+		String storeCode = (String) params.get("storeCode");
+		String storeName = (String) params.get("storeName");
+		String mcode = (String) params.get("mcode");
+		String mname = (String) params.get("mname");
+		String effDate = (String) params.get("effDate");
+		String expDate = (String) params.get("expDate");
+		
+		
+		
 		pageNo = (pageNo == null ? 0 : pageNo);
 		limit = (limit == null ? 10 : limit);
 
@@ -74,8 +83,27 @@ public class RetailPriceController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 			String clientId = account.getClient().getId();
+			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("clientId", clientId);
+			if(StringUtils.isNotBlank(storeCode)){
+				map.put("storeCode",storeCode);
+			}
+			if(StringUtils.isNotBlank(storeName)){
+				map.put("storeName",storeName);
+			}
+			if(StringUtils.isNotBlank(mcode)){
+				map.put("mcode",mcode);
+			}
+			if(StringUtils.isNotBlank(mname)){
+				map.put("mname",mname);
+			}
+			if(StringUtils.isNotBlank(effDate)){
+				map.put("effDate",effDate);
+			}
+			if(StringUtils.isNotBlank(expDate)){
+				map.put("expDate",expDate);
+			}
 			Page<RetailPrice> page = retailPriceService
 					.getRetailPricePageByCondition(map, pageNo, limit);
 			rbody.setData(page);
@@ -204,7 +232,8 @@ public class RetailPriceController extends AbstractController {
 			rbody.setMsg("请输入销售单位！");
 			return rbody;
 		}
-		if (!StringUtils.isNumeric(price)) {
+		
+		if (!NumberUtils.isNumber(price)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入销售价格！");
 			return rbody;
@@ -214,24 +243,15 @@ public class RetailPriceController extends AbstractController {
 			rbody.setMsg("请输入生效日期！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(expiryDate)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入失效日期！");
-			return rbody;
-		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
+		
+		
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
+			
 
 			RetailPrice retailPrice = new RetailPrice();
 			retailPrice.setId(UUID.randomUUID().toString());
@@ -240,7 +260,7 @@ public class RetailPriceController extends AbstractController {
 					DatetimeUtil.DATE));
 			retailPrice.setEffectiveDate(DatetimeUtil.toDate(effectiveDate,
 					DatetimeUtil.DATE));
-			retailPrice.setClient(client);
+			retailPrice.setClient(account.getClient());
 			retailPrice.setCreated(new Date());
 			retailPrice.setCreator(account.getId());
 
@@ -323,16 +343,6 @@ public class RetailPriceController extends AbstractController {
 		if (StringUtils.isBlank(effectiveDate)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入生效日期！");
-			return rbody;
-		}
-		if (StringUtils.isBlank(expiryDate)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入失效日期！");
-			return rbody;
-		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
 			return rbody;
 		}
 

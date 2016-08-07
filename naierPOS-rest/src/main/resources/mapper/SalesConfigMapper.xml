@@ -50,6 +50,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="clientId != null">
 				and a.Client=#{clientId}
 			</if>
+			<if test="storeCode != null">
+				and s.Code=#{storeCode}
+			</if>
+			<if test="storeName != null">
+				and s.Name like CONCAT('%','${storeName}','%' ) 
+			</if>
+			<if test="salesDate != null">
+				and a.SalesDate=#{salesDate}
+			</if>
 			order by a.ID desc
 			<if test="start != null and limit != null">
 				limit #{start},#{limit}
@@ -57,11 +66,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="getSalesConfigCountByCondition" parameterType="java.util.Map" resultType="int">
-		SELECT count(1)
-		FROM SalesConfig a WHERE 
-			1 = 1
+		SELECT 
+			count(1)
+		FROM SalesConfig a left outer join Client c
+		on a.Client = c.id and c.status = 1 
+		left outer join Store s
+		on a.Store = s.id and s.status = 1 
+		left outer join Terminal t
+		on a.Terminal = t.id and t.status = 1 
+		where	1 = 1
 			<if test="clientId != null">
 				and a.Client=#{clientId}
+			</if>
+			<if test="storeCode != null">
+				and s.Code=#{storeCode}
+			</if>
+			<if test="storeName != null">
+				and s.Name like CONCAT('%','${storeName}','%' ) 
+			</if>
+			<if test="salesDate != null">
+				and a.SalesDate=#{salesDate}
 			</if>
 	</select>
 	

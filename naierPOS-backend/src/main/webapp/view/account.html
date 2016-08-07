@@ -35,10 +35,9 @@
 			<div class="table-responsive mailbox-messages">
 				<table class="table table-hover">
 					<tr>
-						<th width="30"><button type="button"
-								class="btn btn-default btn-sm checkbox-toggle">
-								<i class="fa fa-square-o"></i>
-							</button></th>
+						<th width="30">
+							<input type="checkbox" ng-click="checkAll(basicsInfo.results,allchk)" ng-model="allchk">
+						</th>
 						<th>帐号</th>
 						<th>昵称</th>
 						<th>头像</th>
@@ -47,7 +46,7 @@
 						<th>操作</th>
 					</tr>
 					<tr ng-repeat="result in basicsInfo.results"  on-render-finish>
-						<td align="center"><input type="checkbox" ng-click="check(result.id,chk)" ng-model="chk"></td>
+						<td align="center"><input type="checkbox" ng-click="check(result.id,result.chk)" ng-model="result.chk"></td>
 		                <td>{{result.name}}</td>
 		                <td>{{result.nick}}</td>
 		                <td><img alt="User Image" class="user-image"

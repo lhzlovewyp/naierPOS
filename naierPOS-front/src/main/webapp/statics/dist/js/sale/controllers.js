@@ -1,15 +1,29 @@
-app.controller("loginCtrl",['$scope','$location','LoginService',function($scope,$location,LoginService){
+app.controller("loginCtrl",['$scope','$location','LoginService','ngDialog',function($scope,$location,LoginService,ngDialog){
 	var form = {};
     $scope.form = form;
 	$scope.login = function(isValid){
 		if(isValid) {
             LoginService.login($scope.form).then(function(data){
                 if(data.hasLogin){
-                	//如果是初次登陆,强制修改密码
-                	if(data.changePWD == "1"){
-                		location.href="changePWD.html";
+                	var stores=data.stores;
+                	if(stores.length>1){
+                		//弹窗提示选择门店.
+                		$scope.stores=stores;
+                		ngDialog.open({
+                            template: 'chooseStore',
+                            scope: $scope,
+                            closeByDocument: false,
+                            width:200,
+                            controller: 'loginCtrl',
+                            showClose:false
+                        });
                 	}else{
-                		location.href="home.html";
+                		//如果是初次登陆,强制修改密码
+                    	if(data.changePWD == "1"){
+                    		location.href="changePWD.html";
+                    	}else{
+                    		location.href="home.html";
+                    	}
                 	}
                 }else{
                     $scope.loginInfo = data;
@@ -28,6 +42,22 @@ app.controller("loginCtrl",['$scope','$location','LoginService',function($scope,
 		document.getElementById("verifyCodeImg").src="/rest/captcha-image"
 	};
 	
+	$scope.choose=function(store){
+		LoginService.chooseStore(store).then(function(data){
+			 if(data.hasLogin){
+				//如果是初次登陆,强制修改密码
+		        	if(data.changePWD == "1"){
+		        		location.href="changePWD.html";
+		        	}else{
+		        		location.href="home.html";
+		        	}
+			 }else{
+				 alert('登陆失效,请重新登陆.');
+				 location.href="login.html";
+			 }
+    		
+        });
+	}
 	
 }]);
 

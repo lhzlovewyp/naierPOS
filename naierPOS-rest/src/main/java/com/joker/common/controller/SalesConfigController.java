@@ -63,6 +63,13 @@ public class SalesConfigController extends AbstractController {
 		Map params = paramsBody.getBody();
 		Integer pageNo = (Integer) params.get("pageNo");
 		Integer limit = (Integer) params.get("limit");
+		
+		String storeCode = (String) params.get("storeCode");
+		String storeName = (String) params.get("storeName");
+		String salesDate = (String) params.get("salesDate");
+		
+		
+		
 		pageNo = (pageNo == null ? 0 : pageNo);
 		limit = (limit == null ? 10 : limit);
 
@@ -73,6 +80,17 @@ public class SalesConfigController extends AbstractController {
 			String clientId = account.getClient().getId();
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("clientId", clientId);
+			
+			if(StringUtils.isNotBlank(storeCode)){
+				map.put("storeCode",storeCode);
+			}
+			if(StringUtils.isNotBlank(storeName)){
+				map.put("storeName",storeName);
+			}
+			if(StringUtils.isNotBlank(salesDate)){
+				map.put("salesDate",salesDate);
+			}
+			
 			Page<SalesConfig> page = salesConfigService
 					.getSalesConfigPageByCondition(map, pageNo, limit);
 			rbody.setData(page);
@@ -203,19 +221,14 @@ public class SalesConfigController extends AbstractController {
 			rbody.setMsg("请输入门店！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
+		
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
+			
 
 			SalesConfig salesConfig = new SalesConfig();
 			salesConfig.setId(UUID.randomUUID().toString());
@@ -223,7 +236,7 @@ public class SalesConfigController extends AbstractController {
 			salesConfig.setMaxCode(Integer.valueOf(maxCode));
 			salesConfig.setSalesDate(DatetimeUtil.toDate(salesDate,
 					DatetimeUtil.DATE));
-			salesConfig.setClient(client);
+			salesConfig.setClient(account.getClient());
 			salesConfig.setCreated(new Date());
 			salesConfig.setCreator(account.getId());
 

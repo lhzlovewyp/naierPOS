@@ -16,51 +16,29 @@
 			<form class="form-horizontal" role="form" method="post"  name="basicsForm" id="basicsForm" ng-submit="edit(basicsForm.$valid)" novalidate>
 				<div class="tab-content" style="margin-top: 20px;">
 					<div class="tab-pane active" id="Account">
-						<div class="form-group" style="display:none;">
-							<label for="id" class="col-sm-2 control-label">GUID</label>
-							<div class="col-sm-4">
-								<input type="text" class="form-control" id="id" name="id"
-									placeholder="GUID" ng-model="form.id" >
-							</div>
-						</div>
 						<div class="form-group">
 							<label for="name" class="col-sm-2 control-label">账户</label>
 							<div class="col-sm-4">
 								<input type="text" class="form-control" id="name" name="name"
 									placeholder="账户" ng-model="form.name">
 							</div>
-						</div>
-						<div class="form-group">
 							<label for="nick" class="col-sm-2 control-label">昵称</label>
 							<div class="col-sm-4">
 								<input type="text" class="form-control" id="nick" name="nick"
 									placeholder="昵称" ng-model="form.nick">
 							</div>
 						</div>
-						
 						<div class="form-group">
 							<label for="nick" class="col-sm-2 control-label">图像</label>
+							
 							<div class="col-sm-4">
 								<input type="text" class="form-control" id="nick" name="nick"
-									placeholder="上传图片" ng-model="form.displayPhone">
-								<input id="lefile" type="file" style="display:none">
+									placeholder="上传图片" ng-model="form.displayPhoto" readonly>
 							</div>
-							<a class="btn" onclick="$('input[id=lefile]').click();">上传图像</a>
-						</div>
-						
-						<div class="form-group">
-							<label for="status" class="col-sm-2 control-label">状态</label>
-							<div class="col-sm-4">
-								<select id="status" name="status" class="form-control" ng-model="selstatus" ng-options="x.show for x in statuses">
-								</select>
+							<div class="col-sm-1">
+								<img alt="" style="width:30px;" src="{{form.displayPhoto}}" ng-show="form.displayPhoto!=null && form.displayPhoto!=''">
 							</div>
-						</div>
-						<div class="form-group">
-							<label for="storeId" class="col-sm-2 control-label">所属门店</label>
-							<div class="col-sm-4">
-								<select id="storeId" name="storeId" class="form-control" ng-model="selstore" ng-options="x.show for x in stores">
-								</select>
-							</div>
+							<a class="btn" ng-click="uploadFile('p')">上传图像</a>
 						</div>
 						<div class="form-group">
 							<label for="roleId" class="col-sm-2 control-label">归属角色</label>
@@ -70,16 +48,27 @@
 					    			tick-property="ticked">
 								</div>
 							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-sm-offset-2 col-sm-10">
-								<div class="checkbox">
-									<label class="icheckbox"> <input type="checkbox"
-										value="0" id="changePWD" name="changePWD" ng-model="form.changePWD"> 首次登录后强制修改密码
-									</label>
-								</div>
+							
+							<label for="status" class="col-sm-2 control-label">状态</label>
+							<div class="col-sm-4">
+								<select id="status" name="status" class="form-control" ng-model="selstatus" ng-options="x.show for x in statuses">
+								</select>
 							</div>
 						</div>
+						<!-- - 
+						<div class="form-group">
+							<label for="storeId" class="col-sm-2 control-label">所属门店</label>
+							<div class="col-sm-4">
+								
+								<select id="storeId" name="storeId" class="form-control" ng-model="selstore" ng-options="x.show for x in stores">
+								</select>
+								
+								<input type="text" class="form-control" 
+									placeholder="选择门店" ng-model="form.selectStoreName">
+							</div>
+							<a class="btn" ng-click="chooseStore();">选择门店</a>
+						</div>
+						-->
 					</div>
 				</div>
 				<div class="form-group has-feedback" role="alert">
@@ -100,6 +89,56 @@
 					</div>
 				</div>
 			</form>
+		</div>
+	</div>
+	<div class="box" height="300px;">
+		<ul class="nav nav-tabs" id="myTab">
+				<li class="active"><a href="javascript:;;">选择门店</a></li>
+		</ul>
+		<div class="row">
+		
+		
+		<div class=" col-xs-4 table-responsive mailbox-messages" style="overflow:scroll; height:250px;">
+			<table class="table table-striped table-hover table-border">
+				
+				<tr>
+				<th width="30"><input type="checkbox" ng-click="checkAll(readyStores,allcheck1,1)" ng-model="allcheck1"></th>
+				<th>门店编号</th>			
+				<th>门店名称</th>
+				</tr>
+				<tr ng-show="readyStores.length>0" ng-repeat="store in readyStores">
+					<td align="center"><input type="checkbox" ng-click="storeCheck(store)" ng-model="store.chk"></td>
+					<td>{{store.code}}</td>
+					<td>{{store.name}}</td>
+				</tr>
+				
+			</table>
+		</div>
+		<div class="col-xs-2">
+			<div class="form-group" style="text-align:center;margin-top:80px;">
+				<button type="button" class="btn full-left btn-danger" ng-click="selectLeft();">>></button>
+			</div>
+			<div class="form-group" style="text-align:center;margin-top:10px">
+				<button type="button" class="btn full-left btn-danger" ng-click="selectRight();"><<</button>
+			</div>
+		</div>
+		<div class="col-xs-4  table-responsive mailbox-messages" style="overflow:scroll; height:250px;">
+			<table class="table table-striped .table-condensed table-hover table-border">
+				
+				<tr>
+				<th width="30"><input type="checkbox" ng-click="checkAll(selectedStores,allcheck2,2)" ng-model="allcheck2"></th>
+				<th>门店编号</th>			
+				<th>门店名称</th>
+				</tr>
+				<tr ng-repeat="store in selectedStores">
+					<td align="center"><input type="checkbox" ng-click="storeCheck(store)"  ng-model="store.chk"></td>
+					<td>{{store.code}}</td>
+					<td>{{store.name}}</td>
+				</tr>
+				</tr>
+				
+			</table>
+		</div>
 		</div>
 	</div>
 </section>

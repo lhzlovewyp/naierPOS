@@ -76,7 +76,7 @@ public class LoginFilter implements Filter{
 					
 					Account account=JSON.parseObject(body.getData().toString(), Account.class);
 					if (!account.getLoginAdmin().equals("1")) {
-						response.sendRedirect("/backend/authorize.html");
+						returnJsonObject(response, "<script>window.location.href='/backend/authorize.html'</script>");
 						return;
 					} /*else if (path.indexOf("account") > 0) {
 						response.sendRedirect("/backend/home.html#account");

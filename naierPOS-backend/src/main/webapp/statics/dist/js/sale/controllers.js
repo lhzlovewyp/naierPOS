@@ -55,6 +55,12 @@ app.controller("changePWDCtrl",['$scope','$location','LoginService',function($sc
 }]);
 
 app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsService',function($scope,$location,$routeParams,BasicsService){
+	
+	//绑定时间控件.
+	$scope.$on('$viewContentLoaded', function(){
+		$('[data-provide="datepicker-inline"]').datepicker();
+	});
+	
 	var initItemsPerPage = 10;
 	var initCurrentPage = 1;
 	var totalItems = 0;
@@ -146,6 +152,20 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
         	selectedId = selectedId.replace(val+",","");
         }
 	};
+	$scope.checkAll=function(arr,chk){
+		$scope.chk=!chk;
+		selectedId="";
+		for(var i=0;i<arr.length;i++){
+			var result=arr[i];
+			if(!chk == true){//选中
+				result.chk=true;
+				selectedId+=result.id+",";
+			}else{
+				result.chk=false;
+			}
+		}
+		
+	}
 	
 	$scope.showYesOrNo = function(value){
 		if(value == "1"){
@@ -218,7 +238,7 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 	};
 }]);
 
-app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDialog','BasicsService',function($scope,$location,$routeParams,ngDialog,BasicsService){
+app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDialog','BasicsService','$timeout',function($scope,$location,$routeParams,ngDialog,BasicsService,$timeout){
 	var allStatus = [
 		        	    {value : "1", show : "有效"},
 		        	    {value : "0", show : "无效"}
@@ -261,6 +281,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 	 		        	];
 	$scope.statuses = allStatus;
 	$scope.editType = 'add';
+	$scope.form={};
 	var id = $routeParams.id;
 	var routePath = $routeParams.routePath;
 	
@@ -280,6 +301,12 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		}
 	}
 	
+	$scope.$watch("form", function(newValue, oldValue){
+		$timeout(function(){
+			$scope.$apply();
+		});
+		
+	},true);
 	
 	//绑定时间控件.
 	$scope.$on('$viewContentLoaded', function(){
@@ -327,14 +354,43 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					$scope.selstore = selectInfoMap[selStoreValue];
 				}
 			}
-			if(routePath == 'account' && allSelectInfoMap['role']){
-				var selectInfoMap = allSelectInfoMap['role'];
-				if(data.roles && data.roles.length > 0){
-					for(var roleIndex =0 ; roleIndex < data.roles.length; roleIndex++){
-						var selRole = data.roles[roleIndex];
-						var selRoleValue = selRole.id;
-						selectInfoMap[selRoleValue].ticked = true;
+			if(routePath == 'account'){
+				if(allSelectInfoMap['role']){
+					var selectInfoMap = allSelectInfoMap['role'];
+					if(data.roles && data.roles.length > 0){
+						for(var roleIndex =0 ; roleIndex < data.roles.length; roleIndex++){
+							var selRole = data.roles[roleIndex];
+							var selRoleValue = selRole.id;
+							selectInfoMap[selRoleValue].ticked = true;
+						}
 					}
+				}
+				if(allSelectInfoMap['store']){//如果存在选中的门店.
+					var selectInfoMap = allSelectInfoMap['store'];
+					var readyStores=[];
+					var selectedStores=[];
+					if(data.stores && data.stores.length > 0){
+						selectedStores=data.stores;
+						for(var i=0;i<$scope.stores.length;i++){
+							var store=$scope.stores[i];
+							var flag=0;
+							for(var j=0;j<selectedStores.length;j++){
+								var selectedStore=selectedStores[j];
+								if(selectedStore.code==store.code){
+									flag=1;
+									break;
+								}
+							}
+							if(flag==0){
+								readyStores.push(store);
+							}
+							
+						}
+					}else{
+						readyStores=$scope.stores;
+					}
+					$scope.readyStores=readyStores;
+					$scope.selectedStores=selectedStores;
 				}
 			}
 			if(routePath == 'salesConfig' && allSelectInfoMap['terminal']){
@@ -468,6 +524,10 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					var selMatchContentValue = data.matchContent;
 					$scope.selMaterial = selectInfoMap[selMatchContentValue];
 				}
+			}
+		}else{
+			if(routePath == 'account'){
+				$scope.readyStores=$scope.stores;
 			}
 		}
 	}
@@ -663,12 +723,11 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
     				if(type == 'clientPayment'){
     					name = data[i].payment.name;
     				}
-					var selectObj = {"value":id,"show":name};
+					var selectObj = {"value":id,"show":name,"id":id,"name":name,"code":data[i].code};
 					allSelect.push(selectObj);
 					selectInfoMap[id] = selectObj;
 				}
     			$scope[selectParam] = allSelect;
-    			
 				allSelectInfoMap[type] = selectInfoMap;
 				setSelectedInfo();
     		}
@@ -802,10 +861,6 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			}
 			
 			if(routePath == 'account'){
-				if($scope.form.changePWD)
-					$scope.form.changePWD = "1";
-				else
-					$scope.form.changePWD = "0";
 				
 				if($scope.outputRoles){
 					var finalRole = "";
@@ -815,6 +870,16 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 						finalRole += selRoleValue + ',';
 					}
 					$scope.form.roleId = finalRole;
+				}
+				//获取用户所属门店信息.
+				if($scope.selectedStores){
+					var finalStore="";
+					var stores=$scope.selectedStores;
+					for(var i=0;i<stores.length;i++){
+						var store=stores[i];
+						finalStore+=(store.id)+',';
+					}
+					$scope.form.storeIds=finalStore;
 				}
 			}
 			
@@ -1082,18 +1147,130 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		$location.path('/backend/list/'+routePath);
 	}
 	
-	//品类信息查询.
-	$scope.openMaterialCategoryTree = function(){
+	$scope.storeCheck=function(store){
+		if(!store.chk){
+			store.chk=1;
+		}else{
+			store.chk=0;
+		}
+	}
+	$scope.selectLeft=function(){
+		var readyStores=$scope.readyStores;
+		var readyStoresTmp=[];
+		var selectedStores=$scope.selectedStores || [];
+		for(var i=0;i<readyStores.length;i++){
+			var readyStore=readyStores[i];
+			if(readyStore.chk){
+				readyStore.chk=0;
+				selectedStores.push(readyStore);
+			}else{
+				readyStoresTmp.push(readyStore);
+			}
+		}
+		$scope.readyStores=readyStoresTmp;
+		$scope.selectedStores=selectedStores;
+		$scope.allcheck1=false;
+		$scope.allcheck2=false;
+	}
+	
+	$scope.selectRight=function(){
+		var readyStores=$scope.readyStores || [];
+		var selectedStoresTmp=[];
+		var selectedStores=$scope.selectedStores || [];
+		for(var i=0;i<selectedStores.length;i++){
+			var selectedStore=selectedStores[i];
+			if(selectedStore.chk){
+				selectedStore.chk=0;
+				readyStores.push(selectedStore);
+			}else{
+				selectedStoresTmp.push(selectedStore);
+			}
+		}
+		$scope.readyStores=readyStores;
+		$scope.selectedStores=selectedStoresTmp;
+		$scope.allcheck1=false;
+		$scope.allcheck2=false;
+	}
+	$scope.allcheck1=false;
+	$scope.allcheck2=false;
+	$scope.checkAll=function(arr,chk,type){
 		
+		$scope["allcheck"+type]=!chk;
+		selectedId="";
+		for(var i=0;i<arr.length;i++){
+			var result=arr[i];
+			if(!chk == true && chk!="undefined"){//选中
+				result.chk=true;
+			}else{
+				result.chk=false;
+			}
+		}
+		
+	}
+	
+	$scope.uploadFile = function(type){
+		$scope.uploadFileType=type;
+		ngDialog.open({
+            template: '/backend/view/template/uploadFile.html',
+            scope: $scope,
+            closeByEscape: false,
+            width:'300px',
+            controller: 'uploadFileCtrl',
+        });
+	}
+	
+	//导购员信息查询.
+	$scope.openMaterialCategoryTree = function(){
+		var type=$scope.uploadFileType;
 		ngDialog.open({
             template: '/backend/view/template/materialCategoryTree.html',
             scope: $scope,
             closeByEscape: false,
-            controller: 'materialCategoryTreeCtrl'
+            controller: 'materialCategoryTreeCtrl',
+            
         });
 	}
 }]);
 
+app.controller("uploadFileCtrl",['$scope','$location','LoginService','ngDialog','BasicsService',function($scope,$location,LoginService,ngDialog,BasicsService){
+	//执行图片上传操作
+	$scope.submit=function(){
+		var token=$.cookie("token");
+		var type=$scope.uploadFileType;
+		var maxSize=$scope.uploadFileMaxSize || 10;
+		var url="/rest/file/uploadImg?token="+token+"&type="+type+"&maxSize="+maxSize;
+		$.ajaxFileUpload({
+			 url:url,
+			 secureuri:false,
+			 formId:"uploadForm",
+			 fileElementId:["fileUpload"],
+			 dataType: 'json',
+			 success: function (data, status) {
+				 $('#uploadFile').remove();
+				 var reg = /<pre.+?>(.+)<\/pre>/g;  
+				 var result = data.match(reg);  
+				 data = RegExp.$1;
+				 data=$.parseJSON(data);
+				 if(data.status == Status.SUCCESS){
+					 //文件上传成功
+					 alert("文件上传成功");
+					 
+					 var form=$scope.form;
+					 
+					 form.displayPhoto=decodeURIComponent(data.data);
+					 $scope.form=form;
+					 $scope.$apply();//需要手动刷新
+					 ngDialog.close();
+				 }else{
+					 alert(data.msg);
+				 }
+			 },
+			 error: function (data, status, e) {
+				 alert(e);
+			 }		
+		 });
+	}
+}]);
 app.controller("materialCategoryTreeCtrl",['$scope','$location','LoginService','ngDialog','BasicsService',function($scope,$location,LoginService,ngDialog,BasicsService){
 	var selectedNode = {};
 	

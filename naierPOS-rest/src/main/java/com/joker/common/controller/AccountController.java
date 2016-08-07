@@ -230,8 +230,9 @@ public class AccountController extends AbstractController {
 		String nick = (String) params.get("nick");
 		String password = (String) params.get("password");
 		String changePWD = (String) params.get("changePWD");
-		String storeId = (String) params.get("storeId");
+		String storeIds = (String) params.get("storeIds");
 		String roleId = (String) params.get("roleId");
+		String displayPhoto=(String)params.get("displayPhoto");
 
 		password=EncryptUtil.doEncrypt("111111");
 		
@@ -266,11 +267,17 @@ public class AccountController extends AbstractController {
 			addAccount.setPassword(password);
 			addAccount.setCreated(new Date());
 			addAccount.setCreator(account.getId());
+			addAccount.setDisplayPhoto(displayPhoto);
 
-			if (StringUtils.isNotBlank(storeId)) {
-				Store store = new Store();
-				store.setId(storeId);
-				addAccount.setStore(store);
+			if (StringUtils.isNotBlank(storeIds)) {
+				String[] storeIdArr = storeIds.split(",");
+				List<Store> stores=new ArrayList<Store>();
+				for(String storeId:storeIdArr){
+					Store store=new Store();
+					store.setId(storeId);
+					stores.add(store);
+				}
+				addAccount.setStores(stores);
 			}
 			if (StringUtils.isNotBlank(roleId)) {
 				String[] roleIdArr = roleId.split(",");
@@ -314,11 +321,11 @@ public class AccountController extends AbstractController {
 		String name = (String) params.get("name");
 		String nick = (String) params.get("nick");
 		String password = (String) params.get("password");
-		String changePWD = (String) params.get("changePWD");
 		String clientId = (String) params.get("clientId");
-		String storeId = (String) params.get("storeId");
+		String storeIds = (String) params.get("storeIds");
 		String roleId = (String) params.get("roleId");
 		String status = (String) params.get("status");
+		String displayPhoto=(String)params.get("displayPhoto");
 
 		if (StringUtils.isBlank(id)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -361,7 +368,6 @@ public class AccountController extends AbstractController {
 
 			Account account = new Account();
 			account.setId(id);
-			account.setChangePWD(changePWD);
 			account.setName(name);
 			account.setNick(nick);
 			account.setClient(client);
@@ -369,11 +375,17 @@ public class AccountController extends AbstractController {
 			account.setCreated(new Date());
 			account.setCreator(loginAccount.getId());
 			account.setStatus(status);
+			account.setDisplayPhoto(displayPhoto);
 
-			if (StringUtils.isNotBlank(storeId)) {
-				Store store = new Store();
-				store.setId(storeId);
-				account.setStore(store);
+			if (StringUtils.isNotBlank(storeIds)) {
+				String[] storeIdArr = storeIds.split(",");
+				List<Store> stores=new ArrayList<Store>();
+				for(String storeId:storeIdArr){
+					Store store=new Store();
+					store.setId(storeId);
+					stores.add(store);
+				}
+				account.setStores(stores);
 			}
 			if (StringUtils.isNotBlank(roleId)) {
 				String[] roleIdArr = roleId.split(",");

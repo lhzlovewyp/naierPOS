@@ -19,6 +19,15 @@ public interface StoreMapper {
 	 */
 	@DataSource("slave")
 	public Store getStoreById(String id);
+	
+	/**
+	 * 根据账号id查询门店信息.
+	 * 
+	 * @param username
+	 * @return
+	 */
+	@DataSource("slave")
+	public List<Store> getStoresByAid(String accountId);
 
 	/**
 	 * 根据商户id和门店code查询门店信息.

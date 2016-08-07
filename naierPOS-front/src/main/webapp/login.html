@@ -10,6 +10,11 @@
   <link rel="stylesheet" href="statics/dist/css/font-awesome.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="statics/dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="statics/dist/css/skins/_all-skins.min.css">
+  <link rel="stylesheet" href="statics/plugins/angular/ngDialog/css/ngDialog.css">
+  <link rel="stylesheet" href="statics/plugins/angular/ngDialog/css/ngDialog-theme-default.css">
+  <link rel="stylesheet" href="statics/plugins/angular/ngDialog/css/ngDialog-theme-plain.css">
+  <link rel="stylesheet" href="statics/plugins/angular/ngDialog/css/ngDialog-custom-width.css">
   <link rel="stylesheet" href="statics/plugins/datepicker/datepicker3.css">
   
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -75,6 +80,27 @@
   <!-- /.login-box-body -->
 </div>
 <!-- /.login-box -->
+<script type="text/ng-template" id="chooseStore">
+	<div class="box-header">
+			<h3 class="box-title">选择门店</h3>
+	</div>
+	<div class="box-body">
+			<div class="table-responsive mailbox-messages">
+				<table class="table table-hover">
+					<tr>
+						<th>编码</th>
+						<th>名称</th>
+					</tr>
+					<tr ng-repeat="result in stores"  ng-click="choose(result);">
+		                <td>{{result.code}}</td>
+		                <td>{{result.name}}</td>
+		            </tr>
+				</table>
+			</div>
+	</div>
+</script>
+
+
 
 <script type="text/javascript" src="statics/plugins/jQuery/jQuery-2.2.0.min.js"></script>
 <script type="text/javascript" src="statics/plugins/jQuery/jquery.cookie.min.js"></script>

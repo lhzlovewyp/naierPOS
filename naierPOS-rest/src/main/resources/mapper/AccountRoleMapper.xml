@@ -22,6 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		DELETE FROM AccountRole where Account=#{account.id}
 	</delete>
 	
+	
 	<insert id="insertAccountRole" parameterType="accountRole">
 		insert into AccountRole <include refid="accountRoleSet" />
 	</insert>

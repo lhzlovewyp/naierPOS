@@ -21,6 +21,24 @@ app.factory('LoginService',['$q','$location','$http','BaseService',function($q,$
             });
             return deferred.promise;
         },
+        chooseStore:function(store){
+        	var deferred = $q.defer();
+        	var token=$.cookie("token");
+        	var obj={"token":token,"store":store};
+            BaseService.post('/rest/login/chooseStore', obj).then(function (obj) {
+                if(obj && obj.data && obj.data.status == Status.SUCCESS) {
+                    loginInfo = obj.data.data;
+                    loginInfo.hasLogin = true;
+                    loginInfo.loginerror = false;
+                }else{
+                    loginInfo.hasLogin = false;
+                    loginInfo.loginerror = true;
+                    loginInfo.loginerroinfo = obj.data.msg;
+                }
+                deferred.resolve(loginInfo);
+            });
+            return deferred.promise;
+        },
         updatePWD:function(condition){
         	var deferred = $q.defer();
         	var newPwd=condition.newPassword;
@@ -55,7 +73,7 @@ app.factory('LoginService',['$q','$location','$http','BaseService',function($q,$
         	BaseService.post('/rest/login/validToken', obj).then(function (data) {
         		if(data.data.status == Status.SUCCESS){
         			loginInfo.userName=data.data.data.nick;
-        			loginInfo.storeName=data.data.data.store.name;
+        			loginInfo.storeName=data.data.data.store ? data.data.data.store.name:'';
         			deferred.resolve(loginInfo);
         		}else{
         			location.href = '/front/login.html';

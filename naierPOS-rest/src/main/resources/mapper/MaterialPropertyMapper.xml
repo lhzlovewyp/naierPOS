@@ -49,12 +49,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getMaterialPropertyPageByCondition" parameterType="java.util.Map" resultMap="materialPropertyPage">
 		SELECT 
 			a.ID,a.Client,a.Material,a.Color,a.Size,a.Barcode,a.Status,c.Name ClientName
-		FROM MaterialProperty a left outer join Client c
+		FROM MaterialProperty a 
+		join Material b on a.Material=b.id
+		left outer join Client c
 		on a.Client = c.id and c.status = 1  
 		WHERE 
 			a.Status= 1
 			<if test="clientId != null">
 				and a.Client=#{clientId}
+			</if>
+			<if test="code != null">
+				and b.Code=#{code}
+			</if>
+			<if test="likeName != null">
+				and b.Name like CONCAT('%','${likeName}','%' )  
 			</if>
 			order by a.ID desc
 			<if test="start != null and limit != null">
@@ -63,10 +71,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="getMaterialPropertyCountByCondition" parameterType="java.util.Map" resultType="int">
-		SELECT count(1)
-		FROM MaterialProperty a WHERE a.Status= 1
+		SELECT 
+			count(1)
+		FROM MaterialProperty a 
+		join Material b on a.Material=b.id
+		left outer join Client c
+		on a.Client = c.id and c.status = 1 
 			<if test="clientId != null">
 				and a.Client=#{clientId}
+			</if>
+			<if test="code != null">
+				and b.Code=#{code}
+			</if>
+			<if test="likeName != null">
+				and b.Name like CONCAT('%','${likeName}','%' )  
 			</if>
 	</select>
 	

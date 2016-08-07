@@ -46,6 +46,9 @@ public class Account extends BaseModel{
 	
 	//当前用户下所属的角色.
 	private List<Role> roles;
+	
+	//当前用户下所属的角色.
+   private List<Store> stores;
 
 	public Client getClient() {
 		return client;
@@ -172,6 +175,14 @@ public class Account extends BaseModel{
 
 	public void setAllDISC(String allDISC) {
 		this.allDISC = allDISC;
+	}
+
+	public List<Store> getStores() {
+		return stores;
+	}
+
+	public void setStores(List<Store> stores) {
+		this.stores = stores;
 	}
 	
 	

@@ -61,7 +61,8 @@ public class UnitConversionController extends AbstractController {
 		Map params = paramsBody.getBody();
 		Integer pageNo = (Integer) params.get("pageNo");
 		Integer limit = (Integer) params.get("limit");
-		String likeName = (String) params.get("likeName");
+		String uniA = (String) params.get("uniA");
+		String uniB = (String) params.get("uniB");
 		pageNo = (pageNo == null ? 0 : pageNo);
 		limit = (limit == null ? 10 : limit);
 
@@ -72,7 +73,12 @@ public class UnitConversionController extends AbstractController {
 			String clientId = account.getClient().getId();
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("clientId", clientId);
-			map.put("likeName", likeName);
+			if(StringUtils.isNotBlank(uniA)){
+				map.put("uniA",uniA);
+			}
+			if(StringUtils.isNotBlank(uniB)){
+				map.put("uniB",uniB);
+			}
 			Page<UnitConversion> page = unitConversionService
 					.getUnitConversionPageByCondition(map, pageNo, limit);
 			rbody.setData(page);
@@ -168,19 +174,13 @@ public class UnitConversionController extends AbstractController {
 			rbody.setMsg("请输入乙单位数量！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
+		
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
 
 			Unit unitA = new Unit();
 			unitA.setId(unitAId);
@@ -195,7 +195,7 @@ public class UnitConversionController extends AbstractController {
 			addUnitConversion.setUnitB(unitB);
 			addUnitConversion.setQtyB(new BigDecimal(qtyB));
 			addUnitConversion.setRemark(remark);
-			addUnitConversion.setClient(client);
+			addUnitConversion.setClient(account.getClient());
 			addUnitConversion.setCreated(new Date());
 			addUnitConversion.setCreator(account.getId());
 
