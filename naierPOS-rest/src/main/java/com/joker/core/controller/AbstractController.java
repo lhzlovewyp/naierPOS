@@ -8,10 +8,7 @@ import com.joker.core.expection.FailedException;
 import com.joker.core.expection.InvalidUserException;
 import com.joker.core.expection.ParamsNullException;
 import com.joker.core.util.LogUtil;
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;

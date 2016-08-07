@@ -57,6 +57,10 @@ public class Material  extends BaseModel{
 	
 	private List<AttrDto> attrDtos;
 	
+	private Color color;
+	
+	private Size size;
+	
 	public String getDisplayPhoto() {
 		return displayPhoto;
 	}
@@ -193,6 +197,22 @@ public class Material  extends BaseModel{
 
 	public void setAttrDtos(List<AttrDto> attrDtos) {
 		this.attrDtos = attrDtos;
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
+	public Size getSize() {
+		return size;
+	}
+
+	public void setSize(Size size) {
+		this.size = size;
 	}
 
 	

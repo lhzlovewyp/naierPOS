@@ -65,7 +65,7 @@ public class MaterialController extends AbstractController {
 	@RequestMapping(value = { "/m/getMaterialByCode" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
-	public ReturnBody getShoppingGuide(@RequestBody ParamsBody paramsBody,
+	public ReturnBody getMaterialByCode(@RequestBody ParamsBody paramsBody,
 			HttpServletRequest request, HttpServletResponse response) {
 		ReturnBody rbody = new ReturnBody();
 
@@ -75,7 +75,7 @@ public class MaterialController extends AbstractController {
 		if (user != null && body.get("code") != null) {
 			Account account = (Account) user;
 			String code = (String) body.get("code");
-			Material material = materialService.getMaterialByCode(account
+			Material material = materialService.getDynMaterial(account
 					.getClient().getId(), code);
 			if (material != null) {
 				SalesConfig config = salesConfigService

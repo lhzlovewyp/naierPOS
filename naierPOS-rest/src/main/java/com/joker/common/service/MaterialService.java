@@ -7,6 +7,18 @@ import com.joker.common.model.Material;
 import com.joker.core.dto.Page;
 
 public interface MaterialService {
+	
+	/**
+	 * 根据code动态查询数据.
+	 * 先从商品属性表里面查询数据,如果商品属性找不到，从商品表里面的barcode查找，如果再找不到,根据code查找.
+	 * 
+	 * 
+	 * @param clientId
+	 * @param code
+	 * @return
+	 */
+	public Material getDynMaterial(String clientId,String code);
+	
 	/**
 	 * 查询物料信息.
 	 * 

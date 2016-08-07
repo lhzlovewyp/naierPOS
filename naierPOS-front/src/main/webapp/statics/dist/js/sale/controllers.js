@@ -205,7 +205,7 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog','Pa
 			return;
 		}
 		SaleService.searchMat($scope.matForm).then(function(data){
-            if(data.data.property=="1"){//需要维护属性.
+            if(data.data.property=="1" && !data.data.color && !data.data.size){//需要维护属性.
             	
             	$scope.tempMat=data.data;
             	$scope.matForm={};

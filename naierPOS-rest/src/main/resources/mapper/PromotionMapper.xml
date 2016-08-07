@@ -77,7 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	
     <select id="getPromotionsByStore" resultMap="promotion">
-		SELECT p.ID,p.Client,p.Code,p.Name,pa.Memo,p.EffectiveDate,p.ExpiryDate,p.EffectiveTime,p.ExpiryTime
+		SELECT p.ID,p.Client,p.Code,p.Name,p.Memo,p.EffectiveDate,p.ExpiryDate,p.EffectiveTime,p.ExpiryTime
 			,p.RepeatEffect,p.Week,p.Days,p.PaymentRestrict,p.MemberRestrict,p.OfferRelation,p.Excluded
 			,p.Status,p.Creator,p.Created,p.Editor,p.Modified
 			,ps.Store FROM Promotion p, PromotionStore ps

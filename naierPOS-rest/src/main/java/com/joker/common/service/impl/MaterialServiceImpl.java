@@ -19,14 +19,18 @@ import com.joker.common.mapper.BrandMapper;
 import com.joker.common.mapper.MaterialCategoryMapper;
 import com.joker.common.mapper.MaterialMapper;
 import com.joker.common.model.Brand;
+import com.joker.common.model.Color;
 import com.joker.common.model.Material;
 import com.joker.common.model.MaterialCategory;
 import com.joker.common.model.MaterialProperty;
+import com.joker.common.model.Size;
 import com.joker.common.model.Unit;
 import com.joker.common.model.UnitConversion;
+import com.joker.common.service.ColorService;
 import com.joker.common.service.MaterialPropertyService;
 import com.joker.common.service.MaterialService;
 import com.joker.common.service.RetailPriceService;
+import com.joker.common.service.SizeService;
 import com.joker.common.service.UnitConversionService;
 import com.joker.common.service.UnitService;
 import com.joker.core.dto.Page;
@@ -59,6 +63,37 @@ public class MaterialServiceImpl implements MaterialService {
 
 	@Autowired
 	BrandMapper brandMapper;
+	
+	@Autowired
+	ColorService colorService;
+	
+	@Autowired
+	SizeService sizeService;
+	
+	@Override
+	public Material getDynMaterial(String clientId, String code) {
+		Material material=null;
+		List<MaterialProperty> properties = materialPropertyService.getMaterialPropertyByBarCode(clientId, code);
+		if(CollectionUtils.isEmpty(properties)){
+			material=this.getMaterialByBarCode(clientId, code);
+			if(material == null){
+				material = this.getMaterialByCode(clientId, code);
+			}
+		}else{
+			//只读取第一个.
+			MaterialProperty property=properties.get(0);
+			material=this.getMaterialById(property.getMaterial().getId());
+			Color color=colorService.getColorByID(property.getColor().getId());
+			Size size=sizeService.getSizeByID(property.getSize().getId());
+			material.setColor(color);
+			material.setSize(size);
+		}
+		if(material!= null){
+			initMaterial(material);
+			initUnitConversion(material);
+		}
+		return material;
+	}
 
 	@Override
 	public Material getMaterialByCode(String clientId, String code) {
@@ -252,4 +287,5 @@ public class MaterialServiceImpl implements MaterialService {
 		}
 		mapper.insertMaterial(material);
 	}
+
 }
