@@ -47,12 +47,12 @@ public class PromotionOfferServiceImpl implements PromotionOfferService {
 				.getPromotionOfferPageByCondition(map);
 		if (CollectionUtils.isNotEmpty(list)) {
 			Map<String, Promotion> promotionCacheMap = new HashMap<String, Promotion>();
-			for (PromotionOffer PromotionOffer : list) {
-				if (PromotionOffer != null) {
-					if (PromotionOffer.getPromotion() != null
-							&& StringUtils.isNotBlank(PromotionOffer
+			for (PromotionOffer promotionOffer : list) {
+				if (promotionOffer != null) {
+					if (promotionOffer.getPromotion() != null
+							&& StringUtils.isNotBlank(promotionOffer
 									.getPromotion().getId())) {
-						String promotionId = PromotionOffer.getPromotion()
+						String promotionId = promotionOffer.getPromotion()
 								.getId();
 						Promotion promotion = null;
 						if (promotionCacheMap.containsKey(promotionId)) {
@@ -65,7 +65,7 @@ public class PromotionOfferServiceImpl implements PromotionOfferService {
 							}
 						}
 						if (promotion != null) {
-							PromotionOffer.setPromotion(promotion);
+							promotionOffer.setPromotion(promotion);
 						}
 					}
 				}

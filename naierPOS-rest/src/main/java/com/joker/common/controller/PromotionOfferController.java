@@ -180,12 +180,12 @@ public class PromotionOfferController extends AbstractController {
 		// 参数校验
 		Map params = paramsBody.getBody();
 		String promotionId = (String) params.get("promotionId");
-		String offerType = (String) params.get("offerType");
+		String offerTypeId = (String) params.get("offerTypeId");
 		String offerContent = null;
 		if (params.get("offerContent") != null) {
-			offerContent = (String) params.get("offerContent");
+			offerContent = String.valueOf(params.get("offerContent"));
 		}
-		String matchType = (String) params.get("matchType");
+		String matchTypeId = (String) params.get("matchTypeId");
 		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(promotionId)) {
@@ -193,7 +193,7 @@ public class PromotionOfferController extends AbstractController {
 			rbody.setMsg("请输入促销活动！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(offerType)) {
+		if (StringUtils.isBlank(offerTypeId)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入优惠方式！");
 			return rbody;
@@ -203,17 +203,16 @@ public class PromotionOfferController extends AbstractController {
 			rbody.setMsg("请输入优惠值！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
 
+			if (StringUtils.isBlank(clientId)) {
+				clientId = account.getClient().getId();
+			}
+			
 			Client client = new Client();
 			client.setId(clientId);
 
@@ -223,9 +222,9 @@ public class PromotionOfferController extends AbstractController {
 			PromotionOffer promotionOffer = new PromotionOffer();
 			promotionOffer.setId(UUID.randomUUID().toString());
 			promotionOffer.setPromotion(promotion);
-			promotionOffer.setOfferType(offerType);
+			promotionOffer.setOfferType(offerTypeId);
 			promotionOffer.setOfferContent(new BigDecimal(offerContent));
-			promotionOffer.setMatchType(matchType);
+			promotionOffer.setMatchType(matchTypeId);
 			promotionOffer.setClient(client);
 			promotionOffer.setCreated(new Date());
 			promotionOffer.setCreator(account.getId());
@@ -258,12 +257,12 @@ public class PromotionOfferController extends AbstractController {
 		Map params = paramsBody.getBody();
 		String id = (String) params.get("id");
 		String promotionId = (String) params.get("promotionId");
-		String offerType = (String) params.get("offerType");
+		String offerTypeId = (String) params.get("offerTypeId");
 		String offerContent = null;
 		if (params.get("offerContent") != null) {
-			offerContent = (String) params.get("offerContent");
+			offerContent = String.valueOf(params.get("offerContent"));
 		}
-		String matchType = (String) params.get("matchType");
+		String matchTypeId = (String) params.get("matchTypeId");
 		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
@@ -277,7 +276,7 @@ public class PromotionOfferController extends AbstractController {
 			rbody.setMsg("请输入促销活动！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(offerType)) {
+		if (StringUtils.isBlank(offerTypeId)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入优惠方式！");
 			return rbody;
@@ -285,11 +284,6 @@ public class PromotionOfferController extends AbstractController {
 		if (StringUtils.isBlank(offerContent)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入优惠值！");
-			return rbody;
-		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
 			return rbody;
 		}
 		if (StringUtils.isBlank(status)) {
@@ -303,6 +297,10 @@ public class PromotionOfferController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
+			if (StringUtils.isBlank(clientId)) {
+				clientId = account.getClient().getId();
+			}
+			
 			Client client = new Client();
 			client.setId(clientId);
 
@@ -312,9 +310,9 @@ public class PromotionOfferController extends AbstractController {
 			PromotionOffer promotionOffer = new PromotionOffer();
 			promotionOffer.setId(id);
 			promotionOffer.setPromotion(promotion);
-			promotionOffer.setOfferType(offerType);
+			promotionOffer.setOfferType(offerTypeId);
 			promotionOffer.setOfferContent(new BigDecimal(offerContent));
-			promotionOffer.setMatchType(matchType);
+			promotionOffer.setMatchType(matchTypeId);
 			promotionOffer.setClient(client);
 			promotionOffer.setStatus(status);
 			promotionOffer.setModified(new Date());

@@ -20,14 +20,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="getPromotionStoreByID" parameterType="string" resultMap="promotionStore">
 		SELECT 
-			a.ID,a.Client,a.Promotion,a.Store,a.effDate,a.expDate
+			a.ID,a.Client,a.Promotion,a.Store,a.EffectiveDate,a.ExpiryDate
 		FROM PromotionStore a
 		WHERE a.ID=#{id} 
 	</select>
 	
 	<select id="getPromotionStorePageByCondition" parameterType="java.util.Map" resultMap="promotionStorePage">
 		SELECT 
-			a.ID,a.Client,a.Promotion,a.Store,a.effDate,a.expDate,c.Name ClientName
+			a.ID,a.Client,a.Promotion,a.Store,a.EffectiveDate,a.ExpiryDate,c.Name ClientName
 		FROM PromotionStore a left outer join Client c
 		on a.Client = c.id and c.status = 1 
 		WHERE 
@@ -73,7 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
 			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
 			<if test= "promotion != null">Promotion=#{promotion.id,jdbcType=VARCHAR},</if >
-			<if test= "clientStore != null">Store=#{clientStore.id,jdbcType=VARCHAR},</if >
+			<if test= "store != null">Store=#{store.id,jdbcType=VARCHAR},</if >
 			<if test= "effDate != null">EffectiveDate=#{effDate},</if >
 			<if test= "expDate != null">ExpiryDate=#{expDate},</if >
 		</set>

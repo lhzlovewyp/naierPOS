@@ -68,21 +68,47 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 	$scope.chk = false;
 	var routePath = $routeParams.routePath;
 	function goPage(pageNo,selectForm){
-		var promotionId = $location.search()['promotionId'];
-		if(promotionId){
-			$scope.promotionId = promotionId;
-		}
 		var body = {};
 		body.pageNo = pageNo;
 		body.limit = $scope.paginationConf.itemsPerPage;
 		body.likeName = $scope.likeName;
 		if(selectForm){
-		  body=$.extend(body,selectForm);
+			body=$.extend(body,selectForm);
 		}
 		
-		if(promotionId){
-			body.promotionId = promotionId;
+		if(routePath == 'promotionOffer' || routePath == 'promotionStore' || routePath == 'promotionPayment'){
+			var promotionId = $location.search()['promotionId'];
+			if(promotionId){
+				$scope.promotionId = promotionId;
+				body.promotionId = promotionId;
+			}else{
+				$location.path('/backend/list/promotion');
+				return;
+			}
 		}
+		
+		if(routePath == 'promotionOfferMatchContent' || routePath == 'promotionCondition'){
+			var promotionOfferId = $location.search()['promotionOfferId'];
+			if(promotionOfferId){
+				$scope.promotionOfferId = promotionOfferId;
+				body.promotionOfferId = promotionOfferId;
+			}else{
+				$location.path('/backend/list/promotion');
+				return;
+			}
+		}
+		
+		if(routePath == 'promotionConditionMatchContent'){
+			var promotionConditionId = $location.search()['promotionConditionId'];
+			if(promotionConditionId){
+				$scope.promotionConditionId = promotionConditionId;
+				body.promotionConditionId = promotionConditionId;
+			}else{
+				$location.path('/backend/list/promotion');
+				return;
+			}
+		}
+		
 		BasicsService.queryByPage(body,routePath).then(function(data){
     		$scope.basicsInfo = data;
     		$scope.paginationConf.totalItems = data.totalRecord;
@@ -125,7 +151,7 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
         }else{
         	selectedId = selectedId.replace(val+",","");
         }
-	}
+	};
 	$scope.checkAll=function(arr,chk){
 		$scope.chk=!chk;
 		selectedId="";
@@ -147,21 +173,69 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 		}else{
 			return "否";
 		}
-	}
+	};
 	$scope.showStatusDesc = function(value){
 		if(value == "1"){
 			return "有效";
 		}else{
 			return "无效";
 		}
-	}
+	};
 	$scope.showAllowDesc = function(value){
 		if(value == "1"){
 			return "允许";
 		}else{
 			return "不允许";
 		}
-	}
+	};
+	$scope.showOfferType = function(value){
+		if(value == "DISC"){
+			return "折扣";
+		}else if(value == "RED"){
+			return "折让";
+		}else if(value == "SPCL"){
+			return "特价";
+		}else if(value == "FREE"){
+			return "赠送商品";
+		}else if(value == "EXT"){
+			return "加价购买";
+		}else{
+			return value;
+		}
+	};
+	$scope.showMatchType = function(value){
+		if(value == "MATCAT"){
+			return "品类";
+		}else if(value == "BRAND"){
+			return "品牌";
+		}else if(value == "MAT"){
+			return "物料";
+		}else{
+			return value;
+		}
+	};
+	$scope.showConditionType = function(value){
+		if(value == "MATQTY"){
+			return "商品数量";
+		}else if(value == "MATAMT"){
+			return "商品金额";
+		}else if(value == "TTLAMT"){
+			return "整单金额";
+		}else{
+			return value;
+		}
+	};
+	$scope.showMatch = function(value){
+		if(value == "ANY"){
+			return "任意";
+		}else if(value == "SAME"){
+			return "相同";
+		}else if(value == "DIFF"){
+			return "不同";
+		}else{
+			return value;
+		}
+	};
 }]);
 
 app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDialog','BasicsService','$timeout',function($scope,$location,$routeParams,ngDialog,BasicsService,$timeout){
@@ -183,12 +257,38 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		        	    {value : "ONLY", show : "只能会员参加"},
 		        	    {value : "NON", show : "会员不能参加"}
 		        	];
+	var allOfferType = [
+	 		        	    {value : "DISC", show : "折扣"},
+	 		        	    {value : "RED", show : "折让"},
+	 		        	    {value : "SPCL", show : "特价"},
+	 		        	    {value : "FREE", show : "赠送商品"},
+	 		        	    {value : "EXT", show : "加价购买"}
+	 		        	];
+	var allMatchType = [
+	 		        	    {value : "MATCAT", show : "品类"},
+	 		        	    {value : "BRAND", show : "品牌"},
+	 		        	    {value : "MAT", show : "物料"}
+	 		        	];
+	var allConditionType = [
+ 		        	    {value : "MATQTY", show : "商品数量"},
+ 		        	    {value : "MATAMT", show : "商品金额"},
+ 		        	    {value : "TTLAMT", show : "整单金额"}
+ 		        	];
+	var allMatch = [
+	 		        	    {value : "ANY", show : "任意"},
+	 		        	    {value : "SAME", show : "相同"},
+	 		        	    {value : "DIFF", show : "不同"}
+	 		        	];
 	$scope.statuses = allStatus;
 	$scope.editType = 'add';
 	$scope.form={};
 	var id = $routeParams.id;
 	var routePath = $routeParams.routePath;
+	
 	var promotionId = $location.search()['promotionId'];
+	var promotionOfferId = $location.search()['promotionOfferId'];
+	var promotionConditionId = $location.search()['promotionConditionId'];
+	
 	var selectComplete = {};
 	var allSelectInfoMap = {};
 	var completeQueryById = false;
@@ -220,7 +320,19 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		$scope.paymentRestricts = allPaymentRestrict;
 		$scope.memberRestricts = allMemberRestrict;
 	}
+	if(routePath == 'promotionOffer'){
+		$scope.offerTypes = allOfferType;
+		$scope.matchTypes = allMatchType;
+	}
+	if(routePath == 'promotionCondition'){
+		$scope.conditionTypes = allConditionType;
+		$scope.matchs = allMatch;
+		$scope.matchTypes = allMatchType;
+	}
 	
+	/**
+	 * 设置选择框中被选中的值
+	 */
 	function setSelectedInfo(){
 		var data = $scope.form;
 		if(data && completeQueryById){
@@ -365,6 +477,54 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					$scope.selSize = selectInfoMap[selSizeValue];
 				}
 			}
+			if(routePath == 'promotionStore' && allSelectInfoMap['promotion']){
+				var selectInfoMap = allSelectInfoMap['promotion'];
+				if(promotionId){
+					$scope.selPromotion = selectInfoMap[promotionId];
+					$("#Promotion").attr("disabled","disabled");
+				}else if(data.promotion && data.promotion.id){
+					var selPromotionValue = data.promotion.id;
+					$scope.selPromotion = selectInfoMap[selPromotionValue];
+				}
+			}
+			if(routePath == 'promotionStore' && allSelectInfoMap['store']){
+				var selectInfoMap = allSelectInfoMap['store'];
+				if(data.store && data.store.id){
+					var selStoreValue = data.store.id;
+					$scope.selStore = selectInfoMap[selStoreValue];
+				}
+			}
+			if(routePath == 'promotionOffer' && allSelectInfoMap['promotion']){
+				var selectInfoMap = allSelectInfoMap['promotion'];
+				if(promotionId){
+					$scope.selPromotion = selectInfoMap[promotionId];
+					$("#Promotion").attr("disabled","disabled");
+				}else if(data.promotion && data.promotion.id){
+					var selPromotionValue = data.promotion.id;
+					$scope.selPromotion = selectInfoMap[selPromotionValue];
+				}
+			}
+			if((routePath == 'promotionOfferMatchContent' || routePath == 'promotionConditionMatchContent') && allSelectInfoMap['materialCategory']){
+				var selectInfoMap = allSelectInfoMap['materialCategory'];
+				if(data.matchContent){
+					var selMatchContentValue = data.matchContent;
+					$scope.selMaterialCategory = selectInfoMap[selMatchContentValue];
+				}
+			}
+			if((routePath == 'promotionOfferMatchContent' || routePath == 'promotionConditionMatchContent') && allSelectInfoMap['brand']){
+				var selectInfoMap = allSelectInfoMap['brand'];
+				if(data.matchContent){
+					var selMatchContentValue = data.matchContent;
+					$scope.selBrand = selectInfoMap[selMatchContentValue];
+				}
+			}
+			if((routePath == 'promotionOfferMatchContent' || routePath == 'promotionConditionMatchContent') && allSelectInfoMap['material']){
+				var selectInfoMap = allSelectInfoMap['material'];
+				if(data.matchContent){
+					var selMatchContentValue = data.matchContent;
+					$scope.selMaterial = selectInfoMap[selMatchContentValue];
+				}
+			}
 		}else{
 			if(routePath == 'account'){
 				$scope.readyStores=$scope.stores;
@@ -372,6 +532,9 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		}
 	}
 	
+	/**
+	 * 根据id查询明细
+	 */
 	function queryBasicsInfoById(){
 		var body = {};
 		body.id = id;
@@ -466,6 +629,65 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 						data.expDate=new Date(data.expDate).format('yyyy-MM-dd');
 					}
 				}
+				if(routePath == 'promotionStore'){
+					if(data.effDate){
+						data.effDate=new Date(data.effDate).format('yyyy-MM-dd');
+					}
+					if(data.expDate){
+						data.expDate=new Date(data.expDate).format('yyyy-MM-dd');
+					}
+				}
+				if(routePath == 'promotionOffer'){
+					var selOfferType = data.offerType;
+					for ( var i = 0; i < allOfferType.length; i++) {
+						if(allOfferType[i].value == selOfferType){
+							$scope.selOfferType = allOfferType[i];	
+							break;
+						}
+					}
+					var selMatchType = data.matchType;
+					for ( var i = 0; i < allMatchType.length; i++) {
+						if(allMatchType[i].value == selMatchType){
+							$scope.selMatchType = allMatchType[i];	
+							break;
+						}
+					}
+				}
+				if(routePath == 'promotionCondition'){
+					var selConditionType = data.conditionType;
+					for ( var i = 0; i < allConditionType.length; i++) {
+						if(allConditionType[i].value == selConditionType){
+							$scope.selConditionType = allConditionType[i];	
+							break;
+						}
+					}
+					var selMatch = data.match;
+					for ( var i = 0; i < allMatch.length; i++) {
+						if(allMatch[i].value == selMatch){
+							$scope.selMatch = allMatch[i];	
+							break;
+						}
+					}
+					var selMatchType = data.matchType;
+					for ( var i = 0; i < allMatchType.length; i++) {
+						if(allMatchType[i].value == selMatchType){
+							$scope.selMatchType = allMatchType[i];	
+							break;
+						}
+					}
+				}
+				if(routePath == 'promotionOfferMatchContent'){
+					if(data.promotionOffer && data.promotionOffer.matchType){
+						$('.MatchContent').hide();
+						$('#'+data.promotionOffer.matchType).show();
+					}
+				}
+				if(routePath == 'promotionConditionMatchContent'){
+					if(data.promotionCondition && data.promotionCondition.matchType){
+						$('.MatchContent').hide();
+						$('#'+data.promotionCondition.matchType).show();
+					}
+				}
 				
 				$scope.form = data;
 			}
@@ -474,6 +696,9 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
         });
 	}
 	
+	/**
+	 * 获取下拉菜单
+	 */
 	function querySelectInfo(type,selectParam,queryBasics){
 		var pageBody = {};
 		BasicsService.queryByList(pageBody,type).then(function(data){
@@ -530,6 +755,15 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			querySelectInfo('material','materials',1);
 			querySelectInfo('color','colors',1);
 			querySelectInfo('size','sizes',1);
+		}else if(routePath == 'promotionStore'){
+			querySelectInfo('promotion','promotions',1);
+			querySelectInfo('store','stores',1);
+		}else if(routePath == 'promotionOffer'){
+			querySelectInfo('promotion','promotions',1);
+		}else if(routePath == 'promotionOfferMatchContent' || routePath == 'promotionConditionMatchContent'){
+			querySelectInfo('materialCategory','materialCategorys',1);
+			querySelectInfo('brand','brands',1);
+			querySelectInfo('material','materials',1);
 		}
 		queryBasicsInfoById();
 	}else{
@@ -563,6 +797,49 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			querySelectInfo('material','materials');
 			querySelectInfo('color','colors');
 			querySelectInfo('size','sizes');
+		}else if(routePath == 'promotionStore'){
+			querySelectInfo('promotion','promotions');
+			querySelectInfo('store','stores');
+			if(promotionId){
+				completeQueryById = true;
+			}
+		}else if(routePath == 'promotionOffer'){
+			querySelectInfo('promotion','promotions');
+			if(promotionId){
+				completeQueryById = true;
+			}
+		}else if(routePath == 'promotionOfferMatchContent'){
+			var body = {};
+			body.id = promotionOfferId;
+			BasicsService.queryById(body,'promotionOffer').then(function(data){
+				if(data && data.matchType){
+					if(data.matchType == 'MATCAT'){
+						querySelectInfo('materialCategory','materialCategorys');
+					}else if(data.matchType == 'BRAND'){
+						querySelectInfo('brand','brands');
+					}else if(data.matchType == 'MAT'){
+						querySelectInfo('material','materials');
+					}
+					$('.MatchContent').hide();
+					$('#'+data.matchType).show();
+				}				
+			})
+		}else if(routePath == 'promotionConditionMatchContent'){
+			var body = {};
+			body.id = promotionConditionId;
+			BasicsService.queryById(body,'promotionCondition').then(function(data){
+				if(data && data.matchType){
+					if(data.matchType == 'MATCAT'){
+						querySelectInfo('materialCategory','materialCategorys');
+					}else if(data.matchType == 'BRAND'){
+						querySelectInfo('brand','brands');
+					}else if(data.matchType == 'MAT'){
+						querySelectInfo('material','materials');
+					}
+					$('.MatchContent').hide();
+					$('#'+data.matchType).show();
+				}				
+			})
 		}
 	}
 	
@@ -727,6 +1004,93 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					$scope.form.sizeId = selSize.value;
 				}
 			}
+			if(routePath == 'promotionStore'){
+				var selPromotion = $scope.selPromotion;
+				if(selPromotion){
+					$scope.form.promotionId = selPromotion.value;
+				}
+				var selStore = $scope.selStore;
+				if(selStore){
+					$scope.form.storeId = selStore.value;
+				}
+			}
+			if(routePath == 'promotionOffer'){
+				var selPromotion = $scope.selPromotion;
+				if(selPromotion){
+					$scope.form.promotionId = selPromotion.value;
+				}
+				var selOfferType = $scope.selOfferType;
+				if(selOfferType){
+					$scope.form.offerTypeId = selOfferType.value;
+				}
+				var selMatchType = $scope.selMatchType;
+				if(selMatchType){
+					$scope.form.matchTypeId = selMatchType.value;
+				}
+			}
+			if(routePath == 'promotionOfferMatchContent'){
+				$scope.form.promotionOfferId = promotionOfferId;
+				$('.MatchContent').each(function(){
+					if($(this).css('display') != 'none'){
+						var matchTypeId = $(this).attr('id');
+						if(matchTypeId == 'MATCAT'){
+							var selMaterialCategory = $scope.selMaterialCategory;
+							if(selMaterialCategory){
+								$scope.form.matchContent = selMaterialCategory.value;
+							}
+						}else if(matchTypeId == 'BRAND'){
+							var selBrand = $scope.selBrand;
+							if(selBrand){
+								$scope.form.matchContent = selBrand.value;
+							}
+						}else if(matchTypeId == 'MAT'){
+							var selMaterial = $scope.selMaterial;
+							if(selMaterial){
+								$scope.form.matchContent = selMaterial.value;
+							}
+						}
+					}
+				})
+			}
+			if(routePath == 'promotionCondition'){
+				$scope.form.promotionOfferId = promotionOfferId;
+				var selConditionType = $scope.selConditionType;
+				if(selConditionType){
+					$scope.form.conditionTypeId = selConditionType.value;
+				}
+				var selMatch = $scope.selMatch;
+				if(selMatch){
+					$scope.form.matchId = selMatch.value;
+				}
+				var selMatchType = $scope.selMatchType;
+				if(selMatchType){
+					$scope.form.matchTypeId = selMatchType.value;
+				}
+			}
+			if(routePath == 'promotionConditionMatchContent'){
+				$scope.form.promotionConditionId = promotionConditionId;
+				$('.MatchContent').each(function(){
+					if($(this).css('display') != 'none'){
+						var matchTypeId = $(this).attr('id');
+						if(matchTypeId == 'MATCAT'){
+							var selMaterialCategory = $scope.selMaterialCategory;
+							if(selMaterialCategory){
+								$scope.form.matchContent = selMaterialCategory.value;
+							}
+						}else if(matchTypeId == 'BRAND'){
+							var selBrand = $scope.selBrand;
+							if(selBrand){
+								$scope.form.matchContent = selBrand.value;
+							}
+						}else if(matchTypeId == 'MAT'){
+							var selMaterial = $scope.selMaterial;
+							if(selMaterial){
+								$scope.form.matchContent = selMaterial.value;
+							}
+						}
+					}
+				})
+			}
 			
 			if($scope.editType == 'add'){
 				BasicsService.add($scope.form,routePath).then(function(data){
@@ -758,6 +1122,20 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 	}
 	
 	$scope.cancel=function(){
+		if(routePath == 'promotionOffer' || routePath == 'promotionStore' || routePath == 'promotionPayment'){
+			$location.url('/backend/list/'+routePath+'?promotionId='+promotionId);
+			return;
+		}
+		
+		if(routePath == 'promotionOfferMatchContent' || routePath == 'promotionCondition'){
+			$location.url('/backend/list/'+routePath+'?promotionOfferId='+promotionOfferId);
+			return;
+		}
+		
+		if(routePath == 'promotionConditionMatchContent'){
+			$location.url('/backend/list/'+routePath+'?promotionConditionId='+promotionConditionId);
+			return;
+		}
 		$location.path('/backend/list/'+routePath);
 	}
 	

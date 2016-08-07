@@ -53,12 +53,12 @@ public class PromotionStoreServiceImpl implements PromotionStoreService {
 		if (CollectionUtils.isNotEmpty(list)) {
 			Map<String, Store> cacheMap = new HashMap<String, Store>();
 			Map<String, Promotion> promotionCacheMap = new HashMap<String, Promotion>();
-			for (PromotionStore PromotionStore : list) {
-				if (PromotionStore != null) {
-					if (PromotionStore.getStore() != null
-							&& StringUtils.isNotBlank(PromotionStore.getStore()
+			for (PromotionStore promotionStore : list) {
+				if (promotionStore != null) {
+					if (promotionStore.getStore() != null
+							&& StringUtils.isNotBlank(promotionStore.getStore()
 									.getId())) {
-						String storeId = PromotionStore.getStore().getId();
+						String storeId = promotionStore.getStore().getId();
 						Store store = null;
 						if (cacheMap.containsKey(storeId)) {
 							store = cacheMap.get(storeId);
@@ -69,14 +69,14 @@ public class PromotionStoreServiceImpl implements PromotionStoreService {
 							}
 						}
 						if (store != null) {
-							PromotionStore.setStore(store);
+							promotionStore.setStore(store);
 						}
 					}
 
-					if (PromotionStore.getPromotion() != null
-							&& StringUtils.isNotBlank(PromotionStore
+					if (promotionStore.getPromotion() != null
+							&& StringUtils.isNotBlank(promotionStore
 									.getPromotion().getId())) {
-						String promotionId = PromotionStore.getPromotion()
+						String promotionId = promotionStore.getPromotion()
 								.getId();
 						Promotion promotion = null;
 						if (promotionCacheMap.containsKey(promotionId)) {
@@ -89,7 +89,7 @@ public class PromotionStoreServiceImpl implements PromotionStoreService {
 							}
 						}
 						if (promotion != null) {
-							PromotionStore.setPromotion(promotion);
+							promotionStore.setPromotion(promotion);
 						}
 					}
 				}

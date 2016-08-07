@@ -11,9 +11,9 @@
 <section class="content">
 	<div class="box">
 		<div class="box-header">
-			<h3 class="box-title">促销支付限制</h3>
+			<h3 class="box-title">促销条件匹配内容</h3>
 			<div class="box-tools">
-				<a class="btn btn-primary btn-flat" href="/backend/add/promotionPayment?promotionId={{promotionId}}"><i
+				<a class="btn btn-primary btn-flat" href="/backend/add/promotionConditionMatchContent?promotionConditionId={{promotionConditionId}}"><i
 					class="fa fa-plus"></i> 添加</a> <a class="btn btn-danger btn-flat"
 					href="javascript:void(0)" ng-click="del()"><i class="fa fa-minus"></i> 删除</a>
 			</div>
@@ -26,22 +26,17 @@
 								class="btn btn-default btn-sm checkbox-toggle">
 								<i class="fa fa-square-o"></i>
 							</button></th>
-						<th>促销活动</th>
-						<th>支付方式</th>
+						<th>条件匹配内容</th>
 						<th>操作</th>
 					</tr>
 					<tr ng-repeat="result in basicsInfo.results"  on-render-finish>
 						<td align="center"><input type="checkbox" ng-click="check(result.id,chk)" ng-model="chk"></td>
-		                <td>{{result.promotion.name}}</td>
-		                <td>{{result.clientPayment.payment.name}}</td>
-						<td><a href="/backend/edit/promotionPayment/{{result.id}}?promotionId={{promotionId}}" class="btn btn-info btn-xs">编辑</a></td>
-		            </tr>
+		                <td>{{result.matchContentDesc}}</td>
+						<td><a href="/backend/edit/promotionConditionMatchContent/{{result.id}}?promotionConditionId={{promotionConditionId}}" class="btn btn-info btn-xs">编辑</a></td>
+					</tr>
 				</table>
 			</div>
 			<div class="row">
-				<div class="col-sm-5">
-					<div class="dataTables_info">{{basicsInfo.pageNo}}/{{basicsInfo.totalPage}}</div>
-				</div>
 				<tm-pagination conf="paginationConf"></tm-pagination>
 			</div>
 		</div>

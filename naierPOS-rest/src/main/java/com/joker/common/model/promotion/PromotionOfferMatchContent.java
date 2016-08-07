@@ -15,6 +15,8 @@ public class PromotionOfferMatchContent extends BaseModel{
 	private PromotionOffer promotionOffer;
 	
 	private String matchContent;
+	
+	private String matchContentDesc;
 
 	public Client getClient() {
 		return client;
@@ -39,6 +41,13 @@ public class PromotionOfferMatchContent extends BaseModel{
 	public void setMatchContent(String matchContent) {
 		this.matchContent = matchContent;
 	}
-	
+
+	public String getMatchContentDesc() {
+		return matchContentDesc;
+	}
+
+	public void setMatchContentDesc(String matchContentDesc) {
+		this.matchContentDesc = matchContentDesc;
+	}
 	
 }

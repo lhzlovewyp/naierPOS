@@ -181,7 +181,7 @@ public class PromotionConditionMatchContentController extends AbstractController
 		// 参数校验
 		Map params = paramsBody.getBody();
 		String promotionConditionId = (String) params.get("promotionConditionId");
-		String matchContent = (String) params.get("MatchContent");
+		String matchContent = (String) params.get("matchContent");
 		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(promotionConditionId)) {
@@ -194,17 +194,16 @@ public class PromotionConditionMatchContentController extends AbstractController
 			rbody.setMsg("请输入条件匹配内容！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
 
+			if (StringUtils.isBlank(clientId)) {
+				clientId = account.getClient().getId();
+			}
+			
 			Client client = new Client();
 			client.setId(clientId);
 
@@ -247,8 +246,7 @@ public class PromotionConditionMatchContentController extends AbstractController
 		// 参数校验
 		Map params = paramsBody.getBody();
 		String id = (String) params.get("id");
-		String promotionConditionId = (String) params.get("promotionConditionId");
-		String matchContent = (String) params.get("MatchContent");
+		String matchContent = (String) params.get("matchContent");
 		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
@@ -257,19 +255,9 @@ public class PromotionConditionMatchContentController extends AbstractController
 			rbody.setMsg("记录唯一信息缺失，请刷新页面！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(promotionConditionId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入促销条件！");
-			return rbody;
-		}
 		if (StringUtils.isBlank(matchContent)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入条件匹配内容！");
-			return rbody;
-		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
 			return rbody;
 		}
 		if (StringUtils.isBlank(status)) {
@@ -283,15 +271,15 @@ public class PromotionConditionMatchContentController extends AbstractController
 		if (user != null) {
 			Account account = (Account) user;
 
+			if (StringUtils.isBlank(clientId)) {
+				clientId = account.getClient().getId();
+			}
+			
 			Client client = new Client();
 			client.setId(clientId);
 
-			PromotionCondition promotionCondition = new PromotionCondition();
-			promotionCondition.setId(promotionConditionId);
-
 			PromotionConditionMatchContent promotionConditionMatchContent = new PromotionConditionMatchContent();
 			promotionConditionMatchContent.setId(id);
-			promotionConditionMatchContent.setPromotionCondition(promotionCondition);
 			promotionConditionMatchContent.setMatchContent(matchContent);
 			promotionConditionMatchContent.setClient(client);
 			promotionConditionMatchContent.setStatus(status);

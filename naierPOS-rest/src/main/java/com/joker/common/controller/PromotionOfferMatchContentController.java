@@ -194,17 +194,16 @@ public class PromotionOfferMatchContentController extends AbstractController {
 			rbody.setMsg("请输入优惠匹配内容！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
 
+			if (StringUtils.isBlank(clientId)) {
+				clientId = account.getClient().getId();
+			}
+			
 			Client client = new Client();
 			client.setId(clientId);
 
@@ -247,7 +246,6 @@ public class PromotionOfferMatchContentController extends AbstractController {
 		// 参数校验
 		Map params = paramsBody.getBody();
 		String id = (String) params.get("id");
-		String promotionOfferId = (String) params.get("promotionOfferId");
 		String matchContent = (String) params.get("matchContent");
 		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
@@ -257,19 +255,9 @@ public class PromotionOfferMatchContentController extends AbstractController {
 			rbody.setMsg("记录唯一信息缺失，请刷新页面！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(promotionOfferId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入促销优惠！");
-			return rbody;
-		}
 		if (StringUtils.isBlank(matchContent)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入优惠匹配内容！");
-			return rbody;
-		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
 			return rbody;
 		}
 		if (StringUtils.isBlank(status)) {
@@ -283,15 +271,15 @@ public class PromotionOfferMatchContentController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
+			if (StringUtils.isBlank(clientId)) {
+				clientId = account.getClient().getId();
+			}
+			
 			Client client = new Client();
 			client.setId(clientId);
 
-			PromotionOffer promotionOffer = new PromotionOffer();
-			promotionOffer.setId(promotionOfferId);
-
 			PromotionOfferMatchContent promotionOfferMatchContent = new PromotionOfferMatchContent();
 			promotionOfferMatchContent.setId(id);
-			promotionOfferMatchContent.setPromotionOffer(promotionOffer);
 			promotionOfferMatchContent.setMatchContent(matchContent);
 			promotionOfferMatchContent.setClient(client);
 			promotionOfferMatchContent.setStatus(status);

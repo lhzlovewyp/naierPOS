@@ -11,8 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joker.common.Constant.Constants;
+import com.joker.common.mapper.BrandMapper;
+import com.joker.common.mapper.MaterialCategoryMapper;
+import com.joker.common.mapper.MaterialMapper;
 import com.joker.common.mapper.PromotionOfferMapper;
 import com.joker.common.mapper.PromotionOfferMatchContentMapper;
+import com.joker.common.model.Brand;
+import com.joker.common.model.Material;
+import com.joker.common.model.MaterialCategory;
 import com.joker.common.model.promotion.PromotionOffer;
 import com.joker.common.model.promotion.PromotionOfferMatchContent;
 import com.joker.common.service.PromotionOfferMatchContentService;
@@ -28,10 +34,33 @@ public class PromotionOfferMatchContentServiceImpl implements
 	@Autowired
 	PromotionOfferMapper promotionOfferMapper;
 
+	@Autowired
+	MaterialCategoryMapper materialCategoryMapper;
+
+	@Autowired
+	BrandMapper brandMapper;
+
+	@Autowired
+	MaterialMapper materialMapper;
+
 	@Override
 	public PromotionOfferMatchContent getPromotionOfferMatchContentByID(
 			String id) {
-		return mapper.getPromotionOfferMatchContentByID(id);
+		PromotionOfferMatchContent promotionOfferMatchContent = mapper
+				.getPromotionOfferMatchContentByID(id);
+		if (promotionOfferMatchContent != null
+				&& promotionOfferMatchContent.getPromotionOffer() != null
+				&& StringUtils.isNotBlank(promotionOfferMatchContent
+						.getPromotionOffer().getId())) {
+			String promotionOfferId = promotionOfferMatchContent
+					.getPromotionOffer().getId();
+			PromotionOffer promotionOffer = promotionOfferMapper
+					.getPromotionOfferByID(promotionOfferId);
+			if (promotionOffer != null) {
+				promotionOfferMatchContent.setPromotionOffer(promotionOffer);
+			}
+		}
+		return promotionOfferMatchContent;
 	}
 
 	@Override
@@ -50,13 +79,13 @@ public class PromotionOfferMatchContentServiceImpl implements
 				.getPromotionOfferMatchContentPageByCondition(map);
 		if (CollectionUtils.isNotEmpty(list)) {
 			Map<String, PromotionOffer> promotionCacheMap = new HashMap<String, PromotionOffer>();
-			for (PromotionOfferMatchContent PromotionOfferMatchContent : list) {
-				if (PromotionOfferMatchContent != null) {
-					if (PromotionOfferMatchContent.getPromotionOffer() != null
+			for (PromotionOfferMatchContent promotionOfferMatchContent : list) {
+				if (promotionOfferMatchContent != null) {
+					if (promotionOfferMatchContent.getPromotionOffer() != null
 							&& StringUtils
-									.isNotBlank(PromotionOfferMatchContent
+									.isNotBlank(promotionOfferMatchContent
 											.getPromotionOffer().getId())) {
-						String promotionOfferId = PromotionOfferMatchContent
+						String promotionOfferId = promotionOfferMatchContent
 								.getPromotionOffer().getId();
 						PromotionOffer promotionOffer = null;
 						if (promotionCacheMap.containsKey(promotionOfferId)) {
@@ -71,8 +100,46 @@ public class PromotionOfferMatchContentServiceImpl implements
 							}
 						}
 						if (promotionOffer != null) {
-							PromotionOfferMatchContent
+							promotionOfferMatchContent
 									.setPromotionOffer(promotionOffer);
+							if (StringUtils
+									.isNotBlank(promotionOfferMatchContent
+											.getMatchContent())) {
+								if (Constants.PROMOTION_TYPE_MATCAT
+										.equals(promotionOffer.getMatchType())) {
+									MaterialCategory materialCategory = materialCategoryMapper
+											.getMaterialCategoryByID(promotionOfferMatchContent
+													.getMatchContent());
+									if (materialCategory != null) {
+										promotionOfferMatchContent
+												.setMatchContentDesc(materialCategory
+														.getName());
+									}
+
+								} else if (Constants.PROMOTION_TYPE_BRAND
+										.equals(promotionOffer.getMatchType())) {
+									Brand brand = brandMapper
+											.getBrandByID(promotionOfferMatchContent
+													.getMatchContent());
+									if (brand != null) {
+										promotionOfferMatchContent
+												.setMatchContentDesc(brand
+														.getName());
+									}
+
+								} else if (Constants.PROMOTION_TYPE_MAT
+										.equals(promotionOffer.getMatchType())) {
+									Material material = materialMapper
+											.getMaterialByID(promotionOfferMatchContent
+													.getMatchContent());
+									if (material != null) {
+										promotionOfferMatchContent
+												.setMatchContentDesc(material
+														.getName());
+									}
+
+								}
+							}
 						}
 					}
 				}

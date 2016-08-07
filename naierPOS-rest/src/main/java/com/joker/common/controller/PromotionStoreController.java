@@ -196,17 +196,15 @@ public class PromotionStoreController extends AbstractController {
 			rbody.setMsg("请输入门店信息！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
 
+			if (StringUtils.isBlank(clientId)) {
+				clientId = account.getClient().getId();
+			}
 			Client client = new Client();
 			client.setId(clientId);
 
@@ -282,11 +280,6 @@ public class PromotionStoreController extends AbstractController {
 			rbody.setMsg("请输入门店信息！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 		if (StringUtils.isBlank(status)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入状态！");
@@ -298,6 +291,10 @@ public class PromotionStoreController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
+			if (StringUtils.isBlank(clientId)) {
+				clientId = account.getClient().getId();
+			}
+			
 			Client client = new Client();
 			client.setId(clientId);
 

@@ -1,0 +1,47 @@
+<section class="content">
+	<div class="box">
+		<div class="box-header">
+			<h3 class="box-title">促销优惠</h3>
+		</div>
+		<div class="box-body">
+			<form class="form-horizontal" role="form" method="post"  name="basicsForm" id="basicsForm" ng-submit="edit(basicsForm.$valid)" novalidate>
+				<div class="form-group">
+					<label for="Promotion" class="col-sm-2 control-label">促销活动</label>
+					<div class="col-sm-10">
+						<select id="Promotion" name="Promotion" class="form-control" ng-model="selPromotion" ng-options="x.show for x in promotions">
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="OfferType" class="col-sm-2 control-label">优惠方式</label>
+					<div class="col-sm-10">
+						<select id="OfferType" name="OfferType" class="form-control" 
+							onChange="$('#OfferContent').attr('placeholder', $(this).children('option:selected').text())"
+							ng-model="selOfferType" ng-options="x.show for x in offerTypes">
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="OfferContent" class="col-sm-2 control-label">优惠值</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="OfferContent"
+							name="OfferContent" placeholder="折扣率" ng-model="form.offerContent">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="MatchType" class="col-sm-2 control-label">优惠匹配类型</label>
+					<div class="col-sm-10">
+						<select id="MatchType" name="MatchType" class="form-control" ng-model="selMatchType" ng-options="x.show for x in matchTypes">
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="button" class="btn btn-danger" ng-click="edit(basicsForm.$valid)">提交</button>
+						<button type="button" class="btn btn-danger" ng-click="cancel();">取消</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</section>
