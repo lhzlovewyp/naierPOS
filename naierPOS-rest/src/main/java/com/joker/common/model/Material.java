@@ -51,9 +51,19 @@ public class Material  extends BaseModel{
 	//需要维护属性.
 	private String property;
 	
+	private String displayPhoto;
+	
 	private List<MaterialProperty> properties;
 	
 	private List<AttrDto> attrDtos;
+	
+	public String getDisplayPhoto() {
+		return displayPhoto;
+	}
+
+	public void setDisplaoyPhoto(String displayPhoto) {
+		this.displayPhoto = displayPhoto;
+	}
 
 	public Client getClient() {
 		return client;

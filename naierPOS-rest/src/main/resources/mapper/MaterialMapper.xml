@@ -24,6 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="created" column="Created" />
 		<result property="editor" column="Editor" />
 		<result property="modified" column="Modified" />
+		<result property="displayPhoto" column="Pic" />
 	</resultMap>
 	
 	<resultMap type="material" id="materialPage" extends="material">
@@ -31,7 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 	
 	<select id="getMaterialByCondition" resultMap="material">
-		select ID,Client,Code,Name,Abbr,MaterialCategory,Brand,BasicUnit,SalesUnit,SalesConversion,RetailPrice,BarCode,Property,Status,Creator,Created,Editor,Modified
+		select ID,Client,Code,Name,Abbr,MaterialCategory,Brand,Pic,BasicUnit,SalesUnit,SalesConversion,RetailPrice,BarCode,Property,Status,Creator,Created,Editor,Modified
 		from Material
 		where Status='1' 
 		<if test="clientId !=null"> and Client=#{clientId}</if>
@@ -42,7 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="getMaterialByID" parameterType="string" resultMap="material">
 		SELECT 
-			ID,Client,Code,Name,Abbr,MaterialCategory,Brand,BasicUnit,SalesUnit,SalesConversion,RetailPrice,BarCode,Property,Status,Creator,Created,Editor,Modified
+			ID,Client,Code,Name,Abbr,MaterialCategory,Brand,Pic,BasicUnit,SalesUnit,SalesConversion,RetailPrice,BarCode,Property,Status,Creator,Created,Editor,Modified
 		FROM Material a
 		WHERE a.ID=#{id} 
 	</select>
@@ -50,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getMaterialPageByCondition" parameterType="string" resultMap="materialPage">
 		SELECT 
 			a.ID,a.Client,a.Code,a.Name,a.Abbr,a.MaterialCategory,a.Brand,a.BasicUnit,a.SalesUnit,a.SalesConversion,a.RetailPrice
-			,a.BarCode,a.Property,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+			,a.BarCode,a.Property,a.Status,a.Creator,a.Created,a.Editor,a.Modified,a.Pic
 			,c.Name ClientName
 		FROM Material a left outer join Client c
 		on a.Client = c.id and c.status = 1 
@@ -114,6 +115,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test= "created != null">Created=#{created},</if >
 			<if test= "editor != null">Editor=#{editor,jdbcType=VARCHAR},</if >
 			<if test= "modified != null">Modified=#{modified},</if >
+			<if test= "displayPhoto != null">Pic=#{displayPhoto},</if >
 		</set>
 	</sql >
 </mapper>

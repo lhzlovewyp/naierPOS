@@ -49,7 +49,7 @@
           <!-- User Account: style can be found in dropdown.less -->
           <li class="user user-menu">
             <a href="javascript:;;">
-              <img alt="User Image" class="user-image" src="/backend/statics/dist/images/avatar.png">
+              <img alt="User Image" class="user-image" src="{{loginInfo.displayPhoto || '/backend/statics/dist/images/avatar.png'}}">
               <span class="hidden-xs">当前登录：{{loginInfo.userName}}</span>
             </a>
           </li>
@@ -160,6 +160,7 @@
 
 <script type="text/javascript" src="/backend/statics/plugins/jQuery/jQuery-2.2.0.min.js"></script>
 <script type="text/javascript" src="/backend/statics/plugins/jQuery/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="/backend/statics/plugins/jQuery/jquery.ajaxfileupload.js"></script>
 <script type="text/javascript" src="/backend/statics/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/backend/statics/bootstrap/js/bootstrap-treeview.min.js"></script>
 <script type="text/javascript" src="/backend/statics/dist/js/app.js"></script>

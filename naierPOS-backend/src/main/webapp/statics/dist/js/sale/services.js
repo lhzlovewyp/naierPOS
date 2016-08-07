@@ -56,6 +56,7 @@ app.factory('LoginService',['$q','$location','$http','BaseService',function($q,$
         		if(data.data.status == Status.SUCCESS){
         			loginInfo.userName=data.data.data.nick;
         			loginInfo.storeName=data.data.data.store ?data.data.data.store.name : '';
+        			loginInfo.displayPhoto=data.data.data.displayPhoto;
         			deferred.resolve(loginInfo);
         		}else{
         			location.href = '/backend/login.html';

@@ -232,6 +232,7 @@ public class AccountController extends AbstractController {
 		String changePWD = (String) params.get("changePWD");
 		String storeIds = (String) params.get("storeIds");
 		String roleId = (String) params.get("roleId");
+		String displayPhoto=(String)params.get("displayPhoto");
 
 		password=EncryptUtil.doEncrypt("111111");
 		
@@ -266,6 +267,7 @@ public class AccountController extends AbstractController {
 			addAccount.setPassword(password);
 			addAccount.setCreated(new Date());
 			addAccount.setCreator(account.getId());
+			addAccount.setDisplayPhoto(displayPhoto);
 
 			if (StringUtils.isNotBlank(storeIds)) {
 				String[] storeIdArr = storeIds.split(",");
@@ -323,6 +325,7 @@ public class AccountController extends AbstractController {
 		String storeIds = (String) params.get("storeIds");
 		String roleId = (String) params.get("roleId");
 		String status = (String) params.get("status");
+		String displayPhoto=(String)params.get("displayPhoto");
 
 		if (StringUtils.isBlank(id)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -372,6 +375,7 @@ public class AccountController extends AbstractController {
 			account.setCreated(new Date());
 			account.setCreator(loginAccount.getId());
 			account.setStatus(status);
+			account.setDisplayPhoto(displayPhoto);
 
 			if (StringUtils.isNotBlank(storeIds)) {
 				String[] storeIdArr = storeIds.split(",");

@@ -27,6 +27,7 @@
         <property name="suffix" value=".html" />
     </bean>
 
+	
     <bean id="velocityConfigurer"
           class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
         <property name="resourceLoaderPath">

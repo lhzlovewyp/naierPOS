@@ -51,7 +51,7 @@
 					</tr>
 					<tr ng-repeat="result in basicsInfo.results"  on-render-finish>
 						<td align="center"><input type="checkbox" ng-click="check(result.id,chk)" ng-model="chk"></td>
-		                <td><img src="/backend/statics/dist/images/avatar.png" width="50"></td>
+		                <td><img src="{{result.displayPhoto || '/backend/statics/dist/images/avatar.png'}}" width="50"></td>
 		                <td>{{result.code}}</td>
 		                <td>{{result.name}}</td>
 		                <td>{{result.abbr}}</td>

@@ -30,12 +30,15 @@
 						</div>
 						<div class="form-group">
 							<label for="nick" class="col-sm-2 control-label">图像</label>
+							
 							<div class="col-sm-4">
 								<input type="text" class="form-control" id="nick" name="nick"
-									placeholder="上传图片" ng-model="form.displayPhone">
-								<input id="lefile" type="file" style="display:none">
+									placeholder="上传图片" ng-model="form.displayPhoto" readonly>
 							</div>
-							<a class="btn" onclick="$('input[id=lefile]').click();">上传图像</a>
+							<div class="col-sm-1">
+								<img alt="" style="width:30px;" src="{{form.displayPhoto}}" ng-show="form.displayPhoto!=null && form.displayPhoto!=''">
+							</div>
+							<a class="btn" ng-click="uploadFile('p')">上传图像</a>
 						</div>
 						<div class="form-group">
 							<label for="roleId" class="col-sm-2 control-label">归属角色</label>

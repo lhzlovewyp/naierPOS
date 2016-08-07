@@ -164,7 +164,7 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 	}
 }]);
 
-app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDialog','BasicsService',function($scope,$location,$routeParams,ngDialog,BasicsService){
+app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDialog','BasicsService','$timeout',function($scope,$location,$routeParams,ngDialog,BasicsService,$timeout){
 	var allStatus = [
 		        	    {value : "1", show : "有效"},
 		        	    {value : "0", show : "无效"}
@@ -185,6 +185,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		        	];
 	$scope.statuses = allStatus;
 	$scope.editType = 'add';
+	$scope.form={};
 	var id = $routeParams.id;
 	var routePath = $routeParams.routePath;
 	var promotionId = $location.search()['promotionId'];
@@ -200,6 +201,12 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		}
 	}
 	
+	$scope.$watch("form", function(newValue, oldValue){
+		$timeout(function(){
+			$scope.$apply();
+		});
+		
+	},true);
 	
 	//绑定时间控件.
 	$scope.$on('$viewContentLoaded', function(){
@@ -815,21 +822,69 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		
 	}
 	
+	$scope.uploadFile = function(type){
+		$scope.uploadFileType=type;
+		ngDialog.open({
+            template: '/backend/view/template/uploadFile.html',
+            scope: $scope,
+            closeByEscape: false,
+            width:'300px',
+            controller: 'uploadFileCtrl',
+        });
+	}
 	
 	//导购员信息查询.
 	$scope.openMaterialCategoryTree = function(){
-		
+		var type=$scope.uploadFileType;
 		ngDialog.open({
             template: '/backend/view/template/materialCategoryTree.html',
             scope: $scope,
             closeByEscape: false,
-            controller: 'materialCategoryTreeCtrl'
+            controller: 'materialCategoryTreeCtrl',
+            
         });
 	}
 }]);
 
-
-
+app.controller("uploadFileCtrl",['$scope','$location','LoginService','ngDialog','BasicsService',function($scope,$location,LoginService,ngDialog,BasicsService){
+	//执行图片上传操作
+	$scope.submit=function(){
+		var token=$.cookie("token");
+		var type=$scope.uploadFileType;
+		var maxSize=$scope.uploadFileMaxSize || 10;
+		var url="/rest/file/uploadImg?token="+token+"&type="+type+"&maxSize="+maxSize;
+		$.ajaxFileUpload({
+			 url:url,
+			 secureuri:false,
+			 formId:"uploadForm",
+			 fileElementId:["fileUpload"],
+			 dataType: 'json',
+			 success: function (data, status) {
+				 $('#uploadFile').remove();
+				 var reg = /<pre.+?>(.+)<\/pre>/g;  
+				 var result = data.match(reg);  
+				 data = RegExp.$1;
+				 data=$.parseJSON(data);
+				 if(data.status == Status.SUCCESS){
+					 //文件上传成功
+					 alert("文件上传成功");
+					 
+					 var form=$scope.form;
+					 
+					 form.displayPhoto=decodeURIComponent(data.data);
+					 $scope.form=form;
+					 $scope.$apply();//需要手动刷新
+					 ngDialog.close();
+				 }else{
+					 alert(data.msg);
+				 }
+			 },
+			 error: function (data, status, e) {
+				 alert(e);
+			 }		
+		 });
+	}
+}]);
 app.controller("materialCategoryTreeCtrl",['$scope','$location','LoginService','ngDialog','BasicsService',function($scope,$location,LoginService,ngDialog,BasicsService){
 	var selectedNode = {};
 	

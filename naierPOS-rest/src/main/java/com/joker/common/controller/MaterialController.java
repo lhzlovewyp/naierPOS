@@ -241,6 +241,7 @@ public class MaterialController extends AbstractController {
 		String brandId = (String) params.get("brandId");
 		String basicUnitId = (String) params.get("basicUnitId");
 		String salesUnitId = (String) params.get("salesUnitId");
+		String displayPhoto = (String) params.get("displayPhoto");
 		String salesConversion = null;
 		if (params.get("salesConversion") != null) {
 			salesConversion = String.valueOf(params.get("salesConversion"));
@@ -317,7 +318,7 @@ public class MaterialController extends AbstractController {
 			material.setClient(account.getClient());
 			material.setCreated(new Date());
 			material.setCreator(account.getId());
-
+			material.setDisplaoyPhoto(displayPhoto);
 			if (StringUtils.isNotBlank(categoryId)) {
 				MaterialCategory materialCategory = new MaterialCategory();
 				materialCategory.setId(categoryId);
@@ -363,6 +364,7 @@ public class MaterialController extends AbstractController {
 		String brandId = (String) params.get("brandId");
 		String basicUnitId = (String) params.get("basicUnitId");
 		String salesUnitId = (String) params.get("salesUnitId");
+		String displayPhoto=(String)params.get("displayPhoto");
 		String salesConversion = null;
 		if (params.get("salesConversion") != null) {
 			salesConversion = String.valueOf(params.get("salesConversion"));
@@ -461,6 +463,7 @@ public class MaterialController extends AbstractController {
 			material.setStatus(status);
 			material.setModified(new Date());
 			material.setEditor(account.getId());
+			material.setDisplaoyPhoto(displayPhoto);
 
 			if (StringUtils.isNotBlank(categoryId)) {
 				MaterialCategory materialCategory = new MaterialCategory();
