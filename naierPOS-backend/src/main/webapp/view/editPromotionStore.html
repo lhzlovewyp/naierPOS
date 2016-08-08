@@ -7,21 +7,21 @@
 			<form class="form-horizontal" role="form" method="post"  name="basicsForm" id="basicsForm" ng-submit="edit(basicsForm.$valid)" novalidate>
 				<div class="form-group">
 					<label for="Promotion" class="col-sm-2 control-label">促销活动</label>
-					<div class="col-sm-10">
+					<div class="col-sm-4">
 						<select id="Promotion" name="Promotion" class="form-control" ng-model="selPromotion" ng-options="x.show for x in promotions">
 						</select>
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="storeId" class="col-sm-2 control-label">门店</label>
-					<div class="col-sm-10">
+					<div class="col-sm-4">
 						<select id="storeId" name="storeId" class="form-control" ng-model="selStore" ng-options="x.show for x in stores">
 						</select>
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="EffectiveDate" class="col-sm-2 control-label">生效日期</label>
-					<div class="col-sm-10">
+					<div class="col-sm-4">
 						<input type="text" class="form-control" id="EffectiveDate"
 							name="EffectiveDate" placeholder="生效日期"
 							data-provide="datepicker-inline" data-date-format="yyyy-mm-dd" ng-model="form.effDate" value="{{form.effDate  | date:'yyyy-MM-dd'}}">
@@ -29,7 +29,7 @@
 				</div>
 				<div class="form-group">
 					<label for="ExpiryDate" class="col-sm-2 control-label">失效日期</label>
-					<div class="col-sm-10">
+					<div class="col-sm-4">
 						<input type="text" class="form-control" id="ExpiryDate"
 							name="ExpiryDate" placeholder="失效日期"
 							data-provide="datepicker-inline" data-date-format="yyyy-mm-dd" ng-model="form.expDate" value="{{form.expDate  | date:'yyyy-MM-dd'}}">

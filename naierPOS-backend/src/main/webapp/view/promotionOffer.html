@@ -42,8 +42,8 @@
 						<td>{{showMatchType(result.matchType)}}</td>
 						<td>
 							<a href="/backend/edit/promotionOffer/{{result.id}}?promotionId={{promotionId}}" class="btn btn-info btn-xs">编辑基本信息</a>
-							<a href="/backend/list/promotionOfferMatchContent?promotionOfferId={{result.id}}" class="btn btn-info btn-xs">编辑优惠匹配内容</a>
-							<a href="/backend/list/promotionCondition?promotionOfferId={{result.id}}" class="btn btn-info btn-xs">编辑优惠促销条件</a>
+							<a href="/backend/list/promotionOfferMatchContent?promotionOfferId={{result.id}}&promotionId={{promotionId}}" class="btn btn-info btn-xs">编辑优惠匹配内容</a>
+							<a href="/backend/list/promotionCondition?promotionOfferId={{result.id}}&promotionId={{promotionId}}" class="btn btn-info btn-xs">编辑优惠促销条件</a>
 						</td>
 					</tr>
 				</table>

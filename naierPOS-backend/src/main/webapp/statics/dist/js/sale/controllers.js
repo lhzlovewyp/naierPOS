@@ -67,6 +67,12 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 	var selectedId ="";
 	$scope.chk = false;
 	var routePath = $routeParams.routePath;
+	
+	if(routePath == 'promotionOfferMatchContent' || routePath == 'promotionCondition'){
+		var promotionId = $location.search()['promotionId'];
+		$scope.promotionId = promotionId;
+	}
+	
 	function goPage(pageNo,selectForm){
 		var body = {};
 		body.pageNo = pageNo;
@@ -402,8 +408,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			}
 			if(routePath == 'clientPayment' && allSelectInfoMap['payment']){
 				var selectInfoMap = allSelectInfoMap['payment'];
-				if(data.payment && data.payment.id){
-					var selPaymentValue = data.payment.id;
+				if(data.payment && data.payment.code){
+					var selPaymentValue = data.payment.code;
 					$scope.selPayment = selectInfoMap[selPaymentValue];
 				}
 			}
