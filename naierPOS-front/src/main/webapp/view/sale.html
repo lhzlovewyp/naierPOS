@@ -115,7 +115,7 @@
                 </tr>
                 <tr ng-repeat="saleInfo in info.saleInfos"  on-render-finish>
                 <td width="30"><button type="button" class="close" ng-click="deleteSaleInfo(saleInfo);">×</button></td>
-                <td>{{saleInfo.sort}}</td>
+                <td>{{$index+1}}</td>
                 <td>{{saleInfo.code}}</td>
                 <td>{{saleInfo.abbr}}</td>
                 <td ng-click="updateAttr(saleInfo);">{{saleInfo.color.name}}/{{saleInfo.size.name}}</td>
