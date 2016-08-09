@@ -67,6 +67,12 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 	var selectedId ="";
 	$scope.chk = false;
 	var routePath = $routeParams.routePath;
+	
+	if(routePath == 'promotionOfferMatchContent' || routePath == 'promotionCondition'){
+		var promotionId = $location.search()['promotionId'];
+		$scope.promotionId = promotionId;
+	}
+	
 	function goPage(pageNo,selectForm){
 		var body = {};
 		body.pageNo = pageNo;
@@ -402,8 +408,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			}
 			if(routePath == 'clientPayment' && allSelectInfoMap['payment']){
 				var selectInfoMap = allSelectInfoMap['payment'];
-				if(data.payment && data.payment.id){
-					var selPaymentValue = data.payment.id;
+				if(data.payment && data.payment.code){
+					var selPaymentValue = data.payment.code;
 					$scope.selPayment = selectInfoMap[selPaymentValue];
 				}
 			}
@@ -553,21 +559,25 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 				if(routePath == 'store'){
 					if(data.opened){
 						data.opened=new Date(data.opened).format('yyyy-MM-dd');
+						$('#opened').datepicker('update',data.opened);
 					}
 				}
 				
 				if(routePath == 'salesConfig'){
 					if(data.salesDate){
 						data.salesDate=new Date(data.salesDate).format('yyyy-MM-dd');
+						$('#SalesDate').datepicker('update',data.salesDate);
 					}
 				}
 				
 				if(routePath == 'retailPrice'){
 					if(data.effectiveDate){
 						data.effectiveDate=new Date(data.effectiveDate).format('yyyy-MM-dd');
+						$('#EffectiveDate').datepicker('update',data.effectiveDate);
 					}
 					if(data.expiryDate){
 						data.expiryDate=new Date(data.expiryDate).format('yyyy-MM-dd');
+						$('#ExpiryDate').datepicker('update',data.expiryDate);
 					}
 				}
 				
@@ -624,17 +634,21 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					}
 					if(data.effDate){
 						data.effDate=new Date(data.effDate).format('yyyy-MM-dd');
+						$('#EffectiveDate').datepicker('update',data.effDate);
 					}
 					if(data.expDate){
 						data.expDate=new Date(data.expDate).format('yyyy-MM-dd');
+						$('#ExpiryDate').datepicker('update',data.expDate);
 					}
 				}
 				if(routePath == 'promotionStore'){
 					if(data.effDate){
 						data.effDate=new Date(data.effDate).format('yyyy-MM-dd');
+						$('#EffectiveDate').datepicker('update',data.effDate);
 					}
 					if(data.expDate){
 						data.expDate=new Date(data.expDate).format('yyyy-MM-dd');
+						$('#ExpiryDate').datepicker('update',data.expDate);
 					}
 				}
 				if(routePath == 'promotionOffer'){

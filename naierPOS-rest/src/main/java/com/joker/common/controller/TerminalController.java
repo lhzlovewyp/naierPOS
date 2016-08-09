@@ -190,11 +190,6 @@ public class TerminalController extends AbstractController {
 			rbody.setMsg("请输入终端名称！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 		if (StringUtils.isBlank(storeId)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入门店！");
@@ -207,7 +202,7 @@ public class TerminalController extends AbstractController {
 			Account account = (Account) user;
 
 			Client client = new Client();
-			client.setId(clientId);
+			client.setId(account.getClient().getId());
 			
 			Terminal addTerminal = new Terminal();
 			addTerminal.setId(UUID.randomUUID().toString());
@@ -250,7 +245,6 @@ public class TerminalController extends AbstractController {
 		String id = (String) params.get("id");
 		String code = (String) params.get("code");
 		String name = (String) params.get("name");
-		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 		String storeId = (String) params.get("storeId");
 
@@ -269,11 +263,6 @@ public class TerminalController extends AbstractController {
 			rbody.setMsg("请输入终端名称！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 		if (StringUtils.isBlank(status)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入状态！");
@@ -290,14 +279,10 @@ public class TerminalController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
-
 			Terminal updateTerminal = new Terminal();
 			updateTerminal.setId(id);
 			updateTerminal.setCode(code);
 			updateTerminal.setName(name);
-			updateTerminal.setClient(client);
 			updateTerminal.setStatus(status);
 			updateTerminal.setModified(new Date());
 			updateTerminal.setEditor(account.getId());

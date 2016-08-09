@@ -26,8 +26,6 @@
 								class="btn btn-default btn-sm checkbox-toggle">
 								<i class="fa fa-square-o"></i>
 							</button></th>
-						<th>GUID</th>
-						<th>商户</th>
 						<th>门店</th>
 						<th>终端编码</th>
 						<th>终端名称</th>
@@ -36,8 +34,6 @@
 					</tr>
 					<tr ng-repeat="result in basicsInfo.results"  on-render-finish>
 						<td align="center"><input type="checkbox" ng-click="check(result.id,chk)" ng-model="chk"></td>
-		                <td>{{result.id}}</td>
-		                <td>{{result.client.name}}</td>
 		                <td>{{result.store.name}}</td>
 		                <td>{{result.code}}</td>
 		                <td>{{result.name}}</td>
