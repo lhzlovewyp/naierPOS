@@ -108,13 +108,19 @@ app.controller("routeMainCtl",['$scope','$location','HomeService',function($scop
 	});
 	
 	$scope.dayReport = function(){
-		HomeService.dayReport().then(function(data){
-			if(data.status == Status.SUCCESS){
-				location.reload();
-			}else{
-				alert('日结失败，请稍后重试.');
-			}
-		});
+		var saleDate=$scope.info.saleDate;
+		var strDate1=new Date(saleDate).Format("yyyy-MM-dd");
+		var strDate2=new Date(saleDate+24*60*60*1000).Format("yyyy-MM-dd");
+		var data="日结后营业日期将从"+strDate1+" 变更为"+strDate2+"，请确认是否要继续？";
+		if(confirm(data)){
+			HomeService.dayReport().then(function(data){
+				if(data.status == Status.SUCCESS){
+					location.reload();
+				}else{
+					alert('日结失败，请稍后重试.');
+				}
+			});
+		};
 	}
 }]);
 
@@ -163,9 +169,9 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog','Pa
 			}
 			$scope.info.totalPrice=totalPrice.toFixed(2);
 			$scope.info.totalNum=count;
-			$scope.info.totalDiscPrice=discPrice;
+			$scope.info.totalDiscPrice=discPrice.toFixed(2);
 			$scope.info.pay=(totalPrice-Math.abs(discPrice)).toFixed(2);
-			$scope.info.payed=0;
+			$scope.info.payed='0.00';
 			$scope.info.needPay=($scope.info.pay-Math.abs($scope.info.payed)).toFixed(2);
 		},true);
 	});
