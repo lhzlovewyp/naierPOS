@@ -1236,6 +1236,38 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
             
         });
 	}
+	
+	/* 检测字符串是否为空 */
+	function isnull( str ) {
+		var i=0;
+		var sch="";
+		for ( i = str.length-1; i >= 0; i--){
+			sch=str.charAt(i);
+			if ( sch!=" " && sch!="\t" && sch!="\r" && sch!="\n") return false;
+		}
+		return true;
+	}
+	
+	/*校验是否是整数 */
+	function isInteger(str) { 
+		if(isnull(str)){return false;}
+		return /^([+-]?)(\d+)$/.test(str); 
+	}
+	
+	$scope.validInteger = function(select,min,max){
+		$this = $(select);
+		var id = $this.attr("id") + "_valid";
+		var $warn = $("#"+id);
+		var warnLen = $warn.length;
+		var content = $this.val();
+		if(!isInteger(content) || content < min || content > max){
+			if(warnLen == 0){
+				$this.parent('div').after("<label id='"+id+"' style='color:red'>请输入正确的数字</label>");
+			}
+		}else if(warnLen > 0){
+			$warn.remove();
+		}
+	}
 }]);
 
 app.controller("uploadFileCtrl",['$scope','$location','LoginService','ngDialog','BasicsService',function($scope,$location,LoginService,ngDialog,BasicsService){
