@@ -1254,18 +1254,60 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		return /^([+-]?)(\d+)$/.test(str); 
 	}
 	
-	$scope.validInteger = function(select,min,max){
-		$this = $(select);
-		var id = $this.attr("id") + "_valid";
-		var $warn = $("#"+id);
-		var warnLen = $warn.length;
-		var content = $this.val();
-		if(!isInteger(content) || content < min || content > max){
-			if(warnLen == 0){
-				$this.parent('div').after("<label id='"+id+"' style='color:red'>请输入正确的数字</label>");
+	function parseRange(range){
+		var obj = null;
+		if(range && range.length >= 3 && (range.substr(0,1) == '[' || range.substr(0,1) == '(') && (range.substr(range.length-1) == ']' || range.substr(range.length-1) == ')')){
+			var orRange = range;
+			obj = {};
+			var minStr = null;
+			var maxStr = null;
+			range = range.substr(1,range.length-2);
+			if(range.indexOf(',') >= 0){
+				var rangeArr = range.split(',');
+				minStr = $.trim(rangeArr[0]);
+				maxStr = $.trim(rangeArr[1]);
+				if(!isNaN(minStr)){
+					obj.min = $.trim(minStr);
+				}
+				if(!isNaN(maxStr)){
+					obj.max = $.trim(maxStr);
+				}
+			}else if(!isNaN(range)){
+				obj.min = $.trim(range);
 			}
-		}else if(warnLen > 0){
-			$warn.remove();
+		}
+		if(obj && obj.min != null && typeof obj.min != 'undefined'){
+			if(orRange.substr(0,1) == '['){
+				obj.minEqual = true;
+			}
+		}
+		if(obj && obj.max != null && typeof obj.max != 'undefined'){
+			if(orRange.substr(orRange.length-1) == ']'){
+				obj.maxEqual = true;
+			}
+		}
+		return obj;
+	}
+	
+	$scope.validNumber = function(select,range,mustInt){
+		var obj = parseRange(range);
+		if(obj){
+			var min = obj.min;
+			var max = obj.max
+			$this = $(select);
+			var id = $this.attr("id") + "_valid";
+			var $warn = $("#"+id);
+			var warnLen = $warn.length;
+			var content = $this.val() + '';
+			if((mustInt && !isInteger(content)) || (isNaN(content)) || 
+					(min != null && typeof min != 'undefined' && min != '' && ((obj.minEqual && Number(content) < Number(min)) || (!obj.minEqual && Number(content) <= Number(min)))) 
+				|| (max != null && typeof max != 'undefined' && max != '' && ((obj.maxEqual && Number(content) > Number(max)) || (!obj.maxEqual && Number(content) >= Number(max))))){
+				if(warnLen == 0){
+					$this.parent('div').after("<label id='"+id+"' style='color:red'>请输入正确的数字</label>");
+				}
+			}else if(warnLen > 0){
+				$warn.remove();
+			}
 		}
 	}
 }]);

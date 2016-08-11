@@ -22,7 +22,7 @@
 							<label for="QTYA" class="col-sm-2 control-label">甲单位数量</label>
 							<div class="col-sm-4">
 								<input type="text" class="form-control" id="QTYA" name="QTYA"
-									placeholder="甲单位数量" ng-model="form.qtyA">
+									placeholder="甲单位数量" ng-model="form.qtyA" ng-change="validNumber('#QTYA','(0)',1)">
 							</div>
 						</div>
 						<div class="form-group">
@@ -36,7 +36,7 @@
 							<label for="QTYB" class="col-sm-2 control-label">乙单位数量</label>
 							<div class="col-sm-4">
 								<input type="text" class="form-control" id="QTYB" name="QTYB"
-									placeholder="乙单位数量" ng-model="form.qtyB">
+									placeholder="乙单位数量" ng-model="form.qtyB" ng-change="validNumber('#QTYB','(0)',1)">
 							</div>
 						</div>
 						<div class="form-group">
