@@ -19,6 +19,16 @@ Date.prototype.format = function (format) {
         return format;
     }
 
+$("#a_expand").click(function(){
+	if($(".main-sidebar").css('display') == 'none'){
+		$(".main-sidebar").show();
+		$(".content-wrapper > div[ng-view]").css('margin-left','230px');
+	}else{
+		$(".main-sidebar").hide();
+		$(".content-wrapper > div[ng-view]").css('margin-left','');
+	}
+	
+});
 
 var app=angular.module('mainApp',['ngRoute','tm.pagination','ngDialog', 'isteven-multi-select']);
 
