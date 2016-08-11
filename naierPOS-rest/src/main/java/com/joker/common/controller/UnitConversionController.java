@@ -148,9 +148,15 @@ public class UnitConversionController extends AbstractController {
 		// 参数校验
 		Map params = paramsBody.getBody();
 		String unitAId = (String) params.get("unitAId");
-		String qtyA = (String) params.get("qtyA");
+		String qtyA = null;
+		if(params.get("qtyA") != null){
+			qtyA = String.valueOf(params.get("qtyA"));
+		}
 		String unitBId = (String) params.get("unitBId");
-		String qtyB = (String) params.get("qtyB");
+		String qtyB = null;
+		if(params.get("qtyB") != null){
+			qtyB = String.valueOf(params.get("qtyB"));
+		}
 		String remark = (String) params.get("remark");
 		String clientId = (String) params.get("clientId");
 
@@ -159,7 +165,7 @@ public class UnitConversionController extends AbstractController {
 			rbody.setMsg("请输入甲单位！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(qtyA)) {
+		if (!StringUtils.isNumeric(qtyA)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入甲单位数量！");
 			return rbody;
@@ -169,7 +175,7 @@ public class UnitConversionController extends AbstractController {
 			rbody.setMsg("请输入乙单位！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(qtyB)) {
+		if (!StringUtils.isNumeric(qtyB)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入乙单位数量！");
 			return rbody;
@@ -227,9 +233,15 @@ public class UnitConversionController extends AbstractController {
 		Map params = paramsBody.getBody();
 		String id = (String) params.get("id");
 		String unitAId = (String) params.get("unitAId");
-		String qtyA = (String) params.get("qtyA");
+		String qtyA = null;
+		if(params.get("qtyA") != null){
+			qtyA = String.valueOf(params.get("qtyA"));
+		}
 		String unitBId = (String) params.get("unitBId");
-		String qtyB = (String) params.get("qtyB");
+		String qtyB = null;
+		if(params.get("qtyB") != null){
+			qtyB = String.valueOf(params.get("qtyB"));
+		}
 		String remark = (String) params.get("remark");
 		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
@@ -239,29 +251,24 @@ public class UnitConversionController extends AbstractController {
 			rbody.setMsg("记录唯一信息缺失，请刷新页面！");
 			return rbody;
 		}
-		if (!StringUtils.isNumeric(unitAId)) {
+		if (StringUtils.isBlank(unitAId)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入甲单位！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(qtyA)) {
+		if (!StringUtils.isNumeric(qtyA)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入甲单位数量！");
 			return rbody;
 		}
-		if (!StringUtils.isNumeric(unitBId)) {
+		if (StringUtils.isBlank(unitBId)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入乙单位！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(qtyB)) {
+		if (!StringUtils.isNumeric(qtyB)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入乙单位数量！");
-			return rbody;
-		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
 			return rbody;
 		}
 		if (StringUtils.isBlank(status)) {
@@ -274,9 +281,6 @@ public class UnitConversionController extends AbstractController {
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
-
-			Client client = new Client();
-			client.setId(clientId);
 
 			Unit unitA = new Unit();
 			unitA.setId(unitAId);
@@ -291,7 +295,6 @@ public class UnitConversionController extends AbstractController {
 			updateUnitConversion.setUnitB(unitA);
 			updateUnitConversion.setQtyB(new BigDecimal(qtyB));
 			updateUnitConversion.setRemark(remark);
-			updateUnitConversion.setClient(client);
 			updateUnitConversion.setStatus(status);
 			updateUnitConversion.setModified(new Date());
 			updateUnitConversion.setEditor(account.getId());
