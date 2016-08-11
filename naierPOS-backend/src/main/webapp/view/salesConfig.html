@@ -12,11 +12,6 @@
 	<div class="box">
 		<div class="box-header">
 			<h3 class="box-title">销售交易设定</h3>
-			<div class="box-tools">
-				<a class="btn btn-primary btn-flat" href="/backend/add/salesConfig"><i
-					class="fa fa-plus"></i> 添加</a> <a class="btn btn-danger btn-flat"
-					href="javascript:void(0)" ng-click="del()"><i class="fa fa-minus"></i> 删除</a>
-			</div>
 		</div>
 		<div class="box-header">
 			<div class="input-group input-group-sm" style="width: 80%">
@@ -44,7 +39,6 @@
 						<th>收银终端</th>
 						<th>营业日期</th>
 						<th>销售最大交易序号</th>
-						<th>编号标记</th>
 						<th>操作</th>
 					</tr>
 					<tr ng-repeat="result in basicsInfo.results"  on-render-finish>
@@ -53,7 +47,6 @@
 		                <td>{{result.terminal.name}}</td>
 		                <td>{{result.salesDate | date:'yyyy-MM-dd'}}</td>
 		                <td>{{result.maxCode}}</td>
-		                <td>{{result.flag}}</td>
 						<td><a href="/backend/edit/salesConfig/{{result.id}}" class="btn btn-info btn-xs">编辑</a></td>
 		            </tr>
 				</table>

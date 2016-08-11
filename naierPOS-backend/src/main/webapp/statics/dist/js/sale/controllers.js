@@ -132,6 +132,10 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
         }
     };
 	
+	if(routePath == 'retailConfig'){
+		goPage($scope.paginationConf.currentPage);
+	}
+	
 	$scope.queryByPage = function(){
 		goPage(1,$scope.selectForm);
 	};
