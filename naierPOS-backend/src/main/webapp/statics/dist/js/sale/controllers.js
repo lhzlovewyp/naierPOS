@@ -1379,7 +1379,7 @@ app.controller("uploadFileCtrl",['$scope','$location','LoginService','ngDialog',
 			 dataType: 'json',
 			 success: function (data, status) {
 				 $('#uploadFile').remove();
-				 var reg = /<pre.+?>(.+)<\/pre>/g;  
+				 var reg = /<pre.*?>(.+)<\/pre>/g;  
 				 var result = data.match(reg);  
 				 data = RegExp.$1;
 				 data=$.parseJSON(data);
