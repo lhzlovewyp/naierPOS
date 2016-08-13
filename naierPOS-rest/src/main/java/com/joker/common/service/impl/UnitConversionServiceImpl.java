@@ -85,6 +85,14 @@ public class UnitConversionServiceImpl implements UnitConversionService {
 		page.setResults(list);
 		return page;
 	}
+	
+	@Override
+	public List<UnitConversion> getUnitConversionPageByCondition(
+			Map<String, Object> map) {
+		List<UnitConversion> list = mapper
+				.getUnitConversionPageByCondition(map);
+		return list;
+	}
 
 	@Override
 	public void deleteUnitConversionByID(String id) {
@@ -142,8 +150,8 @@ public class UnitConversionServiceImpl implements UnitConversionService {
 	private void validDuplicate(String unitAId, String unitBId) {
 		if (StringUtils.isNotBlank(unitAId) && StringUtils.isNotBlank(unitBId)) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("uniAId", unitAId);
-			map.put("uniBId", unitBId);
+			map.put("unitAId", unitAId);
+			map.put("unitBId", unitBId);
 			int count = mapper.getUnitConversionCountByCondition(map);
 			if (count > 0) {
 				throw new DuplicateKeyException("唯一编码重复");

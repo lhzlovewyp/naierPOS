@@ -1241,6 +1241,54 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
         });
 	}
 	
+	// 编辑物料信息
+	var lastSalesConversion = null;
+	$scope.fillSalesConversion = function(){
+		if($scope.editType == 'update' && (lastSalesConversion == null || typeof lastSalesConversion == 'undefined')
+				&& $scope.form.salesConversion != null && typeof $scope.form.salesConversion != 'undefined'){
+			lastSalesConversion = $scope.form.salesConversion;
+		}else if($scope.editType == 'update' && lastSalesConversion != null && typeof lastSalesConversion != 'undefined'){
+			$scope.form.salesConversion = lastSalesConversion;
+		}else if($scope.editType == 'add'){
+			$scope.form.salesConversion = "";
+		}
+		$("#SalesConversion").attr("readonly",false);
+		var selBasicUnit = $scope.selBasicUnit;
+		var selSalesUnit = $scope.selSalesUnit;
+		if(selBasicUnit && selSalesUnit){
+			var basicUnitVal = selBasicUnit.value;
+			var salesUnitVal = selSalesUnit.value;
+			if(basicUnitVal != null && typeof basicUnitVal != 'undefined' && salesUnitVal != null && typeof salesUnitVal != 'undefined'){
+				var pageBody = {};
+				pageBody.unitAId = basicUnitVal;
+				pageBody.unitBId = salesUnitVal;
+				pageBody.unitCanChange = "1";
+				BasicsService.queryByList(pageBody,"unitConversion").then(function(data){
+		    		if(data && data.length > 0){
+		    			if(data.length == 1){
+		    				var info = data[0];
+		    				if(info.unitA && info.unitB && info.qtyA != null && typeof info.qtyA != 'undefined' && info.qtyB != null && typeof info.qtyB != 'undefined'){
+		    					var unitAId = info.unitA.id;
+			    				var qtyA = info.qtyA;
+			    				var unitBId = info.unitB.id;
+			    				var qtyB = info.qtyB;
+			    				if(unitAId == basicUnitVal && unitBId == salesUnitVal){
+			    					$scope.form.salesConversion = (qtyA/qtyB).toFixed(2);
+			    					$("#SalesConversion").attr("readonly",true);
+			    				}else if(unitBId == basicUnitVal && unitAId == salesUnitVal){
+			    					$scope.form.salesConversion = (qtyB/qtyA).toFixed(2);
+			    					$("#SalesConversion").attr("readonly",true);
+			    				}
+		    				}
+		    			}else if(data.length > 1){
+		    				alert("单位换算有多条,请检查!");
+		    			}
+		    		}
+		        });
+			}	
+		}
+	}
+	
 	/* 检测字符串是否为空 */
 	function isnull( str ) {
 		var i=0;

@@ -4,14 +4,17 @@
 package com.joker.common.controller;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.joker.common.model.Account;
-import com.joker.common.model.Client;
 import com.joker.common.model.Unit;
 import com.joker.common.model.UnitConversion;
 import com.joker.common.service.UnitConversionService;
@@ -44,7 +46,7 @@ public class UnitConversionController extends AbstractController {
 	UnitConversionService unitConversionService;
 
 	/**
-	 * 查询品牌信息.
+	 * 查询单位换算信息.
 	 * 
 	 * @param paramsBody
 	 * @param request
@@ -54,8 +56,9 @@ public class UnitConversionController extends AbstractController {
 	@RequestMapping(value = { "/unitConversion/queryByPage" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
-	public ReturnBody getUnitConversionByPage(@RequestBody ParamsBody paramsBody,
-			HttpServletRequest request, HttpServletResponse response) {
+	public ReturnBody getUnitConversionByPage(
+			@RequestBody ParamsBody paramsBody, HttpServletRequest request,
+			HttpServletResponse response) {
 		ReturnBody rbody = new ReturnBody();
 		// 参数校验
 		Map params = paramsBody.getBody();
@@ -73,11 +76,11 @@ public class UnitConversionController extends AbstractController {
 			String clientId = account.getClient().getId();
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("clientId", clientId);
-			if(StringUtils.isNotBlank(uniA)){
-				map.put("uniA",uniA);
+			if (StringUtils.isNotBlank(uniA)) {
+				map.put("uniA", uniA);
 			}
-			if(StringUtils.isNotBlank(uniB)){
-				map.put("uniB",uniB);
+			if (StringUtils.isNotBlank(uniB)) {
+				map.put("uniB", uniB);
 			}
 			Page<UnitConversion> page = unitConversionService
 					.getUnitConversionPageByCondition(map, pageNo, limit);
@@ -93,7 +96,77 @@ public class UnitConversionController extends AbstractController {
 	}
 
 	/**
-	 * 查询品牌信息.
+	 * 查询单位换算信息.
+	 * 
+	 * @param paramsBody
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = { "/unitConversion/queryByList" }, method = RequestMethod.POST)
+	@NotNull(value = "token")
+	@ResponseBody
+	public ReturnBody getUnitConversionByList(
+			@RequestBody ParamsBody paramsBody, HttpServletRequest request,
+			HttpServletResponse response) {
+		ReturnBody rbody = new ReturnBody();
+		// 参数校验
+		Map params = paramsBody.getBody();
+		Integer pageNo = (Integer) params.get("pageNo");
+		Integer limit = (Integer) params.get("limit");
+		String uniA = (String) params.get("uniA");
+		String uniB = (String) params.get("uniB");
+		String unitAId = (String) params.get("unitAId");
+		String unitBId = (String) params.get("unitBId");
+		String unitCanChange = (String) params.get("unitCanChange");
+		pageNo = (pageNo == null ? 0 : pageNo);
+		limit = (limit == null ? 10 : limit);
+
+		String token = paramsBody.getToken();
+		Object user = CacheFactory.getCache().get(token);
+		if (user != null) {
+			Account account = (Account) user;
+			String clientId = account.getClient().getId();
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("clientId", clientId);
+			if (StringUtils.isNotBlank(uniA)) {
+				map.put("uniA", uniA);
+			}
+			if (StringUtils.isNotBlank(uniB)) {
+				map.put("uniB", uniB);
+			}
+			if (StringUtils.isNotBlank(unitAId)) {
+				map.put("unitAId", unitAId);
+			}
+			if (StringUtils.isNotBlank(unitBId)) {
+				map.put("unitBId", unitBId);
+			}
+			List<UnitConversion> list = unitConversionService
+					.getUnitConversionPageByCondition(map);
+			if (CollectionUtils.isEmpty(list)
+					&& StringUtils.isNotBlank(unitCanChange)) {
+				if (StringUtils.isNotBlank(unitAId)) {
+					map.put("unitBId", unitAId);
+				}
+				if (StringUtils.isNotBlank(unitBId)) {
+					map.put("unitAId", unitBId);
+				}
+				list = unitConversionService
+						.getUnitConversionPageByCondition(map);
+			}
+			rbody.setData(list);
+			rbody.setStatus(ResponseState.SUCCESS);
+			return rbody;
+		} else {
+			rbody.setStatus(ResponseState.ERROR);
+			rbody.setMsg("请登录！");
+		}
+		// 数据返回时永远返回true.
+		return rbody;
+	}
+
+	/**
+	 * 查询单位换算信息.
 	 * 
 	 * @param paramsBody
 	 * @param request
@@ -132,7 +205,7 @@ public class UnitConversionController extends AbstractController {
 	}
 
 	/**
-	 * 添加品牌信息.
+	 * 添加单位换算信息.
 	 * 
 	 * @param paramsBody
 	 * @param request
@@ -149,12 +222,12 @@ public class UnitConversionController extends AbstractController {
 		Map params = paramsBody.getBody();
 		String unitAId = (String) params.get("unitAId");
 		String qtyA = null;
-		if(params.get("qtyA") != null){
+		if (params.get("qtyA") != null) {
 			qtyA = String.valueOf(params.get("qtyA"));
 		}
 		String unitBId = (String) params.get("unitBId");
 		String qtyB = null;
-		if(params.get("qtyB") != null){
+		if (params.get("qtyB") != null) {
 			qtyB = String.valueOf(params.get("qtyB"));
 		}
 		String remark = (String) params.get("remark");
@@ -180,13 +253,11 @@ public class UnitConversionController extends AbstractController {
 			rbody.setMsg("请输入乙单位数量！");
 			return rbody;
 		}
-		
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
-
 
 			Unit unitA = new Unit();
 			unitA.setId(unitAId);
@@ -216,7 +287,7 @@ public class UnitConversionController extends AbstractController {
 	}
 
 	/**
-	 * 更新品牌信息.
+	 * 更新单位换算信息.
 	 * 
 	 * @param paramsBody
 	 * @param request
@@ -234,12 +305,12 @@ public class UnitConversionController extends AbstractController {
 		String id = (String) params.get("id");
 		String unitAId = (String) params.get("unitAId");
 		String qtyA = null;
-		if(params.get("qtyA") != null){
+		if (params.get("qtyA") != null) {
 			qtyA = String.valueOf(params.get("qtyA"));
 		}
 		String unitBId = (String) params.get("unitBId");
 		String qtyB = null;
-		if(params.get("qtyB") != null){
+		if (params.get("qtyB") != null) {
 			qtyB = String.valueOf(params.get("qtyB"));
 		}
 		String remark = (String) params.get("remark");
@@ -310,7 +381,7 @@ public class UnitConversionController extends AbstractController {
 	}
 
 	/**
-	 * 删除品牌信息.
+	 * 删除单位换算信息.
 	 * 
 	 * @param paramsBody
 	 * @param request

@@ -50,14 +50,14 @@
 						<div class="form-group">
 							<label for="BasicUnit" class="col-sm-2 control-label">基本单位</label>
 							<div class="col-sm-4">
-								<select id="BasicUnit" name="BasicUnit" class="form-control" ng-model="selBasicUnit" ng-options="x.show for x in units">
+								<select id="BasicUnit" name="BasicUnit" class="form-control" ng-model="selBasicUnit" ng-options="x.show for x in units" ng-change="fillSalesConversion()">
 								</select>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="SalesUnit" class="col-sm-2 control-label">销售单位</label>
 							<div class="col-sm-4">
-								<select id="SalesUnit" name="SalesUnit" class="form-control" ng-model="selSalesUnit" ng-options="x.show for x in units">
+								<select id="SalesUnit" name="SalesUnit" class="form-control" ng-model="selSalesUnit" ng-options="x.show for x in units" ng-change="fillSalesConversion()">
 								</select>
 							</div>
 						</div>
