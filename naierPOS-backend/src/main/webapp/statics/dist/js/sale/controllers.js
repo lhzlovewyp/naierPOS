@@ -132,6 +132,10 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
         }
     };
 	
+	if(routePath == 'retailConfig'){
+		goPage($scope.paginationConf.currentPage);
+	}
+	
 	$scope.queryByPage = function(){
 		goPage(1,$scope.selectForm);
 	};
@@ -1237,6 +1241,54 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
         });
 	}
 	
+	// 编辑物料信息
+	var lastSalesConversion = null;
+	$scope.fillSalesConversion = function(){
+		if($scope.editType == 'update' && (lastSalesConversion == null || typeof lastSalesConversion == 'undefined')
+				&& $scope.form.salesConversion != null && typeof $scope.form.salesConversion != 'undefined'){
+			lastSalesConversion = $scope.form.salesConversion;
+		}else if($scope.editType == 'update' && lastSalesConversion != null && typeof lastSalesConversion != 'undefined'){
+			$scope.form.salesConversion = lastSalesConversion;
+		}else if($scope.editType == 'add'){
+			$scope.form.salesConversion = "";
+		}
+		$("#SalesConversion").attr("readonly",false);
+		var selBasicUnit = $scope.selBasicUnit;
+		var selSalesUnit = $scope.selSalesUnit;
+		if(selBasicUnit && selSalesUnit){
+			var basicUnitVal = selBasicUnit.value;
+			var salesUnitVal = selSalesUnit.value;
+			if(basicUnitVal != null && typeof basicUnitVal != 'undefined' && salesUnitVal != null && typeof salesUnitVal != 'undefined'){
+				var pageBody = {};
+				pageBody.unitAId = basicUnitVal;
+				pageBody.unitBId = salesUnitVal;
+				pageBody.unitCanChange = "1";
+				BasicsService.queryByList(pageBody,"unitConversion").then(function(data){
+		    		if(data && data.length > 0){
+		    			if(data.length == 1){
+		    				var info = data[0];
+		    				if(info.unitA && info.unitB && info.qtyA != null && typeof info.qtyA != 'undefined' && info.qtyB != null && typeof info.qtyB != 'undefined'){
+		    					var unitAId = info.unitA.id;
+			    				var qtyA = info.qtyA;
+			    				var unitBId = info.unitB.id;
+			    				var qtyB = info.qtyB;
+			    				if(unitAId == basicUnitVal && unitBId == salesUnitVal){
+			    					$scope.form.salesConversion = (qtyA/qtyB).toFixed(2);
+			    					$("#SalesConversion").attr("readonly",true);
+			    				}else if(unitBId == basicUnitVal && unitAId == salesUnitVal){
+			    					$scope.form.salesConversion = (qtyB/qtyA).toFixed(2);
+			    					$("#SalesConversion").attr("readonly",true);
+			    				}
+		    				}
+		    			}else if(data.length > 1){
+		    				alert("单位换算有多条,请检查!");
+		    			}
+		    		}
+		        });
+			}	
+		}
+	}
+	
 	/* 检测字符串是否为空 */
 	function isnull( str ) {
 		var i=0;
@@ -1254,18 +1306,60 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		return /^([+-]?)(\d+)$/.test(str); 
 	}
 	
-	$scope.validInteger = function(select,min,max){
-		$this = $(select);
-		var id = $this.attr("id") + "_valid";
-		var $warn = $("#"+id);
-		var warnLen = $warn.length;
-		var content = $this.val();
-		if(!isInteger(content) || content < min || content > max){
-			if(warnLen == 0){
-				$this.parent('div').after("<label id='"+id+"' style='color:red'>请输入正确的数字</label>");
+	function parseRange(range){
+		var obj = null;
+		if(range && range.length >= 3 && (range.substr(0,1) == '[' || range.substr(0,1) == '(') && (range.substr(range.length-1) == ']' || range.substr(range.length-1) == ')')){
+			var orRange = range;
+			obj = {};
+			var minStr = null;
+			var maxStr = null;
+			range = range.substr(1,range.length-2);
+			if(range.indexOf(',') >= 0){
+				var rangeArr = range.split(',');
+				minStr = $.trim(rangeArr[0]);
+				maxStr = $.trim(rangeArr[1]);
+				if(!isNaN(minStr)){
+					obj.min = $.trim(minStr);
+				}
+				if(!isNaN(maxStr)){
+					obj.max = $.trim(maxStr);
+				}
+			}else if(!isNaN(range)){
+				obj.min = $.trim(range);
 			}
-		}else if(warnLen > 0){
-			$warn.remove();
+		}
+		if(obj && obj.min != null && typeof obj.min != 'undefined'){
+			if(orRange.substr(0,1) == '['){
+				obj.minEqual = true;
+			}
+		}
+		if(obj && obj.max != null && typeof obj.max != 'undefined'){
+			if(orRange.substr(orRange.length-1) == ']'){
+				obj.maxEqual = true;
+			}
+		}
+		return obj;
+	}
+	
+	$scope.validNumber = function(select,range,mustInt){
+		var obj = parseRange(range);
+		if(obj){
+			var min = obj.min;
+			var max = obj.max
+			$this = $(select);
+			var id = $this.attr("id") + "_valid";
+			var $warn = $("#"+id);
+			var warnLen = $warn.length;
+			var content = $this.val() + '';
+			if((mustInt && !isInteger(content)) || (isNaN(content)) || 
+					(min != null && typeof min != 'undefined' && min != '' && ((obj.minEqual && Number(content) < Number(min)) || (!obj.minEqual && Number(content) <= Number(min)))) 
+				|| (max != null && typeof max != 'undefined' && max != '' && ((obj.maxEqual && Number(content) > Number(max)) || (!obj.maxEqual && Number(content) >= Number(max))))){
+				if(warnLen == 0){
+					$this.parent('div').after("<label id='"+id+"' style='color:red'>请输入正确的数字</label>");
+				}
+			}else if(warnLen > 0){
+				$warn.remove();
+			}
 		}
 	}
 }]);
@@ -1285,7 +1379,7 @@ app.controller("uploadFileCtrl",['$scope','$location','LoginService','ngDialog',
 			 dataType: 'json',
 			 success: function (data, status) {
 				 $('#uploadFile').remove();
-				 var reg = /<pre.+?>(.+)<\/pre>/g;  
+				 var reg = /<pre.*?>(.+)<\/pre>/g;  
 				 var result = data.match(reg);  
 				 data = RegExp.$1;
 				 data=$.parseJSON(data);

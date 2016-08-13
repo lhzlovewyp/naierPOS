@@ -54,6 +54,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="uniB != null">
 				and u2.Name=#{uniB}
 			</if>
+			<if test="unitAId != null">
+				and a.UnitA=#{unitAId}
+			</if>
+			<if test="unitBId != null">
+				and a.UnitB=#{unitBId}
+			</if>
 			order by a.ID desc
 			<if test="start != null and limit != null">
 				limit #{start},#{limit}
@@ -79,6 +85,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			</if>
 			<if test="uniB != null">
 				and u2.Name=#{uniB}
+			</if>
+			<if test="unitAId != null">
+				and a.UnitA=#{unitAId}
+			</if>
+			<if test="unitBId != null">
+				and a.UnitB=#{unitBId}
 			</if>
 	</select>
 	

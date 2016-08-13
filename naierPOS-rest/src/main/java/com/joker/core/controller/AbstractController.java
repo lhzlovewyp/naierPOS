@@ -45,7 +45,7 @@ public class AbstractController {
         }else if(exception instanceof ParamsNullException){
             LogUtil.error(request.getServletPath() + ":" + exception.getMessage(), exception);
             rbody.setStatus(ResponseState.FAILED);
-            rbody.setMsg(ExceptionCode.SYSTEM_ERROR);
+            rbody.setMsg(ExceptionCode.PARAM_IS_NULL);
         }else if(exception instanceof ErrorException){
             LogUtil.error(request.getServletPath() + ":" + exception.getMessage(),exception);
             rbody.setStatus(ResponseState.ERROR);

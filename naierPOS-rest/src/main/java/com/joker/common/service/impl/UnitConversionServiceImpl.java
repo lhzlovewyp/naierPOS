@@ -4,6 +4,7 @@
 package com.joker.common.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import com.joker.common.mapper.UnitConversionMapper;
@@ -22,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.joker.common.Constant.Constants;
 import com.joker.core.dto.Page;
+import com.joker.core.expection.ParamsNullException;
 
 /**
  * @author zhangfei
@@ -83,6 +85,14 @@ public class UnitConversionServiceImpl implements UnitConversionService {
 		page.setResults(list);
 		return page;
 	}
+	
+	@Override
+	public List<UnitConversion> getUnitConversionPageByCondition(
+			Map<String, Object> map) {
+		List<UnitConversion> list = mapper
+				.getUnitConversionPageByCondition(map);
+		return list;
+	}
 
 	@Override
 	public void deleteUnitConversionByID(String id) {
@@ -98,12 +108,21 @@ public class UnitConversionServiceImpl implements UnitConversionService {
 
 	@Override
 	public void updateUnitConversion(UnitConversion unitConversion) {
-		mapper.updateUnitConversion(unitConversion);
+		String unitAId = unitConversion.getUnitA().getId();
+		String unitBId = unitConversion.getUnitB().getId();
 
+		validDuplicate(unitBId, unitAId);
+		mapper.updateUnitConversion(unitConversion);
 	}
 
 	@Override
 	public void insertUnitConversion(UnitConversion unitConversion) {
+		String unitAId = unitConversion.getUnitA().getId();
+		String unitBId = unitConversion.getUnitB().getId();
+
+		validDuplicate(unitAId, unitBId);
+		validDuplicate(unitBId, unitAId);
+
 		if (StringUtils.isBlank(unitConversion.getId())) {
 			unitConversion.setId(UUID.randomUUID().toString());
 		}
@@ -126,5 +145,19 @@ public class UnitConversionServiceImpl implements UnitConversionService {
 			}
 		}
 		return returnUnit;
+	}
+
+	private void validDuplicate(String unitAId, String unitBId) {
+		if (StringUtils.isNotBlank(unitAId) && StringUtils.isNotBlank(unitBId)) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("unitAId", unitAId);
+			map.put("unitBId", unitBId);
+			int count = mapper.getUnitConversionCountByCondition(map);
+			if (count > 0) {
+				throw new DuplicateKeyException("唯一编码重复");
+			}
+		} else {
+			throw new ParamsNullException("0");
+		}
 	}
 }

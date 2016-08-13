@@ -22,7 +22,7 @@
 							<label for="Decimal" class="col-sm-2 control-label">小数位</label>
 							<div class="col-sm-4">
 								<input type="text" class="form-control" id="UnitNum"
-									name="UnitNum" placeholder="小数位" ng-model="form.unitNum" ng-change="validInteger('#UnitNum',0,2)">
+									name="UnitNum" placeholder="小数位" ng-model="form.unitNum" ng-change="validNumber('#UnitNum','[0,2]',1)">
 							</div>
 						</div>
 						<div class="form-group">
