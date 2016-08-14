@@ -37,6 +37,7 @@ public class TreeUtil {
 				TreeNode newTreeNode = new TreeNode();
 				newTreeNode.setId(id);
 				newTreeNode.setText(text);
+				newTreeNode.setData(treeNode.getData());
 
 				// 标记节点
 				allNodeMap.put(id, newTreeNode);
