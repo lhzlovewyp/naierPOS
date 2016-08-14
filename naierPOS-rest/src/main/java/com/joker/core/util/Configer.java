@@ -6,10 +6,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Configer {
-	private static final Logger logger=Logger.getLogger(Configer.class.getName());
+	private static final Logger logger=LoggerFactory.getLogger(Configer.class);
 	private static Properties properties=new Properties();
 	
 	
@@ -39,7 +40,7 @@ public class Configer {
 			logger.error("unable to read config.properties");
 			return false;
 		}catch(Exception e){
-			logger.error(e);
+			logger.error("发生错误",e);
 			return false;
 		}finally{
 			try{
