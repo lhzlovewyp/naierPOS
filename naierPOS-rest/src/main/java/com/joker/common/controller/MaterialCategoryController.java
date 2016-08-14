@@ -78,13 +78,13 @@ public class MaterialCategoryController extends AbstractController {
 			String clientId = account.getClient().getId();
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("clientId", clientId);
-			if(StringUtils.isNotBlank(likeName)){
+			if (StringUtils.isNotBlank(likeName)) {
 				map.put("likeName", likeName);
 			}
-			if(StringUtils.isNotBlank(code)){
+			if (StringUtils.isNotBlank(code)) {
 				map.put("code", code);
 			}
-			
+
 			Page<MaterialCategory> page = materialCategoryService
 					.getMaterialCategoryPageByCondition(map, pageNo, limit);
 			rbody.setData(page);
@@ -145,8 +145,9 @@ public class MaterialCategoryController extends AbstractController {
 	@RequestMapping(value = { "/materialCategory/queryById" }, method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
-	public ReturnBody getMaterialCategoryById(@RequestBody ParamsBody paramsBody,
-			HttpServletRequest request, HttpServletResponse response) {
+	public ReturnBody getMaterialCategoryById(
+			@RequestBody ParamsBody paramsBody, HttpServletRequest request,
+			HttpServletResponse response) {
 		ReturnBody rbody = new ReturnBody();
 		// 参数校验
 		Map params = paramsBody.getBody();
@@ -187,6 +188,9 @@ public class MaterialCategoryController extends AbstractController {
 	public ReturnBody getTree(@RequestBody ParamsBody paramsBody,
 			HttpServletRequest request, HttpServletResponse response) {
 		ReturnBody rbody = new ReturnBody();
+		// 参数校验
+		Map params = paramsBody.getBody();
+		String needRoot = (String) params.get("needRoot");
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
@@ -208,10 +212,21 @@ public class MaterialCategoryController extends AbstractController {
 						treeNode.setParentId(materialCategory.getParent()
 								.getId());
 					}
+
+					Map<String, Object> data = new HashMap<String, Object>();
+					data.put("code", materialCategory.getCode());
+					treeNode.setData(data);
 					treeNodes.add(treeNode);
 				}
 				TreeNode rootTreeNode = TreeUtil.makeTree(treeNodes, "0");
-				treeJson = JSONObject.toJSONString(rootTreeNode.getNodes());
+				if(StringUtils.isNotBlank(needRoot)){
+					rootTreeNode.setText("根节点");
+					List<TreeNode> list = new ArrayList<TreeNode>();
+					list.add(rootTreeNode);
+					treeJson = JSONObject.toJSONString(list);
+				}else{
+					treeJson = JSONObject.toJSONString(rootTreeNode.getNodes());
+				}
 			}
 			rbody.setData(treeJson);
 			rbody.setStatus(ResponseState.SUCCESS);
@@ -255,7 +270,7 @@ public class MaterialCategoryController extends AbstractController {
 			rbody.setMsg("请输入品类名称！");
 			return rbody;
 		}
-		
+
 		if (StringUtils.isBlank(parentId)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入上级品类！");
@@ -266,7 +281,6 @@ public class MaterialCategoryController extends AbstractController {
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
-
 
 			MaterialCategory addMaterialCategory = new MaterialCategory();
 			addMaterialCategory.setId(UUID.randomUUID().toString());
@@ -328,16 +342,6 @@ public class MaterialCategoryController extends AbstractController {
 			rbody.setMsg("请输入品类名称！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
-		if (StringUtils.isBlank(parentId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入上级品类！");
-			return rbody;
-		}
 		if (StringUtils.isBlank(status)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入状态！");
@@ -349,21 +353,19 @@ public class MaterialCategoryController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
-
 			MaterialCategory updateMaterialCategory = new MaterialCategory();
 			updateMaterialCategory.setId(id);
 			updateMaterialCategory.setCode(code);
 			updateMaterialCategory.setName(name);
-			updateMaterialCategory.setClient(client);
 			updateMaterialCategory.setStatus(status);
 			updateMaterialCategory.setModified(new Date());
 			updateMaterialCategory.setEditor(account.getId());
-			
-			MaterialCategory parentMaterialCategory = new MaterialCategory();
-			parentMaterialCategory.setId(parentId);
-			updateMaterialCategory.setParent(parentMaterialCategory);
+
+			if (StringUtils.isNotBlank(parentId)) {
+				MaterialCategory parentMaterialCategory = new MaterialCategory();
+				parentMaterialCategory.setId(parentId);
+				updateMaterialCategory.setParent(parentMaterialCategory);
+			}
 
 			materialCategoryService
 					.updateMaterialCategory(updateMaterialCategory);

@@ -56,6 +56,7 @@ app.controller("changePWDCtrl",['$scope','$location','LoginService',function($sc
 
 app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsService',function($scope,$location,$routeParams,BasicsService){
 	
+
 	//绑定时间控件.
 	$scope.$on('$viewContentLoaded', function(){
 		$('[data-provide="datepicker-inline"]').datepicker();
@@ -248,7 +249,7 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 	};
 }]);
 
-app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDialog','BasicsService','$timeout',function($scope,$location,$routeParams,ngDialog,BasicsService,$timeout){
+app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDialog','BasicsService','$timeout', '$route',function($scope,$location,$routeParams,ngDialog,BasicsService,$timeout, $route){
 	var allStatus = [
 		        	    {value : "1", show : "有效"},
 		        	    {value : "0", show : "无效"}
@@ -318,12 +319,40 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		
 	},true);
 	
+	$scope.routePath = routePath;
+	
 	//绑定时间控件.
 	$scope.$on('$viewContentLoaded', function(){
 		$('[data-provide="datepicker-inline"]').datepicker();
+		
+		if(routePath == 'materialCategory'){
+			var body = {};
+			body.needRoot = "1";
+			BasicsService.queryTree(body,'materialCategory').then(function(data){
+				var tree = data;
+				$('#materialCategoryTree').treeview({
+					data: tree,
+					onNodeSelected: function(event, node) {
+						if(!$scope.form){
+							$scope.form = {};
+						}
+						if(node.data){
+							$scope.form.code = node.data.code;
+							$scope.form.name = node.text;
+							$scope.form.parent = {};
+							$scope.form.parent.id = node.id;
+						}else{
+							$scope.form.code = "";
+							$scope.form.name = "";
+							$scope.form.parent = {};
+							$scope.form.parent.id = 0;
+						}
+						$scope.$apply();//需要手动刷新
+		            }}
+				);
+	        });
+		}
 	});
-	
-	$scope.routePath = routePath;
 	
 	if(routePath == 'promotion'){
 		$scope.offerRelations = allOfferRelation;
@@ -744,7 +773,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
         });
 	}
 	
-	if(id){		
+	if(id){
 		$scope.editType = 'update';
 		
 		if(routePath == 'unitConversion'){
@@ -904,10 +933,22 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 				}
 			}
 			if(routePath == 'materialCategory'){
-				if($scope.form.parent.id)
-					$scope.form.parentId = $scope.form.parent.id;
-				else
-					$scope.form.parentId = "0";
+				if($scope.editType == 'add'){
+					if($scope.form.parent && $scope.form.parent.id){
+						$scope.form.parentId = $scope.form.parent.id;
+					}else{
+						$scope.form.parentId = "0";
+					}
+				}else if($scope.editType == 'update'){
+					if($scope.form.parent && $scope.form.parent.id){
+						$scope.form.id = $scope.form.parent.id;
+					}else{
+						alert("请选择要修改的节点");
+						return false;
+					}
+				}
+					
+				
 			}
 			
 			if(routePath == 'terminal' || routePath == 'salesConfig' || routePath == 'retailPrice' || routePath == 'account'){
@@ -1115,6 +1156,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					if(data && data.error){
 						alert(data.error);
 						//$scope.info = data;
+	                }else if(routePath == 'materialCategory'){
+	                	$route.reload();
 	                }else{
 	                	$location.path('/backend/list/'+routePath);
 	                }
@@ -1124,6 +1167,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					if(data && data.error){
 						alert(data.error);
 						//$scope.info = data;
+	                }else if(routePath == 'materialCategory'){
+	                	$route.reload();
 	                }else{
 	                	$location.path('/backend/list/'+routePath);
 	                }
@@ -1240,6 +1285,47 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
             
         });
 	}
+	
+	//增加品类信息
+	$scope.addMc = function(){
+		$("#Code").val("");
+		$("#Name").val("");
+		$("#Code").attr("readonly",false);
+		$("#Name").attr("readonly",false);
+		$scope.editType = 'add';
+	}
+	
+	$scope.delMc = function(){
+		if($scope.form.parent && $scope.form.parent.id){
+			if(confirm("确定执行删除?")){
+				var body = {};
+				body.id = $scope.form.parent.id;
+				BasicsService.del(body,routePath).then(function(data){
+					if(data && data.delerror){
+						alert("删除数据出错:"+data.delerror);
+		            }else{
+		            	alert("删除数据成功");
+		            	$route.reload();
+		            }
+		        });
+			}
+		}else{
+			alert("请选择需要删除的节点!");
+			return false;
+		}
+	}
+	
+	$scope.editMc = function(){
+		if($scope.form.parent && $scope.form.parent.id){
+			$("#Code").attr("readonly",false);
+			$("#Name").attr("readonly",false);
+			$scope.editType = 'update';
+		}else{
+			alert("请选择需要修改的节点!");
+			return false;
+		}
+	}
+	
 	
 	// 编辑物料信息
 	var lastSalesConversion = null;

@@ -2,6 +2,7 @@ package com.joker.common.model;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 public class TreeNode implements Serializable {
 	/**
@@ -17,6 +18,8 @@ public class TreeNode implements Serializable {
 	private String parentId;
 	/** 子节点 **/
 	private List<TreeNode> nodes;
+	
+	private Map<String,Object> data;
 
 	public String getId() {
 		return id;
@@ -48,5 +51,13 @@ public class TreeNode implements Serializable {
 
 	public void setNodes(List<TreeNode> nodes) {
 		this.nodes = nodes;
+	}
+
+	public Map<String, Object> getData() {
+		return data;
+	}
+
+	public void setData(Map<String, Object> data) {
+		this.data = data;
 	}
 }
