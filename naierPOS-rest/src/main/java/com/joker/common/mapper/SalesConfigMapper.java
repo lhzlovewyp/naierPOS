@@ -56,6 +56,15 @@ public interface SalesConfigMapper {
 	public void deleteSalesConfigByID(String id);
 	
 	/**
+	 * 删除销售交易信息.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@DataSource("master")
+	public void deleteSalesConfigByTerminalID(String id);
+	
+	/**
 	 * 修改销售交易信息.
 	 * 
 	 * @param salesConfig
