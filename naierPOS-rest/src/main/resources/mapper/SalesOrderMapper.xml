@@ -224,4 +224,137 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		 (#{item.id},#{item.client.id},#{item.salesOrder.id},#{item.transClass},#{item.store.id},#{item.salesDate},#{item.code},#{item.serialNo},#{item.payTime},#{item.payment.code},#{item.amount},#{item.changed},#{item.excess},#{item.transNo})
         </foreach>  
 	</insert>
+	
+	
+	<select id="getSalesOrderPayByCondition" resultMap="salesOrderPay" parameterType="java.util.Map">
+	    SELECT Payment,SUM(Amount) AS Amount FROM SalesOrderPay sp WHERE sp.TransClass='SO'
+	    
+	    and sp.Store=#{storeId} and sp.Client=#{clientId}
+	    <if test="startDate != null">
+	              <![CDATA[ and sp.SalesDate>=#{startDate}]]>
+	    </if>
+	    <if test="endDate != null">
+	              <![CDATA[ and sp.SalesDate<=#{endDate}]]>
+	    </if>
+	   GROUP BY Payment
+	    order by  SalesDate desc
+	   
+	</select>
+	
+	<select id="getSalesOrderPageByDate" resultMap="salesOrder" parameterType="java.util.Map">
+		select so.* from SalesOrder so
+		where so.TransClass='SO'
+		and so.Store=#{storeId} and so.Client=#{clientId}
+		
+		<if test="code != null">
+		        and so.Code=#{code}
+		</if>
+		<if test="startDate != null">
+				<![CDATA[  and so.SalesDate>=#{startDate} ]]>
+		</if>
+		<if test="endDate != null">
+				<![CDATA[  and so.SalesDate<=#{endDate}]]>
+		</if>
+	
+		order by SalesDate desc
+		<if test="start != null and limit != null">
+				limit #{start},#{limit}
+		</if>
+	</select>
+	
+	<select id="getSalesOrderPageByMaterial" resultMap="salesOrder" parameterType="java.util.Map">
+		SELECT so.ID,so.SalesDate,so.Code,so.Quantity,so.Amount FROM SalesOrder so
+		INNER JOIN SalesOrderDetails sd
+		ON sd.SalesOrder=so.ID
+		INNER JOIN Material mt
+		ON sd.Item=mt.ID
+		and so.Store=#{storeId} and so.Client=#{clientId}
+		<if test="matCode != null">
+		        and mt.Code=#{matCode}
+		</if>
+		<if test="startDate != null">
+				<![CDATA[  and sd.SalesDate>=#{startDate} ]]>
+		</if>
+		<if test="endDate != null">
+				<![CDATA[  and sd.SalesDate<=#{endDate}]]>
+		</if>
+		GROUP BY so.ID,so.SalesDate,so.Code,so.Quantity,so.Amount
+		order by so.SalesDate desc
+		<if test="start != null and limit != null">
+				limit #{start},#{limit}
+		</if>
+	</select>
+	
+	<select id="getSalesOrderCountByMaterial" parameterType="java.util.Map" resultType="int">
+	    select count(1) from (
+	           select so.ID from SalesOrder so
+		       INNER JOIN SalesOrderDetails sd
+		       ON sd.SalesOrder=so.ID
+		       INNER JOIN Material mt
+		       ON sd.Item=mt.ID
+		       and so.Store=#{storeId} and so.Client=#{clientId}
+		
+		<if test="matCode != null">
+		        and mt.Code=#{matCode}
+		</if>
+		<if test="startDate != null">
+				<![CDATA[  and sd.SalesDate>=#{startDate} ]]>
+		</if>
+		<if test="endDate != null">
+				<![CDATA[  and sd.SalesDate<=#{endDate}]]>
+		</if>
+	         GROUP BY so.ID,so.SalesDate,so.Code,so.Quantity,so.Amount  
+	    ) a
+		
+		
+		
+	</select>
+	
+	<select id="getSalesOrderDetailCountByMaterial" parameterType="java.util.Map" resultType="int">
+	    SELECT COUNT(1) FROM (
+	            SELECT 
+		        SUM(sd.Quantity) AS Quantity,SUM(sd.Amount) AS Amount,SUM(sd.Discount) AS Discount,SUM(sd.Payable) AS Payable
+                FROM SalesOrderDetails sd
+                INNER JOIN Material mt
+                ON sd.Item=mt.ID
+		        and sd.Store=#{storeId} and sd.Client=#{clientId}
+		
+		<if test="item != null">
+		        and mt.Code=#{item}
+		</if>
+		<if test="startDate != null">
+				<![CDATA[  and sd.SalesDate>=#{startDate} ]]>
+		</if>
+		<if test="endDate != null">
+				<![CDATA[  and sd.SalesDate<=#{endDate}]]>
+		</if>
+		GROUP BY sd.Item
+	    
+	    ) a
+		
+	</select>
+	
+	<select id="getSalesOrderDetailPageByCondition" resultMap="salesOrderDetails" parameterType="java.util.Map">
+		        SELECT sd.ID,sd.ItemClass,sd.Item,sd.Color,sd.Size,
+		        SUM(sd.Quantity) AS Quantity,SUM(sd.Amount) AS Amount,SUM(sd.Discount) AS Discount,SUM(sd.Payable) AS Payable
+                FROM SalesOrderDetails sd
+                INNER JOIN Material mt
+                ON sd.Item=mt.ID
+                and sd.Store=#{storeId} and sd.Client=#{clientId}
+		<if test="matCode != null">
+		        and mt.Code=#{matCode}
+		</if>
+		
+		<if test="startDate != null">
+				<![CDATA[  and sd.SalesDate>=#{startDate} ]]>
+		</if>
+		<if test="endDate != null">
+				<![CDATA[  and sd.SalesDate<=#{endDate}]]>
+		</if>
+		GROUP BY sd.Item
+		order BY sd.SalesDate desc
+		<if test="start != null and limit != null">
+				limit #{start},#{limit}
+		</if>
+	</select>
 </mapper>

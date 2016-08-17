@@ -100,4 +100,49 @@ public interface SalesOrderMapper {
 	 */
 	public int saveSalesOrderPay(List<SalesOrderPay> pays);
 	
+	
+	
+	/**
+	 * 根据条件查询支付信息.
+	 * @param salesOrderId
+	 * @return
+	 */
+	@DataSource("slave")
+	public List<SalesOrderPay> getSalesOrderPayByCondition(Map<String, Object> map);
+	/**
+	 * 销售明细查询.
+	 * @param startDate,endDate,code
+	 * @return
+	 */
+	public List<SalesOrder> getSalesOrderPageByDate(Map<String, Object> map);
+	
+	/**
+	 * 根据商品查询销售订单.
+	 * @param startDate,endDate,code
+	 * @return
+	 */
+	public List<SalesOrder> getSalesOrderPageByMaterial(Map<String, Object> map);
+
+	/**
+	 * 根据商品查询销售订单 总页数.
+	 * @param startDate,endDate,code
+	 * @return
+	 */
+	public int getSalesOrderCountByMaterial(Map<String, Object> map);
+
+	/**
+	 * 根据商品查询销售订单 总页数.
+	 * @param startDate,endDate,code
+	 * @return
+	 */
+	public int getSalesOrderDetailCountByMaterial(Map<String, Object> map);
+	/**
+	 * 根据条件查询销售明细信息.
+	 * 
+	 * @param map
+	 * @return
+	 */
+	@DataSource("slave")
+	public List<SalesOrderDetails> getSalesOrderDetailPageByCondition(Map<String, Object> map);
+	
 }
