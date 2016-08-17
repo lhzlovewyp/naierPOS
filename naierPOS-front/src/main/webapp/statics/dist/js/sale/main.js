@@ -82,6 +82,19 @@ app.config(['$routeProvider','$locationProvider','$httpProvider', function ($rou
             templateUrl: '/front/view/order.html',
             controller: 'routeMainCtl'
         })
+        .when('/front/salesDetail.html', {
+            templateUrl: '/front/view/salesDetail.html',
+            controller: 'salesDetailCtl'
+            
+        })
+        .when('/front/salesSummary.html', {
+            templateUrl: '/front/view/salesSummary.html',
+            controller: 'salesSummaryCtl'
+        })
+        .when('/front/paymentSummary.html', {
+            templateUrl: '/front/view/paymentSummary.html',
+            controller: 'paymentSummaryCtl'
+        })
         
 }]);
 
@@ -112,3 +125,6 @@ app.directive('onRenderFinish', function ($timeout) {
     };
 });
 
+app.config(['$httpProvider',function($httpProvider){
+	$httpProvider.interceptors.push('myInterceptor');
+}])

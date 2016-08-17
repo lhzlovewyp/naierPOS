@@ -309,4 +309,119 @@ app.factory('PinBackService',['$q','$location','$http','BaseService',function($q
 		
 	}
 }]);
-	
+
+app.factory('SaleDetailService',['$q','$location','BaseService',function($q,$location,BaseService){
+	return {
+		searchMat:function(ordForm){
+			var token=$.cookie("token");
+			ordForm.token = token;
+			if(!ordForm){
+			    return;
+			   };
+			var deferred = $q.defer();
+			BaseService.post('/rest/statistics/getsalesDetail',ordForm).then(function(obj){
+                 deferred.resolve(obj);
+				
+			});
+			return deferred.promise;
+		}
+		
+	}
+}]);
+
+app.factory('SaleSummaryService',['$q','$location','BaseService',function($q,$location,BaseService){
+	return {
+		searchMat:function(ordForm){
+			var token=$.cookie("token");
+			ordForm.token = token;
+			if(!ordForm){
+			    return;
+			   };
+			var deferred = $q.defer();
+			BaseService.post('/rest/statistics/getsalesSummary',ordForm).then(function(obj){
+				deferred.resolve(obj);
+				
+			});
+			return deferred.promise;
+		}
+		
+	}
+}]);
+
+app.factory('PaymentSummaryService',['$q','$location','BaseService',function($q,$location,BaseService){
+	return {
+		searchMat:function(ordForm){
+			var token=$.cookie("token");
+			ordForm.token = token;
+			if(!ordForm){
+			    return;
+			   };
+			var deferred = $q.defer();
+			BaseService.post('/rest/statistics/getPaymentSummary',ordForm).then(function(obj){
+				var info = {};
+				var types = [];
+				var amts = [];
+				if(obj.data.status==Status.SUCCESS){
+					var dto=obj.data.data;
+					
+                    /*info=dto;*/
+                    for(var i=0;i<dto.length;i++){
+                    	types.push(dto[i].payment.code);
+                    	amts.push(dto[i].amount);
+                    }
+                    info.types = types;
+                    info.amts = amts;
+                    
+                    deferred.resolve(info);
+				}
+			});
+			return deferred.promise;
+		}
+		
+	}
+}]);
+
+app.factory('AmtFormat',[function(){
+	return {
+		amtFormat:function(s,n){
+			n = n > 0 && n <= 20 ? n : 2;
+		    if(s==null) s=0;
+		    s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+		    var l = s.split(".")[0],
+		        r = s.split(".")[1];
+		    var result  = '';
+		    l = (l||0).toString();
+		    while (l.length > 3) {
+		        result = ',' + l.slice(-3) + result;
+		        l = l.slice(0, l.length - 3);
+		    }
+		    if (l=="-") { result = l + result.slice(1); }
+		    else result = l + result;
+		    return result  + "." + r;
+		}
+	}
+}]);
+
+app.factory('myInterceptor',['$q','$rootScope',function($q,$rootScope){
+	var interceptor = {
+			'request':function(config){
+				$rootScope.loading=true
+				return config
+			},
+			'response':function(response){
+				$rootScope.loading=false
+				
+				return response
+			},
+			'requestError':function(rejection){
+				
+				return rejection
+			},
+			'responseError':function(rejection){
+				$rootScope.loading=false
+				
+				return rejection
+            }
+	}
+	return interceptor;
+}]);

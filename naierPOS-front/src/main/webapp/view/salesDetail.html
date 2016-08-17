@@ -1,0 +1,127 @@
+<div>
+<section class="content-header">
+      <h1>
+        销售明细查询
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="index.html"><i class="fa fa-dashboard"></i> 首页</a></li>
+        <li class="active">统计</li>
+      </ol>
+    </section>
+
+
+    <!-- Main content -->
+    <section class="content">
+    <div class="col-md-3">
+       <div class="box box-solid">
+            <div class="box-header with-border">
+
+            </div>
+            <div class="box-body no-padding">
+              <ul class="nav nav-pills nav-stacked">
+                <li class="active"><a href="/front/salesDetail.html"><i class="fa fa-inbox"></i> 销售明细
+                <li><a href="/front/salesSummary.html"><i class="fa fa-th"></i> 销售汇总</a></li>
+                <li><a href="/front/paymentSummary.html"><i class="fa fa-cny"></i> 收款汇总</a></li>
+              </ul>
+            </div>
+            <!-- /.box-body -->
+          </div>
+    </div>
+    <div class="col-md-9">     
+      <div class="box">
+        <div class="box-header">
+          <form>
+   
+          	<ul class="search-inline col-md-7">
+            	<li>销售日期: </li>
+                <li>
+                    <div class="input-group input-daterange" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+                       <input type="text" class="form-control" ng-model="selectForm.startDate" name="start" >
+                       <span class="input-group-addon">-</span>
+                       <input type="text" class="form-control" ng-model="selectForm.endDate" name="end" >
+                    </div>
+                </li>
+                
+                
+            </ul>
+                <ul class="search-inline col-md-5">
+                <li>商品: </li>
+                <li>
+                <div class="input-group input-group-sm" style="width:250px;">
+                  <input ng-model="selectForm.matCode" type="text" name="table_search" class="form-control pull-right">
+                  <div class="input-group-btn">
+                    <button type="submit" class="btn btn-primary" ng-disabled="loading" ng-click="queryByPage()"><i class="fa fa-search"></i></button>
+                  </div>
+                </div>
+               </li>
+            </ul>
+          </form>
+        </div>
+        <div class="box-body">
+        <div ng-if="info.notNull==false" style="text-align: center"><span class="label label-danger">查无数据……</span></div>
+        
+        	<div class="box box-info box-solid" ng-repeat="order in info.results"  ng-if="info.notNull">
+        	   <div class="box-header with-border">
+                   <div class="" style="display:flex">
+                   <div class="box-title" style="flex:1;font-size:16px">{{order.salesDate | date:"yyyy-MM-dd HH-mm-ss"}}</div>
+                   <div class="box-title" style="flex:1;font-size:16px">销售单号：{{order.code}}</div>
+                   <div class="box-title" style="flex:1;font-size:16px">总数量：{{order.quantity}}</div>
+                   <div class="box-title" style="flex:1;font-size:16px">总金额：{{order.amount | customCurrency:"￥"}}</div>
+                   </div>
+                   <div class="box-tools pull-right">
+                       <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                   </div><!-- /.box-tools -->
+               </div><!-- /.box-header -->
+           <div class="box-body">
+               <table class="table table-bordered">
+                <tbody>
+               
+                <tr ng-repeat="saleInfo in order.salesOrderDetails">
+                  <td>{{saleInfo.material.code}}</td>
+                  <td>{{saleInfo.material.abbr}}</td>
+                  <td>{{saleInfo.color.name}}/{{saleInfo.size.name}}</td>
+                  <td>{{saleInfo.price}}</td>
+                  <td>{{saleInfo.quantity}}</td>
+                  <td>{{saleInfo.quantity * saleInfo.price | number:2}}</td>
+                  <td rowspan="{{order.salesOrderDetails.length}}" align="center" ng-if="$first">
+                    <div ng-repeat="payments in order.salesOrderPay">
+                       <div>{{payments.payment.name}}：{{payments.amount | customCurrency:"￥"}}</div>
+                    </div>
+                   
+                  </td>
+                </tr>
+                <!-- <tr>
+                  <td>33121-1</td>
+                  <td>全棉提花女船袜</td>
+                  <td>咖啡/22-24</td>
+                  <td>¥7.00/双</td>
+                  <td>3双</td>
+                  <td>¥21.00</td>
+                </tr>
+                <tr>
+                  <td>33121-1</td>
+                  <td>全棉提花女船袜</td>
+                  <td>咖啡/22-24</td>
+                  <td>¥7.00/双</td>
+                  <td>3双</td>
+                  <td>¥21.00</td>
+                </tr> -->
+              </tbody></table>
+           </div><!-- /.box-body -->
+           </div><!-- /.box -->
+            <div class="pull-right" ng-if="info.notNull">
+               <ul class="pagination">
+                  <li class="paginate_button previous" ng-show="paginationConf.pageNo>1" ng-click="pageTurn(-1)"><a href>上一页</a></li>
+                  <li class="paginate_button active"><a href="javascript:;;">{{paginationConf.pageNo}}/{{paginationConf.totalPage}}</a></li>
+                  <li class="paginate_button next" ng-show="paginationConf.pageNo<paginationConf.totalPage" ng-click="pageTurn(1)"><a href>下一页</a></li>
+               </ul>
+            </div>
+        </div>
+        <div class="overlay" ng-if="loading">
+              <i class="fa fa-refresh fa-spin"></i>
+        </div>
+     </div>
+     </div> 
+    </section>
+    <!-- /.content -->
+</div>

@@ -1226,9 +1226,160 @@ function basicPay(PayService,$scope,channel,code,transNo,barcode,amount,success,
 	});
 }
 
+app.controller("salesDetailCtl",['$scope','$location','SaleDetailService',
+                                 function($scope,$location,SaleDetailService){
+	$scope.$on('$viewContentLoaded', function(){
+		$(".input-daterange").datepicker({
+		    language: "zh-CN",
+		    autoclose: true,
+		    todayBtn:true
+		    
+		}); 
+	});
+	var initCurrentPage = 1;
+	var totalItems = 0;
+	
+	$scope.paginationConf = {
+	        currentPage: initCurrentPage,
+	        onChange: function(){
+	        	goPage($scope.paginationConf.currentPage);
+	        }
+	};
+	$scope.queryByPage = function(){
+		goPage(1);
+	};
+	$scope.pageTurn = function(flag){
+		var currentPage=$scope.paginationConf.pageNo;
+		goPage(currentPage+flag);
+	}
+	
+	function goPage(pageNo){
+		var body = {};
+		pageNo = pageNo || 1;
+		body.pageNo = pageNo || 1;
+		body.limit = $scope.paginationConf.itemsPerPage || 3;
+		if($scope.selectForm){
+			body.startDate=$scope.selectForm.startDate;
+			body.endDate=$scope.selectForm.endDate;
+			body.matCode=$scope.selectForm.matCode;
+		
+		}
+		
+		SaleDetailService.searchMat(body).then(function(data){
+			
+			var data=data.data;
+			 if(data.status==Status.SUCCESS){
+	             var dto=data.data;
+	             if(dto!=null){
+	            	 $scope.info = dto;
+		             $scope.paginationConf.totalItems=dto.totalRecord;
+		             $scope.paginationConf.totalPage=dto.totalPage;
+		             $scope.paginationConf.pageNo=pageNo;
+		             $scope.info.notNull = true;
+	             }else{
+	            	 $scope.info=new Object;
+	            	 $scope.info.notNull = false;
+	             }
+	         }else{
+	        	 alert(data.msg);
+	        	 return;
+	         }
+        });
+	};
+	
+}]);
 
+app.controller("salesSummaryCtl",['$scope','$location','SaleSummaryService',
+                                  function($scope,$location,SaleSummaryService){
+	
+	$scope.$on('$viewContentLoaded', function(){
+		$(".input-daterange").datepicker({
+		    language: "zh-CN",
+		    autoclose: true,
+		    todayBtn:true
+		    
+		}); 
+	});
+	var initCurrentPage = 1;
+	var totalItems = 0;
+	
+	
+	$scope.paginationConf = {
+	        currentPage: initCurrentPage,
+	        onChange: function(){
+	        	goPage($scope.paginationConf.currentPage);
+	        }
+	};
+	$scope.queryByPage = function(){
+		goPage(1);
+	};
+	$scope.pageTurn = function(flag){
+		var currentPage=$scope.paginationConf.pageNo;
+		goPage(currentPage+flag);
+	}
+	function goPage(pageNo){
+		var body = {};
+		pageNo = pageNo || 1;
+		body.pageNo = pageNo || 1;
+		body.limit = $scope.paginationConf.itemsPerPage || 10;
+		if($scope.selectForm){
+			body.startDate=$scope.selectForm.startDate;
+			body.endDate=$scope.selectForm.endDate;
+			body.matCode=$scope.selectForm.matCode;
+		
+		}
+		
+		SaleSummaryService.searchMat(body).then(function(data){
+			
+			var data=data.data;
+			 if(data.status==Status.SUCCESS){
+	             var dto=data.data;
+	             if(dto.results!=null){
+	            	 $scope.info = dto;
+		             $scope.paginationConf.totalItems=dto.totalRecord;
+		             $scope.paginationConf.totalPage=dto.totalPage;
+		             $scope.paginationConf.pageNo=pageNo;
+		             $scope.info.notNull = true;
+	             }else{
+	            	 $scope.info=new Object;
+	            	 $scope.info.notNull = false;
+	             }
+	         }else{
+	        	 alert(data.msg);
+	        	 return;
+	         }
+        });
+	};
+}]);
 
-
+app.controller("paymentSummaryCtl",['$scope','$location','PaymentSummaryService',function($scope,$location,PaymentSummaryService){
+	$scope.$on('$viewContentLoaded', function(){
+		$(".input-daterange").datepicker({
+		    language: "zh-CN",
+		    autoclose: true,
+		    todayBtn:true
+		    
+		}); 
+	});
+	$scope.searchMat = function(){
+		
+		if(!$scope.ordForm){
+			return;
+		}
+		
+		PaymentSummaryService.searchMat($scope.ordForm).then(function(data){
+			
+			$scope.info = data;
+			
+			
+			
+			$scope.barChart=true;
+        });
+		
+	};
+	
+	
+}])
 
 
 
