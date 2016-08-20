@@ -28,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="getMaterialPrice" resultMap="retailPrice">
     	select ID,Client,Store,Material,Unit,Price,EffectiveDate,ExpiryDate
     	from RetailPrice
-    	where Client=#{clientId} and Store=${storeId} and Material=#{materialId}
+    	where Client=#{clientId} and Store=#{storeId} and Material=#{materialId}
     	<![CDATA[  
     	and Unit=#{unitId} and EffectiveDate<=#{searchDate}
     	and (ExpiryDate is null or ExpiryDate>=#{searchDate})

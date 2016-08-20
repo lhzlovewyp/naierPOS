@@ -660,6 +660,49 @@ app.controller("payingCtrl",['$scope','$location','PayService','SaleService','Me
 		aliPay(PayService,$scope,channel,code,payment,barcode,amount);
 	};
 	
+	$scope.prepaidPay=function(payment){
+		var form=$scope.prepaidForm;
+		if(!form || !form.amount){//如果没有输入账号，提示错误.
+			alert("请输入金额.");
+			return ;
+		}
+		var amount=form.amount;
+		if(isNaN(amount)){
+			alert("请输入数字");
+			return;
+		}
+		var member=$scope.info.member;
+		if(!member || member.memberBalance<amount){
+			alert("余额不足");
+			return;
+		}
+		if((amount-0)> $scope.info.needPay){
+			alert("超出需要支付的金额.");
+			return;
+		}
+		var payInfo={};
+		var id = $scope.info.id;
+		var salesDate=$scope.info.saleDate;
+		payInfo.code=member.memberCode;
+		payInfo.salesDtoId=id;
+		payInfo.salesDate=salesDate;
+		payInfo.amount=amount;
+		payInfo.type="3";
+		
+		PayService.prepaidPay(payInfo).then(function(obj){
+			var dto=obj.data.data;
+			if(obj.data.status==Status.SUCCESS){
+				alert("付款成功.");
+				payment.amount=amount;
+				$scope.loadPayInfo();
+				$scope.closeThisDialog();
+	        }else{
+	        	alert(obj.data.msg);
+	        }
+		});
+		
+	}
+	
 	
 }]);	
 app.controller("payCtrl",['$scope','$location','PayService','SaleService','ngDialog','$timeout',function($scope,$location,PayService,SaleService,ngDialog,$timeout){
@@ -687,8 +730,24 @@ app.controller("payCtrl",['$scope','$location','PayService','SaleService','ngDia
 					payment.amount=0;
 				  	break;
 				case Status.BS_PREPAID://百胜储值卡
-					//payPayment="payPrepaid";	
-					  break;
+					//payPayment="payPrepaid";
+					var payInfo={};
+					payInfo.code=$scope.info.member.memberCode;
+					payInfo.salesDtoId=$scope.info.id;
+					payInfo.amount=payment.amount;
+					payInfo.type="2";
+					
+					PayService.prepaidPay(payInfo).then(function(obj){
+						var dto=obj.data.data;
+						if(obj.data.status==Status.SUCCESS){
+							payment.amount=0;
+							$scope.loadPayInfo();
+							//ngDialog.close();
+				        }else{
+				        	alert(obj.data.msg);
+				        }
+					});
+					break;
 				case Status.BS_COUPON://百胜电子券
 					//payPayment="payCoupon";
 					  break;
@@ -702,7 +761,7 @@ app.controller("payCtrl",['$scope','$location','PayService','SaleService','ngDia
 				case Status.WXPAY://微信支付.
 					var channel=2,code="05";
 					aliPay(PayService,$scope,channel,code,payment,barcode,amount,transNo);
-					  break;
+					break;
 				default:
 				  break;
 				}	

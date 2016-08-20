@@ -268,6 +268,19 @@ app.factory('PayService',['$q','$location','$http','BaseService',function($q,$lo
                 	deferred.resolve(obj);
             });
 			return deferred.promise;
+		},
+		prepaidPay : function(condition){
+			if(!condition){
+				condition={};
+			}
+			var token=$.cookie("token");
+			condition.token=token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/pay/prepaidPay',condition).then(function(obj){
+                	deferred.resolve(obj);
+            });
+			return deferred.promise;
 		}
 	}
 }]);	

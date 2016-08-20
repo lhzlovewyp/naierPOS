@@ -96,6 +96,42 @@ public class ThirdMemberDto {
 	public void setMarriage(String marriage) {
 		this.marriage = marriage;
 	}
+	public String getCustomer_id() {
+		return customer_id;
+	}
+	public void setCustomer_id(String customer_id) {
+		this.customer_id = customer_id;
+	}
+	public String getCustomer_code() {
+		return customer_code;
+	}
+	public void setCustomer_code(String customer_code) {
+		this.customer_code = customer_code;
+	}
+	public String getCustomer_level() {
+		return customer_level;
+	}
+	public void setCustomer_level(String customer_level) {
+		this.customer_level = customer_level;
+	}
+	public String getCustomer_tel() {
+		return customer_tel;
+	}
+	public void setCustomer_tel(String customer_tel) {
+		this.customer_tel = customer_tel;
+	}
+	public String getCustomer_integral() {
+		return customer_integral;
+	}
+	public void setCustomer_integral(String customer_integral) {
+		this.customer_integral = customer_integral;
+	}
+	public BigDecimal getMoney() {
+		return money;
+	}
+	public void setMoney(BigDecimal money) {
+		this.money = money;
+	}
 	
 	
 }

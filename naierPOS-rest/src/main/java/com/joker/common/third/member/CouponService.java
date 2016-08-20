@@ -6,6 +6,7 @@ package com.joker.common.third.member;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.alibaba.fastjson.JSONObject;
 import com.joker.common.third.dto.ThirdBaseDto;
@@ -15,7 +16,7 @@ import com.joker.core.util.FunctionTextMd5;
 import com.joker.core.util.HttpClientUtil;
 
 /**
- * 调用第三方接口，获取
+ * 电子券相关的第三方接口
  * @author lvhaizhen
  *
  */
@@ -30,11 +31,10 @@ public class CouponService extends BaseService{
 		String url=Configer.get("thirdRestUrl");
 		String action="crm/coupon/get_detail";
 		String key="pos";
-		//“key”＋“password”＋“date”生成的md5；password固定为“123456”，date取当前日期，格式为“YYYY-MM-DD” 
-		String timestamp=DatetimeUtil.formatDateToString(new Date(),"yyyyMMddHHmmss");
+		//String timestamp=DatetimeUtil.formatDateToString(new Date(),"yyyyMMddHHmmss");
+		String timestamp=new Long(System.currentTimeMillis()/1000).toString();
 
-
-		Map<String ,Object> map=new LinkedHashMap<String,Object>();
+		TreeMap<String ,Object> map=new TreeMap<String,Object>();
 		
 		map.put("coupon_code",code);
 		map.put("key",key);
@@ -63,6 +63,18 @@ public class CouponService extends BaseService{
 		return null;
 	}
 	
+	/**  
+	 * pay:消费电子券. <br/>  
+	 * TODO(这里描述这个方法适用条件 – 可选).<br/>  
+	 * TODO(这里描述这个方法的执行流程 – 可选).<br/>  
+	 * TODO(这里描述这个方法的使用方法 – 可选).<br/>  
+	 * TODO(这里描述这个方法的注意事项 – 可选).<br/>  
+	 *  
+	 * @author Administrator  
+	 * @param code
+	 * @return  
+	 * @since JDK 1.7  
+	 */
 	public static ThirdBaseDto<String>  pay(String code){
 		String url=Configer.get("thirdRestUrl");
 		String action="crm/coupon/user";
@@ -71,7 +83,7 @@ public class CouponService extends BaseService{
 		String timestamp=DatetimeUtil.formatDateToString(new Date(),"yyyyMMddHHmmss");
 
 
-		Map<String ,Object> map=new LinkedHashMap<String,Object>();
+		TreeMap<String ,Object> map=new TreeMap<String,Object>();
 		
 		map.put("code",code);
 		map.put("is_consume",0);

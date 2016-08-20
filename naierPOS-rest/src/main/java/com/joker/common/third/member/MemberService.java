@@ -7,8 +7,8 @@ import java.security.MessageDigest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +28,7 @@ import com.joker.core.util.HttpClientUtil;
 
 
 /**
+ * 会员相关的接口.
  * @author lvhaizhen
  *
  */
@@ -36,6 +37,18 @@ public class MemberService {
 	private Logger log = LoggerFactory.getLogger(MemberService.class);
 
 	
+	/**  
+	 * getMember:获取单一会员信息. <br/>  
+	 * TODO(这里描述这个方法适用条件 – 可选).<br/>  
+	 * TODO(这里描述这个方法的执行流程 – 可选).<br/>  
+	 * TODO(这里描述这个方法的使用方法 – 可选).<br/>  
+	 * TODO(这里描述这个方法的注意事项 – 可选).<br/>  
+	 *  
+	 * @author Administrator  
+	 * @param memNo
+	 * @return  
+	 * @since JDK 1.7  
+	 */
 	public static Member getMember(String memNo){
 		String url=Configer.get("member_single");
 		String api="18f9ffb3c8cf7ec67e9ee2862af94e28";
@@ -81,13 +94,30 @@ public class MemberService {
 		return null;
 	}
 	
+	/**  
+	 * getMembers:批量获取会员信息. <br/>  
+	 * TODO(这里描述这个方法适用条件 – 可选).<br/>  
+	 * TODO(这里描述这个方法的执行流程 – 可选).<br/>  
+	 * TODO(这里描述这个方法的使用方法 – 可选).<br/>  
+	 * TODO(这里描述这个方法的注意事项 – 可选).<br/>  
+	 *  
+	 * @author Administrator  
+	 * @param code
+	 * @param name
+	 * @param tel
+	 * @param shopCode
+	 * @param pageNum
+	 * @param num
+	 * @return  
+	 * @since JDK 1.7  
+	 */
 	public static ThirdMemberPage<ThirdMemberDto> getMembers(String code,String name,String tel,String shopCode,Integer pageNum,Integer num){
 		String url=Configer.get("thirdRestUrl");
 		String action="crm/customer/get_list";
 		String key="pos";
 		String timestamp=DatetimeUtil.formatDateToString(new Date(),"yyyyMMddHHmmSS");
 		
-		Map<String ,Object> map=new LinkedHashMap<String,Object>();
+		TreeMap<String ,Object> map=new TreeMap<String,Object>();
 		map.put("fields","*");
 		if(!StringUtils.isEmpty(code)) map.put("customer_code", code);
 		if(!StringUtils.isEmpty(name)) map.put("customer_name", name);
@@ -108,18 +138,31 @@ public class MemberService {
 		
 		try {
 			String result = HttpClientUtil.httpGetNew(url, map);
-			ThirdBaseDto<ThirdMemberPage<ThirdMemberDto>> dto = (ThirdBaseDto<ThirdMemberPage<ThirdMemberDto>>)JSONObject.parseObject(result, ThirdBaseDto.class);
+			ThirdBaseDto<JSONObject> dto = (ThirdBaseDto<JSONObject>)JSONObject.parseObject(result, ThirdBaseDto.class);
 			if("1".equals(dto.getStatus())){
-				return dto.getData();
+				JSONObject data=dto.getData();
+				ThirdMemberPage<ThirdMemberDto> page = JSONObject.parseObject(data.toString(),ThirdMemberPage.class);
+				return page;
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		return null;
 	}
 	
+	/**  
+	 * createMember:创建会员信息. <br/>  
+	 * TODO(这里描述这个方法适用条件 – 可选).<br/>  
+	 * TODO(这里描述这个方法的执行流程 – 可选).<br/>  
+	 * TODO(这里描述这个方法的使用方法 – 可选).<br/>  
+	 * TODO(这里描述这个方法的注意事项 – 可选).<br/>  
+	 *  
+	 * @author Administrator  
+	 * @param memberDto
+	 * @return  
+	 * @since JDK 1.7  
+	 */
 	public static ThirdBaseDto<ThirdMemberDto> createMember(ThirdMemberDto memberDto){
 		String url=Configer.get("thirdRestUrl");
 		String action="crm/customer/add_vip";
@@ -170,11 +213,10 @@ public class MemberService {
 		
 		//System.out.println(JSONObject.toJSON(createMember(member)).toString());
 		
-		//URI.create("http://crm.3zu.cn/crm/api/web/?data={}");
 		
 		//查询会员信息.
-//		ThirdMemberPage<ThirdMemberDto> dto = getMembers(null,null,null,"test",1,10);
-//		System.out.println(JSONObject.toJSON(dto).toString());
+		/*ThirdMemberPage<ThirdMemberDto> dto = getMembers(null,null,null,"test",1,10);
+		System.out.println(JSONObject.toJSON(dto).toString());*/
 	}
 	
 	

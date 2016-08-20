@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joker.common.mapper.MemberPointPayConfigMapper">
+     
+    
+    <resultMap type="memberPointPayConfig" id="memberPointPayConfig">
+		<result property="id" column="ID" />
+		<result property="client.id" column="Client" />
+		<result property="pointPay" column="PointPay" />
+		<result property="pointPayAMT" column="PointPayAMT" />
+	</resultMap>
+	
+	
+	
+    <select id="getMemberPointPayConfigByClient" parameterType="string" resultMap="memberPointPayConfig">
+		SELECT * FROM MemberPointPayConfig a
+		WHERE 
+			a.Client=#{clientId}
+	</select>
+	
+	
+    
+	
+
+</mapper>

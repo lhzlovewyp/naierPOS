@@ -39,6 +39,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 	     <typeAlias type="com.joker.common.model.Payment" alias="payment" />
 	     <typeAlias type="com.joker.common.model.TransClass" alias="transClass" />
 	     <typeAlias type="com.joker.common.model.ItemClass" alias="itemClass" />
+	     <typeAlias type="com.joker.common.model.MemberPointPayConfig" alias="memberPointPayConfig" />
 	      
 	</typeAliases>
 

@@ -10,20 +10,18 @@
   
 package com.joker.common.third.member;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.alibaba.fastjson.JSONObject;
 import com.joker.common.third.dto.ThirdBaseDto;
 import com.joker.core.util.Configer;
-import com.joker.core.util.DatetimeUtil;
 import com.joker.core.util.FunctionTextMd5;
 import com.joker.core.util.HttpClientUtil;
 
 /**  
  * ClassName: PointService <br/>  
- * Function: TODO ADD FUNCTION. <br/>  
+ * Function: 积分相关的接口调用. <br/>  
  * Reason: TODO ADD REASON(可选). <br/>  
  * date: 2016年8月19日 上午9:45:01 <br/>  
  *  
@@ -37,10 +35,10 @@ public class PointService {
 		String url=Configer.get("thirdRestUrl");
 		String action="crm/customer/change_integral_by_customer_code";
 		String key="pos";
-		String timestamp=DatetimeUtil.formatDateToString(new Date(),"yyyyMMddHHmmss");
+		//String timestamp=DatetimeUtil.formatDateToString(new Date(),"yyyyMMddHHmmss");
+		String timestamp=new Long(System.currentTimeMillis()/1000).toString();
 
-
-		Map<String ,Object> map=new LinkedHashMap<String,Object>();
+		TreeMap<String ,Object> map=new TreeMap<String,Object>();
 		
 		map.put("customer_code",code);
 		map.put("integral",points);

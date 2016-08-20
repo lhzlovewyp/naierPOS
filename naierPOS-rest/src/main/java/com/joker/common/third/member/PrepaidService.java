@@ -3,17 +3,14 @@
  */
 package com.joker.common.third.member;
 
-import java.math.BigDecimal;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.joker.common.third.dto.ThirdBaseDto;
-import com.joker.common.third.dto.ThirdMemberDto;
-import com.joker.common.third.dto.ThirdMemberPage;
 import com.joker.core.util.Configer;
 import com.joker.core.util.DatetimeUtil;
 import com.joker.core.util.FunctionTextMd5;
@@ -33,15 +30,16 @@ public class PrepaidService extends BaseService{
 		String key="pos";
 		String timestamp=DatetimeUtil.formatDateToString(new Date(),"yyyyMMddHHmmss");
 
-		Map<String,Object> map=new LinkedHashMap<String,Object>();
+		TreeMap<String,Object> map=new TreeMap<String,Object>();
 		map.put("customer_code",code);
-		map.put("money",amount);
-		map.put("type",type);
-		map.put("shop_code",storeCode);
-		//map.put("type_code","001");
-		map.put("relation_code",salesOrderId);
 		map.put("key",key);
+		map.put("money",amount);
+		map.put("relation_code",salesOrderId);
+		map.put("shop_code",storeCode);
 		map.put("timestamp", timestamp);
+		map.put("type",type);
+		map.put("type_code","001");
+		map.put("key",key);
 		
 		String sign="";
 		for (Map.Entry<String, Object> entry : map.entrySet()) {  
@@ -69,7 +67,7 @@ public class PrepaidService extends BaseService{
 		
 	}
 	public static void main(String args[]){
-		ThirdBaseDto<String> dto = pay("18957339389","0.01", "3", "test", "1");
+		ThirdBaseDto<String> dto = pay("18957339389","0.01", "3", "111049", "1");
 		if(dto!=null){
 			System.out.println(JSONObject.toJSON(dto));
 		}

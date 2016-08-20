@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.joker.common.model.Account;
 import com.joker.common.model.ClientPayment;
 import com.joker.common.service.ClientPaymentService;
+import com.joker.common.third.dto.ThirdBaseDto;
+import com.joker.common.third.member.PrepaidService;
 import com.joker.common.third.pay.aliweixin.AliPayService;
 import com.joker.common.third.pay.aliweixin.PayParamsVo;
 import com.joker.common.third.pay.aliweixin.PayReturnVo;
@@ -105,6 +107,41 @@ public class PayController extends AbstractController {
 				rbody.setStatus(ResponseState.FAILED);
 				rbody.setMsg(returnVo.getMsg());
 				rbody.setData(returnVo);
+			}
+		}else{
+			rbody.setStatus(ResponseState.INVALID_USER);
+			rbody.setMsg("请登陆.");
+		}
+		return rbody;
+	}
+	
+	@RequestMapping(value = { "/pay/prepaidPay" }, method = RequestMethod.POST)
+	@NotNull(value = "token")
+	@ResponseBody
+	public ReturnBody prepaidPay(@RequestBody ParamsBody paramsBody,
+			HttpServletRequest request, HttpServletResponse response) {
+		ReturnBody rbody = new ReturnBody();
+		String token = paramsBody.getToken();
+		Map<String,Object> body=paramsBody.getBody();
+		Object user = CacheFactory.getCache().get(token);
+		
+		String memberCode=(String)body.get("code");
+		String amount=(String)body.get("amount");//金额
+		String salesDtoId=(String)body.get("salesDtoId");//销售单号.
+		String type = (String)body.get("type");//销售单号.2.退款、3.扣减
+		if (user != null) {
+			Account account = (Account) user;
+			
+			ThirdBaseDto<String> dto=PrepaidService.pay(memberCode, amount, type, account.getStore().getCode(), salesDtoId);
+			if(dto == null){
+				rbody.setStatus(ResponseState.FAILED);
+				rbody.setMsg("系统内部错误");
+			}
+			if("1".equals(dto.getStatus())){
+				rbody.setStatus(ResponseState.SUCCESS);
+			}else{
+				rbody.setStatus(ResponseState.FAILED);
+				rbody.setMsg(dto.getMessage());
 			}
 		}else{
 			rbody.setStatus(ResponseState.INVALID_USER);
