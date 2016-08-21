@@ -338,6 +338,19 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog','Pa
 	
 }]);
 app.controller("memberCtrl",['$scope','$location','MemberService','ngDialog','BasicsService',function($scope,$location,MemberService,ngDialog,BasicsService){
+	var allSex = [
+		        	    {value : "1", show : "男"},
+		        	    {value : "2", show : "女"}
+		        	];
+	
+	var allMarriage = [
+		        	    {value : "1", show : "已婚"},
+		        	    {value : "2", show : "未婚"},
+		        	    {value : "0", show : "保密"}
+		        	];
+	$scope.sexs = allSex;
+	$scope.marriages = allMarriage;
+	
 	$scope.search = function(){
 		var form=$scope.memberForm;
 		if(!form){
@@ -358,6 +371,16 @@ app.controller("memberCtrl",['$scope','$location','MemberService','ngDialog','Ba
 		var info=$scope.info || {};
 		info.member=member;
 	}
+	
+	$scope.showNewMember=function(member){
+		ngDialog.open({
+	        template: '/front/view/template/newMember.html',
+	        scope: $scope,
+	        closeByDocument: false,
+	        width:'40%',
+	        controller: 'memberCtrl'
+	    });
+	}	
 	
 	var manualClick = false;
 	var initItemsPerPage = 10;
@@ -395,6 +418,34 @@ app.controller("memberCtrl",['$scope','$location','MemberService','ngDialog','Ba
 		manualClick = true;
 		goPage(1,$scope.selectForm);
 	};
+	
+	$scope.close=function(){
+		ngDialog.close();
+	};
+	
+	$scope.edit = function(isValid){
+		if(isValid) {
+			var selSex = $scope.selSex;
+			if(selSex){
+				$scope.form.customer_sex = selSex.value;
+			}
+			var selMarriage = $scope.selMarriage;
+			if(selMarriage){
+				$scope.form.marriage = selMarriage.value;
+			}
+			if(!$scope.form){
+				$scope.form = {};
+			}
+			BasicsService.add($scope.form,"member").then(function(data){
+				if(data && data.error){
+					alert(data.error);
+					//$scope.info = data;
+                }else{
+                	ngDialog.close();
+                }
+            });
+		}
+	}
 	
 }]);
 

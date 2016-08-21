@@ -3,8 +3,10 @@
  */
 package com.joker.common.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.joker.common.model.Account;
 import com.joker.common.model.Brand;
 import com.joker.common.model.Member;
+import com.joker.common.third.dto.ThirdBaseDto;
 import com.joker.common.third.dto.ThirdMemberDto;
 import com.joker.common.third.dto.ThirdMemberPage;
 import com.joker.common.third.member.MemberService;
@@ -115,6 +118,84 @@ public class MemberController extends AbstractController {
 			rbody.setData(page);
 			rbody.setStatus(ResponseState.SUCCESS);
 			return rbody;
+		} else {
+			rbody.setStatus(ResponseState.ERROR);
+			rbody.setMsg("请登录！");
+		}
+		// 数据返回时永远返回true.
+		return rbody;
+	}
+	
+	/**
+	 * 添加会员信息信息.
+	 * 
+	 * @param paramsBody
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = { "/member/add" }, method = RequestMethod.POST)
+	@NotNull(value = "token")
+	@ResponseBody
+	public ReturnBody add(@RequestBody ParamsBody paramsBody,
+			HttpServletRequest request, HttpServletResponse response) {
+		ReturnBody rbody = new ReturnBody();
+		// 参数校验
+		Map params = paramsBody.getBody();
+		String customer_name = (String) params.get("customer_name");
+		String tel = (String) params.get("tel");
+		String customer_sex = (String) params.get("customer_sex");
+		String email = (String) params.get("email");
+		String address = (String) params.get("address");
+		String birthday = (String) params.get("birthday");
+		String id_card = (String) params.get("id_card");
+		String marriage = (String) params.get("marriage");
+		
+		if (StringUtils.isBlank(customer_name)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入姓名！");
+			return rbody;
+		}
+		if (StringUtils.isBlank(tel)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入手机号码！");
+			return rbody;
+		}
+		if (StringUtils.isBlank(id_card)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入身份证号！");
+			return rbody;
+		}
+		
+
+		String token = paramsBody.getToken();
+		Object user = CacheFactory.getCache().get(token);
+		if (user != null) {
+			Account account = (Account) user;
+
+			ThirdMemberDto memberDto = new ThirdMemberDto();
+			memberDto.setVip_code(tel);
+			memberDto.setCustomer_name(customer_name);
+			memberDto.setTel(tel);
+			memberDto.setCustomer_sex(customer_sex);
+			memberDto.setEmail(email);
+			memberDto.setAddress(address);
+			memberDto.setBirthday(birthday);
+			memberDto.setId_card(id_card);
+			memberDto.setMarriage(marriage);
+			memberDto.setSource("6");
+			ThirdBaseDto<ThirdMemberDto> thirdBaseDto = MemberService
+					.createMember(memberDto);
+			if(thirdBaseDto != null && "1".equals(thirdBaseDto.getStatus())){
+				rbody.setStatus(ResponseState.SUCCESS);
+			}else{
+				rbody.setStatus(ResponseState.ERROR);
+				if(thirdBaseDto != null && StringUtils.isNotBlank(thirdBaseDto.getMessage())){
+					rbody.setMsg(thirdBaseDto.getMessage());
+				}else{
+					rbody.setMsg("接口错误！");	
+				}
+			}
 		} else {
 			rbody.setStatus(ResponseState.ERROR);
 			rbody.setMsg("请登录！");
