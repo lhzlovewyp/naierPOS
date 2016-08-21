@@ -10,7 +10,7 @@ Array.prototype.remove = function(val) {
 	}
 };
 
-var app=angular.module('mainApp',['ngRoute','ngDialog']);
+var app=angular.module('mainApp',['ngRoute','ngDialog','tm.pagination']);
 
 //app.factory('statusInterceptor', ['$q','$location',function($q,$location) {
 //    var statusInterceptor = {
@@ -76,7 +76,7 @@ app.config(['$routeProvider','$locationProvider','$httpProvider', function ($rou
         })
         .when('/front/member.html', {
             templateUrl: '/front/view/member.html',
-            controller: 'routeMainCtl'
+            controller: 'memberCtrl'
         })
         .when('/front/order.html', {
             templateUrl: '/front/view/order.html',

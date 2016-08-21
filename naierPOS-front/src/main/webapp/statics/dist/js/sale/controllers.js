@@ -337,7 +337,7 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog','Pa
 	
 	
 }]);
-app.controller("memberCtrl",['$scope','$location','MemberService','ngDialog',function($scope,$location,MemberService,ngDialog){
+app.controller("memberCtrl",['$scope','$location','MemberService','ngDialog','BasicsService',function($scope,$location,MemberService,ngDialog,BasicsService){
 	$scope.search = function(){
 		var form=$scope.memberForm;
 		if(!form){
@@ -358,6 +358,43 @@ app.controller("memberCtrl",['$scope','$location','MemberService','ngDialog',fun
 		var info=$scope.info || {};
 		info.member=member;
 	}
+	
+	var manualClick = false;
+	var initItemsPerPage = 10;
+	var initCurrentPage = 1;
+	function goPage(pageNo,selectForm){
+		var body = {};
+		body.pageNo = pageNo;
+		body.limit = $scope.paginationConf.itemsPerPage;
+		if(selectForm){
+			body=$.extend(body,selectForm);
+		}
+		
+		BasicsService.queryByPage(body,'member').then(function(data){
+    		$scope.basicsInfo = data;
+    		$scope.paginationConf.totalItems = data.totalRecord;
+        });
+	}
+	
+	$scope.paginationConf = {
+        currentPage: initCurrentPage,
+        itemsPerPage: initItemsPerPage,
+        pagesLength: 15,
+        perPageOptions: [10, 20, 30, 40, 50],
+        rememberPerPage: 'perPageItems',
+        onChange: function(){
+        	if(!manualClick){
+        		goPage($scope.paginationConf.currentPage,$scope.selectForm);
+        	}else{
+        		manualClick = false;
+        	}
+        }
+    };
+	
+	$scope.searchMore = function(){
+		manualClick = true;
+		goPage(1,$scope.selectForm);
+	};
 	
 }]);
 

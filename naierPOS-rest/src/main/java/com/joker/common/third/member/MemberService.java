@@ -122,6 +122,7 @@ public class MemberService {
 		if(!StringUtils.isEmpty(code)) map.put("customer_code", code);
 		if(!StringUtils.isEmpty(name)) map.put("customer_name", name);
 		if(!StringUtils.isEmpty(tel)) map.put("customer_tel", tel);
+		if(!StringUtils.isEmpty(shopCode)) map.put("shop_code", shopCode);
 		map.put("pageNum", pageNum);
 		map.put("num", num);
 		map.put("key", key);
