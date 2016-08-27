@@ -13,7 +13,7 @@ app.controller("loginCtrl",['$scope','$location','LoginService','ngDialog',funct
                             template: 'chooseStore',
                             scope: $scope,
                             closeByDocument: false,
-                            width:200,
+                            width:400,
                             controller: 'loginCtrl',
                             showClose:false
                         });
