@@ -496,6 +496,110 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 		return null;
 	}
 
+	@Override
+	public Page<SalesOrder> getSalesOrderPageByDate(Map<String, Object> map, Integer pageNo, Integer limit) {
+		int start = (pageNo - 1) * limit;
+		map.put("start", start);
+		map.put("limit", limit);
+		Page<SalesOrder> page = new Page<SalesOrder>();
+		int totalRecord = mapper.getSalesOrderCountByMaterial(map);
+		
+		List<SalesOrder> orders=mapper.getSalesOrderPageByMaterial(map);
+		
+		if(CollectionUtils.isNotEmpty(orders)){
+			for(int i = 0;i<orders.size();i++){
+				SalesOrder order = orders.get(i);
+				
+				List<SalesOrderDetails> details=mapper.getSalesOrderDetailById(order.getId());
+				for(Iterator<SalesOrderDetails> it=details.iterator();it.hasNext();){
+					SalesOrderDetails detail=it.next();
+					if(detail.getItemClass().getCode().equals(Constants.SALE_TYPE_MAT)){
+						//获取物料信息.
+						Material material=materialService.getMaterialById(detail.getMaterial().getId());
+						detail.setMaterial(material);
+						detail.setSalesUnit(material.getSalesUnit());
+						detail.setBasicUnit(material.getBasicUnit());
+						if(detail.getColor()!=null){
+							Color color=colorMapper.getColorByID(detail.getColor().getId());
+							if(color!=null){
+								detail.setColor(color);
+							}
+						}
+						if(detail.getSize()!=null){
+							Size size= sizeMapper.getSizeByID(detail.getSize().getId());
+							if(size!=null){
+								detail.setSize(size);
+							}
+						}
+					}
+				}
+				order.setSalesOrderDetails(details);
+				//获取折扣
+				order.setSalesOrderDiscount(mapper.getSalesOrderDiscountById(order.getId()));
+				//获取支付信息.
+				order.setSalesOrderPay(mapper.getSalesOrderPayById(order.getId()));
+				
+				
+		
+			}
+			page.setPageNo(start + 1);
+			page.setPageSize(limit);
+			page.setTotalRecord(totalRecord);
+			page.setResults(orders);
+			return page;
+		}
+		
+		return null;
+	}
+
+	@Override
+	public Page<SalesOrderDetails> getSalesSummaryPageByCondition(Map<String, Object> map, Integer pageNo,
+			Integer limit) {
+		int start = (pageNo - 1) * limit;
+		map.put("start", start);
+		map.put("limit", limit);
+		Page<SalesOrderDetails> page = new Page<SalesOrderDetails>();
+		int totalRecord = mapper.getSalesOrderDetailCountByMaterial(map);
+		
+		List<SalesOrderDetails> details=mapper.getSalesOrderDetailPageByCondition(map);
+		if(CollectionUtils.isNotEmpty(details)){
+		for(Iterator<SalesOrderDetails> it=details.iterator();it.hasNext();){
+			SalesOrderDetails detail=it.next();
+			if(detail.getItemClass().getCode().equals(Constants.SALE_TYPE_MAT)){
+				//获取物料信息.
+				Material material=materialService.getMaterialById(detail.getMaterial().getId());
+				detail.setMaterial(material);
+				detail.setSalesUnit(material.getSalesUnit());
+				detail.setBasicUnit(material.getBasicUnit());
+				if(detail.getColor()!=null){
+					Color color=colorMapper.getColorByID(detail.getColor().getId());
+					if(color!=null){
+						detail.setColor(color);
+					}
+				}
+				if(detail.getSize()!=null){
+					Size size= sizeMapper.getSizeByID(detail.getSize().getId());
+					if(size!=null){
+						detail.setSize(size);
+					}
+				}
+			}
+		}
+		page.setPageNo(start + 1);
+		page.setPageSize(limit);
+		page.setTotalRecord(totalRecord);
+		page.setResults(details);
+		return page;
+		}
+		return page;
+	}
+
+	@Override
+	public List<SalesOrderPay> getSalesOrderPayByCondition(Map<String, Object> map) {
+		List<SalesOrderPay> payments=mapper.getSalesOrderPayByCondition(map);
+		return payments;
+	}
+
 	
 
 

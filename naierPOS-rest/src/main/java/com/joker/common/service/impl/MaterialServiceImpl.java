@@ -287,5 +287,4 @@ public class MaterialServiceImpl implements MaterialService {
 		}
 		mapper.insertMaterial(material);
 	}
-
 }

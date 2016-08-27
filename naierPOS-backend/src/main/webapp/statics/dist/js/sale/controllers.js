@@ -62,6 +62,7 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 		$('[data-provide="datepicker-inline"]').datepicker();
 	});
 	
+	var manualClick = false;
 	var initItemsPerPage = 10;
 	var initCurrentPage = 1;
 	var totalItems = 0;
@@ -129,7 +130,11 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
         perPageOptions: [10, 20, 30, 40, 50],
         rememberPerPage: 'perPageItems',
         onChange: function(){
-        	goPage($scope.paginationConf.currentPage,$scope.selectForm);
+        	if(!manualClick){
+        		goPage($scope.paginationConf.currentPage,$scope.selectForm);
+        	}else{
+        		manualClick = false;
+        	}
         }
     };
 	
@@ -138,6 +143,7 @@ app.controller("routeBasicsCtl",['$scope','$location','$routeParams','BasicsServ
 	}
 	
 	$scope.queryByPage = function(){
+		manualClick = true;
 		goPage(1,$scope.selectForm);
 	};
 	

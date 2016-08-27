@@ -521,5 +521,4 @@ public class MaterialController extends AbstractController {
 		// 数据返回时永远返回true.
 		return rbody;
 	}
-
 }

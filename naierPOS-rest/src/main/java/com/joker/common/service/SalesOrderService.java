@@ -1,11 +1,14 @@
 package com.joker.common.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import com.joker.common.dto.SaleDto;
 import com.joker.common.model.Account;
 import com.joker.common.model.SalesOrder;
+import com.joker.common.model.SalesOrderDetails;
+import com.joker.common.model.SalesOrderPay;
 import com.joker.core.dto.Page;
 
 public interface SalesOrderService {
@@ -56,6 +59,12 @@ public interface SalesOrderService {
 	public boolean addSaleInfo(SaleDto saleDto,Account account);
 	
 	
+	public Page<SalesOrder> getSalesOrderPageByDate(Map<String, Object> map, Integer pageNo, Integer limit);
+
+	public Page<SalesOrderDetails> getSalesSummaryPageByCondition(Map<String, Object> map, Integer pageNo, Integer limit);
+
+	public List<SalesOrderPay> getSalesOrderPayByCondition(Map<String, Object> map);
 	
-	
-}
+};
+
+

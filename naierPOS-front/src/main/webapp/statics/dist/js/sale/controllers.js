@@ -16,7 +16,7 @@ app.controller("loginCtrl",['$scope','$location','LoginService','ngDialog',funct
                             width:200,
                             controller: 'loginCtrl',
                             showClose:false
-                        });
+                        });a
                 	}else{
                 		//如果是初次登陆,强制修改密码
                     	if(data.changePWD == "1"){
@@ -109,18 +109,18 @@ app.controller("routeMainCtl",['$scope','$location','HomeService',function($scop
 	
 	$scope.dayReport = function(){
 		var saleDate=$scope.info.saleDate;
-		var strDate1=new Date(saleDate).Format("yyyy-MM-dd");
-		var strDate2=new Date(saleDate+24*60*60*1000).Format("yyyy-MM-dd");
-		var data="日结后营业日期将从"+strDate1+" 变更为"+strDate2+"，请确认是否要继续？";
-		if(confirm(data)){
-			HomeService.dayReport().then(function(data){
-				if(data.status == Status.SUCCESS){
-					location.reload();
-				}else{
-					alert('日结失败，请稍后重试.');
-				}
-			});
-		};
+		 		var strDate1=new Date(saleDate).Format("yyyy-MM-dd");
+		 		var strDate2=new Date(saleDate+24*60*60*1000).Format("yyyy-MM-dd");
+		 		var data="日结后营业日期将从"+strDate1+" 变更为"+strDate2+"，请确认是否要继续？";
+		 		if(confirm(data)){
+		 			HomeService.dayReport().then(function(data){
+		 				if(data.status == Status.SUCCESS){
+		 					location.reload();
+		 				}else{
+		 					alert('日结失败，请稍后重试.');
+		 				}
+		 			});
+		 		};
 	}
 }]);
 
@@ -211,7 +211,7 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog','Pa
 			return;
 		}
 		SaleService.searchMat($scope.matForm).then(function(data){
-            if(data.data.property=="1" && !data.data.color && !data.data.size){//需要维护属性.
+			if(data.data.property=="1" && !data.data.color && !data.data.size){//需要维护属性.
             	
             	$scope.tempMat=data.data;
             	$scope.matForm={};
@@ -343,7 +343,20 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog','Pa
 	
 	
 }]);
-app.controller("memberCtrl",['$scope','$location','MemberService','ngDialog',function($scope,$location,MemberService,ngDialog){
+app.controller("memberCtrl",['$scope','$location','MemberService','ngDialog','BasicsService',function($scope,$location,MemberService,ngDialog,BasicsService){
+	var allSex = [
+		        	    {value : "1", show : "男"},
+		        	    {value : "2", show : "女"}
+		        	];
+	
+	var allMarriage = [
+		        	    {value : "1", show : "已婚"},
+		        	    {value : "2", show : "未婚"},
+		        	    {value : "0", show : "保密"}
+		        	];
+	$scope.sexs = allSex;
+	$scope.marriages = allMarriage;
+	
 	$scope.search = function(){
 		var form=$scope.memberForm;
 		if(!form){
@@ -363,6 +376,81 @@ app.controller("memberCtrl",['$scope','$location','MemberService','ngDialog',fun
 		ngDialog.close();
 		var info=$scope.info || {};
 		info.member=member;
+	}
+	
+	$scope.showNewMember=function(member){
+		ngDialog.open({
+	        template: '/front/view/template/newMember.html',
+	        scope: $scope,
+	        closeByDocument: false,
+	        width:'40%',
+	        controller: 'memberCtrl'
+	    });
+	}	
+	
+	var manualClick = false;
+	var initItemsPerPage = 10;
+	var initCurrentPage = 1;
+	function goPage(pageNo,selectForm){
+		var body = {};
+		body.pageNo = pageNo;
+		body.limit = $scope.paginationConf.itemsPerPage;
+		if(selectForm){
+			body=$.extend(body,selectForm);
+		}
+		
+		BasicsService.queryByPage(body,'member').then(function(data){
+    		$scope.basicsInfo = data;
+    		$scope.paginationConf.totalItems = data.totalRecord;
+        });
+	}
+	
+	$scope.paginationConf = {
+        currentPage: initCurrentPage,
+        itemsPerPage: initItemsPerPage,
+        pagesLength: 15,
+        perPageOptions: [10, 20, 30, 40, 50],
+        rememberPerPage: 'perPageItems',
+        onChange: function(){
+        	if(!manualClick){
+        		goPage($scope.paginationConf.currentPage,$scope.selectForm);
+        	}else{
+        		manualClick = false;
+        	}
+        }
+    };
+	
+	$scope.searchMore = function(){
+		manualClick = true;
+		goPage(1,$scope.selectForm);
+	};
+	
+	$scope.close=function(){
+		ngDialog.close();
+	};
+	
+	$scope.edit = function(isValid){
+		if(isValid) {
+			var selSex = $scope.selSex;
+			if(selSex){
+				$scope.form.customer_sex = selSex.value;
+			}
+			var selMarriage = $scope.selMarriage;
+			if(selMarriage){
+				$scope.form.marriage = selMarriage.value;
+			}
+			if(!$scope.form){
+				$scope.form = {};
+			}
+			BasicsService.add($scope.form,"member").then(function(data){
+				if(data && data.error){
+					alert(data.error);
+					//$scope.info = data;
+                }else{
+                	ngDialog.close();
+                }
+            });
+		}
 	}
 	
 }]);
@@ -666,6 +754,49 @@ app.controller("payingCtrl",['$scope','$location','PayService','SaleService','Me
 		aliPay(PayService,$scope,channel,code,payment,barcode,amount);
 	};
 	
+	$scope.prepaidPay=function(payment){
+		var form=$scope.prepaidForm;
+		if(!form || !form.amount){//如果没有输入账号，提示错误.
+			alert("请输入金额.");
+			return ;
+		}
+		var amount=form.amount;
+		if(isNaN(amount)){
+			alert("请输入数字");
+			return;
+		}
+		var member=$scope.info.member;
+		if(!member || member.memberBalance<amount){
+			alert("余额不足");
+			return;
+		}
+		if((amount-0)> $scope.info.needPay){
+			alert("超出需要支付的金额.");
+			return;
+		}
+		var payInfo={};
+		var id = $scope.info.id;
+		var salesDate=$scope.info.saleDate;
+		payInfo.code=member.memberCode;
+		payInfo.salesDtoId=id;
+		payInfo.salesDate=salesDate;
+		payInfo.amount=amount;
+		payInfo.type="3";
+		
+		PayService.prepaidPay(payInfo).then(function(obj){
+			var dto=obj.data.data;
+			if(obj.data.status==Status.SUCCESS){
+				alert("付款成功.");
+				payment.amount=amount;
+				$scope.loadPayInfo();
+				$scope.closeThisDialog();
+	        }else{
+	        	alert(obj.data.msg);
+	        }
+		});
+		
+	}
+	
 	
 }]);	
 app.controller("payCtrl",['$scope','$location','PayService','SaleService','ngDialog','$timeout',function($scope,$location,PayService,SaleService,ngDialog,$timeout){
@@ -693,8 +824,24 @@ app.controller("payCtrl",['$scope','$location','PayService','SaleService','ngDia
 					payment.amount=0;
 				  	break;
 				case Status.BS_PREPAID://百胜储值卡
-					//payPayment="payPrepaid";	
-					  break;
+					//payPayment="payPrepaid";
+					var payInfo={};
+					payInfo.code=$scope.info.member.memberCode;
+					payInfo.salesDtoId=$scope.info.id;
+					payInfo.amount=payment.amount;
+					payInfo.type="2";
+					
+					PayService.prepaidPay(payInfo).then(function(obj){
+						var dto=obj.data.data;
+						if(obj.data.status==Status.SUCCESS){
+							payment.amount=0;
+							$scope.loadPayInfo();
+							//ngDialog.close();
+				        }else{
+				        	alert(obj.data.msg);
+				        }
+					});
+					break;
 				case Status.BS_COUPON://百胜电子券
 					//payPayment="payCoupon";
 					  break;
@@ -708,7 +855,7 @@ app.controller("payCtrl",['$scope','$location','PayService','SaleService','ngDia
 				case Status.WXPAY://微信支付.
 					var channel=2,code="05";
 					aliPay(PayService,$scope,channel,code,payment,barcode,amount,transNo);
-					  break;
+					break;
 				default:
 				  break;
 				}	
@@ -1232,9 +1379,157 @@ function basicPay(PayService,$scope,channel,code,transNo,barcode,amount,success,
 	});
 }
 
+app.controller("salesDetailCtl",['$scope','$location','SaleDetailService',
+                                 function($scope,$location,SaleDetailService){
+	$scope.$on('$viewContentLoaded', function(){
+		$(".input-daterange").datepicker({
+		    language: "zh-CN",
+		    autoclose: true,
+		    todayBtn:true
+		    
+		}); 
+	});
+	var initCurrentPage = 1;
+	var totalItems = 0;
+	
+	$scope.paginationConf = {
+	        currentPage: initCurrentPage,
+	        onChange: function(){
+	        	goPage($scope.paginationConf.currentPage);
+	        }
+	};
+	$scope.queryByPage = function(){
+		goPage(1);
+	};
+	$scope.pageTurn = function(flag){
+		var currentPage=$scope.paginationConf.pageNo;
+		goPage(currentPage+flag);
+	}
+	
+	function goPage(pageNo){
+		var body = {};
+		pageNo = pageNo || 1;
+		body.pageNo = pageNo || 1;
+		body.limit = $scope.paginationConf.itemsPerPage || 3;
+		if($scope.selectForm){
+			body.startDate=$scope.selectForm.startDate;
+			body.endDate=$scope.selectForm.endDate;
+			body.matCode=$scope.selectForm.matCode;
+		
+		}
+		
+		SaleDetailService.searchMat(body).then(function(data){
+			
+			var data=data.data;
+			 if(data.status==Status.SUCCESS){
+	             var dto=data.data;
+	             if(dto!=null){
+	            	 $scope.info = dto;
+		             $scope.paginationConf.totalItems=dto.totalRecord;
+		             $scope.paginationConf.totalPage=dto.totalPage;
+		             $scope.paginationConf.pageNo=pageNo;
+		             $scope.info.notNull = true;
+	             }else{
+	            	 $scope.info=new Object;
+	            	 $scope.info.notNull = false;
+	             }
+	         }else{
+	        	 alert(data.msg);
+	        	 return;
+	         }
+        });
+	};
+	
+}]);
 
+app.controller("salesSummaryCtl",['$scope','$location','SaleSummaryService',
+                                  function($scope,$location,SaleSummaryService){
+	
+	$scope.$on('$viewContentLoaded', function(){
+		$(".input-daterange").datepicker({
+		    language: "zh-CN",
+		    autoclose: true,
+		    todayBtn:true
+		    
+		}); 
+	});
+	var initCurrentPage = 1;
+	var totalItems = 0;
+	
+	
+	$scope.paginationConf = {
+	        currentPage: initCurrentPage,
+	        onChange: function(){
+	        	goPage($scope.paginationConf.currentPage);
+	        }
+	};
+	$scope.queryByPage = function(){
+		goPage(1);
+	};
+	$scope.pageTurn = function(flag){
+		var currentPage=$scope.paginationConf.pageNo;
+		goPage(currentPage+flag);
+	}
+	function goPage(pageNo){
+		var body = {};
+		pageNo = pageNo || 1;
+		body.pageNo = pageNo || 1;
+		body.limit = $scope.paginationConf.itemsPerPage || 10;
+		if($scope.selectForm){
+			body.startDate=$scope.selectForm.startDate;
+			body.endDate=$scope.selectForm.endDate;
+			body.matCode=$scope.selectForm.matCode;
+		
+		}
+		
+		SaleSummaryService.searchMat(body).then(function(data){
+			
+			var data=data.data;
+			 if(data.status==Status.SUCCESS){
+	             var dto=data.data;
+	             if(dto.results!=null){
+	            	 $scope.info = dto;
+		             $scope.paginationConf.totalItems=dto.totalRecord;
+		             $scope.paginationConf.totalPage=dto.totalPage;
+		             $scope.paginationConf.pageNo=pageNo;
+		             $scope.info.notNull = true;
+	             }else{
+	            	 $scope.info=new Object;
+	            	 $scope.info.notNull = false;
+	             }
+	         }else{
+	        	 alert(data.msg);
+	        	 return;
+	         }
+        });
+	};
+}]);
 
-
-
-
-
+app.controller("paymentSummaryCtl",['$scope','$location','PaymentSummaryService',function($scope,$location,PaymentSummaryService){
+	$scope.$on('$viewContentLoaded', function(){
+		$(".input-daterange").datepicker({
+		    language: "zh-CN",
+		    autoclose: true,
+		    todayBtn:true
+		    
+		}); 
+	});
+	$scope.searchMat = function(){
+		
+		if(!$scope.ordForm){
+			return;
+		}
+		
+		PaymentSummaryService.searchMat($scope.ordForm).then(function(data){
+			
+			$scope.info = data;
+			
+			
+			
+			$scope.barChart=true;
+        });
+		
+	};
+	
+	
+}])

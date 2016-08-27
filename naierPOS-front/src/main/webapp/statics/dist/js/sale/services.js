@@ -268,6 +268,19 @@ app.factory('PayService',['$q','$location','$http','BaseService',function($q,$lo
                 	deferred.resolve(obj);
             });
 			return deferred.promise;
+		},
+		prepaidPay : function(condition){
+			if(!condition){
+				condition={};
+			}
+			var token=$.cookie("token");
+			condition.token=token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/pay/prepaidPay',condition).then(function(obj){
+                	deferred.resolve(obj);
+            });
+			return deferred.promise;
 		}
 	}
 }]);	
@@ -309,4 +322,225 @@ app.factory('PinBackService',['$q','$location','$http','BaseService',function($q
 		
 	}
 }]);
-	
+
+app.factory('SaleDetailService',['$q','$location','BaseService',function($q,$location,BaseService){
+	return {
+		searchMat:function(ordForm){
+			var token=$.cookie("token");
+			ordForm.token = token;
+			if(!ordForm){
+			    return;
+			   };
+			var deferred = $q.defer();
+			BaseService.post('/rest/statistics/getsalesDetail',ordForm).then(function(obj){
+                 deferred.resolve(obj);
+				
+			});
+			return deferred.promise;
+		}
+		
+	}
+}]);
+
+app.factory('SaleSummaryService',['$q','$location','BaseService',function($q,$location,BaseService){
+	return {
+		searchMat:function(ordForm){
+			var token=$.cookie("token");
+			ordForm.token = token;
+			if(!ordForm){
+			    return;
+			   };
+			var deferred = $q.defer();
+			BaseService.post('/rest/statistics/getsalesSummary',ordForm).then(function(obj){
+				deferred.resolve(obj);
+				
+			});
+			return deferred.promise;
+		}
+		
+	}
+}]);
+
+app.factory('PaymentSummaryService',['$q','$location','BaseService',function($q,$location,BaseService){
+	return {
+		searchMat:function(ordForm){
+			var token=$.cookie("token");
+			ordForm.token = token;
+			if(!ordForm){
+			    return;
+			   };
+			var deferred = $q.defer();
+			BaseService.post('/rest/statistics/getPaymentSummary',ordForm).then(function(obj){
+				var info = {};
+				var types = [];
+				var amts = [];
+				if(obj.data.status==Status.SUCCESS){
+					var dto=obj.data.data;
+					
+                    /*info=dto;*/
+                    for(var i=0;i<dto.length;i++){
+                    	types.push(dto[i].payment.code);
+                    	amts.push(dto[i].amount);
+                    }
+                    info.types = types;
+                    info.amts = amts;
+                    
+                    deferred.resolve(info);
+				}
+			});
+			return deferred.promise;
+		}
+		
+	}
+}]);
+
+app.factory('AmtFormat',[function(){
+	return {
+		amtFormat:function(s,n){
+			n = n > 0 && n <= 20 ? n : 2;
+		    if(s==null) s=0;
+		    s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+		    var l = s.split(".")[0],
+		        r = s.split(".")[1];
+		    var result  = '';
+		    l = (l||0).toString();
+		    while (l.length > 3) {
+		        result = ',' + l.slice(-3) + result;
+		        l = l.slice(0, l.length - 3);
+		    }
+		    if (l=="-") { result = l + result.slice(1); }
+		    else result = l + result;
+		    return result  + "." + r;
+		}
+	}
+}]);
+
+app.factory('myInterceptor',['$q','$rootScope',function($q,$rootScope){
+	var interceptor = {
+			'request':function(config){
+				$rootScope.loading=true
+				return config
+			},
+			'response':function(response){
+				$rootScope.loading=false
+				
+				return response
+			},
+			'requestError':function(rejection){
+				
+				return rejection
+			},
+			'responseError':function(rejection){
+				$rootScope.loading=false
+				
+				return rejection
+            }
+	}
+	return interceptor;
+}]);
+
+app.factory('BasicsService',['$q','$location','$http','BaseService',function($q,$location,$http,BaseService){
+	return {
+		queryByPage : function(condition,routePath){
+			var token=$.cookie("token");
+			condition.token = token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/'+routePath+'/queryByPage',condition).then(function(obj){
+                if(obj.data.status==Status.SUCCESS){
+                    var dto=obj.data.data;
+                    info = dto;
+                }
+                deferred.resolve(info);
+            });
+			return deferred.promise;
+		},
+		queryByList : function(condition,routePath){
+			var token=$.cookie("token");
+			condition.token = token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/'+routePath+'/queryByList',condition).then(function(obj){
+                if(obj.data.status==Status.SUCCESS){
+                    var dto=obj.data.data;
+                    info = dto;
+                }
+                deferred.resolve(info);
+            });
+			return deferred.promise;
+		},
+		queryById : function(condition,routePath){
+			var token=$.cookie("token");
+			condition.token = token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/'+routePath+'/queryById',condition).then(function(obj){
+                if(obj.data.status==Status.SUCCESS){
+                    var dto=obj.data.data;
+                    info = dto;
+                }
+                deferred.resolve(info);
+            });
+			return deferred.promise;
+		},
+		add : function(condition,routePath){
+			var token=$.cookie("token");
+			condition.token = token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/'+routePath+'/add',condition).then(function(obj){
+				if(obj && obj.data && obj.data.status == Status.SUCCESS) {
+            		info = obj.data.data;
+                }else{
+                	info.error = obj.data.msg;
+                }
+            	deferred.resolve(info);
+            });
+			return deferred.promise;
+		},
+		update : function(condition,routePath){
+			var token=$.cookie("token");
+			condition.token = token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/'+routePath+'/update',condition).then(function(obj){
+				if(obj && obj.data && obj.data.status == Status.SUCCESS) {
+            		info = obj.data.data;
+                }else{
+                	info.error = obj.data.msg;
+                }
+            	deferred.resolve(info);
+            });
+			return deferred.promise;
+		},
+		del : function(condition,routePath){
+			var token=$.cookie("token");
+			condition.token = token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/'+routePath+'/delete',condition).then(function(obj){
+				if(obj && obj.data && obj.data.status == Status.SUCCESS) {
+            		info = obj.data.data;
+                }else{
+                	info.delerror = obj.data.msg;
+                }
+            	deferred.resolve(info);
+            });
+			return deferred.promise;
+		},
+		queryTree : function(condition,routePath){
+			var token=$.cookie("token");
+			condition.token = token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/'+routePath+'/queryByTree',condition).then(function(obj){
+				if(obj.data.status==Status.SUCCESS){
+                    var dto=obj.data.data;
+                    info = dto;
+                }
+				deferred.resolve(info);
+            });
+			return deferred.promise;
+		}
+	}
+}]);

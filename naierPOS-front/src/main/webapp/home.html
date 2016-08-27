@@ -26,7 +26,7 @@
 </head>
 
 <body class="skin-blue" ng-app="mainApp">
-<div class="wrapper">
+<div class="wrapper" style="background-color: #ecf0f5">
   <header class="main-header" ng-controller="headNavCtrl">
     <!-- Logo -->
     <a href="/front/home.html" class="logo">
@@ -42,7 +42,7 @@
         <li><a href="/front/pinBack.html">销退</a></li>
         <li><a href="/front/order.html">订单</a></li>
         <li><a href="/front/member.html">会员</a></li>
-        <li><a href="#">统计</a></li>
+        <li><a href="/front/salesDetail.html">统计</a></li>
       </ul>
     </div>
       <div class="navbar-custom-menu">
@@ -87,5 +87,8 @@
 <script src="statics/dist/js/sell.js"></script>
 <script src="statics/plugins/datepicker/bootstrap-datepicker.js"></script>
 <script src="statics/plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js" charset="UTF-8"></script>
+<script type="text/javascript" src="statics/plugins/echarts/echarts.simple.min.js"></script>
+<script type="text/javascript" src="statics/dist/js/sale/filter.js"></script>
+<script src="directive/barChart.js"></script>
 </body>
 </html>

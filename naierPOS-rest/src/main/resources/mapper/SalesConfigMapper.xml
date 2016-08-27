@@ -59,6 +59,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="salesDate != null">
 				and a.SalesDate=#{salesDate}
 			</if>
+			<if test="terminalId != null">
+				and a.Terminal=#{terminalId}
+			</if>
 			order by a.ID desc
 			<if test="start != null and limit != null">
 				limit #{start},#{limit}
@@ -87,10 +90,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="salesDate != null">
 				and a.SalesDate=#{salesDate}
 			</if>
+			<if test="terminalId != null">
+				and a.Terminal=#{terminalId}
+			</if>
 	</select>
 	
 	<delete id="deleteSalesConfigByID" parameterType="string">
 		DELETE FROM SalesConfig where ID =#{id}
+	</delete>
+	
+	<delete id="deleteSalesConfigByTerminalID" parameterType="string">
+		DELETE FROM SalesConfig where Terminal =#{id}
 	</delete>
     
     <!-- 修改销售配置,只允许修改maxCode值 -->
