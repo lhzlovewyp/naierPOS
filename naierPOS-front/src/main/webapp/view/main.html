@@ -3,8 +3,9 @@
 <section class="content-header">
       <h1>
         当前营业日期
-        <small>{{info.saleDate | date:'yyyy-MM-dd'}}</small>
-        <a class="btn btn-primary btn-flat" ng-click="dayReport();"><i class="fa fa-credit-card"></i> 日结</a> <a class="btn btn-warning btn-flat"><i class="fa fa-rmb"></i> 读账</a>
+        <strong style="color:red;">{{info.saleDate | date:'yyyy-MM-dd'}}</strong>
+        <a class="btn btn-warning btn-flat" style="float:right;"><i class="fa fa-rmb"></i> 读账</a>
+        <a class="btn btn-primary btn-flat" style="float:right;" ng-click="dayReport();"><i class="fa fa-credit-card"></i> 日结</a> 
       </h1>
      </section>
     <!-- Main content -->
@@ -58,3 +59,4 @@
     </section>
     <!-- /.content -->
   </div>
+
