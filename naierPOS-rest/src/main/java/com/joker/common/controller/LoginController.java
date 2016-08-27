@@ -22,6 +22,7 @@ import com.joker.common.service.AccountService;
 import com.joker.common.service.ClientService;
 import com.joker.core.annotation.NotNull;
 import com.joker.core.cache.CacheFactory;
+import com.joker.core.constant.Context;
 import com.joker.core.constant.ResponseState;
 import com.joker.core.controller.AbstractController;
 import com.joker.core.dto.ParamsBody;
@@ -120,7 +121,7 @@ public class LoginController extends AbstractController{
         		store.setCode(map.get("code"));
         		
         		account.setStore(store);
-        		CacheFactory.getCache().put(account.getToken(), account);
+        		CacheFactory.getCache().put(account.getToken(), account,Context.DEFALUT_LOGIN_TIME);
         		rbody.setData(user);
         		rbody.setStatus(ResponseState.SUCCESS);
         		return rbody;
