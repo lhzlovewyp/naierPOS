@@ -17,12 +17,7 @@
     </properties>
     
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
-        </dependency>
+        
 
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -225,16 +220,11 @@
             <artifactId>rocketmq-client</artifactId>
             <version>3.2.6</version>
         </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>RELEASE</version>
-            <scope>test</scope>
-        </dependency>
+        
     </dependencies>
 
     <build>
-        <finalName>saleSystem</finalName>
+        <finalName>front</finalName>
         <sourceDirectory>src/main/java</sourceDirectory>
         <outputDirectory>src/main/webapp/WEB-INF/classes</outputDirectory>
 		<plugins>
