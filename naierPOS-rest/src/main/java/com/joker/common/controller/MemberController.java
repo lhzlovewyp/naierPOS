@@ -3,15 +3,14 @@
  */
 package com.joker.common.controller;
 
-import java.util.Date;
-import java.util.HashMap;
+import java.math.BigDecimal;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,8 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.joker.common.model.Account;
-import com.joker.common.model.Brand;
 import com.joker.common.model.Member;
+import com.joker.common.model.MemberPointPayConfig;
+import com.joker.common.service.MemberPointPayConfigService;
 import com.joker.common.third.dto.ThirdBaseDto;
 import com.joker.common.third.dto.ThirdMemberDto;
 import com.joker.common.third.dto.ThirdMemberPage;
@@ -39,6 +39,9 @@ import com.joker.core.dto.ReturnBody;
  */
 @RestController
 public class MemberController extends AbstractController {
+	
+	@Autowired
+	MemberPointPayConfigService memberPointPayConfigService;
 
 	/**
 	 * 查询账号信息.
@@ -61,10 +64,24 @@ public class MemberController extends AbstractController {
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
+			Account account=(Account)user;
 			Member member = MemberService.getMember(memNo);
+			//设置会员积分消费情况.
 			if (member == null) {
 				rbody.setStatus(ResponseState.ERROR);
 			} else {
+				MemberPointPayConfig memberPointPayConfig = memberPointPayConfigService.getMemberPointPayConfigByClient(account.getClient().getId());
+				BigDecimal memberPoint = member.getMemberPoint();
+				//计算积分和最小兑换积分的比率.
+				BigDecimal[] datas = memberPoint.divideAndRemainder(memberPointPayConfig.getPointPay());
+				if(datas[0].intValue() == 0){
+					memberPointPayConfig.setPoints(BigDecimal.valueOf(0L));
+				}else{
+					memberPointPayConfig.setPoints(memberPoint.subtract(datas[1]));
+				}
+				//设置积分可以兑换的金额.
+				memberPointPayConfig.setPointsMoney(memberPointPayConfig.getPointPayAMT().multiply(datas[0]));
+				member.setMemberPointPayConfig(memberPointPayConfig);
 				rbody.setData(member);
 				rbody.setStatus(ResponseState.SUCCESS);
 			}

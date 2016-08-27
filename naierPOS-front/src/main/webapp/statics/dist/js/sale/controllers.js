@@ -16,7 +16,7 @@ app.controller("loginCtrl",['$scope','$location','LoginService','ngDialog',funct
                             width:200,
                             controller: 'loginCtrl',
                             showClose:false
-                        });a
+                        });
                 	}else{
                 		//如果是初次登陆,强制修改密码
                     	if(data.changePWD == "1"){
@@ -575,6 +575,8 @@ app.controller("matAttrCtrl",['$scope','$location','SaleService','ngDialog',func
 
 app.controller("discCtrl",['$scope','$location','SaleService','ngDialog',function($scope,$location,SaleService,ngDialog){
 	var tempMat=$scope.tempMat;
+	$scope.discForm={};
+	$scope.discForm.selected="1";
 	$scope.submit=function(){
 		var condition=$scope.discForm;
 		if(!condition){
@@ -604,6 +606,10 @@ app.controller("discCtrl",['$scope','$location','SaleService','ngDialog',functio
 						totalPrice+=Number(Number(saleInfo.allDiscount).toFixed(2));//增加该商品的单项折扣.
 					}
 					
+				}else{
+					if(saleInfo.discType=="2"){//如果存在整单折扣，删除掉 。
+						saleInfos.remove(saleInfo);
+					}
 				}
 			}
 			if(type=="1"){//折扣%
@@ -678,7 +684,21 @@ app.controller("discCtrl",['$scope','$location','SaleService','ngDialog',functio
 					saleInfo:tempMat,
 					disc:inputDisc
 			};
-			$scope.info.saleInfos.insert($scope.info.saleInfos.indexOf(tempMat)+1,saleInfo);
+			//计算此商品是否存在单项折扣信息,如果存在，则删除单项折扣数据.
+			var tempMatIndex = $scope.info.saleInfos.indexOf(tempMat)+1;
+			var saleInfos=$scope.info.saleInfos;
+			var flag=0;
+			if(saleInfos.length>tempMatIndex){
+				var nextData=saleInfos[tempMatIndex];
+				if(nextData && nextData.discType && nextData.discType == "1"){
+					flag=1;
+				}
+			}
+			if(flag==1){
+					saleInfos[tempMatIndex]=saleInfo;
+			}else{
+					$scope.info.saleInfos.insert(tempMatIndex,saleInfo);
+			}
 			//$scope.info.saleInfos.push(saleInfo);
 			
 		}
@@ -797,6 +817,67 @@ app.controller("payingCtrl",['$scope','$location','PayService','SaleService','Me
 		
 	}
 	
+	$scope.payPoint=function(payment){
+		var form=$scope.pointForm;
+		var member = $scope.info.member;
+		if(!member){
+			alert('请输入会员信息');
+		}
+		if(!form || !form.point){//如果没有输入账号，提示错误.
+			alert("请输入积分.");
+			return ;
+		} 
+		var points = member.memberPointPayConfig.points;//可用积分
+		if(points<form.point){
+			alert('输入积分超过上限');
+			return;
+		}
+		//计算输入积分换算金额.
+		var amount = (form.point || 0)/member.memberPointPayConfig.pointPay * member.memberPointPayConfig.pointPayAMT
+		
+		if((amount-0)> $scope.info.needPay){
+			alert("超出需要支付的金额.");
+			return;
+		}
+
+		var payInfo={};
+		var id = $scope.info.id;
+		var salesDate=$scope.info.saleDate;
+		payInfo.code=member.memberCode;
+		payInfo.salesDtoId=id;
+		payInfo.salesDate=salesDate;
+		payInfo.points=form.point;
+		
+		PayService.pointPay(payInfo).then(function(obj){
+			var dto=obj.data.data;
+			if(obj.data.status==Status.SUCCESS){
+				alert("付款成功.");
+				payment.amount=amount;
+				payment.points=form.point;
+				$scope.loadPayInfo();
+				$scope.closeThisDialog();
+	        }else{
+	        	alert(obj.data.msg);
+	        }
+		});
+		
+	}
+	
+	$scope.pointChange = function(){
+		var form=$scope.pointForm;
+		var input=form.point;
+		if(isNaN(input)){
+			alert("请输入数字");
+			return;
+		}
+		var minPoint = $scope.info.member.memberPointPayConfig.pointPay;
+		if(input%minPoint!=0){
+			alert('输入积分只能是'+minPoint+'的整数倍');
+			form.point=0;
+			return;
+		}
+	}
+	
 	
 }]);	
 app.controller("payCtrl",['$scope','$location','PayService','SaleService','ngDialog','$timeout',function($scope,$location,PayService,SaleService,ngDialog,$timeout){
@@ -847,6 +928,22 @@ app.controller("payCtrl",['$scope','$location','PayService','SaleService','ngDia
 					  break;
 				case Status.BS_POINT://百胜会员积分.
 					//payPayment="payPoint";
+					var payInfo={};
+					payInfo.code=$scope.info.member.memberCode;
+					payInfo.salesDtoId=$scope.info.id;
+					payInfo.points=(0-payment.points)+"";
+					
+					PayService.pointPay(payInfo).then(function(obj){
+						var dto=obj.data.data;
+						if(obj.data.status==Status.SUCCESS){
+							payment.amount=0;
+							payment.points=null;
+							$scope.loadPayInfo();
+							//ngDialog.close();
+				        }else{
+				        	alert(obj.data.msg);
+				        }
+					});
 					  break;
 				case Status.ALIPAY://支付宝退款.
 					var channel=1,code="02";

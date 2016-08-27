@@ -13,6 +13,9 @@ package com.joker.common.third.member;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.alibaba.fastjson.JSONObject;
 import com.joker.common.third.dto.ThirdBaseDto;
 import com.joker.core.util.Configer;
@@ -30,6 +33,9 @@ import com.joker.core.util.HttpClientUtil;
  * @since JDK 1.7  
  */
 public class PointService {
+
+	
+	private static Logger log = LoggerFactory.getLogger(PrepaidService.class);
 
 	public static ThirdBaseDto<String>  pay(String code,String points,String orderCode){
 		String url=Configer.get("thirdRestUrl");
@@ -60,6 +66,7 @@ public class PointService {
 		String result=null;
 		try {
 			result = HttpClientUtil.httpGet(url, map);
+			log.error(result);
 			ThirdBaseDto<String>  dto=(ThirdBaseDto<String>)JSONObject.parseObject(result, ThirdBaseDto.class);
 			return dto;
 		} catch (Exception e) {
@@ -72,7 +79,7 @@ public class PointService {
 	
 	public static void main(String args[]){
 		//System.out.println(JSONObject.toJSON(getAmount("11952")).toString());
-		System.out.println(JSONObject.toJSON(pay("18957339389","1","test")).toString());
+		System.out.println(JSONObject.toJSON(pay("18957339389","-1","test")).toString());
 	}
 }
   
