@@ -37,6 +37,8 @@ public class Member {
 	
 	private String memberBirthDay;
 	
+	private MemberPointPayConfig memberPointPayConfig;
+	
 	
 	public String getMemberBirthDay() {
 		return memberBirthDay;
@@ -127,6 +129,12 @@ public class Member {
 	}
 	public void setMarriage(String marriage) {
 		this.marriage = marriage;
+	}
+	public MemberPointPayConfig getMemberPointPayConfig() {
+		return memberPointPayConfig;
+	}
+	public void setMemberPointPayConfig(MemberPointPayConfig memberPointPayConfig) {
+		this.memberPointPayConfig = memberPointPayConfig;
 	}
 	
 	

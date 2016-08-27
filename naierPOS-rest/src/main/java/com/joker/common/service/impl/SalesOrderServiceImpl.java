@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -32,15 +34,19 @@ import com.joker.common.model.SalesOrderDetails;
 import com.joker.common.model.SalesOrderDiscount;
 import com.joker.common.model.SalesOrderPay;
 import com.joker.common.model.Size;
+import com.joker.common.model.Store;
 import com.joker.common.service.MaterialService;
 import com.joker.common.service.SalesConfigService;
 import com.joker.common.service.SalesOrderService;
+import com.joker.common.service.StoreService;
+import com.joker.common.third.dto.ThirdBaseDto;
+import com.joker.common.third.member.PointService;
+import com.joker.common.third.member.PrepaidService;
 import com.joker.common.third.pay.aliweixin.AliPayService;
 import com.joker.common.third.pay.aliweixin.PayParamsVo;
 import com.joker.common.third.pay.aliweixin.PayReturnVo;
 import com.joker.core.dto.Page;
 import com.joker.core.util.RandomCodeFactory;
-import com.joker.core.util.SystemUtil;
 
 /**
  * @author lvhaizhen
@@ -49,6 +55,9 @@ import com.joker.core.util.SystemUtil;
 @Service
 public class SalesOrderServiceImpl implements SalesOrderService{
 
+	private Logger log = LoggerFactory.getLogger(SalesOrderServiceImpl.class);
+
+	
 	@Autowired
     SalesOrderMapper mapper;
 	@Autowired
@@ -59,6 +68,8 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 	ColorMapper colorMapper;
 	@Autowired
 	SizeMapper sizeMapper;
+	@Autowired
+	StoreService storeService;
 	
 
 	@Override
@@ -386,6 +397,7 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 				pay.setPayTime(new Date());
 				pay.setPayment(payment.getPayment());
 				pay.setAmount(payment.getAmount());
+				pay.setPoints(payment.getPoints());
 				//找零
 				//溢收
 				pay.setTransNo(payment.getTransNo());
@@ -418,6 +430,7 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 		salesOrder.setCreated(new Date());
 		salesOrder.setCreator(account.getId());
 		salesOrder.setTransClass(Constants.ORDER_TYPE_RTN);
+		salesOrder.setCode(salesOrder.getCode());
 		//修改销售单明细.
 		if(CollectionUtils.isNotEmpty(salesOrder.getSalesOrderDetails())){
 			for(SalesOrderDetails detail:salesOrder.getSalesOrderDetails()){
@@ -466,6 +479,17 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 					PayReturnVo returnVo=AliPayService.pay(payParamsVo);
 					if(returnVo == null || !returnVo.getState().equals("100")){
 						throw new Exception("微信退款出现问题.");
+					}
+				}else if(pay.getPayment().getCode().equals(Constants.PAYMENT_BS_POINT)){//积分退款
+					ThirdBaseDto<String>  result = PointService.pay(salesOrder.getMember().getMemberCode(), pay.getPoints().negate().intValue()+"", salesOrder.getId());
+					if(result == null || !"1".equals(result.getStatus())){
+						throw new Exception("积分退款出现异常");
+					}
+				}else if(pay.getPayment().getCode().equals(Constants.PAYMENT_BS_PREPAID)){//储值卡退款
+					Store store=storeService.getStoreById(salesOrder.getStore().getId());
+					ThirdBaseDto<String>  result = PrepaidService.pay(salesOrder.getMember().getMemberCode(), pay.getAmount().negate().toString(), "3", store.getCode(), salesOrder.getId());
+					if(result == null || !"1".equals(result.getStatus())){
+						throw new Exception("储值卡退款出现异常");
 					}
 				}
 			}
