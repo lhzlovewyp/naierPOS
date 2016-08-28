@@ -17,6 +17,11 @@ public class MemberPointPayConfig  extends BaseModel{
 	private BigDecimal pointPay;
 	
 	private BigDecimal pointPayAMT;
+	
+	//可用积分
+	private BigDecimal points;
+	//积分可以兑换金额.
+	private BigDecimal pointsMoney;
 
 	public Client getClient() {
 		return client;
@@ -40,6 +45,22 @@ public class MemberPointPayConfig  extends BaseModel{
 
 	public void setPointPayAMT(BigDecimal pointPayAMT) {
 		this.pointPayAMT = pointPayAMT;
+	}
+
+	public BigDecimal getPoints() {
+		return points;
+	}
+
+	public void setPoints(BigDecimal points) {
+		this.points = points;
+	}
+
+	public BigDecimal getPointsMoney() {
+		return pointsMoney;
+	}
+
+	public void setPointsMoney(BigDecimal pointsMoney) {
+		this.pointsMoney = pointsMoney;
 	}
 	
 	

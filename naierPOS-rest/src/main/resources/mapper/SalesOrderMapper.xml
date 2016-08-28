@@ -115,10 +115,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 		
 		<if test="startDate != null">
-				<![CDATA[  and so.Finished>=#{startDate} ]]>
+				<![CDATA[  and so.salesDate>=#{startDate} ]]>
 		</if>
 		<if test="endDate != null">
-				<![CDATA[  and so.Finished<=#{endDate}]]>
+				<![CDATA[  and so.salesDate<=#{endDate}]]>
 		</if>
 		<if test="status != null">
 				<![CDATA[  and so.Status=#{stauts}]]>
@@ -152,11 +152,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 		
 		<if test="startDate != null">
-		<![CDATA[  and Finished>=#{startDate}]]>		
+		<![CDATA[  and salesDate>=#{startDate}]]>		
 		</if>
 		
 		<if test="endDate != null">
-				<![CDATA[  and Finished<=#{endDate} ]]>
+				<![CDATA[  and salesDate<=#{endDate} ]]>
 		</if>
 		
 	</select>
@@ -176,7 +176,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
               <if test= "transClass != null">transClass=#{transClass},</if>
               <if test= "store != null">Store=#{store.id},</if>
               <if test= "salesDate != null">SalesDate=#{salesDate},</if>
-              <if test= "code != null">Code=#{code},</if>
+              <if test= "code != null and code!=0 ">Code=#{code},</if>
               <if test= "originOrder != null">OriginOrder=#{originOrder.id},</if>
               <if test= "member !=null and  member.member != null">Member=#{member.member},</if>
               <if test= "member !=null and member.memberCode != null">MemberCode=#{member.memberCode},</if>
@@ -218,10 +218,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</insert>
 	
 	<insert id="saveSalesOrderPay" parameterType="java.util.List">
-		insert into SalesOrderPay (ID,Client,SalesOrder,TransClass,Store,SalesDate,Code,SerialNo,PayTime,Payment,Amount,Changed,Excess,TransNo)
+		insert into SalesOrderPay (ID,Client,SalesOrder,TransClass,Store,SalesDate,Code,SerialNo,PayTime,Payment,Amount,Changed,Excess,TransNo,Points)
 		values
 		<foreach collection="list" item="item" index="index" separator="," >  
-		 (#{item.id},#{item.client.id},#{item.salesOrder.id},#{item.transClass},#{item.store.id},#{item.salesDate},#{item.code},#{item.serialNo},#{item.payTime},#{item.payment.code},#{item.amount},#{item.changed},#{item.excess},#{item.transNo})
+		 (#{item.id},#{item.client.id},#{item.salesOrder.id},#{item.transClass},#{item.store.id},#{item.salesDate},#{item.code},#{item.serialNo},#{item.payTime},#{item.payment.code},#{item.amount},#{item.changed},#{item.excess},#{item.transNo},#{item.points})
         </foreach>  
 	</insert>
 	

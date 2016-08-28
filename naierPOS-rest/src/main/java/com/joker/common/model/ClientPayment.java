@@ -23,6 +23,9 @@ public class ClientPayment extends BaseModel{
 	private Payment payment;
 	private BigDecimal amount;
 	
+	//支付积分数量.
+	private BigDecimal points;
+	
 	private String selected;
 	//支付流水号.
 	private String transNo;
@@ -65,6 +68,14 @@ public class ClientPayment extends BaseModel{
 
 	public void setTransNo(String transNo) {
 		this.transNo = transNo;
+	}
+
+	public BigDecimal getPoints() {
+		return points;
+	}
+
+	public void setPoints(BigDecimal points) {
+		this.points = points;
 	}
 	
 	

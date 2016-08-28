@@ -1,3 +1,10 @@
+<style>
+.ngdialog.ngdialog-theme-default {
+	padding-top:0px;
+	padding-bottom:160px;
+}
+</style>
+
 <div class="modal-content">
 	<div class="modal-header">
 		<h4 class="modal-title" id="myModalLabel">订单详情</h4>
@@ -6,24 +13,24 @@
 		<div class="margin-bottom">
 			<table class="table text-right">
             	<tbody><tr>
-                <td>交易序号</td><td><input type="text" class="form-control" value="{{salesOrder.code}}"></td>
-                <td>销售日期</td><td><input type="text" class="form-control" value="{{salesOrder.finished | date:'yyyy-MM-dd HH:mm:ss'}}"></td>
-                <td>导购</td><td><input type="text" class="form-control" value="{{salesOrder.shoppingGuide.name}}"></td>
+                <td>交易序号</td><td><input type="text" class="form-control" value="{{salesOrder.code}}" readonly></td>
+                <td>销售日期</td><td><input type="text" class="form-control" value="{{salesOrder.finished | date:'yyyy-MM-dd HH:mm:ss'}}" readonly></td>
+                <td>导购</td><td><input type="text" class="form-control" value="{{salesOrder.shoppingGuide.name}}" readonly></td>
                 </tr>
                 <tr>
-                <td>会员姓名</td><td><input type="text" class="form-control" value="{{salesOrder.member.memberName}}"></td>
-                <td>会员等级</td><td><input type="text" class="form-control" value="{{salesOrder.member.memberGrade}}"></td>
-                <td>会员手机号码</td><td><input type="text" class="form-control" value="{{salesOrder.member.memberMobile}}"></td>
+                <td>会员姓名</td><td><input type="text" class="form-control" value="{{salesOrder.member.memberName}}" readonly></td>
+                <td>会员等级</td><td><input type="text" class="form-control" value="{{salesOrder.member.memberGrade}}" readonly></td>
+                <td>会员手机号码</td><td><input type="text" class="form-control" value="{{salesOrder.member.memberMobile}}" readonly></td>
                 </tr>
                 <tr>
-                <td>总数量</td><td><input type="text" class="form-control" value="{{salesOrder.quantity}}"></td>
-                <td>总金额</td><td><input type="text" class="form-control" value="{{salesOrder.payable}}"></td>
-                <td>总折扣金额</td><td><input type="text" class="form-control" value="{{salesOrder.discount}}"></td>
+                <td>总数量</td><td><input type="text" class="form-control" value="{{salesOrder.quantity}}" readonly></td>
+                <td>总金额</td><td><input type="text" class="form-control" value="{{salesOrder.payable}}" readonly></td>
+                <td>总折扣金额</td><td><input type="text" class="form-control" value="{{salesOrder.discount}}" readonly></td>
                 </tr>
                 <tr>
-                <td>抹零金额</td><td><input type="text" class="form-control" value="{{salesOrder.minusChange}}"></td>
+                <td>抹零金额</td><td><input type="text" class="form-control" value="{{salesOrder.minusChange}}" readonly></td>
                 <td>&nbsp;</td><td>&nbsp;</td>
-                <td>应付金额</td><td><input type="text" class="form-control" value="{{salesOrder.payable}}"></td>
+                <td>应付金额</td><td><input type="text" class="form-control" value="{{salesOrder.payable}}" readonly></td>
                 </tr>
             </tbody></table>
 		</div>
@@ -46,9 +53,9 @@
 						<td>{{detail.material.abbr}}</td>
 						<td  ng-if="detail.color!=null && detail.size!=null">{{detail.color.name}}/{{detail.size.name}}</td>
 						<td  ng-if="detail.color==null || detail.size==null">-</td>
-						<td>¥{{detail.price}}/{{detail.salesUnit.name}}</td>
-						<td>{{detail.quantity}}{{detail.salesUnit.name}}</td>
-						<td>¥{{detail.amount}}</td>
+						<td>{{detail.price}}/{{detail.salesUnit.name}}</td>
+						<td>{{detail.quantity}}</td>
+						<td>{{detail.amount}}</td>
 						<td>{{detail.promotion.name}}</td>
 					</tr>
 				</tbody>
@@ -63,8 +70,8 @@
         	<table class="table">
                 <tbody><tr>
                 <td width="40%"></td>
-                <td>溢收金额</td><td><input type="text" class="form-control" value="{{salesOrder.excess}}"></td>
-                <td>实付金额</td><td><input type="text" class="form-control" value="{{salesOrder.paid}}"></td>
+                <td>溢收金额</td><td><input type="text" class="form-control" value="{{salesOrder.excess}}" readonly></td>
+                <td>实付金额</td><td><input type="text" class="form-control" value="{{salesOrder.paid}}" readonly></td>
                 </tr>
             </tbody></table>
         </div>

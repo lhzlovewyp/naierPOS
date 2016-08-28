@@ -1,11 +1,15 @@
-<h5>文件上传</h5>
-<hr />
+<div class="box-header">
+	<h3 class="box-title">文件上传</h3>
+</div>
 <form id="file_upload_id" name="file_upload_name"
 	method="post" enctype="multipart/form-data">
-	<div>
-		<input type="file" name="file_upload"  id="fileUpload"/>
-	</div>
-	<div>
-		<input type="button" ng-click="submit();" value="上传" />
+	<div class="box-body">
+		<div class="form-group">
+			<input type="file" name="file_upload"  id="fileUpload"/>
+		</div>
+		<div class="form-group">
+			<input type="button" ng-click="submit();" value="上传" />
+		</div>
 	</div>
 </form>
+

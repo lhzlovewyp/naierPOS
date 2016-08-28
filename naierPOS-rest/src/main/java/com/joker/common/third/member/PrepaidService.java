@@ -8,8 +8,11 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
+import com.joker.common.service.impl.SalesOrderServiceImpl;
 import com.joker.common.third.dto.ThirdBaseDto;
 import com.joker.core.util.Configer;
 import com.joker.core.util.DatetimeUtil;
@@ -23,6 +26,9 @@ import com.joker.core.util.HttpClientUtil;
  *
  */
 public class PrepaidService extends BaseService{
+	
+	private static Logger log = LoggerFactory.getLogger(PrepaidService.class);
+
 
 	public static ThirdBaseDto<String> pay(String code,String amount,String type ,String storeCode,String salesOrderId){
 		String url=Configer.get("thirdRestUrl");
@@ -55,6 +61,7 @@ public class PrepaidService extends BaseService{
 		try {
 			result = HttpClientUtil.httpGet(url, map);
 			if(StringUtils.isNotBlank(result)){
+				log.error(result);
 				ThirdBaseDto<String> dto = (ThirdBaseDto<String>)JSONObject.parseObject(result, ThirdBaseDto.class);
 				return dto;
 			}
@@ -67,7 +74,7 @@ public class PrepaidService extends BaseService{
 		
 	}
 	public static void main(String args[]){
-		ThirdBaseDto<String> dto = pay("18957339389","0.01", "3", "111049", "1");
+		ThirdBaseDto<String> dto = pay("18957339389","1", "3", "111049", "1");
 		if(dto!=null){
 			System.out.println(JSONObject.toJSON(dto));
 		}

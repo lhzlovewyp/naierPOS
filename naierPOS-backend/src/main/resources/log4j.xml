@@ -13,7 +13,7 @@
 
 	<appender name="exlogAppender"
 		class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="File" value="/Users/chenqi/disk/logs/exlog.log" />
+		<param name="File" value="/Users/lvhaizhen/disk/logs/exlog.log" />
 		<param name="Append" value="true" />
 		<param name="DatePattern" value="yyyy-MM-dd'.log'" />
 		<layout class="org.apache.log4j.PatternLayout">
@@ -24,7 +24,7 @@
 
 	<appender name="debuglogAppender"
 		class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="File" value="/Users/chenqi/disk/logs/debuglog.log" />
+		<param name="File" value="/users/lvhaizhen/disk/logs/debuglog.log" />
 		<param name="Append" value="true" />
 		<param name="DatePattern" value="yyyy-MM-dd'.log'" />
 		<layout class="org.apache.log4j.PatternLayout">
@@ -35,7 +35,7 @@
 
 	<appender name="perflogAppender"
 		class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="File" value="/Users/chenqi/disk/logs/perflog.log" />
+		<param name="File" value="/users/lvhaizhen/disk/logs/perflog.log" />
 		<param name="Append" value="true" />
 		<param name="DatePattern" value="yyyy-MM-dd'.log'" />
 		<layout class="org.apache.log4j.PatternLayout">
@@ -45,22 +45,22 @@
 	</appender>
 
 	<category name="exlog">
-		<level value="DEBUG" />
+		<level value="ERROR" />
 		<appender-ref ref="exlogAppender" />
 	</category>
 
 	<category name="debuglog">
-		<level value="DEBUG" />
+		<level value="ERROR" />
 		<appender-ref ref="debuglogAppender" />
 	</category>
 
 	<category name="perflog">
-		<level value="DEBUG" />
+		<level value="ERROR" />
 		<appender-ref ref="perflogAppender" />
 	</category>
 
 	<root>
-		<level value="INFO" />
+		<level value="ERROR" />
 		<appender-ref ref="rootlogAppender" />
 	</root>
 

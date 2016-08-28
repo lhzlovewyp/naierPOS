@@ -45,6 +45,8 @@ public class SalesOrderPay extends BaseModel{
 	private BigDecimal excess = new BigDecimal(0);
 	/**支付流水号*/
 	private String transNo;
+	
+	private BigDecimal points;
 
 	public Client getClient() {
 		return client;
@@ -156,6 +158,18 @@ public class SalesOrderPay extends BaseModel{
 
 	public void setTransNo(String transNo) {
 		this.transNo = transNo;
+	}
+
+	public BigDecimal getPoints() {
+		return points;
+	}
+
+	public void setPoints(BigDecimal points) {
+		this.points = points;
+	}
+
+	public void setChanged(BigDecimal changed) {
+		this.changed = changed;
 	}
 	
 	

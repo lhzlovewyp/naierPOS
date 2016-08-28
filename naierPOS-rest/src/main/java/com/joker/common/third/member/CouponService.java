@@ -89,6 +89,8 @@ public class CouponService extends BaseService{
 		map.put("is_consume",0);
 		map.put("key",key);
 		map.put("timestamp", timestamp);
+		map.put("consume", "");
+		map.put("consume_detail", "");
 		
 		String sign="";
 		for (Map.Entry<String, Object> entry : map.entrySet()) {  
@@ -103,6 +105,7 @@ public class CouponService extends BaseService{
 		String result=null;
 		try {
 			result = HttpClientUtil.httpGet(url, map);
+			System.out.println(result);
 			ThirdBaseDto<String>  dto=(ThirdBaseDto<String>)JSONObject.parseObject(result, ThirdBaseDto.class);
 			return dto;
 		} catch (Exception e) {

@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	
 	
-    <select id="getMemberPointPayConfigByClient" parameterType="string" resultMap="memberPointPayConfig">
+    <select id="getMemberPointPayConfigByClient"  resultMap="memberPointPayConfig">
 		SELECT * FROM MemberPointPayConfig a
 		WHERE 
 			a.Client=#{clientId}
