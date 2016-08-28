@@ -237,6 +237,12 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog','Pa
             }
         });
 	}
+	$scope.keydown = function(event){
+		var code=event.keyCode;
+		if(code == '13'){
+			$scope.searchMat();
+		}
+	}
 	//删除商品.
 	$scope.deleteSaleInfo=function(saleInfo){
 		$scope.info.saleInfos.splice($scope.info.saleInfos.indexOf(saleInfo), 1);

@@ -94,7 +94,7 @@
         <div class="box-header">
         	<div class="">
             <div style="width:250px;" class="input-group input-group-sm">
-              <input id="matCode" ng-model="matForm.code" type="text" placeholder="搜索" class="form-control pull-right" name="table_search">
+              <input id="matCode" ng-model="matForm.code" ng-keydown="keydown($event)" type="text" placeholder="搜索" class="form-control pull-right" name="table_search">
               <div class="input-group-btn">
                 <button id="btn3" class="btn btn-primary" type="submit" ng-click="searchMat();"><i class="fa fa-search"></i></button>
               </div>
