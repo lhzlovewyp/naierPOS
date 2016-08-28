@@ -1,0 +1,66 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<h4 class="modal-title">新建会员</h4>
+	</div>
+	<div class="modal-body">
+		<form class="form-horizontal" role="form" method="post"  name="basicsForm" id="basicsForm" ng-submit="edit(basicsForm.$valid)" novalidate>
+          <div class="box-body">
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="customer_name">姓名</label>
+              <div class="col-sm-9">
+                <input type="text" id="customer_name" class="form-control" ng-model="form.customer_name">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="tel">手机号</label>
+              <div class="col-sm-9">
+                <input type="text" id="tel" class="form-control" ng-model="form.tel">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="customer_sex">性别</label>
+              <div class="col-sm-9">
+              	<select id="customer_sex" name="customer_sex" class="form-control" ng-model="selSex" ng-options="x.show for x in sexs">
+				</select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="email">email</label>
+              <div class="col-sm-9">
+                <input type="text" id="email" class="form-control" ng-model="form.email">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="address">地址</label>
+              <div class="col-sm-9">
+                <input type="text" id="address" class="form-control" ng-model="form.address">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="birthday">生日</label>
+              <div class="col-sm-9">
+                <input type="text" id="birthday" class="form-control" ng-model="form.birthday">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="id_card">身份证号</label>
+              <div class="col-sm-9">
+                <input type="text" id="id_card" class="form-control" ng-model="form.id_card">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label" for="marriage">婚姻状况</label>
+              <div class="col-sm-9">
+                <select id="marriage" name="marriage" class="form-control" ng-model="selMarriage" ng-options="x.show for x in marriages">
+				</select>
+              </div>
+            </div>
+          </div>
+          <!-- /.box-body -->
+        </form>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-default" ng-click="close()">取消</button>
+		<button type="submit" class="btn btn-primary" ng-click="edit(basicsForm.$valid)">提交</button>
+	</div>
+</div>
