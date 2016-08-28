@@ -26,7 +26,7 @@ Date.prototype.Format = function (fmt) { //author: meizz
     return fmt;
 }
 
-var app=angular.module('mainApp',['ngRoute','ngDialog']);
+var app=angular.module('mainApp',['ngRoute','ngDialog','tm.pagination']);
 
 //app.factory('statusInterceptor', ['$q','$location',function($q,$location) {
 //    var statusInterceptor = {
