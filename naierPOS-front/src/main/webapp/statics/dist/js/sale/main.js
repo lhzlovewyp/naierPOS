@@ -1,4 +1,15 @@
 
+//增加页面公共弹窗
+function showMask(){
+	$('body').css({'overflow': 'hidden'}).append('<div class="mask"></div><i class="fa fa-spin fa-spinner loading"></i>');
+}
+
+function closeMask(){
+	$('.mask, .loading').remove()
+	$('body').css({'overflow': 'auto'});
+}
+
+
 //增加公用方法，对数组进行插入.
 Array.prototype.insert = function (index, item) {
 this.splice(index, 0, item);

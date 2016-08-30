@@ -3,7 +3,17 @@ app.factory('LoginService',['$q','$location','$http','BaseService',function($q,$
     return {
         login:function(condition){
             var deferred = $q.defer();
+            showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
             BaseService.post('/rest/login', condition).then(function (obj) {
+            	closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
+            	
                 if(obj && obj.data && obj.data.status == Status.SUCCESS) {
                     loginInfo = obj.data.data;
                     loginInfo.hasLogin = true;
@@ -25,7 +35,16 @@ app.factory('LoginService',['$q','$location','$http','BaseService',function($q,$
         	var deferred = $q.defer();
         	var token=$.cookie("token");
         	var obj={"token":token,"store":store};
+        	showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
             BaseService.post('/rest/login/chooseStore', obj).then(function (obj) {
+            	closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
                 if(obj && obj.data && obj.data.status == Status.SUCCESS) {
                     loginInfo = obj.data.data;
                     loginInfo.hasLogin = true;
@@ -50,8 +69,17 @@ app.factory('LoginService',['$q','$location','$http','BaseService',function($q,$
         		info.errorInfo="2次输入的密码不一致";
         		deferred.resolve(info);
         	}else{
+        		showMask();
+                var t=setTimeout(function(){
+                	closeMask();
+                	alert('连接超时,请稍后重试.');
+                },10000);
         		//修改密码.
         		 BaseService.post('/rest/account/updatePWD', condition).then(function (obj) {
+        			 closeMask();
+                 	if(t){
+                 		clearTimeout(t);
+                 	}
                      if(obj && obj.data && obj.data.status == Status.SUCCESS) {
                          //info = obj.data.data;
                          info.error=false;
@@ -70,7 +98,16 @@ app.factory('LoginService',['$q','$location','$http','BaseService',function($q,$
         	var deferred = $q.defer();
         	var token=$.cookie("token");
         	var obj={"token":token};
+        	showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
         	BaseService.post('/rest/login/validToken', obj).then(function (data) {
+        		closeMask();
+              	if(t){
+              		clearTimeout(t);
+              	}
         		if(data.data.status == Status.SUCCESS){
         			loginInfo.userName=data.data.data.nick;
         			loginInfo.storeName=data.data.data.store ? data.data.data.store.name:'';
@@ -82,9 +119,18 @@ app.factory('LoginService',['$q','$location','$http','BaseService',function($q,$
         	return deferred.promise;
         },
         logOff : function(){
+        	showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
         	var token=$.cookie("token");
         	var obj={"token":token};
             BaseService.post('/rest/login/logout',obj).then(function(obj){
+            	closeMask();
+              	if(t){
+              		clearTimeout(t);
+              	}
                 if(obj.data.status==Status.SUCCESS){
                     $.cookie('token', '', { expires: -1,path:"/"});
                     $.cookie('nickName',loginInfo.nickName,{expires: 1,path:"/"});
@@ -103,7 +149,16 @@ app.factory('HomeService',['$q','$location','$http','BaseService',function($q,$l
 			var obj={"token":token};
 			var deferred = $q.defer();
 			var info={};
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
 			BaseService.post('/rest/home/index',obj).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
                 if(obj.data.status==Status.SUCCESS){
                     var dto=obj.data.data;
                 	info.saleDate=dto.saleDate;
@@ -116,11 +171,20 @@ app.factory('HomeService',['$q','$location','$http','BaseService',function($q,$l
 			return deferred.promise;
 		},
 		dayReport : function(){
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
 			var token=$.cookie("token");
 			var obj={"token":token};
 			var deferred = $q.defer();
 			var info={};
 			BaseService.post('/rest/home/dayReport',obj).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
                	info.status=obj.data.status;
             	deferred.resolve(info);
             });
@@ -134,11 +198,20 @@ app.factory('HomeService',['$q','$location','$http','BaseService',function($q,$l
 app.factory('SaleService',['$q','$location','$http','BaseService',function($q,$location,$http,BaseService){
 	return {
 		initSalesOrder : function(){
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
 			var token=$.cookie("token");
 			var obj={"token":token};
 			var deferred = $q.defer();
 			var info={};
 			BaseService.post('/rest/sale/initSaleOrder',obj).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
                 if(obj.data.status==Status.SUCCESS){
                     var dto=obj.data.data;
                 	info.saleDate=dto.saleDate;
@@ -152,11 +225,20 @@ app.factory('SaleService',['$q','$location','$http','BaseService',function($q,$l
 		},
 		
 		getShoppingGuide : function(condition){
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
 			var token=$.cookie("token");
 			condition.token=token;
 			var deferred = $q.defer();
 			var info={};
 			BaseService.post('/rest/shoppingGuide/getShoppingGuide',condition).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
                 if(obj.data.status==Status.SUCCESS){
                     var dto=obj.data.data;
                     info.data=dto;
@@ -166,6 +248,11 @@ app.factory('SaleService',['$q','$location','$http','BaseService',function($q,$l
 			return deferred.promise;
 		},
 		searchMat : function(condition){
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
 			var token=$.cookie("token");
 			if(!condition){
 				return;
@@ -174,6 +261,10 @@ app.factory('SaleService',['$q','$location','$http','BaseService',function($q,$l
 			var deferred = $q.defer();
 			var info={};
 			BaseService.post('/rest/m/getMaterialByCode',condition).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
                 if(obj.data.status==Status.SUCCESS){
                     var dto=obj.data.data;
                     info.data=dto;
@@ -183,6 +274,11 @@ app.factory('SaleService',['$q','$location','$http','BaseService',function($q,$l
 			return deferred.promise;
 		},
 		getPromotions:function(condition){
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
 			var token=$.cookie("token");
 			if(!condition){
 				return;
@@ -191,6 +287,10 @@ app.factory('SaleService',['$q','$location','$http','BaseService',function($q,$l
 			var deferred = $q.defer();
 			var info={};
 			BaseService.post('/rest/sale/getPromotions',condition).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
                 if(obj.data.status==Status.SUCCESS){
                     var dto=obj.data.data;
                     info.data=dto;
@@ -200,6 +300,11 @@ app.factory('SaleService',['$q','$location','$http','BaseService',function($q,$l
 			return deferred.promise;
 		},
 		cacPromotions:function(condition){//参加活动.
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
 			var token=$.cookie("token");
 			if(!condition){
 				return;
@@ -208,15 +313,28 @@ app.factory('SaleService',['$q','$location','$http','BaseService',function($q,$l
 			var deferred = $q.defer();
 			var info={};
 			BaseService.post('/rest/sale/cacPromotions',condition).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
 				deferred.resolve(obj);
             });
 			return deferred.promise;
 		},
 		submit:function(pay){
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
 			var token=$.cookie("token");
 			pay.token=token;
 			var deferred = $q.defer();
 			BaseService.post('/rest/sale/submit',pay).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
                 deferred.resolve(obj);
             });
 			return deferred.promise;
@@ -226,10 +344,19 @@ app.factory('SaleService',['$q','$location','$http','BaseService',function($q,$l
 app.factory('MemberService',['$q','$location','$http','BaseService',function($q,$location,$http,BaseService){
 	return {
 		getSinglerMember:function(condition){
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
 			var token=$.cookie("token");
 			condition.token=token;
 			var deferred = $q.defer();
 			BaseService.post('/rest/member/getSingleMember',condition).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
                 deferred.resolve(obj);
             });
 			return deferred.promise;
@@ -247,7 +374,16 @@ app.factory('PayService',['$q','$location','$http','BaseService',function($q,$lo
 			condition.token=token;
 			var deferred = $q.defer();
 			var info={};
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
 			BaseService.post('/rest/pay/initPay',condition).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
                 if(obj.data.status==Status.SUCCESS){
                     var dto=obj.data.data;
                     info.data=dto;
@@ -264,7 +400,16 @@ app.factory('PayService',['$q','$location','$http','BaseService',function($q,$lo
 			condition.token=token;
 			var deferred = $q.defer();
 			var info={};
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
 			BaseService.post('/rest/pay/aliPay',condition).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
                 	deferred.resolve(obj);
             });
 			return deferred.promise;
@@ -277,7 +422,16 @@ app.factory('PayService',['$q','$location','$http','BaseService',function($q,$lo
 			condition.token=token;
 			var deferred = $q.defer();
 			var info={};
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
 			BaseService.post('/rest/pay/prepaidPay',condition).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
                 	deferred.resolve(obj);
             });
 			return deferred.promise;
@@ -290,7 +444,16 @@ app.factory('PayService',['$q','$location','$http','BaseService',function($q,$lo
 			condition.token=token;
 			var deferred = $q.defer();
 			var info={};
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
 			BaseService.post('/rest/pay/pointPay',condition).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
                 	deferred.resolve(obj);
             });
 			return deferred.promise;
@@ -306,7 +469,16 @@ app.factory('PinBackService',['$q','$location','$http','BaseService',function($q
 			var token=$.cookie("token");
 			condition.token=token;
 			var deferred = $q.defer();
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
 			BaseService.post('/rest/pinBack/getSalesOrder',condition).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
                 	deferred.resolve(obj);
             });
 			return deferred.promise;
@@ -318,7 +490,16 @@ app.factory('PinBackService',['$q','$location','$http','BaseService',function($q
 			var token=$.cookie("token");
 			condition.token=token;
 			var deferred = $q.defer();
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
 			BaseService.post('/rest/pinBack/getSalesOrderDetails',condition).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
                 	deferred.resolve(obj);
             });
 			return deferred.promise;
@@ -327,7 +508,16 @@ app.factory('PinBackService',['$q','$location','$http','BaseService',function($q
 			var token=$.cookie("token");
 			condition.token=token;
 			var deferred = $q.defer();
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
 			BaseService.post('/rest/pinBack/refund',condition).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
                 	deferred.resolve(obj);
             });
 			return deferred.promise;
@@ -345,7 +535,16 @@ app.factory('SaleDetailService',['$q','$location','BaseService',function($q,$loc
 			    return;
 			   };
 			var deferred = $q.defer();
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
 			BaseService.post('/rest/statistics/getsalesDetail',ordForm).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
                  deferred.resolve(obj);
 				
 			});
@@ -364,7 +563,16 @@ app.factory('SaleSummaryService',['$q','$location','BaseService',function($q,$lo
 			    return;
 			   };
 			var deferred = $q.defer();
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
 			BaseService.post('/rest/statistics/getsalesSummary',ordForm).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
 				deferred.resolve(obj);
 				
 			});
@@ -383,7 +591,16 @@ app.factory('PaymentSummaryService',['$q','$location','BaseService',function($q,
 			    return;
 			   };
 			var deferred = $q.defer();
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
 			BaseService.post('/rest/statistics/getPaymentSummary',ordForm).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
 				var info = {};
 				var types = [];
 				var amts = [];

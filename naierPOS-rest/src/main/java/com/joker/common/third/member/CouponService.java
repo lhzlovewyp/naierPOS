@@ -4,7 +4,6 @@
 package com.joker.common.third.member;
 
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -77,7 +76,7 @@ public class CouponService extends BaseService{
 	 */
 	public static ThirdBaseDto<String>  pay(String code){
 		String url=Configer.get("thirdRestUrl");
-		String action="crm/coupon/user";
+		String action="crm/coupon/used";
 		String key="pos";
 		//“key”＋“password”＋“date”生成的md5；password固定为“123456”，date取当前日期，格式为“YYYY-MM-DD” 
 		String timestamp=DatetimeUtil.formatDateToString(new Date(),"yyyyMMddHHmmss");
@@ -118,7 +117,7 @@ public class CouponService extends BaseService{
 	
 	public static void main(String args[]){
 		//System.out.println(JSONObject.toJSON(getAmount("11952")).toString());
-		System.out.println(JSONObject.toJSON(pay("11952")).toString());
+		System.out.println(JSONObject.toJSON(pay("11953")).toString());
 	}
 	
 }
