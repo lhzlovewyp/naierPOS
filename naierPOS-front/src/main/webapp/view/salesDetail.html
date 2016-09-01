@@ -66,7 +66,9 @@
                    <div class="box-title" style="flex:1;font-size:16px">{{order.salesDate | date:"yyyy-MM-dd HH-mm-ss"}}</div>
                    <div class="box-title" style="flex:1;font-size:16px">销售单号：{{order.code}}</div>
                    <div class="box-title" style="flex:1;font-size:16px">总数量：{{order.quantity}}</div>
-                   <div class="box-title" style="flex:1;font-size:16px">总金额：{{order.amount | customCurrency:"￥"}}</div>
+                   <div class="box-title" style="flex:1;font-size:16px">总金额：{{order.payable | customCurrency:"￥"}}</div>
+                   <div class="box-title" style="flex:0.3;font-size:16px;cursor:pointer;" ng-click="print($event.target)">打印</div>
+                   <input type="hidden" value="{{order.id}}">
                    </div>
                    <div class="box-tools pull-right">
                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -79,10 +81,15 @@
                 <tr ng-repeat="saleInfo in order.salesOrderDetails">
                   <td>{{saleInfo.material.code}}</td>
                   <td>{{saleInfo.material.abbr}}</td>
-                  <td>{{saleInfo.color.name}}/{{saleInfo.size.name}}</td>
-                  <td>{{saleInfo.price}}</td>
-                  <td>{{saleInfo.quantity}}</td>
-                  <td>{{saleInfo.quantity * saleInfo.price | number:2}}</td>
+                  <td>{{saleInfo.color.name}}
+                      <span ng-if="saleInfo.material.code">/</span>
+                      {{saleInfo.size.name}}
+                  </td>
+                  <td>{{saleInfo.price | customCurrency:"￥"}}</td>
+                  <td>
+                  <span ng-if="saleInfo.material.code">{{saleInfo.quantity}}</span>
+                  </td>
+                  <td>{{saleInfo.amount | customCurrency:"￥"}}</td>
                   <td rowspan="{{order.salesOrderDetails.length}}" align="center" ng-if="$first">
                     <div ng-repeat="payments in order.salesOrderPay">
                        <div>{{payments.payment.name}}：{{payments.amount | customCurrency:"￥"}}</div>

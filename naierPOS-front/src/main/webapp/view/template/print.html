@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-store">
+	<meta http-equiv="Expires" content="-1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title></title>
+<script src="../../statics/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+<script type="text/javascript" src="../../statics/plugins/doT.min.js"></script>
+<style>
+        body,ul,li,p{margin:0;padding:0;font-family: '微软雅黑';}
+        *{
+            font-size: 13px;
+            font-family: '微软雅黑';
+        }
+        ul{width:100%;float:left}
+        li{
+            float:left;
+            list-style:none;
+
+        }
+        .head li{width: 33.3%;text-align: left}
+        .huohao li:NTH-CHILD(1) {width: 30%;text-align: left}
+        .huohao.main li:nth-child(1) {width: 30%;text-align: left}
+        .xuhao li {width: 20%;text-align: center;margin-bottom: 8px}
+        .xuhao.main li {width: 20%;text-align: center;margin-bottom: 10px}
+        .total {width: 100%}
+        .total li:nth-child(1){width:70%;text-align: right}
+        .total li:nth-child(2){width:30%;text-align: left}
+</style>
+
+</head>
+<body>
+<div id="main">
+	<!-- 右半部分数据显示 -->
+	<div class="rightinfo"  align="center">
+	<h1 style="align:center;" id="title"></h1>
+	<div id="content">打印资料准备中，请稍后。。。</div>
+
+	</div>
+</div>
+<!--销售单------------------------------------------------>
+<script id="sales-template" type="text/x-dot-template">
+     <ul class="head">
+         <li><span>店号:</span><span>{{=it.storeName}}</span></li>
+         <li><span>收银:</span><span>{{=it.creator}}</span></li>
+         <li><span>日期:</span><span>{{=it.date}}</span></li>
+     </ul>
+     <ul class="head">
+         <li><span>机号:</span><span>{{=it.terminal}}</span></li>
+         <li><span>序号:</span><span>{{=it.code}}</span></li>
+         <li><span>时间:</span><span>{{=it.time}}</span></li>
+     </ul>
+     <ul><hr style="border:1px solid;"/></ul>
+     <ul class="huohao">
+         <li>货号</li>
+         <li>商品名称</li>
+     </ul>
+     <ul class="xuhao">
+         <li>序号</li>
+         <li>单价</li>
+         <li>数量</li>
+         <li>折价</li>
+         <li>金额</li>
+     </ul>
+     <ul><hr style="border:1px dashed;"/></ul>
+     <ul><hr style="border:1px dashed;margin-top: 0"/></ul>
+{{ for(var i=0; i < it.details.length; i++) { }}
+  {{?it.details[i].itemClass.code=='MAT'}}
+     <div>
+         <ul class="huohao main" >
+             <li>{{=it.details[i].material.code}}</li>
+             <li>{{=it.details[i].material.name}}({{=it.details[i].color.name}}/{{=it.details[i].size.name}})</li>
+         </ul>
+         <ul class="xuhao main" >
+             <li>{{=i+1}}</li>
+             <li>{{=it.details[i].material.retailPrice}}</li>
+             <li>{{=it.details[i].quantity}}</li>
+             <li>{{=it.details[i].discount}}</li>
+             <li>￥{{=amtFormat(it.details[i].amount,2)}}</li>
+         </ul>
+     </div>
+  {{?}}
+{{ } }}
+     <ul><hr style="border:1px dashed;"/></ul>
+     <ul><hr style="border:1px dashed;margin-top: 0"/></ul>
+     <ul class="total">
+         <li>折扣合计:</li>
+         <li>{{=it.discount}}</li>
+     </ul>
+     <ul class="total">
+         <li>金额合计:</li>
+         <li>{{=amtFormat(it.amount,2)}}</li>
+     </ul>
+     <ul class="total">
+         <li>数量合计:</li>
+         <li>{{=it.quantity}}</li>
+     </ul>
+{{ for(var i=0; i < it.pays.length; i++) { }}
+     <ul class="total">
+         <li>{{=it.pays[i].payment.name}}:</li>
+         <li>{{=it.pays[i].amount}}</li>
+     </ul>
+{{ } }}
+</script>
+
+
+
+</body>
+
+<script>
+//获取传值
+function GetRequest() {
+  var url = location.search;
+   var theRequest = new Object();
+   if (url.indexOf("?") != -1) {
+      var str = url.substr(1);
+      strs = str.split("&");
+      for(var i = 0; i < strs.length; i ++) {
+         theRequest[strs[i].split("=")[0]]=(strs[i].split("=")[1]);
+      }
+   }
+   return theRequest;
+}
+$(function(){
+	
+})
+var menuid = 0;
+var Request = new Object();
+Request = GetRequest();
+var type = Request["type"];
+var myDate = new Date();
+var printDate = myDate.getFullYear()+"-"+(myDate.getMonth()+1)+"-"+myDate.getDate()+" "+myDate.getHours()+":"+myDate.getMinutes()+":"+myDate.getSeconds();//打印日期
+
+if(type=="sales"){
+	tmplateIn('sales-template','销售单')
+}else if(type=="salesDetail"){
+	tmplateIn2('sales-template','销售单')
+ 
+}
+
+
+function toprint(){
+	
+	//alert(1);document.getElementById("button1").style.display="none";
+	window.print();
+	//alert(2);
+}
+function tmplateIn(tmpID,title){
+	document.getElementById("title").innerHTML=title;
+	var Datas=window.localStorage.getItem("details");
+	var DataP = JSON.parse(Datas);
+	var Data = salesTotal(DataP);
+	var content = document.getElementById('content');
+	var tpl =document.getElementById(tmpID).text;
+	var tempFn = doT.template(tpl);
+	content.innerHTML = tempFn(Data);
+	
+}
+function tmplateIn2(tmpID,title){
+	document.getElementById("title").innerHTML=title;
+	var Datas=window.localStorage.getItem("details");
+	var DataP = JSON.parse(Datas);
+	var Data = salesTotal2(DataP);
+	var content = document.getElementById('content');
+	var tpl =document.getElementById(tmpID).text;
+	var tempFn = doT.template(tpl);
+	content.innerHTML = tempFn(Data);
+	
+}
+function tmplateInOrder(tmpID,title,data){
+	document.getElementById("title").innerHTML=title;
+	
+	
+	
+	var content = document.getElementById('content');
+	var tpl =document.getElementById(tmpID).text;
+	var tempFn = doT.template(tpl);
+	content.innerHTML = tempFn(data);
+	
+}
+function salesTotal(data){
+	var orders = new Object();
+	orders.storeName = data.salesOrder.store.name;
+	orders.creator = data.salesOrder.creator?data.salesOrder.creator:'';
+	orders.date =dateFormatter(data.salesOrder.finished).substr(0,10) ;
+	orders.terminal = data.details[0].terminal?data.details[0].terminal:'';
+	orders.code = data.salesOrder.code;
+	orders.time = dateFormatter(data.salesOrder.finished).substr(10,16);
+	orders.details = data.details;
+	orders.discount = data.salesOrder.discount;
+	orders.amount = amtFormat(data.salesOrder.amount,2);
+	orders.quantity = data.salesOrder.quantity;
+	orders.pays = data.pays;
+	return orders;
+}
+function salesTotal2(data){
+	var orders = new Object();
+	orders.storeName = data.store.name;
+	orders.creator = data.creator?data.creator:'';
+	orders.date =dateFormatter(data.finished).substr(0,10) ;
+	orders.terminal = data.salesOrderDetails[0].terminal?data.salesOrderDetails[0].terminal:'';
+	orders.code = data.code;
+	orders.time = dateFormatter(data.finished).substr(10,16);
+	orders.details = data.salesOrderDetails;
+	orders.discount = data.discount;
+	orders.amount = amtFormat(data.amount,2);
+	orders.quantity = data.quantity;
+	orders.pays = data.salesOrderPay;
+	return orders;
+}
+function amtFormat(s,n){
+	n = n > 0 && n <= 20 ? n : 2;
+	s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+	var l = s.split(".")[0],
+			r = s.split(".")[1];
+	var result  = '';
+	l = (l||0).toString();
+	while (l.length > 3) {
+		result = ',' + l.slice(-3) + result;
+		l = l.slice(0, l.length - 3);
+	}
+	if (l=="-") { result = l + result.slice(1); }
+	else result = l + result;
+
+	return result  + "." + r;
+
+};
+function dateFormatter(value){
+	if(value==''||value==null||value==undefined) {return '';}
+       else {
+          var date = new Date(value);
+          var year = date.getFullYear().toString();
+          var month = (date.getMonth()+1);
+          var day = date.getDate().toString();
+          var hours = date.getHours().toString();
+          var minutes = date.getMinutes().toString();
+          var second = date.getSeconds().toString();
+          if(month<10) month='0'+month;
+          if(day<10) day='0'+month;
+          return year+'-'+month+'-'+day+''+hours+':'+minutes+':'+second;
+       }
+}
+</script>
+</html>

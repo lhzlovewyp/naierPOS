@@ -886,7 +886,7 @@ app.controller("payingCtrl",['$scope','$location','PayService','SaleService','Me
 	
 	
 }]);	
-app.controller("payCtrl",['$scope','$location','PayService','SaleService','ngDialog','$timeout',function($scope,$location,PayService,SaleService,ngDialog,$timeout){
+app.controller("payCtrl",['$scope','$location','printService','PayService','SaleService','ngDialog','$timeout',function($scope,$location,printService,PayService,SaleService,ngDialog,$timeout){
 	
 	$scope.$watch("payments", function(newValue, oldValue){
 		loadPayInfo();
@@ -1037,11 +1037,16 @@ app.controller("payCtrl",['$scope','$location','PayService','SaleService','ngDia
 		SaleService.submit(info).then(function(data){
 			//支付完成后刷新数据.
 			if(data.data.status==Status.SUCCESS){
-				alert("数据保存成功.");
+				/*alert("数据保存成功.");*/
 				ngDialog.close();
 				$timeout(function(){
 					$("#cancelSale").trigger("click");
 				});
+				$scope.details = data.data.data.details;
+				var details = JSON.stringify(data.data.data)
+				window.localStorage.setItem("details",details)
+				printService.printPage("sales",$scope);
+				
 			}else{
 				
 			}
@@ -1482,8 +1487,8 @@ function basicPay(PayService,$scope,channel,code,transNo,barcode,amount,success,
 	});
 }
 
-app.controller("salesDetailCtl",['$scope','$location','SaleDetailService',
-                                 function($scope,$location,SaleDetailService){
+app.controller("salesDetailCtl",['$scope','$location','SaleDetailService','printService',
+                                 function($scope,$location,SaleDetailService,printService){
 	$scope.$on('$viewContentLoaded', function(){
 		$(".input-daterange").datepicker({
 		    language: "zh-CN",
@@ -1508,7 +1513,12 @@ app.controller("salesDetailCtl",['$scope','$location','SaleDetailService',
 		var currentPage=$scope.paginationConf.pageNo;
 		goPage(currentPage+flag);
 	}
-	
+	$scope.print = function(target){
+		var orderId = $(target).siblings("input").val();
+		printService.getData("salesDetail",orderId);
+		
+		
+	}
 	function goPage(pageNo){
 		var body = {};
 		pageNo = pageNo || 1;
@@ -1636,3 +1646,6 @@ app.controller("paymentSummaryCtl",['$scope','$location','PaymentSummaryService'
 	
 	
 }])
+
+
+
