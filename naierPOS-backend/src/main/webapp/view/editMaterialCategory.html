@@ -17,21 +17,21 @@
 				<div id="materialCategoryTree"></div>
 			</div>
 			
-			<div class="col-xs-5">
+			<div class="col-xs-5 pull-right" ng-show="addNedit">
 				<form class="form-horizontal" role="form" method="post"
 					name="basicsForm" id="basicsForm"
 					ng-submit="edit(basicsForm.$valid)" novalidate>
 					<div class="tab-content" style="margin-top: 20px;">
 						<div class="tab-pane active" id="detail">
 							<div class="form-group">
-								<label for="Code" class="col-sm-2 control-label">品类编码</label>
+								<label for="Code" class="col-sm-3 control-label">品类编码</label>
 								<div class="col-sm-4">
 									<input type="text" class="form-control" id="Code" name="Code"
 										placeholder="品类编码" ng-model="form.code" readonly>
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="Name" class="col-sm-2 control-label">品类名称</label>
+								<label for="Name" class="col-sm-3 control-label">品类名称</label>
 								<div class="col-sm-4">
 									<input type="text" class="form-control" id="Name" name="Name"
 										placeholder="品类名称" ng-model="form.name" readonly>
@@ -43,6 +43,8 @@
 						<div class="col-sm-offset-2 col-sm-10">
 							<button type="button" class="btn btn-danger"
 								ng-click="edit(basicsForm.$valid)">提交</button>
+								<button type="button" class="btn btn-default"
+								ng-click="cancel()">取消</button>
 						</div>
 					</div>
 				</form>

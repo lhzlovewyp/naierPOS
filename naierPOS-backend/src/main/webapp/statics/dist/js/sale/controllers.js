@@ -298,6 +298,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 	 		        	];
 	$scope.statuses = allStatus;
 	$scope.editType = 'add';
+	$scope.addNedit = false;
 	$scope.form={};
 	var id = $routeParams.id;
 	var routePath = $routeParams.routePath;
@@ -344,7 +345,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 						}
 						if(node.data){
 							$scope.form.code = node.data.code;
-							$scope.form.name = node.text;
+							$scope.form.name = node.text.split(":")[1];
 							$scope.form.parent = {};
 							$scope.form.parent.id = node.id;
 						}else{
@@ -1164,8 +1165,10 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 						//$scope.info = data;
 	                }else if(routePath == 'materialCategory'){
 	                	$route.reload();
+	                	$scope.addNedit=false;
 	                }else{
 	                	$location.path('/backend/list/'+routePath);
+	                	$scope.addNedit=false;
 	                }
 	            });
 			}else if($scope.editType == 'update'){
@@ -1175,8 +1178,10 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 						//$scope.info = data;
 	                }else if(routePath == 'materialCategory'){
 	                	$route.reload();
+	                	$scope.addNedit=false;
 	                }else{
 	                	$location.path('/backend/list/'+routePath);
+	                	$scope.addNedit=false;
 	                }
 	            });
 			}
@@ -1203,6 +1208,16 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		
 		if(routePath == 'promotionConditionMatchContent'){
 			$location.url('/backend/list/'+routePath+'?promotionConditionId='+promotionConditionId);
+			return;
+		}
+		if(routePath == 'materialCategory'){
+			$scope.addNedit=false;
+			var  node=$('#materialCategoryTree').treeview('getSelected')[0];
+			$scope.form.code = node.data.code;
+			$scope.form.name = node.text.split(":")[1];
+			$scope.form.parent = {};
+			$scope.form.parent.id = node.id;
+			
 			return;
 		}
 		$location.path('/backend/list/'+routePath);
@@ -1294,11 +1309,13 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 	
 	//增加品类信息
 	$scope.addMc = function(){
+		
 		$("#Code").val("");
 		$("#Name").val("");
 		$("#Code").attr("readonly",false);
 		$("#Name").attr("readonly",false);
 		$scope.editType = 'add';
+		$scope.addNedit=true;
 	}
 	
 	$scope.delMc = function(){
@@ -1322,10 +1339,12 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 	}
 	
 	$scope.editMc = function(){
+		
 		if($scope.form.parent && $scope.form.parent.id){
 			$("#Code").attr("readonly",false);
 			$("#Name").attr("readonly",false);
 			$scope.editType = 'update';
+			$scope.addNedit=true;
 		}else{
 			alert("请选择需要修改的节点!");
 			return false;
