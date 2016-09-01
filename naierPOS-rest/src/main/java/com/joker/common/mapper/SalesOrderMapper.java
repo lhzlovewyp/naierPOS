@@ -11,6 +11,7 @@ import com.joker.common.model.SalesOrder;
 import com.joker.common.model.SalesOrderDetails;
 import com.joker.common.model.SalesOrderDiscount;
 import com.joker.common.model.SalesOrderPay;
+import com.joker.common.model.Store;
 import com.joker.core.annotation.DataSource;
 
 @Repository
@@ -144,5 +145,8 @@ public interface SalesOrderMapper {
 	 */
 	@DataSource("slave")
 	public List<SalesOrderDetails> getSalesOrderDetailPageByCondition(Map<String, Object> map);
+
+	@DataSource("slave")
+	public Store getStoreByIds(Map<String, String> map);
 	
 }

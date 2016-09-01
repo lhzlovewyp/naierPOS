@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,8 +54,9 @@ import com.joker.core.util.RandomCodeFactory;
 @Service
 public class SalesOrderServiceImpl implements SalesOrderService{
 
-	private Logger log = LoggerFactory.getLogger(SalesOrderServiceImpl.class);
+	private org.slf4j.Logger log = LoggerFactory.getLogger(SalesOrderServiceImpl.class);
 
+	
 	
 	@Autowired
     SalesOrderMapper mapper;
@@ -149,7 +149,8 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 	}
 
 	@Override
-	public boolean addSaleInfo(SaleDto saleDto,Account account) {
+	public Map addSaleInfo(SaleDto saleDto,Account account) {
+		Map m = new HashMap();
 		//创建销售单
 		SalesOrder salesOrder=createSaleOrder(saleDto, account);
 		Map<String,List> map=createSalesOrderDetails(saleDto,account,salesOrder);
@@ -167,8 +168,11 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 			mapper.saveSalesOrderDiscount(discounts);
 		}
 		mapper.saveSalesOrderPay(pays);
-		
-		return true;
+		m.put("salesOrder", salesOrder);
+		m.put("details", details);
+		m.put("pays", pays);
+		m.put("discounts", discounts);
+		return m;
 	}
 	
 	//创建销售单.
@@ -493,7 +497,6 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 					}
 				}
 			}
-		}
 		//修改折扣明细
 		if(CollectionUtils.isNotEmpty(salesOrder.getSalesOrderDiscount())){
 			for(SalesOrderDiscount discount:salesOrder.getSalesOrderDiscount()){
@@ -514,9 +517,10 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 		if(CollectionUtils.isNotEmpty(salesOrder.getSalesOrderDiscount())){
 			mapper.saveSalesOrderDiscount(salesOrder.getSalesOrderDiscount());
 		}
-		//修改原始订单数据状态为取消.
-		originOrder.setStatus(Constants.STATUS_FAIL); 
-		mapper.updateSalesOrder(originOrder);
+			//修改原始订单数据状态为取消.
+			originOrder.setStatus(Constants.STATUS_FAIL); 
+			mapper.updateSalesOrder(originOrder);
+		}
 		return null;
 	}
 
@@ -555,6 +559,16 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 								detail.setSize(size);
 							}
 						}
+					}else{
+						Material m=new Material();
+						if(detail.getItemClass().getCode().equals(Constants.SALE_TYPE_ITEMDISC)){//单项折扣
+							m.setAbbr("单项折扣");
+						}else if(detail.getItemClass().getCode().equals(Constants.SALE_TYPE_TRANSDISC)){//整单折扣
+							m.setAbbr("整单折扣");
+						}else if(detail.getItemClass().getCode().equals(Constants.SALE_TYPE_PROMDISC)){//促销折扣
+							m.setAbbr("促销折扣");
+						}
+						detail.setMaterial(m);
 					}
 				}
 				order.setSalesOrderDetails(details);
@@ -623,6 +637,7 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 		List<SalesOrderPay> payments=mapper.getSalesOrderPayByCondition(map);
 		return payments;
 	}
+
 
 	
 

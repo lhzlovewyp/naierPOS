@@ -19,8 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.joker.common.model.Account;
 import com.joker.common.model.SalesOrder;
 import com.joker.common.model.SalesOrderDetails;
+import com.joker.common.model.SalesOrderDiscount;
 import com.joker.common.model.SalesOrderPay;
+import com.joker.common.model.Store;
 import com.joker.common.service.SalesOrderService;
+import com.joker.common.service.StoreService;
 import com.joker.core.annotation.NotNull;
 import com.joker.core.cache.CacheFactory;
 import com.joker.core.constant.ResponseState;
@@ -28,6 +31,7 @@ import com.joker.core.controller.AbstractController;
 import com.joker.core.dto.Page;
 import com.joker.core.dto.ParamsBody;
 import com.joker.core.dto.ReturnBody;
+
 
 import io.netty.util.internal.StringUtil;
 
@@ -39,7 +43,8 @@ public class StatisticsController extends AbstractController{
 	
 	@Autowired
 	SalesOrderService salesOrderService;
-	
+	@Autowired
+	StoreService storeService;
 	@RequestMapping(value = {"/statistics/getsalesDetail"},method = RequestMethod.POST)
 	@NotNull(value = "token")
 	@ResponseBody
@@ -171,6 +176,37 @@ public class StatisticsController extends AbstractController{
 			rbody.setData(payments);
 			rbody.setStatus(ResponseState.SUCCESS);
 			return rbody;
+		}else {
+			rbody.setStatus(ResponseState.ERROR);
+			rbody.setMsg("请登录！");
+		}
+		
+		return rbody;
+	}
+	
+	@RequestMapping(value = {"/statistics/printOrder"},method = RequestMethod.POST)
+	public ReturnBody printOrder(@RequestBody ParamsBody paramsBody){
+		ReturnBody rbody = new ReturnBody();
+		Map params = paramsBody.getBody();
+		Map<String, String> map = new HashMap<String,String>();
+		
+		String token = paramsBody.getToken();
+		Object user = CacheFactory.getCache().get(token);
+		String orderId = (String)params.get("orderId");
+		if(user != null){
+			Account account = (Account) user;
+			String clientId = account.getClient().getId();
+			String storeId = account.getStore().getId();
+			
+			map.put("storeId", storeId);
+			
+			SalesOrder salesOrder = salesOrderService.getSalesOrderById(clientId, storeId, orderId);
+			
+			Store store = storeService.getStoreById(storeId);
+			salesOrder.setStore(store);
+			
+			rbody.setData(salesOrder);
+			
 		}else {
 			rbody.setStatus(ResponseState.ERROR);
 			rbody.setMsg("请登录！");

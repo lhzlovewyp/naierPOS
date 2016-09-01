@@ -9,6 +9,7 @@ import com.joker.common.model.Account;
 import com.joker.common.model.SalesOrder;
 import com.joker.common.model.SalesOrderDetails;
 import com.joker.common.model.SalesOrderPay;
+import com.joker.common.model.Store;
 import com.joker.core.dto.Page;
 
 public interface SalesOrderService {
@@ -56,7 +57,7 @@ public interface SalesOrderService {
 	 * 
 	 * @param saleDto
 	 */
-	public boolean addSaleInfo(SaleDto saleDto,Account account);
+	public Map addSaleInfo(SaleDto saleDto,Account account);
 	
 	
 	public Page<SalesOrder> getSalesOrderPageByDate(Map<String, Object> map, Integer pageNo, Integer limit);
@@ -64,6 +65,8 @@ public interface SalesOrderService {
 	public Page<SalesOrderDetails> getSalesSummaryPageByCondition(Map<String, Object> map, Integer pageNo, Integer limit);
 
 	public List<SalesOrderPay> getSalesOrderPayByCondition(Map<String, Object> map);
+
+
 	
 };
 
