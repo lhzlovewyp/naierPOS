@@ -187,4 +187,5 @@
 	
 	<import resource="spring-ehcache.xml"/>
 	
+	
 </beans>

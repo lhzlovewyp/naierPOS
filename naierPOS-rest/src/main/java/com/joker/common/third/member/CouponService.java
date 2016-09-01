@@ -117,7 +117,7 @@ public class CouponService extends BaseService{
 	
 	public static void main(String args[]){
 		//System.out.println(JSONObject.toJSON(getAmount("11952")).toString());
-		System.out.println(JSONObject.toJSON(pay("11953")).toString());
+		System.out.println(JSONObject.toJSON(pay("12010")).toString());
 	}
 	
 }
