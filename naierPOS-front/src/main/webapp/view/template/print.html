@@ -11,10 +11,10 @@
 <script src="../../statics/plugins/jQuery/jQuery-2.2.0.min.js"></script>
 <script type="text/javascript" src="../../statics/plugins/doT.min.js"></script>
 <style>
-        body,ul,li,p{margin:0;padding:0;font-family: 'Î¢ÈíÑÅºÚ';}
+        body,ul,li,p{margin:0;padding:0;font-family: 'å¾®è½¯é›…é»‘';}
         *{
             font-size: 13px;
-            font-family: 'Î¢ÈíÑÅºÚ';
+            font-family: 'å¾®è½¯é›…é»‘';
         }
         ul{width:100%;float:left}
         li{
@@ -35,36 +35,36 @@
 </head>
 <body>
 <div id="main">
-	<!-- ÓÒ°ë²¿·ÖÊı¾İÏÔÊ¾ -->
+	<!-- å³åŠéƒ¨åˆ†æ•°æ®æ˜¾ç¤º -->
 	<div class="rightinfo"  align="center">
 	<h1 style="align:center;" id="title"></h1>
-	<div id="content">´òÓ¡×ÊÁÏ×¼±¸ÖĞ£¬ÇëÉÔºó¡£¡£¡£</div>
+	<div id="content">æ‰“å°èµ„æ–™å‡†å¤‡ä¸­ï¼Œè¯·ç¨åã€‚ã€‚ã€‚</div>
 
 	</div>
 </div>
-<!--ÏúÊÛµ¥------------------------------------------------>
+<!--é”€å”®å•------------------------------------------------>
 <script id="sales-template" type="text/x-dot-template">
      <ul class="head">
-         <li><span>µêºÅ:</span><span>{{=it.storeName}}</span></li>
-         <li><span>ÊÕÒø:</span><span>{{=it.creator}}</span></li>
-         <li><span>ÈÕÆÚ:</span><span>{{=it.date}}</span></li>
+         <li><span>åº—å·:</span><span>{{=it.storeName}}</span></li>
+         <li><span>æ”¶é“¶:</span><span>{{=it.creator}}</span></li>
+         <li><span>æ—¥æœŸ:</span><span>{{=it.date}}</span></li>
      </ul>
      <ul class="head">
-         <li><span>»úºÅ:</span><span>{{=it.terminal}}</span></li>
-         <li><span>ĞòºÅ:</span><span>{{=it.code}}</span></li>
-         <li><span>Ê±¼ä:</span><span>{{=it.time}}</span></li>
+         <li><span>æœºå·:</span><span>{{=it.terminal}}</span></li>
+         <li><span>åºå·:</span><span>{{=it.code}}</span></li>
+         <li><span>æ—¶é—´:</span><span>{{=it.time}}</span></li>
      </ul>
      <ul><hr style="border:1px solid;"/></ul>
      <ul class="huohao">
-         <li>»õºÅ</li>
-         <li>ÉÌÆ·Ãû³Æ</li>
+         <li>è´§å·</li>
+         <li>å•†å“åç§°</li>
      </ul>
      <ul class="xuhao">
-         <li>ĞòºÅ</li>
-         <li>µ¥¼Û</li>
-         <li>ÊıÁ¿</li>
-         <li>ÕÛ¼Û</li>
-         <li>½ğ¶î</li>
+         <li>åºå·</li>
+         <li>å•ä»·</li>
+         <li>æ•°é‡</li>
+         <li>æŠ˜ä»·</li>
+         <li>é‡‘é¢</li>
      </ul>
      <ul><hr style="border:1px dashed;"/></ul>
      <ul><hr style="border:1px dashed;margin-top: 0"/></ul>
@@ -80,7 +80,7 @@
              <li>{{=it.details[i].material.retailPrice}}</li>
              <li>{{=it.details[i].quantity}}</li>
              <li>{{=it.details[i].discount}}</li>
-             <li>£¤{{=amtFormat(it.details[i].amount,2)}}</li>
+             <li>ï¿¥{{=amtFormat(it.details[i].amount,2)}}</li>
          </ul>
      </div>
   {{?}}
@@ -88,15 +88,15 @@
      <ul><hr style="border:1px dashed;"/></ul>
      <ul><hr style="border:1px dashed;margin-top: 0"/></ul>
      <ul class="total">
-         <li>ÕÛ¿ÛºÏ¼Æ:</li>
+         <li>æŠ˜æ‰£åˆè®¡:</li>
          <li>{{=it.discount}}</li>
      </ul>
      <ul class="total">
-         <li>½ğ¶îºÏ¼Æ:</li>
+         <li>é‡‘é¢åˆè®¡:</li>
          <li>{{=amtFormat(it.amount,2)}}</li>
      </ul>
      <ul class="total">
-         <li>ÊıÁ¿ºÏ¼Æ:</li>
+         <li>æ•°é‡åˆè®¡:</li>
          <li>{{=it.quantity}}</li>
      </ul>
 {{ for(var i=0; i < it.pays.length; i++) { }}
@@ -112,7 +112,7 @@
 </body>
 
 <script>
-//»ñÈ¡´«Öµ
+//è·å–ä¼ å€¼
 function GetRequest() {
   var url = location.search;
    var theRequest = new Object();
@@ -133,12 +133,12 @@ var Request = new Object();
 Request = GetRequest();
 var type = Request["type"];
 var myDate = new Date();
-var printDate = myDate.getFullYear()+"-"+(myDate.getMonth()+1)+"-"+myDate.getDate()+" "+myDate.getHours()+":"+myDate.getMinutes()+":"+myDate.getSeconds();//´òÓ¡ÈÕÆÚ
+var printDate = myDate.getFullYear()+"-"+(myDate.getMonth()+1)+"-"+myDate.getDate()+" "+myDate.getHours()+":"+myDate.getMinutes()+":"+myDate.getSeconds();//æ‰“å°æ—¥æœŸ
 
 if(type=="sales"){
-	tmplateIn('sales-template','ÏúÊÛµ¥')
+	tmplateIn('sales-template','é”€å”®å•')
 }else if(type=="salesDetail"){
-	tmplateIn2('sales-template','ÏúÊÛµ¥')
+	tmplateIn2('sales-template','é”€å”®å•')
  
 }
 
