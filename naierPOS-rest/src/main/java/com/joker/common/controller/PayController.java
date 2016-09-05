@@ -18,6 +18,8 @@ import com.joker.common.model.Account;
 import com.joker.common.model.ClientPayment;
 import com.joker.common.service.ClientPaymentService;
 import com.joker.common.third.dto.ThirdBaseDto;
+import com.joker.common.third.dto.ThirdCouponDto;
+import com.joker.common.third.member.CouponService;
 import com.joker.common.third.member.PointService;
 import com.joker.common.third.member.PrepaidService;
 import com.joker.common.third.pay.aliweixin.AliPayService;
@@ -185,6 +187,84 @@ public class PayController extends AbstractController {
 			}
 			if("1".equals(dto.getStatus())){
 				rbody.setStatus(ResponseState.SUCCESS);
+			}else{
+				rbody.setStatus(ResponseState.FAILED);
+				rbody.setMsg(dto.getMessage());
+			}
+		}else{
+			rbody.setStatus(ResponseState.INVALID_USER);
+			rbody.setMsg("请登陆.");
+		}
+		return rbody;
+	}
+	/**
+	 * 电子券支付.
+	 * @param paramsBody
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = { "/pay/couponPay" }, method = RequestMethod.POST)
+	@NotNull(value = "token")
+	@ResponseBody
+	public ReturnBody couponPay(@RequestBody ParamsBody paramsBody,
+			HttpServletRequest request, HttpServletResponse response) {
+		ReturnBody rbody = new ReturnBody();
+		String token = paramsBody.getToken();
+		Map<String,Object> body=paramsBody.getBody();
+		Object user = CacheFactory.getCache().get(token);
+		
+		String code=(String)body.get("code");
+		if (user != null) {
+			//ThirdBaseDto<String> dto=PrepaidService.pay(memberCode, amount, type, account.getStore().getCode(), salesDtoId);
+			ThirdBaseDto<String> dto = CouponService.pay(code);
+			if(dto == null){
+				rbody.setStatus(ResponseState.FAILED);
+				rbody.setMsg("系统内部错误");
+			}
+			if("1".equals(dto.getStatus())){
+				rbody.setStatus(ResponseState.SUCCESS);
+			}else{
+				rbody.setStatus(ResponseState.FAILED);
+				rbody.setMsg(dto.getMessage());
+			}
+		}else{
+			rbody.setStatus(ResponseState.INVALID_USER);
+			rbody.setMsg("请登陆.");
+		}
+		return rbody;
+	}
+	
+	/**
+	 * 积分支付.
+	 * @param paramsBody
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = { "/pay/selectCoupon" }, method = RequestMethod.POST)
+	@NotNull(value = "token")
+	@ResponseBody
+	public ReturnBody selectCoupon(@RequestBody ParamsBody paramsBody,
+			HttpServletRequest request, HttpServletResponse response) {
+		ReturnBody rbody = new ReturnBody();
+		String token = paramsBody.getToken();
+		Map<String,Object> body=paramsBody.getBody();
+		Object user = CacheFactory.getCache().get(token);
+		
+		String couponCode=(String)body.get("code");
+		
+		if (user != null) {
+			//ThirdBaseDto<String> dto=PrepaidService.pay(memberCode, amount, type, account.getStore().getCode(), salesDtoId);
+			//ThirdBaseDto<String> dto=PointService.pay(memberCode, new BigDecimal(points).negate().toString(), salesDtoId);
+			ThirdBaseDto<ThirdCouponDto> dto = CouponService.getAmount(couponCode);
+			if(dto == null){
+				rbody.setStatus(ResponseState.FAILED);
+				rbody.setMsg("系统内部错误");
+			}
+			if("1".equals(dto.getStatus())){
+				rbody.setStatus(ResponseState.SUCCESS);
+				rbody.setData(dto);
 			}else{
 				rbody.setStatus(ResponseState.FAILED);
 				rbody.setMsg(dto.getMessage());

@@ -457,6 +457,50 @@ app.factory('PayService',['$q','$location','$http','BaseService',function($q,$lo
                 	deferred.resolve(obj);
             });
 			return deferred.promise;
+		},
+		queryCoupon : function(condition){
+			if(!condition){
+				condition={};
+			}
+			var token=$.cookie("token");
+			condition.token=token;
+			var deferred = $q.defer();
+			var info={};
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
+			BaseService.post('/rest/pay/selectCoupon',condition).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
+                	deferred.resolve(obj);
+            });
+			return deferred.promise;
+		},
+		couponPay : function(condition){
+			if(!condition){
+				condition={};
+			}
+			var token=$.cookie("token");
+			condition.token=token;
+			var deferred = $q.defer();
+			var info={};
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
+			BaseService.post('/rest/pay/couponPay',condition).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
+                	deferred.resolve(obj);
+            });
+			return deferred.promise;
 		}
 	}
 }]);	

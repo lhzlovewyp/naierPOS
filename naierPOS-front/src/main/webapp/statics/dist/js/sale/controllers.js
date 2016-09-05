@@ -869,6 +869,38 @@ app.controller("payingCtrl",['$scope','$location','PayService','SaleService','Me
 		
 	}
 	
+	$scope.couponPay=function(payment){
+		var form=$scope.couponForm;
+		
+		if(!form || !form.code){//如果没有输入账号，提示错误.
+			alert("请输入电子券号.");
+			return ;
+		} 
+		
+		
+		if($scope.info.needPay<=0){
+			alert("超出需要支付的金额.");
+			return;
+		}
+
+		var payInfo={};
+		
+		payInfo.code=form.code;
+		
+		PayService.couponPay(payInfo).then(function(obj){
+			var dto=obj.data.data;
+			if(obj.data.status==Status.SUCCESS){
+				alert("支付成功.");
+				payment.amount=$scope.couponInfo.money;
+				$scope.loadPayInfo();
+				$scope.closeThisDialog();
+	        }else{
+	        	alert(obj.data.msg);
+	        }
+		});
+		
+	}
+	
 	$scope.pointChange = function(){
 		var form=$scope.pointForm;
 		var input=form.point;
@@ -881,6 +913,33 @@ app.controller("payingCtrl",['$scope','$location','PayService','SaleService','Me
 			alert('输入积分只能是'+minPoint+'的整数倍');
 			form.point=0;
 			return;
+		}
+	}
+	
+	$scope.queryCoupon = function(){
+		var form=$scope.couponForm;
+		if(!form || !form.code){
+			return;
+		}
+		PayService.queryCoupon(form).then(function(obj){
+			if(obj.data.status==Status.SUCCESS){					 
+                var dto=obj.data.data.data;
+                var isUser=dto.detail.is_use;
+                if(isUser=="1"){
+                	alert('券已被使用');
+                	return;
+                }
+                dto.coupon.money=parseFloat(dto.coupon.money).toFixed(2);
+                $scope.couponInfo=dto.coupon;
+			}else{
+				alert(obj.data.msg);
+			}
+		});
+	}
+	$scope.keydown1=function(event){
+		var code=event.keyCode;
+		if(code == '13'){
+			$scope.queryCoupon();
 		}
 	}
 	
@@ -1088,6 +1147,8 @@ app.controller("payCtrl",['$scope','$location','printService','PayService','Sale
 		info.needPay=(pay-info.payed).toFixed(2);
 		
 	}
+	
+	
 	
 }]);
 

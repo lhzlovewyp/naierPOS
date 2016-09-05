@@ -78,17 +78,17 @@
 				<div class="form-group">
 					<label class="col-sm-4 control-label">券号</label>
 					<div class="col-sm-7">
-						<input type="text" class="form-control" value="0.00">
+						<input type="text" class="form-control" value="0.00" ng-model="couponForm.code"  ng-blur="queryCoupon();">
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-4 control-label">面值</label>
-					<div class="col-sm-7">100.00</div>
+					<div class="col-sm-7">{{couponInfo.money}}</div>
 				</div>
 			</div>
 			<div>
 				<button class="btn btn-default" type="submit" ng-click="closeThisDialog();">取消</button>
-				<button class="btn btn-info pull-right" type="submit" onclick="$('.payment-detail').remove()">确认</button>
+				<button class="btn btn-info pull-right" type="submit" ng-click="couponPay(currPayment)">确认</button>
 			</div>
 		</form>
 	</div>

@@ -9,6 +9,7 @@ import java.util.TreeMap;
 
 import com.alibaba.fastjson.JSONObject;
 import com.joker.common.third.dto.ThirdBaseDto;
+import com.joker.common.third.dto.ThirdCouponDto;
 import com.joker.core.util.Configer;
 import com.joker.core.util.DatetimeUtil;
 import com.joker.core.util.FunctionTextMd5;
@@ -26,7 +27,7 @@ public class CouponService extends BaseService{
 	 * @param code
 	 * @return
 	 */
-	public static ThirdBaseDto<String>  getAmount(String code){
+	public static ThirdBaseDto<ThirdCouponDto>  getAmount(String code){
 		String url=Configer.get("thirdRestUrl");
 		String action="crm/coupon/get_detail";
 		String key="pos";
@@ -52,7 +53,7 @@ public class CouponService extends BaseService{
 		String result=null;
 		try {
 			result = HttpClientUtil.httpGet(url, map);
-			ThirdBaseDto<String>  dto=(ThirdBaseDto<String>)JSONObject.parseObject(result, ThirdBaseDto.class);
+			ThirdBaseDto<ThirdCouponDto>  dto=(ThirdBaseDto<ThirdCouponDto>)JSONObject.parseObject(result, ThirdBaseDto.class);
 			return dto;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -90,6 +91,7 @@ public class CouponService extends BaseService{
 		map.put("timestamp", timestamp);
 		map.put("consume", "");
 		map.put("consume_detail", "");
+		map.put("type", "1");
 		
 		String sign="";
 		for (Map.Entry<String, Object> entry : map.entrySet()) {  
@@ -116,7 +118,7 @@ public class CouponService extends BaseService{
 	}
 	
 	public static void main(String args[]){
-		//System.out.println(JSONObject.toJSON(getAmount("11952")).toString());
+		//System.out.println((getAmount("12010")));
 		System.out.println(JSONObject.toJSON(pay("12010")).toString());
 	}
 	

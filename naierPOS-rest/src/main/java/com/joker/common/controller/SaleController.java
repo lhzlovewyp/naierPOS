@@ -1,6 +1,7 @@
 package com.joker.common.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -156,7 +157,8 @@ public class SaleController extends AbstractController{
 			boolean result=checkDto(dto);
 			if(result){
 				//保存销售单.
-				salesOrderService.addSaleInfo(dto, account);
+				Map map = salesOrderService.addSaleInfo(dto, account);
+				rbody.setData(map);
 			}
 			
 			rbody.setStatus(ResponseState.SUCCESS);
