@@ -196,6 +196,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
               <if test= "creator != null">Creator=#{creator},</if>
               <if test= "created != null">Created=#{created},</if>
               <if test= "finished != null">Finished=#{finished},</if>
+              <if test= "toBaison != null">ToBaiSon=#{toBaison},</if>
          </set>
     </sql >
 	
@@ -357,4 +358,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				limit #{start},#{limit}
 		</if>
 	</select>
+	
+	<select id="getLimitSalesOrderByFinished" resultMap="salesOrder" parameterType="java.util.Map">
+		select * from SalesOrder where Member is not NULL and Status =1 and TransClass='SO' and ToBaiSon=0
+		<![CDATA[  and Finished>=#{startDate} ]]>
+		<![CDATA[  and Finished<=#{endDate} ]]>
+	</select>
+	
 </mapper>

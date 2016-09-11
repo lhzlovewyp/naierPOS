@@ -149,4 +149,7 @@ public interface SalesOrderMapper {
 	@DataSource("slave")
 	public Store getStoreByIds(Map<String, String> map);
 	
+	@DataSource("slave")
+	public List<SalesOrder> getLimitSalesOrderByFinished(Map<String,Date> map);
+	
 }

@@ -45,6 +45,7 @@ import com.joker.common.third.pay.aliweixin.AliPayService;
 import com.joker.common.third.pay.aliweixin.PayParamsVo;
 import com.joker.common.third.pay.aliweixin.PayReturnVo;
 import com.joker.core.dto.Page;
+import com.joker.core.util.DatetimeUtil;
 import com.joker.core.util.RandomCodeFactory;
 
 /**
@@ -636,6 +637,23 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 	public List<SalesOrderPay> getSalesOrderPayByCondition(Map<String, Object> map) {
 		List<SalesOrderPay> payments=mapper.getSalesOrderPayByCondition(map);
 		return payments;
+	}
+
+	@Override
+	public List<SalesOrder> getLimitSalesOrderByFinished(Date startDate, Date endDate) {
+		Date date=new Date();
+		endDate  = endDate == null ? date : endDate;
+		Date date1=DatetimeUtil.addDays(endDate, -5);
+		startDate = startDate == null ? date1 : startDate;
+		Map<String,Date> map=new HashMap<String,Date>();
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		return mapper.getLimitSalesOrderByFinished(map);
+	}
+
+	@Override
+	public int updateSalesOrder(SalesOrder salesOrder) {
+		return mapper.updateSalesOrder(salesOrder);
 	}
 
 

@@ -9,7 +9,6 @@ import com.joker.common.model.Account;
 import com.joker.common.model.SalesOrder;
 import com.joker.common.model.SalesOrderDetails;
 import com.joker.common.model.SalesOrderPay;
-import com.joker.common.model.Store;
 import com.joker.core.dto.Page;
 
 public interface SalesOrderService {
@@ -66,7 +65,9 @@ public interface SalesOrderService {
 
 	public List<SalesOrderPay> getSalesOrderPayByCondition(Map<String, Object> map);
 
+	public List<SalesOrder> getLimitSalesOrderByFinished(Date startDate,Date endDate);
 
+	public int updateSalesOrder(SalesOrder salesOrder);
 	
 };
 
