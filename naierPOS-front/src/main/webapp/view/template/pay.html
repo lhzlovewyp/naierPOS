@@ -29,7 +29,7 @@
 			<div class="form-group">
 				<label class="col-sm-4 control-label">支付金额</label>
 				<div class="col-sm-7">
-					<input type="text" class="form-control"  value="0.00" ng-model="cashForm.amount">
+					<input type="text" class="form-control"  value="{{info.needPay || 0}}" ng-model="cashForm.amount">
 				</div>
 			</div>
 		</div>
@@ -59,7 +59,7 @@
 			<div class="form-group">
 				<label class="col-sm-5 control-label">本次支付金额</label>
 				<div class="col-sm-7">
-					<input type="text" class="form-control" value="" ng-model="prepaidForm.amount">
+					<input type="text" class="form-control" value="{{info.needPay || 0}}" ng-model="prepaidForm.amount">
 				</div>
 			</div>
 		</div>

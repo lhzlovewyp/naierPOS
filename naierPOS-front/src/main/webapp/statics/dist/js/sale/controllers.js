@@ -1026,9 +1026,9 @@ app.controller("payCtrl",['$scope','$location','printService','PayService','Sale
 		loadPayInfo();
 		ngDialog.close();
 		//销售单初始化
-		$timeout(function(){
-			$("#cancelSale").trigger("click");
-		});
+//		$timeout(function(){
+//			$("#cancelSale").trigger("click");
+//		});
 	}
 	
 	$scope.pay=function(payment){
@@ -1044,9 +1044,13 @@ app.controller("payCtrl",['$scope','$location','printService','PayService','Sale
 		case Status.CASH://现金支付
 		case Status.UNIONPAY_OFF://银行卡支付
 			payPayment="payCash";
+			$scope.cashForm=$scope.cashForm || {};
+			$scope.cashForm.amount = $scope.info.needPay || 0;
 		  	break;
 		case Status.BS_PREPAID://百胜储值卡
 			payPayment="payPrepaid";	
+			$scope.prepaidForm=$scope.prepaidForm || {};
+			$scope.prepaidForm.amount = $scope.info.needPay || 0;
 			  break;
 		case Status.BS_COUPON://百胜电子券
 			payPayment="payCoupon";
