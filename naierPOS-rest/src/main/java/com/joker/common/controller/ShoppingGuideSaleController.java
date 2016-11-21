@@ -47,7 +47,7 @@ public class ShoppingGuideSaleController extends AbstractController {
 		if (user != null) {
 			// 获取当前用户所在门店的营业日期
 			Account account = (Account) user;
-			ShoppingGuide shoppingGuide = shoppingGuideService.getShoppingGuideByCode(account.getClient().getId(), code);
+			ShoppingGuide shoppingGuide = shoppingGuideService.getShoppingGuideByCode(account.getClient().getId(),account.getStore().getId(), code);
 			
 			if(shoppingGuide!=null){
 				rbody.setData(shoppingGuide);

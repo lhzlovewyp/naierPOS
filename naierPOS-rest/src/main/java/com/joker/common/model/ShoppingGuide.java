@@ -21,6 +21,8 @@ public class ShoppingGuide extends BaseModel{
 	private String code;
 	
 	private String name;
+	
+	private String store;
 
 	public Client getClient() {
 		return client;
@@ -44,6 +46,14 @@ public class ShoppingGuide extends BaseModel{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getStore() {
+		return store;
+	}
+
+	public void setStore(String store) {
+		this.store = store;
 	}
 	
 	

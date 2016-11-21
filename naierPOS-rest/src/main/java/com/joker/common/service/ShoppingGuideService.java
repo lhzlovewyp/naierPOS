@@ -24,7 +24,7 @@ public interface ShoppingGuideService {
 	 * @param code
 	 * @return
 	 */
-	public ShoppingGuide getShoppingGuideByCode(String clientId,String code);
+	public ShoppingGuide getShoppingGuideByCode(String clientId,String store,String code);
 	
 	/**
 	 * 根据id查询颜色信息.

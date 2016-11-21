@@ -8,6 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="shoppingGuide" id="shoppingGuide">
 		<result property="id" column="ID" />
 		<result property="code" column="Code" />
+		<result property="store" column="Store" />
 		<result property="name" column="Name" />
 		<result property="client.id" column="ClientID" />
 		<result property="status" column="Status" />
@@ -23,6 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<where>
 			<if test= "id != null">ID=#{id,jdbcType=VARCHAR}</if >
 			<if test= "code != null">AND Code=#{code,jdbcType=VARCHAR}</if >
+			<if test= "store != null">AND Store=#{store,jdbcType=VARCHAR}</if >
 			<if test= "name != null">AND Name=#{name,jdbcType=VARCHAR}</if >
 			<if test= "clientId != null">AND Client=#{clientId,jdbcType=VARCHAR}</if >
 			<if test= "creator != null">AND Creator=#{creator,jdbcType=VARCHAR}</if >

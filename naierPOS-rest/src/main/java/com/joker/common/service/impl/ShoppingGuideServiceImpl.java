@@ -39,10 +39,11 @@ public class ShoppingGuideServiceImpl implements ShoppingGuideService {
 	}
 
 	@Override
-	public ShoppingGuide getShoppingGuideByCode(String clientId, String code) {
+	public ShoppingGuide getShoppingGuideByCode(String clientId,String store, String code) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("clientId", clientId);
 		map.put("code", code);
+		map.put("store", store);
 		List<ShoppingGuide> list = mapper.getShoppingGuideByCondition(map);
 		return CollectionUtils.isNotEmpty(list) ? list.get(0) : null;
 	}
