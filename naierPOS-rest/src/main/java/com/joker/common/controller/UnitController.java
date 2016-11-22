@@ -177,12 +177,17 @@ public class UnitController extends AbstractController {
 		if (params.get("unitNum") != null) {
 			unitNum = String.valueOf(params.get("unitNum"));
 		}
+		String code = (String) params.get("code");
 		String name = (String) params.get("name");
-		String clientId = (String) params.get("clientId");
 
 		if (!StringUtils.isNumeric(unitNum) || Integer.parseInt(unitNum)<0 || Integer.parseInt(unitNum)>2) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("小数位数输入错误！");
+			return rbody;
+		}
+		if (StringUtils.isBlank(code)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入单位编码！");
 			return rbody;
 		}
 		if (StringUtils.isBlank(name)) {
@@ -200,6 +205,7 @@ public class UnitController extends AbstractController {
 
 			Unit addUnit = new Unit();
 			addUnit.setId(UUID.randomUUID().toString());
+			addUnit.setCode(code);
 			addUnit.setName(name);
 			addUnit.setUnitNum(Integer.valueOf(unitNum));
 			addUnit.setClient(account.getClient());
@@ -237,6 +243,7 @@ public class UnitController extends AbstractController {
 		if (params.get("unitNum") != null) {
 			unitNum = String.valueOf(params.get("unitNum"));
 		}
+		String code = (String) params.get("code");
 		String name = (String) params.get("name");
 		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
@@ -249,6 +256,11 @@ public class UnitController extends AbstractController {
 		if (!StringUtils.isNumeric(unitNum) || Integer.parseInt(unitNum)<0 || Integer.parseInt(unitNum)>2) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("小数位数输入错误！");
+			return rbody;
+		}
+		if (StringUtils.isBlank(code)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入单位编码！");
 			return rbody;
 		}
 		if (StringUtils.isBlank(name)) {
@@ -278,6 +290,7 @@ public class UnitController extends AbstractController {
 			Unit updateUnit = new Unit();
 			updateUnit.setId(id);
 			updateUnit.setUnitNum(Integer.valueOf(unitNum));
+			updateUnit.setCode(code);
 			updateUnit.setName(name);
 			updateUnit.setClient(client);
 			updateUnit.setStatus(status);

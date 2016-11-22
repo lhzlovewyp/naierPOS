@@ -8,7 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="shoppingGuide" id="shoppingGuide">
 		<result property="id" column="ID" />
 		<result property="code" column="Code" />
-		<result property="store" column="Store" />
+		<result property="store.id" column="Store" />
 		<result property="name" column="Name" />
 		<result property="client.id" column="ClientID" />
 		<result property="status" column="Status" />
@@ -18,35 +18,42 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="modified" column="Modified" />
 	</resultMap>
 	
+	<resultMap type="terminal" id="shoppingGuidePage" extends="shoppingGuide">
+		<result property="store.name" column="StoreName" />
+	</resultMap>
+	
     <select id="getShoppingGuideByCondition" parameterType="string" resultMap="shoppingGuide">
-		SELECT s.ID,s.Code,s.Name,s.Status,s.Client as ClientID ,s.Creator,s.Created,s.Editor,s.Modified
+		SELECT s.ID,s.Code,s.Name,s.Store,s.Status,s.Client as ClientID ,s.Creator,s.Created,s.Editor,s.Modified
 		FROM ShoppingGuide s 
-		<where>
+		WHERE s.Status= 1
 			<if test= "id != null">ID=#{id,jdbcType=VARCHAR}</if >
 			<if test= "code != null">AND Code=#{code,jdbcType=VARCHAR}</if >
-			<if test= "store != null">AND Store=#{store,jdbcType=VARCHAR}</if >
+			<if test= "storeId != null">AND Store=#{storeId,jdbcType=VARCHAR}</if >
 			<if test= "name != null">AND Name=#{name,jdbcType=VARCHAR}</if >
 			<if test= "clientId != null">AND Client=#{clientId,jdbcType=VARCHAR}</if >
 			<if test= "creator != null">AND Creator=#{creator,jdbcType=VARCHAR}</if >
 			<if test= "created != null">AND Created=#{created}</if >
 			<if test= "editor != null">AND Editor=#{editor,jdbcType=VARCHAR}</if >
 			<if test= "modified != null">AND Modified=#{modified}</if >
-		</where>
+		
 	</select>
 	
 	<select id="getShoppingGuideByID" parameterType="string" resultMap="shoppingGuide">
 		SELECT 
-			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+			a.ID,a.Client as ClientID,a.Code,a.Name,a.Store,a.Status,a.Creator,a.Created,a.Editor,a.Modified
 		FROM ShoppingGuide a
 		WHERE a.ID=#{id} 
 	</select>
 	
-	<select id="getShoppingGuidePageByCondition" parameterType="java.util.Map" resultMap="shoppingGuide">
+	<select id="getShoppingGuidePageByCondition" parameterType="java.util.Map" resultMap="shoppingGuidePage">
 		SELECT 
-			a.ID,a.Client,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified,c.Name ClientName
+			a.ID,a.Client as ClientID,a.Code,a.Name,a.Store,a.Status,a.Creator,a.Created,a.Editor,a.Modified,c.Name ClientName
+			,s.Name StoreName
 		FROM ShoppingGuide a left outer join Client c
 		on a.Client = c.id and c.status = 1 
-		WHERE 1=1
+		left outer join Store s
+		on a.Store = s.id and s.status = 1 
+		WHERE a.Status= 1
 			<if test="clientId != null">
 				and a.Client=#{clientId}
 			</if>
@@ -64,7 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="getShoppingGuideCountByCondition" parameterType="java.util.Map" resultType="int">
 		SELECT count(1)
-		FROM ShoppingGuide a WHERE 1=1
+		FROM ShoppingGuide a WHERE a.Status= 1
 			<if test="clientId != null">
 				and a.Client=#{clientId}
 			</if>
@@ -96,11 +103,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
 			<if test= "code != null">Code=#{code,jdbcType=VARCHAR},</if >
 			<if test= "name != null">Name=#{name,jdbcType=VARCHAR},</if >
+			<if test= "store != null">Store=#{store.id,jdbcType=VARCHAR},</if >
 			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
 			<if test= "creator != null">Creator=#{creator,jdbcType=VARCHAR},</if >
 			<if test= "created != null">Created=#{created},</if >
 			<if test= "editor != null">Editor=#{editor,jdbcType=VARCHAR},</if >
 			<if test= "modified != null">Modified=#{modified},</if >
+			<if test= "status != null">Status=#{status},</if >
 		</set>
 	</sql >
     

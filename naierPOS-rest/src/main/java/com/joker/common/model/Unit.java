@@ -14,6 +14,8 @@ public class Unit extends BaseModel {
 	private static final long serialVersionUID = -531461948045931568L;
 	// 商户.
 	private Client client;
+	// 单元编码
+	private String code;
 	// 单元描述
 	private String name;
 	// 小数位
@@ -25,6 +27,14 @@ public class Unit extends BaseModel {
 
 	public void setClient(Client client) {
 		this.client = client;
+	}
+	
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public String getName() {

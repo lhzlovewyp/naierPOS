@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.joker.common.model.Account;
 import com.joker.common.model.Client;
 import com.joker.common.model.ShoppingGuide;
+import com.joker.common.model.Store;
 import com.joker.common.service.ShoppingGuideService;
 import com.joker.core.annotation.NotNull;
 import com.joker.core.cache.CacheFactory;
@@ -162,6 +163,7 @@ public class ShoppingGuideSaleController extends AbstractController {
 		ReturnBody rbody = new ReturnBody();
 		// 参数校验
 		Map params = paramsBody.getBody();
+		String storeId = (String) params.get("storeId");
 		String code = (String) params.get("code");
 		String name = (String) params.get("name");
 
@@ -173,6 +175,11 @@ public class ShoppingGuideSaleController extends AbstractController {
 		if (StringUtils.isBlank(name)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入名称！");
+			return rbody;
+		}
+		if (StringUtils.isBlank(storeId)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入门店！");
 			return rbody;
 		}
 		
@@ -191,6 +198,10 @@ public class ShoppingGuideSaleController extends AbstractController {
 			addShoppingGuide.setClient(account.getClient());
 			addShoppingGuide.setCreated(new Date());
 			addShoppingGuide.setCreator(account.getId());
+			
+			Store store = new Store();
+			store.setId(storeId);
+			addShoppingGuide.setStore(store);
 
 			shoppingGuideService.insertShoppingGuide(addShoppingGuide);
 			rbody.setStatus(ResponseState.SUCCESS);
@@ -222,6 +233,7 @@ public class ShoppingGuideSaleController extends AbstractController {
 		String code = (String) params.get("code");
 		String name = (String) params.get("name");
 		String status = (String) params.get("status");
+		String storeId = (String) params.get("storeId");
 
 		if (StringUtils.isBlank(id)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -244,6 +256,11 @@ public class ShoppingGuideSaleController extends AbstractController {
 			rbody.setMsg("请输入状态！");
 			return rbody;
 		}
+		if (StringUtils.isBlank(storeId)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("请输入门店！");
+			return rbody;
+		}
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
@@ -260,6 +277,10 @@ public class ShoppingGuideSaleController extends AbstractController {
 			updateShoppingGuide.setStatus(status);
 			updateShoppingGuide.setModified(new Date());
 			updateShoppingGuide.setEditor(account.getId());
+			
+			Store store = new Store();
+			store.setId(storeId);
+			updateShoppingGuide.setStore(store);
 
 			shoppingGuideService.updateShoppingGuide(updateShoppingGuide);
 			rbody.setStatus(ResponseState.SUCCESS);

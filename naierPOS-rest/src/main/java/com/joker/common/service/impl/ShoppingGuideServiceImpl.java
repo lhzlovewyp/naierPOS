@@ -43,7 +43,7 @@ public class ShoppingGuideServiceImpl implements ShoppingGuideService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("clientId", clientId);
 		map.put("code", code);
-		map.put("store", store);
+		map.put("storeId", store);
 		List<ShoppingGuide> list = mapper.getShoppingGuideByCondition(map);
 		return CollectionUtils.isNotEmpty(list) ? list.get(0) : null;
 	}

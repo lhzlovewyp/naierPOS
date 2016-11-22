@@ -8,6 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="unit" id="unit">
 		<result property="id" column="ID" />
 		<result property="client.id" column="Client" />
+		<result property="code" column="Code" />
 		<result property="name" column="Name" />
 		<result property="unitNum" column="UnitNum" />
 		<result property="status" column="Status" />
@@ -23,14 +24,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
 	<select id="getUnitByID" parameterType="string" resultMap="unit">
 		SELECT 
-			a.ID,a.Client,a.UnitNum,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+			a.ID,a.Client,a.UnitNum,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified
 		FROM Unit a
 		WHERE a.ID=#{id} 
 	</select>
 	
 	<select id="getUnitPageByCondition" parameterType="java.util.Map" resultMap="unitPage">
 		SELECT 
-			a.ID,a.Client,a.UnitNum,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified,c.Name ClientName
+			a.ID,a.Client,a.UnitNum,a.Code,a.Name,a.Status,a.Creator,a.Created,a.Editor,a.Modified,c.Name ClientName
 		FROM Unit a left outer join Client c
 		on a.Client = c.id and c.status = 1 
 		WHERE 
@@ -75,6 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<set >
 			<if test= "id != null">ID=#{id,jdbcType=VARCHAR},</if >
 			<if test= "client != null">Client=#{client.id,jdbcType=VARCHAR},</if >
+			<if test= "code != null">Code=#{code,jdbcType=VARCHAR},</if >
 			<if test= "name != null">Name=#{name,jdbcType=VARCHAR},</if >
 			<if test= "unitNum != null">UnitNum=#{unitNum},</if >
 			<if test= "status != null">Status=#{status},</if >
