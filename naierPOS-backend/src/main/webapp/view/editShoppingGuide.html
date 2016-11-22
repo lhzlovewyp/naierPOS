@@ -17,7 +17,13 @@
 									placeholder="GUID" ng-model="form.id" >
 							</div>
 						</div>
-						
+						<div class="form-group">
+							<label for="Store" class="col-sm-2 control-label">门店</label>
+							<div class="col-sm-4">
+								<select id="storeId" name="storeId" class="form-control" ng-model="selstore" ng-options="x.show for x in stores">
+								</select>
+							</div>
+						</div>
 						<div class="form-group">
 							<label for="Code" class="col-sm-2 control-label">编号</label>
 							<div class="col-sm-4">

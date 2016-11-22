@@ -393,7 +393,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					$scope.selUnitB = selectInfoMap[selUnitBValue];
 				}
 			}
-			if((routePath == 'account' || routePath == 'terminal' || routePath == 'salesConfig'|| routePath == 'retailPrice') && allSelectInfoMap['store']){
+			if((routePath == 'account' || routePath == 'terminal' || routePath == 'salesConfig'|| routePath == 'retailPrice'|| routePath == 'shoppingGuide') && allSelectInfoMap['store']){
 				var selectInfoMap = allSelectInfoMap['store'];
 				if(data.store && data.store.id){
 					var selStoreValue = data.store.id;
@@ -818,6 +818,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			querySelectInfo('materialCategory','materialCategorys',1);
 			querySelectInfo('brand','brands',1);
 			querySelectInfo('material','materials',1);
+		}else if(routePath == 'shoppingGuide'){
+			querySelectInfo('store','stores',1);
 		}
 		queryBasicsInfoById();
 	}else{
@@ -894,6 +896,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					$('#'+data.matchType).show();
 				}				
 			})
+		}else if(routePath == 'shoppingGuide'){
+			querySelectInfo('store','stores');
 		}
 	}
 	
@@ -958,7 +962,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 				
 			}
 			
-			if(routePath == 'terminal' || routePath == 'salesConfig' || routePath == 'retailPrice' || routePath == 'account'){
+			if(routePath == 'terminal' || routePath == 'salesConfig' || routePath == 'retailPrice' || routePath == 'account' || routePath == 'shoppingGuide'){
 				var selstore = $scope.selstore;
 				if(selstore){
 					$scope.form.storeId = selstore.value;
