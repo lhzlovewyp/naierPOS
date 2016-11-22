@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import com.joker.common.mapper.UnitMapper;
 import com.joker.common.model.Unit;
 import com.joker.common.service.UnitService;
 import com.joker.core.dto.Page;
+import com.joker.core.expection.FailedException;
 
 /**
  * @author zhangfei
@@ -86,6 +88,18 @@ public class UnitServiceImpl implements UnitService {
 
 	@Override
 	public void updateUnit(Unit unit) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("clientId", unit.getClient().getId());
+		map.put("code", unit.getCode());
+		List<Unit> units = mapper.getUnitPageByCondition(map);
+		if(CollectionUtils.isNotEmpty(units)){
+			String id = unit.getId();
+			for (Unit unit2 : units) {
+				if(!unit2.getId().equals(id)){
+					throw new FailedException("同一个商户下编码不能重复");
+				}
+			}
+		}
 		mapper.updateUnit(unit);
 
 	}
@@ -94,6 +108,13 @@ public class UnitServiceImpl implements UnitService {
 	public void insertUnit(Unit unit) {
 		if (StringUtils.isBlank(unit.getId())) {
 			unit.setId(UUID.randomUUID().toString());
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("clientId", unit.getClient().getId());
+		map.put("code", unit.getCode());
+		int count = mapper.getUnitCountByCondition(map);
+		if(count > 0){
+			throw new FailedException("同一个商户下编码不能重复");
 		}
 		mapper.insertUnit(unit);
 	}
