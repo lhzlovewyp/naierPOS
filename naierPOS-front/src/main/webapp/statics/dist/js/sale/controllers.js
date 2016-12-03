@@ -746,7 +746,8 @@ app.controller("payingCtrl",['$scope','$location','PayService','SaleService','Me
 		}
 		//如果金额超过需要支付的金额，进行提示.
 		var amount=form.amount;
-		if((amount-0)> $scope.info.needPay){
+		var currentPayment=payment.amount || 0;
+		if((amount-0)> ($scope.info.needPay+currentPayment)){
 			alert("超出需要支付的金额.");
 			return;
 		}
@@ -796,7 +797,8 @@ app.controller("payingCtrl",['$scope','$location','PayService','SaleService','Me
 			alert("余额不足");
 			return;
 		}
-		if((amount-0)> $scope.info.needPay){
+		var currentPayment=payment.amount || 0
+		if((amount-0)> ($scope.info.needPay+currentPayment)){
 			alert("超出需要支付的金额.");
 			return;
 		}
@@ -841,7 +843,8 @@ app.controller("payingCtrl",['$scope','$location','PayService','SaleService','Me
 		//计算输入积分换算金额.
 		var amount = (form.point || 0)/member.memberPointPayConfig.pointPay * member.memberPointPayConfig.pointPayAMT
 		
-		if((amount-0)> $scope.info.needPay){
+		var currentPayment=payment.amount || 0
+		if((amount-0)> ($scope.info.needPay+currentPayment)){
 			alert("超出需要支付的金额.");
 			return;
 		}
@@ -877,8 +880,8 @@ app.controller("payingCtrl",['$scope','$location','PayService','SaleService','Me
 			return ;
 		} 
 		
-		
-		if($scope.info.needPay<=0){
+		var currentPayment=payment.amount || 0;
+		if(($scope.info.needPay+currentPayment)<=0){
 			alert("超出需要支付的金额.");
 			return;
 		}
