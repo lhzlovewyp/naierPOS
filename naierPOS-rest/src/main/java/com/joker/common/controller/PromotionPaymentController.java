@@ -182,7 +182,6 @@ public class PromotionPaymentController extends AbstractController {
 		Map params = paramsBody.getBody();
 		String promotionId = (String) params.get("promotionId");
 		String clientPaymentId = (String) params.get("clientPaymentId");
-		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(promotionId)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -199,13 +198,6 @@ public class PromotionPaymentController extends AbstractController {
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
-
-			if (StringUtils.isBlank(clientId)) {
-				clientId = account.getClient().getId();
-			}
-			
-			Client client = new Client();
-			client.setId(clientId);
 			
 			Promotion promotion = new Promotion();
 			promotion.setId(promotionId);
@@ -217,7 +209,7 @@ public class PromotionPaymentController extends AbstractController {
 			promotionPayment.setId(UUID.randomUUID().toString());
 			promotionPayment.setPromotion(promotion);
 			promotionPayment.setClientPayment(clientPayment);
-			promotionPayment.setClient(client);
+			promotionPayment.setClient(account.getClient());
 			promotionPayment.setCreated(new Date());
 			promotionPayment.setCreator(account.getId());
 
@@ -250,7 +242,6 @@ public class PromotionPaymentController extends AbstractController {
 		String id = (String) params.get("id");
 		String promotionId = (String) params.get("promotionId");
 		String clientPaymentId = (String) params.get("clientPaymentId");
-		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
 		if (StringUtils.isBlank(id)) {
@@ -279,13 +270,6 @@ public class PromotionPaymentController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
-			if (StringUtils.isBlank(clientId)) {
-				clientId = account.getClient().getId();
-			}
-			
-			Client client = new Client();
-			client.setId(clientId);
-
 			Promotion promotion = new Promotion();
 			promotion.setId(promotionId);
 
@@ -296,7 +280,7 @@ public class PromotionPaymentController extends AbstractController {
 			promotionPayment.setId(id);
 			promotionPayment.setPromotion(promotion);
 			promotionPayment.setClientPayment(clientPayment);
-			promotion.setClient(client);
+			promotion.setClient(account.getClient());
 			promotion.setStatus(status);
 			promotion.setModified(new Date());
 			promotion.setEditor(account.getId());

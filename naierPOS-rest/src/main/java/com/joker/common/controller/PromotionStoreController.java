@@ -184,7 +184,6 @@ public class PromotionStoreController extends AbstractController {
 		String storeId = (String) params.get("storeId");
 		String effDate = (String) params.get("effDate");
 		String expDate = (String) params.get("expDate");
-		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(promotionId)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -201,12 +200,6 @@ public class PromotionStoreController extends AbstractController {
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
-
-			if (StringUtils.isBlank(clientId)) {
-				clientId = account.getClient().getId();
-			}
-			Client client = new Client();
-			client.setId(clientId);
 
 			Promotion promotion = new Promotion();
 			promotion.setId(promotionId);
@@ -227,7 +220,7 @@ public class PromotionStoreController extends AbstractController {
 						DatetimeUtil.DATE));
 			}
 
-			promotionStore.setClient(client);
+			promotionStore.setClient(account.getClient());
 			promotionStore.setCreated(new Date());
 			promotionStore.setCreator(account.getId());
 
@@ -262,7 +255,6 @@ public class PromotionStoreController extends AbstractController {
 		String storeId = (String) params.get("storeId");
 		String effDate = (String) params.get("effDate");
 		String expDate = (String) params.get("expDate");
-		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
 		if (StringUtils.isBlank(id)) {
@@ -291,13 +283,6 @@ public class PromotionStoreController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
-			if (StringUtils.isBlank(clientId)) {
-				clientId = account.getClient().getId();
-			}
-			
-			Client client = new Client();
-			client.setId(clientId);
-
 			Promotion promotion = new Promotion();
 			promotion.setId(promotionId);
 
@@ -317,7 +302,7 @@ public class PromotionStoreController extends AbstractController {
 				promotionStore.setExpDate(DatetimeUtil.toDate(expDate,
 						DatetimeUtil.DATE));
 			}
-			promotionStore.setClient(client);
+			promotionStore.setClient(account.getClient());
 			promotionStore.setStatus(status);
 			promotionStore.setModified(new Date());
 			promotionStore.setEditor(account.getId());

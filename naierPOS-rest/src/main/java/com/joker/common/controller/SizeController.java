@@ -239,7 +239,6 @@ public class SizeController extends AbstractController {
 		String id = (String) params.get("id");
 		String code = (String) params.get("code");
 		String name = (String) params.get("name");
-		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
 		if (StringUtils.isBlank(id)) {
@@ -257,11 +256,6 @@ public class SizeController extends AbstractController {
 			rbody.setMsg("请输入尺码名称！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 		if (StringUtils.isBlank(status)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入状态！");
@@ -273,14 +267,11 @@ public class SizeController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
-
 			Size size = new Size();
 			size.setId(id);
 			size.setCode(code);
 			size.setName(name);
-			size.setClient(client);
+			size.setClient(account.getClient());
 			size.setStatus(status);
 			size.setModified(new Date());
 			size.setEditor(account.getId());

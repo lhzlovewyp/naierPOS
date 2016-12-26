@@ -186,7 +186,6 @@ public class PromotionOfferController extends AbstractController {
 			offerContent = String.valueOf(params.get("offerContent"));
 		}
 		String matchTypeId = (String) params.get("matchTypeId");
-		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(promotionId)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -209,13 +208,6 @@ public class PromotionOfferController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
-			if (StringUtils.isBlank(clientId)) {
-				clientId = account.getClient().getId();
-			}
-			
-			Client client = new Client();
-			client.setId(clientId);
-
 			Promotion promotion = new Promotion();
 			promotion.setId(promotionId);
 
@@ -225,7 +217,7 @@ public class PromotionOfferController extends AbstractController {
 			promotionOffer.setOfferType(offerTypeId);
 			promotionOffer.setOfferContent(new BigDecimal(offerContent));
 			promotionOffer.setMatchType(matchTypeId);
-			promotionOffer.setClient(client);
+			promotionOffer.setClient(account.getClient());
 			promotionOffer.setCreated(new Date());
 			promotionOffer.setCreator(account.getId());
 
@@ -263,7 +255,6 @@ public class PromotionOfferController extends AbstractController {
 			offerContent = String.valueOf(params.get("offerContent"));
 		}
 		String matchTypeId = (String) params.get("matchTypeId");
-		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
 		if (StringUtils.isBlank(id)) {
@@ -295,14 +286,7 @@ public class PromotionOfferController extends AbstractController {
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
-			Account account = (Account) user;
-
-			if (StringUtils.isBlank(clientId)) {
-				clientId = account.getClient().getId();
-			}
-			
-			Client client = new Client();
-			client.setId(clientId);
+			Account account = (Account) user;			
 
 			Promotion promotion = new Promotion();
 			promotion.setId(promotionId);
@@ -313,7 +297,7 @@ public class PromotionOfferController extends AbstractController {
 			promotionOffer.setOfferType(offerTypeId);
 			promotionOffer.setOfferContent(new BigDecimal(offerContent));
 			promotionOffer.setMatchType(matchTypeId);
-			promotionOffer.setClient(client);
+			promotionOffer.setClient(account.getClient());
 			promotionOffer.setStatus(status);
 			promotionOffer.setModified(new Date());
 			promotionOffer.setEditor(account.getId());

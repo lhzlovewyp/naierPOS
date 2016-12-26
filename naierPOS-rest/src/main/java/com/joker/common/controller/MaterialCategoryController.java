@@ -258,7 +258,6 @@ public class MaterialCategoryController extends AbstractController {
 		String code = (String) params.get("code");
 		String name = (String) params.get("name");
 		String parentId = (String) params.get("parentId");
-		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(code)) {
 			rbody.setStatus(ResponseState.FAILED);

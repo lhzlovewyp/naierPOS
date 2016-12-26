@@ -182,7 +182,6 @@ public class ColorController extends AbstractController {
 		Map params = paramsBody.getBody();
 		String code = (String) params.get("code");
 		String name = (String) params.get("name");
-		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(code)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -239,7 +238,6 @@ public class ColorController extends AbstractController {
 		String id = (String) params.get("id");
 		String code = (String) params.get("code");
 		String name = (String) params.get("name");
-		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
 		if (StringUtils.isBlank(id)) {
@@ -257,11 +255,6 @@ public class ColorController extends AbstractController {
 			rbody.setMsg("请输入名称！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 		if (StringUtils.isBlank(status)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入状态！");
@@ -273,14 +266,11 @@ public class ColorController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
-
 			Color updateColor = new Color();
 			updateColor.setId(id);
 			updateColor.setCode(code);
 			updateColor.setName(name);
-			updateColor.setClient(client);
+			updateColor.setClient(account.getClient());
 			updateColor.setStatus(status);
 			updateColor.setModified(new Date());
 			updateColor.setEditor(account.getId());

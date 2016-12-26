@@ -182,7 +182,6 @@ public class PromotionOfferMatchContentController extends AbstractController {
 		Map params = paramsBody.getBody();
 		String promotionOfferId = (String) params.get("promotionOfferId");
 		String matchContent = (String) params.get("matchContent");
-		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(promotionOfferId)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -200,13 +199,6 @@ public class PromotionOfferMatchContentController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
-			if (StringUtils.isBlank(clientId)) {
-				clientId = account.getClient().getId();
-			}
-			
-			Client client = new Client();
-			client.setId(clientId);
-
 			PromotionOffer promotionOffer = new PromotionOffer();
 			promotionOffer.setId(promotionOfferId);
 
@@ -214,7 +206,7 @@ public class PromotionOfferMatchContentController extends AbstractController {
 			promotionOfferMatchContent.setId(UUID.randomUUID().toString());
 			promotionOfferMatchContent.setPromotionOffer(promotionOffer);
 			promotionOfferMatchContent.setMatchContent(matchContent);
-			promotionOfferMatchContent.setClient(client);
+			promotionOfferMatchContent.setClient(account.getClient());
 			promotionOfferMatchContent.setCreated(new Date());
 			promotionOfferMatchContent.setCreator(account.getId());
 
@@ -247,7 +239,6 @@ public class PromotionOfferMatchContentController extends AbstractController {
 		Map params = paramsBody.getBody();
 		String id = (String) params.get("id");
 		String matchContent = (String) params.get("matchContent");
-		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
 		if (StringUtils.isBlank(id)) {
@@ -271,17 +262,10 @@ public class PromotionOfferMatchContentController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
-			if (StringUtils.isBlank(clientId)) {
-				clientId = account.getClient().getId();
-			}
-			
-			Client client = new Client();
-			client.setId(clientId);
-
 			PromotionOfferMatchContent promotionOfferMatchContent = new PromotionOfferMatchContent();
 			promotionOfferMatchContent.setId(id);
 			promotionOfferMatchContent.setMatchContent(matchContent);
-			promotionOfferMatchContent.setClient(client);
+			promotionOfferMatchContent.setClient(account.getClient());
 			promotionOfferMatchContent.setStatus(status);
 			promotionOfferMatchContent.setModified(new Date());
 			promotionOfferMatchContent.setEditor(account.getId());

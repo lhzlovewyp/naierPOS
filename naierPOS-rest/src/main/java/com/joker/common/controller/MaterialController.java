@@ -375,7 +375,6 @@ public class MaterialController extends AbstractController {
 		}
 		String barCode = (String) params.get("barcode");
 		String property = (String) params.get("property");
-		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
 		if (StringUtils.isBlank(id)) {
@@ -423,11 +422,6 @@ public class MaterialController extends AbstractController {
 			rbody.setMsg("请输入是否需要维护属性！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 		if (StringUtils.isBlank(status)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入状态！");
@@ -438,9 +432,6 @@ public class MaterialController extends AbstractController {
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
-
-			Client client = new Client();
-			client.setId(clientId);
 
 			Unit basicUnit = new Unit();
 			basicUnit.setId(basicUnitId);
@@ -459,7 +450,7 @@ public class MaterialController extends AbstractController {
 			material.setRetailPrice(new BigDecimal(retailPrice));
 			material.setBarCode(barCode);
 			material.setProperty(property);
-			material.setClient(client);
+			material.setClient(account.getClient());
 			material.setStatus(status);
 			material.setModified(new Date());
 			material.setEditor(account.getId());

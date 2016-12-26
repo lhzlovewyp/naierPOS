@@ -231,7 +231,6 @@ public class UnitConversionController extends AbstractController {
 			qtyB = String.valueOf(params.get("qtyB"));
 		}
 		String remark = (String) params.get("remark");
-		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(unitAId)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -314,7 +313,6 @@ public class UnitConversionController extends AbstractController {
 			qtyB = String.valueOf(params.get("qtyB"));
 		}
 		String remark = (String) params.get("remark");
-		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
 		if (StringUtils.isBlank(id)) {

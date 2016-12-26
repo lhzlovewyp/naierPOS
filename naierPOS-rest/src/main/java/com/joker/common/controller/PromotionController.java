@@ -193,7 +193,6 @@ public class PromotionController extends AbstractController {
 		String paymentRestrict = (String) params.get("paymentRestrict");
 		String memberRestrict = (String) params.get("memberRestrict");
 		String excluded = (String) params.get("excluded");
-		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(code)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -222,19 +221,11 @@ public class PromotionController extends AbstractController {
 		if (StringUtils.isBlank(memberRestrict)) {
 			memberRestrict = "ALL";
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
-
-			Client client = new Client();
-			client.setId(clientId);
 
 			Promotion promotion = new Promotion();
 			promotion.setId(UUID.randomUUID().toString());
@@ -257,7 +248,7 @@ public class PromotionController extends AbstractController {
 			promotion.setMemberRestrict(memberRestrict);
 			promotion.setExcluded(excluded);
 
-			promotion.setClient(client);
+			promotion.setClient(account.getClient());
 			promotion.setCreated(new Date());
 			promotion.setCreator(account.getId());
 
@@ -305,7 +296,6 @@ public class PromotionController extends AbstractController {
 		String paymentRestrict = (String) params.get("paymentRestrictId");
 		String memberRestrict = (String) params.get("memberRestrictId");
 		String excluded = (String) params.get("excluded");
-		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
 		if (StringUtils.isBlank(id)) {
@@ -340,11 +330,6 @@ public class PromotionController extends AbstractController {
 		if (StringUtils.isBlank(memberRestrict)) {
 			memberRestrict = "ALL";
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 		if (StringUtils.isBlank(status)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入状态！");
@@ -355,9 +340,6 @@ public class PromotionController extends AbstractController {
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
-
-			Client client = new Client();
-			client.setId(clientId);
 
 			Promotion promotion = new Promotion();
 			promotion.setId(id);
@@ -379,7 +361,7 @@ public class PromotionController extends AbstractController {
 			promotion.setPaymentRestrict(paymentRestrict);
 			promotion.setMemberRestrict(memberRestrict);
 			promotion.setExcluded(excluded);
-			promotion.setClient(client);
+			promotion.setClient(account.getClient());
 			promotion.setStatus(status);
 			promotion.setModified(new Date());
 			promotion.setEditor(account.getId());

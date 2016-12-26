@@ -182,7 +182,6 @@ public class BrandController extends AbstractController {
 		Map params = paramsBody.getBody();
 		String code = (String) params.get("code");
 		String name = (String) params.get("name");
-		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(code)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -239,7 +238,6 @@ public class BrandController extends AbstractController {
 		String id = (String) params.get("id");
 		String code = (String) params.get("code");
 		String name = (String) params.get("name");
-		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
 		if (StringUtils.isBlank(id)) {
@@ -257,11 +255,6 @@ public class BrandController extends AbstractController {
 			rbody.setMsg("请输入名称！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 		if (StringUtils.isBlank(status)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入状态！");
@@ -273,14 +266,11 @@ public class BrandController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
-
 			Brand updateBrand = new Brand();
 			updateBrand.setId(id);
 			updateBrand.setCode(code);
 			updateBrand.setName(name);
-			updateBrand.setClient(client);
+			updateBrand.setClient(account.getClient());
 			updateBrand.setStatus(status);
 			updateBrand.setModified(new Date());
 			updateBrand.setEditor(account.getId());

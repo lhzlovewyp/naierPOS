@@ -177,8 +177,6 @@ public class TerminalController extends AbstractController {
 		String storeId = (String) params.get("storeId");
 		String code = (String) params.get("code");
 		String name = (String) params.get("name");
-		String clientId = (String) params.get("clientId");
-
 		
 		if (StringUtils.isBlank(code)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -200,15 +198,12 @@ public class TerminalController extends AbstractController {
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
-
-			Client client = new Client();
-			client.setId(account.getClient().getId());
 			
 			Terminal addTerminal = new Terminal();
 			addTerminal.setId(UUID.randomUUID().toString());
 			addTerminal.setCode(code);
 			addTerminal.setName(name);
-			addTerminal.setClient(client);
+			addTerminal.setClient(account.getClient());
 			addTerminal.setCreated(new Date());
 			addTerminal.setCreator(account.getId());
 			

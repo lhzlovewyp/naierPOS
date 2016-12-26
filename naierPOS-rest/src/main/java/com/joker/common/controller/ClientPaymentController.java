@@ -175,7 +175,6 @@ public class ClientPaymentController extends AbstractController {
 		// 参数校验
 		Map params = paramsBody.getBody();
 		String paymentCode = (String) params.get("paymentCode");
-		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(paymentCode)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -229,7 +228,6 @@ public class ClientPaymentController extends AbstractController {
 		Map params = paramsBody.getBody();
 		String id = (String) params.get("id");
 		String paymentCode = (String) params.get("paymentCode");
-		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
 		if (StringUtils.isBlank(id)) {
@@ -240,11 +238,6 @@ public class ClientPaymentController extends AbstractController {
 		if (StringUtils.isBlank(paymentCode)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入支付方式！");
-			return rbody;
-		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
 			return rbody;
 		}
 		if (StringUtils.isBlank(status)) {
@@ -258,16 +251,13 @@ public class ClientPaymentController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
-
 			Payment payment = new Payment();
 			payment.setCode(paymentCode);
 
 			ClientPayment clientPayment = new ClientPayment();
 			clientPayment.setId(id);
 			clientPayment.setPayment(payment);
-			clientPayment.setClient(client);
+			clientPayment.setClient(account.getClient());
 			clientPayment.setStatus(status);
 			clientPayment.setModified(new Date());
 			clientPayment.setEditor(account.getId());

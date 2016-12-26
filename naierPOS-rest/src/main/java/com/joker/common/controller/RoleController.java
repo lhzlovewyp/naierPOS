@@ -272,7 +272,6 @@ public class RoleController extends AbstractController {
 		String loginAdmin = (String) params.get("loginAdmin");
 		String itemDISC = (String) params.get("itemDISC");
 		String allDISC = (String) params.get("allDISC");
-		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
 		if (StringUtils.isBlank(id)) {
@@ -310,11 +309,6 @@ public class RoleController extends AbstractController {
 			rbody.setMsg("请输入名称！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 		if (StringUtils.isBlank(status)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入状态！");
@@ -326,14 +320,11 @@ public class RoleController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
-
 			Role role = new Role();
 			role.setId(id);
 			role.setCode(code);
 			role.setName(name);
-			role.setClient(client);
+			role.setClient(account.getClient());
 			role.setLoginTerminal(loginTerminal);
 			role.setLoginAdmin(loginAdmin);
 			role.setItemDISC(itemDISC);

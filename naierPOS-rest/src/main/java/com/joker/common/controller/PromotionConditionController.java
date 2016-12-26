@@ -188,7 +188,6 @@ public class PromotionConditionController extends AbstractController {
 		}
 		String matchId = (String) params.get("matchId");
 		String matchTypeId = (String) params.get("matchTypeId");
-		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(promotionOfferId)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -211,13 +210,6 @@ public class PromotionConditionController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
-			if (StringUtils.isBlank(clientId)) {
-				clientId = account.getClient().getId();
-			}
-			
-			Client client = new Client();
-			client.setId(clientId);
-
 			PromotionOffer promotionOffer = new PromotionOffer();
 			promotionOffer.setId(promotionOfferId);
 
@@ -228,7 +220,7 @@ public class PromotionConditionController extends AbstractController {
 			promotionCondition.setCondition(new BigDecimal(condition));
 			promotionCondition.setMatch(matchId);
 			promotionCondition.setMatchType(matchTypeId);
-			promotionCondition.setClient(client);
+			promotionCondition.setClient(account.getClient());
 			promotionCondition.setCreated(new Date());
 			promotionCondition.setCreator(account.getId());
 
@@ -267,7 +259,6 @@ public class PromotionConditionController extends AbstractController {
 		}
 		String matchId = (String) params.get("matchId");
 		String matchTypeId = (String) params.get("matchTypeId");
-		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
 		if (StringUtils.isBlank(id)) {
@@ -296,20 +287,13 @@ public class PromotionConditionController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
-			if (StringUtils.isBlank(clientId)) {
-				clientId = account.getClient().getId();
-			}
-			
-			Client client = new Client();
-			client.setId(clientId);
-			
 			PromotionCondition promotionCondition = new PromotionCondition();
 			promotionCondition.setId(id);
 			promotionCondition.setConditionType(conditionTypeId);
 			promotionCondition.setCondition(new BigDecimal(condition));
 			promotionCondition.setMatch(matchId);
 			promotionCondition.setMatchType(matchTypeId);
-			promotionCondition.setClient(client);
+			promotionCondition.setClient(account.getClient());
 			promotionCondition.setStatus(status);
 			promotionCondition.setModified(new Date());
 			promotionCondition.setEditor(account.getId());

@@ -182,7 +182,6 @@ public class PromotionConditionMatchContentController extends AbstractController
 		Map params = paramsBody.getBody();
 		String promotionConditionId = (String) params.get("promotionConditionId");
 		String matchContent = (String) params.get("matchContent");
-		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(promotionConditionId)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -200,13 +199,6 @@ public class PromotionConditionMatchContentController extends AbstractController
 		if (user != null) {
 			Account account = (Account) user;
 
-			if (StringUtils.isBlank(clientId)) {
-				clientId = account.getClient().getId();
-			}
-			
-			Client client = new Client();
-			client.setId(clientId);
-
 			PromotionCondition promotionCondition = new PromotionCondition();
 			promotionCondition.setId(promotionConditionId);
 
@@ -214,7 +206,7 @@ public class PromotionConditionMatchContentController extends AbstractController
 			promotionConditionMatchContent.setId(UUID.randomUUID().toString());
 			promotionConditionMatchContent.setPromotionCondition(promotionCondition);
 			promotionConditionMatchContent.setMatchContent(matchContent);
-			promotionConditionMatchContent.setClient(client);
+			promotionConditionMatchContent.setClient(account.getClient());
 			promotionConditionMatchContent.setCreated(new Date());
 			promotionConditionMatchContent.setCreator(account.getId());
 
@@ -247,7 +239,6 @@ public class PromotionConditionMatchContentController extends AbstractController
 		Map params = paramsBody.getBody();
 		String id = (String) params.get("id");
 		String matchContent = (String) params.get("matchContent");
-		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
 		if (StringUtils.isBlank(id)) {
@@ -271,17 +262,10 @@ public class PromotionConditionMatchContentController extends AbstractController
 		if (user != null) {
 			Account account = (Account) user;
 
-			if (StringUtils.isBlank(clientId)) {
-				clientId = account.getClient().getId();
-			}
-			
-			Client client = new Client();
-			client.setId(clientId);
-
 			PromotionConditionMatchContent promotionConditionMatchContent = new PromotionConditionMatchContent();
 			promotionConditionMatchContent.setId(id);
 			promotionConditionMatchContent.setMatchContent(matchContent);
-			promotionConditionMatchContent.setClient(client);
+			promotionConditionMatchContent.setClient(account.getClient());
 			promotionConditionMatchContent.setStatus(status);
 			promotionConditionMatchContent.setModified(new Date());
 			promotionConditionMatchContent.setEditor(account.getId());

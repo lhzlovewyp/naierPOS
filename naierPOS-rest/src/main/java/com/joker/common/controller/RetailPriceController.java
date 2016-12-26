@@ -313,7 +313,6 @@ public class RetailPriceController extends AbstractController {
 
 		String effectiveDate = (String) params.get("effectiveDate");
 		String expiryDate = (String) params.get("expiryDate");
-		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(id)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -351,9 +350,6 @@ public class RetailPriceController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
-
 			RetailPrice retailPrice = new RetailPrice();
 			retailPrice.setId(id);
 			retailPrice.setPrice(new BigDecimal(price));
@@ -361,7 +357,7 @@ public class RetailPriceController extends AbstractController {
 					DatetimeUtil.DATE));
 			retailPrice.setEffectiveDate(DatetimeUtil.toDate(effectiveDate,
 					DatetimeUtil.DATE));
-			retailPrice.setClient(client);
+			retailPrice.setClient(account.getClient());
 			retailPrice.setModified(new Date());
 			retailPrice.setEditor(account.getId());
 

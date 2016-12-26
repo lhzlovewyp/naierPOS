@@ -189,7 +189,6 @@ public class MaterialPropertyController extends AbstractController {
 		String colorId = (String) params.get("colorId");
 		String sizeId = (String) params.get("sizeId");
 		String barCode = (String) params.get("barCode");
-		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(materialId)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -265,7 +264,6 @@ public class MaterialPropertyController extends AbstractController {
 		String colorId = (String) params.get("colorId");
 		String sizeId = (String) params.get("sizeId");
 		String barCode = (String) params.get("barCode");
-		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
 		if (StringUtils.isBlank(id)) {
@@ -288,11 +286,6 @@ public class MaterialPropertyController extends AbstractController {
 			rbody.setMsg("请输入尺码！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 		if (StringUtils.isBlank(status)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入状态！");
@@ -303,9 +296,6 @@ public class MaterialPropertyController extends AbstractController {
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
-
-			Client client = new Client();
-			client.setId(clientId);
 
 			Material material = new Material();
 			material.setId(materialId);
@@ -322,7 +312,7 @@ public class MaterialPropertyController extends AbstractController {
 			materialProperty.setColor(color);
 			materialProperty.setSize(size);
 			materialProperty.setBarCode(barCode);
-			materialProperty.setClient(client);
+			materialProperty.setClient(account.getClient());
 			materialProperty.setStatus(status);
 			materialProperty.setModified(new Date());
 			materialProperty.setEditor(account.getId());

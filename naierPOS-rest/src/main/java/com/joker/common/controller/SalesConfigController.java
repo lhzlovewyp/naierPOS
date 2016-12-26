@@ -288,7 +288,6 @@ public class SalesConfigController extends AbstractController {
 		if (params.get("flag") != null) {
 			flag = String.valueOf(params.get("flag"));
 		}
-		String clientId = (String) params.get("clientId");
 
 		if (StringUtils.isBlank(id)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -310,19 +309,11 @@ public class SalesConfigController extends AbstractController {
 			rbody.setMsg("请输入门店！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
-
+		
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
 			Account account = (Account) user;
-
-			Client client = new Client();
-			client.setId(clientId);
 
 			SalesConfig salesConfig = new SalesConfig();
 			salesConfig.setId(id);
@@ -330,7 +321,7 @@ public class SalesConfigController extends AbstractController {
 			salesConfig.setMaxCode(Integer.valueOf(maxCode));
 			salesConfig.setSalesDate(DatetimeUtil.toDate(salesDate,
 					DatetimeUtil.DATE));
-			salesConfig.setClient(client);
+			salesConfig.setClient(account.getClient());
 			salesConfig.setModified(new Date());
 			salesConfig.setEditor(account.getId());
 

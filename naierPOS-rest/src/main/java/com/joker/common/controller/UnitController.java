@@ -245,7 +245,6 @@ public class UnitController extends AbstractController {
 		}
 		String code = (String) params.get("code");
 		String name = (String) params.get("name");
-		String clientId = (String) params.get("clientId");
 		String status = (String) params.get("status");
 
 		if (StringUtils.isBlank(id)) {
@@ -268,11 +267,6 @@ public class UnitController extends AbstractController {
 			rbody.setMsg("请输入单位描述！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 		if (StringUtils.isBlank(status)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入状态！");
@@ -284,15 +278,12 @@ public class UnitController extends AbstractController {
 		if (user != null) {
 			Account account = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
-
 			Unit updateUnit = new Unit();
 			updateUnit.setId(id);
 			updateUnit.setUnitNum(Integer.valueOf(unitNum));
 			updateUnit.setCode(code);
 			updateUnit.setName(name);
-			updateUnit.setClient(client);
+			updateUnit.setClient(account.getClient());
 			updateUnit.setStatus(status);
 			updateUnit.setModified(new Date());
 			updateUnit.setEditor(account.getId());

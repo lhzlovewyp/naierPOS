@@ -321,7 +321,6 @@ public class AccountController extends AbstractController {
 		String name = (String) params.get("name");
 		String nick = (String) params.get("nick");
 		String password = (String) params.get("password");
-		String clientId = (String) params.get("clientId");
 		String storeIds = (String) params.get("storeIds");
 		String roleId = (String) params.get("roleId");
 		String status = (String) params.get("status");
@@ -347,11 +346,6 @@ public class AccountController extends AbstractController {
 			rbody.setMsg("请输入密码！");
 			return rbody;
 		}
-		if (StringUtils.isBlank(clientId)) {
-			rbody.setStatus(ResponseState.FAILED);
-			rbody.setMsg("请输入商户！");
-			return rbody;
-		}
 		if (StringUtils.isBlank(status)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入状态！");
@@ -363,14 +357,11 @@ public class AccountController extends AbstractController {
 		if (user != null) {
 			Account loginAccount = (Account) user;
 
-			Client client = new Client();
-			client.setId(clientId);
-
 			Account account = new Account();
 			account.setId(id);
 			account.setName(name);
 			account.setNick(nick);
-			account.setClient(client);
+			account.setClient(account.getClient());
 			account.setPassword(password);
 			account.setCreated(new Date());
 			account.setCreator(loginAccount.getId());
