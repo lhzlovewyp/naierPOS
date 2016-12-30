@@ -57,18 +57,22 @@ private List<PromotionOffer> promotionOffers;
 			}
 		}
 		
+		Map<String,Object> map=PromotionUtil.cacAllPrice(saleDto, saleDto.getSaleInfos(), contents, offer.getMatchType());
+
+		details=(List<SaleInfo>) map.get("details");
+		
 		SaleInfo saleInfo=PromotionUtil.createPromotionSaleInfo(saleDto.getSaleInfos().size());
 		saleInfo.setTotalPrice(offer.getOfferContent().negate());
 		saleInfo.setId(RandomCodeFactory.defaultGenerateMixed());
 		
-		if(CollectionUtils.isNotEmpty(contents)){
+		if(CollectionUtils.isNotEmpty(details)){
 			
-			for(int i=saleDto.getSaleInfos().size()-1;i>=0;i--){
-				String id=saleDto.getSaleInfos().get(i).getId();
-				if(StringUtils.isNotBlank(id) && id.equals(contents.get(contents.size()-1))){
-					details.add(saleDto.getSaleInfos().get(i));
-				}
-			}
+//			for(int i=saleDto.getSaleInfos().size()-1;i>=0;i--){
+//				String id=saleDto.getSaleInfos().get(i).getId();
+//				if(StringUtils.isNotBlank(id) && contents.contains(id)){
+//					details.add(saleDto.getSaleInfos().get(i));
+//				}
+//			}
 			
 			//给销售单中商品设置促销折扣金额.
 			PromotionUtil.setSalesPromoPrice(details, saleDto.getSaleInfos(), saleInfo.getTotalPrice(),saleInfo);
@@ -76,7 +80,7 @@ private List<PromotionOffer> promotionOffers;
 			//如果促销折扣是针对商品的信息,把数据插入到商品信息的后面.
 			for(int i=saleDto.getSaleInfos().size()-1;i>=0;i--){
 				String id=saleDto.getSaleInfos().get(i).getId();
-				if(StringUtils.isNotBlank(id) && id.equals(contents.get(contents.size()-1))){
+				if(StringUtils.isNotBlank(id) && id.equals(details.get(details.size()-1).getId())){
 					saleDto.getSaleInfos().add(i+1, saleInfo);
 					break;
 				}

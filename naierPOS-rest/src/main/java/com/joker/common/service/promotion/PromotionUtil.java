@@ -34,14 +34,14 @@ public class PromotionUtil {
 			amount = saleDto.getTotalPrice();
 		}else if(type.equals(Constants.PROMOTION_TYPE_MATCAT)){//类目;
 			for(SaleInfo info:saleInfos){
-				if(StringUtils.isEmpty(info.getDiscType()) && contents.contains(info.getMaterial().getCategory().getId())){//折扣类型为空，标记是商品.
+				if(StringUtils.isEmpty(info.getDiscType()) && contents.contains(info.getCategory().getId())){//折扣类型为空，标记是商品.
 					amount=amount.add(info.getSaleInfoTotalPrice());
 					details.add(info);
 				}
 			}
 		}else if(type.equals(Constants.PROMOTION_TYPE_BRAND)){//品牌
 			for(SaleInfo info:saleInfos){
-				if(StringUtils.isEmpty(info.getDiscType()) && contents.contains(info.getMaterial().getBrand().getId())){//折扣类型为空，标记是商品.
+				if(StringUtils.isEmpty(info.getDiscType()) && contents.contains(info.getBrand().getId())){//折扣类型为空，标记是商品.
 					amount=amount.add(info.getSaleInfoTotalPrice());
 					details.add(info);
 				}
