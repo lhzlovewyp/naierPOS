@@ -753,8 +753,13 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 	/**
 	 * 获取下拉菜单
 	 */
-	function querySelectInfo(type,selectParam,queryBasics){
+	function querySelectInfo(type,selectParam,queryBasics,paramObj){
 		var pageBody = {};
+		if(paramObj){
+			for(var key in paramObj){
+				pageBody[key] = paramObj[key];
+			}
+		}
 		BasicsService.queryByList(pageBody,type).then(function(data){
     		if(data && data.length > 0){
     			var len = data.length;
@@ -797,7 +802,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			querySelectInfo('payment','Payments',1);
 		}else if(routePath == 'retailPrice'){
 			querySelectInfo('store','stores',1);
-			querySelectInfo('material','materials',1);
+			querySelectInfo('material','materials',1,{'start':0,'limit':100});
 			querySelectInfo('unit','units',1);
 		}else if(routePath == 'material'){
 			querySelectInfo('brand','brands',1);
@@ -806,7 +811,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			querySelectInfo('clientPayment','clientPayments',1);
 			querySelectInfo('promotion','promotions',1);
 		}else if(routePath == 'materialProperty'){
-			querySelectInfo('material','materials',1);
+			querySelectInfo('material','materials',1,{'start':0,'limit':100});
 			querySelectInfo('color','colors',1);
 			querySelectInfo('size','sizes',1);
 		}else if(routePath == 'promotionStore'){
@@ -817,7 +822,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		}else if(routePath == 'promotionOfferMatchContent' || routePath == 'promotionConditionMatchContent'){
 			querySelectInfo('materialCategory','materialCategorys',1);
 			querySelectInfo('brand','brands',1);
-			querySelectInfo('material','materials',1);
+			querySelectInfo('material','materials',1,{'start':0,'limit':100});
 		}else if(routePath == 'shoppingGuide'){
 			querySelectInfo('store','stores',1);
 		}
@@ -838,7 +843,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			querySelectInfo('payment','Payments');
 		}else if(routePath == 'retailPrice'){
 			querySelectInfo('store','stores');
-			querySelectInfo('material','materials');
+			querySelectInfo('material','materials',null,{'start':0,'limit':100});
 			querySelectInfo('unit','units');
 		}else if(routePath == 'material'){
 			querySelectInfo('brand','brands');
@@ -850,7 +855,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 				completeQueryById = true;
 			}
 		}else if(routePath == 'materialProperty'){
-			querySelectInfo('material','materials');
+			querySelectInfo('material','materials',null,{'start':0,'limit':100});
 			querySelectInfo('color','colors');
 			querySelectInfo('size','sizes');
 		}else if(routePath == 'promotionStore'){
@@ -874,7 +879,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					}else if(data.matchType == 'BRAND'){
 						querySelectInfo('brand','brands');
 					}else if(data.matchType == 'MAT'){
-						querySelectInfo('material','materials');
+						querySelectInfo('material','materials',null,{'start':0,'limit':100});
 					}
 					$('.MatchContent').hide();
 					$('#'+data.matchType).show();
@@ -890,7 +895,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					}else if(data.matchType == 'BRAND'){
 						querySelectInfo('brand','brands');
 					}else if(data.matchType == 'MAT'){
-						querySelectInfo('material','materials');
+						querySelectInfo('material','materials',null,{'start':0,'limit':100});
 					}
 					$('.MatchContent').hide();
 					$('#'+data.matchType).show();
@@ -986,8 +991,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					$scope.form.unitId = selUnit.value;
 				}
 				var selMaterial = $scope.selMaterial;
-				if(selMaterial){
-					$scope.form.materialId = selMaterial.value;
+				if(selMaterial && selMaterial.length >= 1){
+					$scope.form.materialId = selMaterial[0].value;
 				}
 			}
 			
@@ -1062,8 +1067,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			}
 			if(routePath == 'materialProperty'){
 				var selMaterial = $scope.selMaterial;
-				if(selMaterial){
-					$scope.form.materialId = selMaterial.value;
+				if(selMaterial && selMaterial.length >= 1){
+					$scope.form.materialId = selMaterial[0].value;
 				}
 				var selColor = $scope.selColor;
 				if(selColor){
@@ -1115,8 +1120,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 							}
 						}else if(matchTypeId == 'MAT'){
 							var selMaterial = $scope.selMaterial;
-							if(selMaterial){
-								$scope.form.matchContent = selMaterial.value;
+							if(selMaterial && selMaterial.length >= 1){
+								$scope.form.matchContent = selMaterial[0].value;
 							}
 						}
 					}
@@ -1154,8 +1159,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 							}
 						}else if(matchTypeId == 'MAT'){
 							var selMaterial = $scope.selMaterial;
-							if(selMaterial){
-								$scope.form.matchContent = selMaterial.value;
+							if(selMaterial && selMaterial.length >= 1){
+								$scope.form.matchContent = selMaterial[0].value;
 							}
 						}
 					}
@@ -1197,6 +1202,35 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
                 }
             });
         }
+	}
+	
+	var beforeKeyword = null;
+	$scope.fSearchMaterialChange = function(data){
+		if(data == '' || data.keyword != beforeKeyword){
+			if(data == ''){
+				beforeKeyword = '';
+			}else{
+				beforeKeyword = data.keyword;
+			}
+			querySelectInfo('material','materials',null,{'start':0,'limit':100,'likeOne':data.keyword});
+		}
+	}
+	var initMaterialSearchFlag = false;
+	$scope.initMaterialSearch = function(data){
+		initMaterialSearchFlag = true;
+		$("#multi_material").find(".inputFilter").bind('input propertychange', function() {
+			if($(this).val()==''){
+				beforeKeyword = '';
+				querySelectInfo('material','materials',null,{'start':0,'limit':100,'likeOne':''});
+			}
+		})
+	}
+	
+	
+	$scope.materialLocalLang = {
+		nothingSelected:"没有选择",
+		reset:"重置",
+		search:"搜索物料编码或者物料名称..."
 	}
 	
 	$scope.cancel=function(){

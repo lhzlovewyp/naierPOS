@@ -15,8 +15,10 @@
 						<div class="form-group">
 							<label for="Material" class="col-sm-2 control-label">物料</label>
 							<div class="col-sm-4">
-								<select id="status" name="status" class="form-control" ng-model="selMaterial" ng-options="x.show for x in materials">
-								</select>
+								<div id="multi_material" isteven-multi-select input-model="materials" output-model="selMaterial" button-label="show"
+					    			item-label="show" tick-property="ticked" selection-mode="single" on-clear="fSearchMaterialChange('')" 
+					    			on-search-change="fSearchMaterialChange(data)" translation="materialLocalLang" on-open="initMaterialSearch()">
+								</div>
 							</div>
 						</div>
 						<div class="form-group">
