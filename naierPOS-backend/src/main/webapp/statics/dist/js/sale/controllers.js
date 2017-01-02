@@ -457,7 +457,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 				var selectInfoMap = allSelectInfoMap['material'];
 				if(data.material && data.material.id){
 					var selMaterialValue = data.material.id;
-					$scope.selMaterial.push(selectInfoMap[selMaterialValue]);
+					selectInfoMap[selMaterialValue].ticked = true;
+					$scope.selMaterial = [selectInfoMap[selMaterialValue]];
 				}
 			}
 			if(routePath == 'retailPrice' && allSelectInfoMap['unit']){
@@ -506,7 +507,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 				var selectInfoMap = allSelectInfoMap['material'];
 				if(data.material && data.material.id){
 					var selMaterialValue = data.material.id;
-					$scope.selMaterial.push(selectInfoMap[selMaterialValue]);
+					selectInfoMap[selMaterialValue].ticked = true;
+					$scope.selMaterial = [selectInfoMap[selMaterialValue]];
 				}
 			}
 			if(routePath == 'materialProperty' && allSelectInfoMap['color']){
@@ -568,7 +570,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 				var selectInfoMap = allSelectInfoMap['material'];
 				if(data.matchContent){
 					var selMatchContentValue = data.matchContent;
-					$scope.selMaterial.push(selectInfoMap[selMatchContentValue]);
+					selectInfoMap[selMatchContentValue].ticked = true;
+					$scope.selMaterial = [selectInfoMap[selMatchContentValue]];
 				}
 			}
 		}else{
