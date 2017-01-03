@@ -64,6 +64,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="likeName != null">
 				and a.name like CONCAT('%','${likeName}','%' )  
 			</if>
+			<if test="likeOne != null">
+				and (a.name like CONCAT('%','${likeOne}','%' ) or  a.Code like CONCAT('%','${likeOne}','%' ))
+			</if>
 			order by a.ID desc
 			<if test="start != null and limit != null">
 				limit #{start},#{limit}

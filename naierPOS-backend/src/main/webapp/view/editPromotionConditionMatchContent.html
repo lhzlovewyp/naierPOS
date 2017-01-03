@@ -21,10 +21,10 @@
 							</select>
 						</div>
 						<div id="MAT" class="MatchContent" style="display: none;">
-							<select id="Material" name="Material"
-								class="form-control" ng-model="selMaterial"
-								ng-options="x.show for x in materials">
-							</select>
+							<div id="multi_material" isteven-multi-select input-model="materials" output-model="selMaterial" button-label="show"
+					    			item-label="show" tick-property="ticked" selection-mode="single" on-clear="fSearchMaterialChange('')" 
+					    			on-search-change="fSearchMaterialChange(data)"  on-open="initMaterialSearch()">
+							</div>
 						</div>
 					</div>
 				</div>

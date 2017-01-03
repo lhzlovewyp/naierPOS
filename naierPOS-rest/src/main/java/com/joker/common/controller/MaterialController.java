@@ -160,6 +160,15 @@ public class MaterialController extends AbstractController {
 	public ReturnBody getMaterialByList(@RequestBody ParamsBody paramsBody,
 			HttpServletRequest request, HttpServletResponse response) {
 		ReturnBody rbody = new ReturnBody();
+		// 参数校验
+		Map params = paramsBody.getBody();
+		Integer start = (Integer) params.get("start");
+		Integer limit = (Integer) params.get("limit");
+		start = (start == null ? 0 : start);
+		limit = (limit == null ? 100 : limit);
+		
+		String likeOne = (String) params.get("likeOne");
+		
 		String token = paramsBody.getToken();
 		Object user = CacheFactory.getCache().get(token);
 		if (user != null) {
@@ -167,6 +176,14 @@ public class MaterialController extends AbstractController {
 			String clientId = account.getClient().getId();
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("clientId", clientId);
+			if(params.get("start") != null && params.get("limit") != null){
+				map.put("start", start);
+				map.put("limit", limit);
+			}
+			if(StringUtils.isNotBlank(likeOne)){
+				map.put("likeOne", likeOne);
+			}
+			
 			List<Material> list = materialService
 					.getMaterialPageByCondition(map);
 			rbody.setData(list);
