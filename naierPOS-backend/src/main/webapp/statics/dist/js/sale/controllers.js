@@ -805,7 +805,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			querySelectInfo('payment','Payments',1);
 		}else if(routePath == 'retailPrice'){
 			querySelectInfo('store','stores',1);
-			querySelectInfo('material','materials',1,{'start':0,'limit':100});
+			querySelectInfo('material','materials',1,{'start':0,'limit':20});
 			querySelectInfo('unit','units',1);
 		}else if(routePath == 'material'){
 			querySelectInfo('brand','brands',1);
@@ -814,7 +814,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			querySelectInfo('clientPayment','clientPayments',1);
 			querySelectInfo('promotion','promotions',1);
 		}else if(routePath == 'materialProperty'){
-			querySelectInfo('material','materials',1,{'start':0,'limit':100});
+			querySelectInfo('material','materials',1,{'start':0,'limit':20});
 			querySelectInfo('color','colors',1);
 			querySelectInfo('size','sizes',1);
 		}else if(routePath == 'promotionStore'){
@@ -825,7 +825,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		}else if(routePath == 'promotionOfferMatchContent' || routePath == 'promotionConditionMatchContent'){
 			querySelectInfo('materialCategory','materialCategorys',1);
 			querySelectInfo('brand','brands',1);
-			querySelectInfo('material','materials',1,{'start':0,'limit':100});
+			querySelectInfo('material','materials',1,{'start':0,'limit':20});
 		}else if(routePath == 'shoppingGuide'){
 			querySelectInfo('store','stores',1);
 		}
@@ -846,7 +846,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			querySelectInfo('payment','Payments');
 		}else if(routePath == 'retailPrice'){
 			querySelectInfo('store','stores');
-			querySelectInfo('material','materials',null,{'start':0,'limit':100});
+			querySelectInfo('material','materials',null,{'start':0,'limit':20});
 			querySelectInfo('unit','units');
 		}else if(routePath == 'material'){
 			querySelectInfo('brand','brands');
@@ -858,7 +858,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 				completeQueryById = true;
 			}
 		}else if(routePath == 'materialProperty'){
-			querySelectInfo('material','materials',null,{'start':0,'limit':100});
+			querySelectInfo('material','materials',null,{'start':0,'limit':20});
 			querySelectInfo('color','colors');
 			querySelectInfo('size','sizes');
 		}else if(routePath == 'promotionStore'){
@@ -882,7 +882,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					}else if(data.matchType == 'BRAND'){
 						querySelectInfo('brand','brands');
 					}else if(data.matchType == 'MAT'){
-						querySelectInfo('material','materials',null,{'start':0,'limit':100});
+						querySelectInfo('material','materials',null,{'start':0,'limit':20});
 					}
 					$('.MatchContent').hide();
 					$('#'+data.matchType).show();
@@ -898,7 +898,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 					}else if(data.matchType == 'BRAND'){
 						querySelectInfo('brand','brands');
 					}else if(data.matchType == 'MAT'){
-						querySelectInfo('material','materials',null,{'start':0,'limit':100});
+						querySelectInfo('material','materials',null,{'start':0,'limit':20});
 					}
 					$('.MatchContent').hide();
 					$('#'+data.matchType).show();
@@ -1215,7 +1215,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 			}else{
 				beforeKeyword = data.keyword;
 			}
-			querySelectInfo('material','materials',null,{'start':0,'limit':100,'likeOne':data.keyword});
+			querySelectInfo('material','materials',null,{'start':0,'limit':20,'likeOne':data.keyword});
 		}
 	}
 	var initMaterialSearchFlag = false;
@@ -1224,7 +1224,7 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
 		$("#multi_material").find(".inputFilter").bind('input propertychange', function() {
 			if($(this).val()==''){
 				beforeKeyword = '';
-				querySelectInfo('material','materials',null,{'start':0,'limit':100,'likeOne':''});
+				querySelectInfo('material','materials',null,{'start':0,'limit':20,'likeOne':''});
 			}
 		})
 	}
