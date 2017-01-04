@@ -87,14 +87,15 @@ public class DiscPromotionParser implements PromotionParser {
 		
 		
 		//如果促销折扣是针对商品的信息,把数据插入到商品信息的后面.
-		if(CollectionUtils.isNotEmpty(contents)){
+		if(CollectionUtils.isNotEmpty(details)){
 			for(int i=saleDto.getSaleInfos().size()-1;i>=0;i--){
 				String id=saleDto.getSaleInfos().get(i).getId();
-				if(StringUtils.isNotBlank(id) && id.equals(contents.get(contents.size()-1))){
+				if(StringUtils.isNotBlank(id) && id.equals(details.get(details.size()-1).getId())){
 					saleDto.getSaleInfos().add(i+1, saleInfo);
 					break;
 				}
 			}
+			
 		}else{
 			saleDto.getSaleInfos().add(saleInfo);
 		}
