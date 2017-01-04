@@ -671,7 +671,7 @@ app.controller("discCtrl",['$scope','$location','SaleService','ngDialog',functio
 				}
 				disc=0-(totalPrice*(100-inputDisc)/100).toFixed(2);
 			}else if(type=="2"){//折让
-				if(inputDisc<0 || inputDisc > totalPrice){
+				if(inputDisc<0 || (inputDisc - totalPrice>0)){
 					return;
 				}
 				disc=0-inputDisc;
