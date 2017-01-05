@@ -777,7 +777,8 @@ app.controller("routeEditBasicsCtl",['$scope','$location','$routeParams','ngDial
     				if(type == 'clientPayment'){
     					name = data[i].payment.name;
     				}
-					var selectObj = {"value":id,"show":name,"id":id,"name":name,"code":data[i].code};
+    				var text = name + "(" + data[i].code + ")";
+					var selectObj = {"value":id,"show":name,"id":id,"name":name,"code":data[i].code,"text":text};
 					allSelect.push(selectObj);
 					selectInfoMap[id] = selectObj;
 				}
