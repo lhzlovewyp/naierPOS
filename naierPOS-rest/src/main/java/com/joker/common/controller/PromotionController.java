@@ -193,6 +193,7 @@ public class PromotionController extends AbstractController {
 		String paymentRestrict = (String) params.get("paymentRestrict");
 		String memberRestrict = (String) params.get("memberRestrict");
 		String excluded = (String) params.get("excluded");
+		String sort = (String) params.get("sort");
 
 		if (StringUtils.isBlank(code)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -214,6 +215,11 @@ public class PromotionController extends AbstractController {
 		}
 		if (!NumberUtils.isDigits(repeatEffect)) {
 			repeatEffect = "0";
+		}
+		if (!NumberUtils.isDigits(sort)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("优先级请输入数字！");
+			return rbody;
 		}
 		if (StringUtils.isBlank(paymentRestrict)) {
 			paymentRestrict = "NON";
@@ -247,6 +253,7 @@ public class PromotionController extends AbstractController {
 			promotion.setPaymentRestrict(paymentRestrict);
 			promotion.setMemberRestrict(memberRestrict);
 			promotion.setExcluded(excluded);
+			promotion.setSort(Integer.valueOf(sort));
 
 			promotion.setClient(account.getClient());
 			promotion.setCreated(new Date());
@@ -297,6 +304,7 @@ public class PromotionController extends AbstractController {
 		String memberRestrict = (String) params.get("memberRestrictId");
 		String excluded = (String) params.get("excluded");
 		String status = (String) params.get("status");
+		String sort = (String) params.get("sort");
 
 		if (StringUtils.isBlank(id)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -316,6 +324,11 @@ public class PromotionController extends AbstractController {
 		if (StringUtils.isBlank(effDate)) {
 			rbody.setStatus(ResponseState.FAILED);
 			rbody.setMsg("请输入生效日期！");
+			return rbody;
+		}
+		if (!NumberUtils.isDigits(sort)) {
+			rbody.setStatus(ResponseState.FAILED);
+			rbody.setMsg("优先级请输入数字！");
 			return rbody;
 		}
 		if (StringUtils.isBlank(offerRelation)) {
@@ -365,6 +378,7 @@ public class PromotionController extends AbstractController {
 			promotion.setStatus(status);
 			promotion.setModified(new Date());
 			promotion.setEditor(account.getId());
+			promotion.setSort(Integer.valueOf(sort));
 
 			promotionService.updatePromotion(promotion);
 			rbody.setStatus(ResponseState.SUCCESS);

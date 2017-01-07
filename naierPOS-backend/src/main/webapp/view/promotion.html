@@ -44,6 +44,7 @@
 						<th>失效日期</th>
 						<th>生效时间</th>
 						<th>失效时间</th>
+						<th>优先级</th>
 						<th>状态</th>
 						<th>操作</th>
 					</tr>
@@ -56,6 +57,7 @@
 		                <td>{{result.expDate | date:'yyyy-MM-dd'}}</td>
 		                <td>{{result.effTime | date:'HH:mm:ss'}}</td>
 		                <td>{{result.expTime | date:'HH:mm:ss'}}</td>
+		                <td>{{result.sort}}</td>
 						<td>{{showStatusDesc(result.status)}}</td>
 						<td>
 							<a href="/backend/edit/promotion/{{result.id}}" class="btn btn-info btn-xs">编辑基本信息</a>
