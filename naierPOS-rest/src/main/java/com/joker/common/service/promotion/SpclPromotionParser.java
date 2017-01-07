@@ -65,7 +65,7 @@ public class SpclPromotionParser implements PromotionParser{
 			}
 			//计算促销优惠价格.
 			if(amount.intValue()>0){
-				SaleInfo saleInfo=PromotionUtil.createPromotionSaleInfo(saleDto.getSaleInfos().size());
+				SaleInfo saleInfo=PromotionUtil.createPromotionSaleInfo(promotion,saleDto.getSaleInfos().size());
 				saleInfo.setTotalPrice(spclPrice.subtract(amount));
 				
 				saleInfo.setId(RandomCodeFactory.defaultGenerateMixed());

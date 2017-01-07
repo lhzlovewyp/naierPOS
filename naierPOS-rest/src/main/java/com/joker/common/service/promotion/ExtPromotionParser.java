@@ -70,7 +70,7 @@ public class ExtPromotionParser implements PromotionParser {
 			list.add(saleInfo);
 		}
 		//计算促销优惠价格.
-		SaleInfo saleInfo=PromotionUtil.createPromotionSaleInfo(saleDto.getSaleInfos().size());
+		SaleInfo saleInfo=PromotionUtil.createPromotionSaleInfo(promotion,saleDto.getSaleInfos().size());
 		saleInfo.setTotalPrice(extAmount.subtract(amount));
 		saleInfo.setId(RandomCodeFactory.defaultGenerateMixed());
 		//给销售单中商品设置促销折扣金额.

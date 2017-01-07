@@ -49,6 +49,13 @@ public class SaleDto {
 	
 	private String cancelPromotion;
 	
+	//冗余字段,促销金额.
+	private BigDecimal promotionAmount = new BigDecimal(0) ;
+	
+	public void addPromotionAmount(BigDecimal num){
+		promotionAmount=promotionAmount.add(num);
+	}
+	
 	public Date getSaleDate() {
 		return saleDate;
 	}
@@ -151,6 +158,12 @@ public class SaleDto {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public BigDecimal getPromotionAmount() {
+		return promotionAmount;
+	}
+	public void setPromotionAmount(BigDecimal promotionAmount) {
+		this.promotionAmount = promotionAmount;
 	}
 	
 	

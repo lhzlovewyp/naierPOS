@@ -135,8 +135,8 @@ public class PromotionConditionRuleParseImpl implements PromotionConditionRulePa
 	private boolean matAmtValidate(){
 		BigDecimal amount=new BigDecimal(0);
 		if(promotionCondition.getMatch().equals(Constants.PROMOTION_CONDITION_MATCH_ANY)){
-			//any的情况下，只需要商品数量达标即可.
-			amount=saleDto.getTotalPrice();
+			
+			amount=saleDto.getTotalPrice().add(saleDto.getPromotionAmount());
 		}else if(promotionCondition.getMatch().equals(Constants.PROMOTION_CONDITION_MATCH_SAME)){
 			if(promotionCondition.getMatchType().equals(Constants.PROMOTION_TYPE_MATCAT)){//类目
 					if(CollectionUtils.isNotEmpty(promotionCondition.getPromotionConditionMatchContents())){
@@ -213,7 +213,7 @@ public class PromotionConditionRuleParseImpl implements PromotionConditionRulePa
 	
 	//整单金额
 	private boolean ttlAmtValidate(){
-		if(promotionCondition.getCondition().compareTo(saleDto.getTotalPrice())<0){
+		if(promotionCondition.getCondition().compareTo(saleDto.getNeedPay())<0){
 			return true;
 		}
 		return false;

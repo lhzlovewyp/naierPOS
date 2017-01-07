@@ -99,6 +99,31 @@ public class SaleController extends AbstractController{
 		return rbody;
 	}
 	
+	@RequestMapping(value = { "/sale/autoJoinPromotions" }, method = RequestMethod.POST)
+	@NotNull(value="token")
+	@ResponseBody
+	public ReturnBody autoJoinPromotions(@RequestBody ParamsBody paramsBody,
+			HttpServletRequest request, HttpServletResponse response){
+		ReturnBody rbody = new ReturnBody();
+		String token = paramsBody.getToken();
+		Object user = CacheFactory.getCache().get(token);
+		if (user != null) {
+			Account account = (Account) user;
+			JSONObject jsonObject = new JSONObject(paramsBody.getBody());
+			SaleDto dto = JSONObject.parseObject(jsonObject.toJSONString(), SaleDto.class);
+			PromotionEngine engine = new PromotionEngine(account.getClient().getId(), account.getStore().getId(),dto);
+			List<Promotion> promotions=engine.getAvailablePromotion();
+			if(CollectionUtils.isNotEmpty(promotions)){
+				dto.setEffPromotions(promotions);
+				dto.setPromotions(promotions);
+				dto=engine.calPromotions();
+			}
+			rbody.setData(dto);
+			rbody.setStatus(ResponseState.SUCCESS);
+		}
+		return rbody;
+	}
+	
 	/**
 	 * 
 	 * 保存支付信息.

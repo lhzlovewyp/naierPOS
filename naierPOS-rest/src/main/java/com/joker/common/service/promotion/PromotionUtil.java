@@ -15,6 +15,7 @@ import com.joker.common.Constant.Constants;
 import com.joker.common.dto.SaleDto;
 import com.joker.common.dto.SaleInfo;
 import com.joker.common.model.Material;
+import com.joker.common.model.promotion.Promotion;
 
 /**
  * @author lvhaizhen
@@ -61,11 +62,12 @@ public class PromotionUtil {
 	}
 	
 	
-	public static SaleInfo createPromotionSaleInfo(int size){
+	public static SaleInfo createPromotionSaleInfo(Promotion promotion,int size){
 		SaleInfo saleInfo=new SaleInfo();
 		saleInfo.setName("促销折扣");
 		saleInfo.setCode("促销折扣");
 		saleInfo.setDiscType("3");
+		saleInfo.setAbbr(promotion.getName());
 		saleInfo.setSort((1000+size)+"");
 		saleInfo.addItemClassCode(Constants.SALE_TYPE_PROMDISC);
 		return saleInfo;
