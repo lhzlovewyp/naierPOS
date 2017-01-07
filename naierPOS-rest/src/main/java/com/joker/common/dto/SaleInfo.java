@@ -82,6 +82,8 @@ public class SaleInfo {
 	
 	//如果是促销活动类型，存储参加当前促销活动的物料信息.
 	private List<SaleInfo> promotionDetails;
+	
+	private String relatedId;
 
 	
 	public void addPromotionDiscount(BigDecimal amount,String disc){
@@ -325,6 +327,14 @@ public class SaleInfo {
 	public void setPromotionDiscountDetails(
 			List<SalesOrderDiscount> promotionDiscountDetails) {
 		this.promotionDiscountDetails = promotionDiscountDetails;
+	}
+
+	public String getRelatedId() {
+		return relatedId;
+	}
+
+	public void setRelatedId(String relatedId) {
+		this.relatedId = relatedId;
 	}
 	
 }

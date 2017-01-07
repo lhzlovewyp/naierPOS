@@ -28,6 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="created" column="Created" />
 		<result property="editor" column="Editor" />
 		<result property="modified" column="Modified" />
+		<result property="sort" column="Sort" />
 	</resultMap>
 	
 	<resultMap type="promotion" id="promotionPage" extends="promotion">
@@ -80,12 +81,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT p.ID,p.Client,p.Code,p.Name,p.Memo,p.EffectiveDate,p.ExpiryDate,p.EffectiveTime,p.ExpiryTime
 			,p.RepeatEffect,p.Week,p.Days,p.PaymentRestrict,p.MemberRestrict,p.OfferRelation,p.Excluded
 			,p.Status,p.Creator,p.Created,p.Editor,p.Modified
-			,ps.Store FROM Promotion p, PromotionStore ps
+			,ps.Store,p.Sort
+		 FROM Promotion p, PromotionStore ps
 		WHERE p.id=ps.Promotion AND p.status=1 AND ps.Store=#{storeId} AND p.Client=#{clientId}
 		<![CDATA[  
     	and ps.EffectiveDate<=#{saleDate}
     	and (ps.ExpiryDate is null or ps.ExpiryDate>=#{saleDate})
     	]]>
+    	order by sort desc;
     </select>
     
     <select id="getPromoPaymentByPromoId" resultMap="promotionPayment">
@@ -124,7 +127,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT 
 			a.ID,a.Client,a.Code,a.Name,a.Memo,a.EffectiveDate,a.ExpiryDate,a.EffectiveTime,a.ExpiryTime
 			,a.RepeatEffect,a.Week,a.Days,a.PaymentRestrict,a.MemberRestrict,a.OfferRelation,a.Excluded
-			,a.Status,a.Creator,a.Created,a.Editor,a.Modified
+			,a.Status,a.Creator,a.Created,a.Editor,a.Modified,a.Sort
 		FROM Promotion a
 		WHERE a.ID=#{id} 
 	</select>
@@ -133,7 +136,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT 
 			a.ID,a.Client,a.Code,a.Name,a.Memo,a.EffectiveDate,a.ExpiryDate,a.EffectiveTime,a.ExpiryTime
 			,a.RepeatEffect,a.Week,a.Days,a.PaymentRestrict,a.MemberRestrict,a.OfferRelation,a.Excluded
-			,a.Status,a.Creator,a.Created,a.Editor,a.Modified,c.Name ClientName
+			,a.Status,a.Creator,a.Created,a.Editor,a.Modified,a.Sort,c.Name ClientName
 		FROM Promotion a left outer join Client c
 		on a.Client = c.id and c.status = 1 
 		WHERE 
@@ -197,6 +200,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test= "created != null">Created=#{created},</if >
 			<if test= "editor != null">Editor=#{editor,jdbcType=VARCHAR},</if >
 			<if test= "modified != null">Modified=#{modified},</if >
+			<if test= "sort != null">Sort=#{sort},</if >
 		</set>
 	</sql >
 </mapper>

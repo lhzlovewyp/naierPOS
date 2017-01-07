@@ -61,7 +61,7 @@ private List<PromotionOffer> promotionOffers;
 
 		details=(List<SaleInfo>) map.get("details");
 		
-		SaleInfo saleInfo=PromotionUtil.createPromotionSaleInfo(saleDto.getSaleInfos().size());
+		SaleInfo saleInfo=PromotionUtil.createPromotionSaleInfo(promotion,saleDto.getSaleInfos().size());
 		saleInfo.setTotalPrice(offer.getOfferContent().negate());
 		saleInfo.setId(RandomCodeFactory.defaultGenerateMixed());
 		
@@ -78,12 +78,18 @@ private List<PromotionOffer> promotionOffers;
 			PromotionUtil.setSalesPromoPrice(details, saleDto.getSaleInfos(), saleInfo.getTotalPrice(),saleInfo);
 			saleInfo.setPromotionDetails(details);
 			//如果促销折扣是针对商品的信息,把数据插入到商品信息的后面.
+			boolean flag=false;
 			for(int i=saleDto.getSaleInfos().size()-1;i>=0;i--){
 				String id=saleDto.getSaleInfos().get(i).getId();
-				if(StringUtils.isNotBlank(id) && id.equals(details.get(details.size()-1).getId())){
+				if(StringUtils.isNotBlank(id) && id.equals(details.get(details.size()-1).getId()) && contents.contains(id)){
 					saleDto.getSaleInfos().add(i+1, saleInfo);
+					flag=true;
 					break;
 				}
+				
+			}
+			if(!flag){
+				saleDto.getSaleInfos().add(saleDto.getSaleInfos().size(), saleInfo);
 			}
 		}else{
 			for(SaleInfo info:saleDto.getSaleInfos()){
@@ -96,7 +102,7 @@ private List<PromotionOffer> promotionOffers;
 			saleInfo.setPromotionDetails(details);
 			saleDto.getSaleInfos().add(saleInfo);
 		}
-		
+		saleDto.addPromotionAmount(saleInfo.getTotalPrice());
 		return saleDto;
 	}
 

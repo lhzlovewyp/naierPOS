@@ -87,9 +87,9 @@ public class PromotionEngine {
 				PromotionCondition condition = conditions.get(0);
 				if (condition.getConditionType().equals(Constants.PROMOTION_CONDITION_MATAMT)){//商品金额
 					matAmtPromotions.add(promotion);
-				}else if (condition.getConditionType().equals(Constants.PROMOTION_CONDITION_MATQTY)){//商品金额
+				}else if (condition.getConditionType().equals(Constants.PROMOTION_CONDITION_MATQTY)){//商品数量
 					matQtyPromotions.add(promotion);
-				}else if (condition.getConditionType().equals(Constants.PROMOTION_CONDITION_TTLAMT)){//商品金额
+				}else if (condition.getConditionType().equals(Constants.PROMOTION_CONDITION_TTLAMT)){//整单金额
 					ttlAmtPromotions.add(promotion);
 				}
 			}
@@ -99,6 +99,23 @@ public class PromotionEngine {
 		result.addAll(ttlAmtPromotions);
 		if(CollectionUtils.isEmpty(result)){
 			return null;
+		}
+		return result;
+	}
+	
+	public boolean  isAvailablePromotion(Promotion promotion){
+		boolean result = true;
+		//如果时间上不匹配,直接过滤.
+		if(!timeAvailable(promotion)){
+			result=false;
+		}
+		//会员限制.
+		if(!memberAvailable(promotion)){
+			result=false;
+		}
+		//促销条件限制.
+		if(!conditionAvailable(promotion)){
+			result=false;
 		}
 		return result;
 	}
@@ -116,7 +133,9 @@ public class PromotionEngine {
 		}
 		
 		for(Promotion cacPromotion:cacPromotions){
-			saleDto = PromotionParserFactory.parsePromotion(saleDto, cacPromotion);
+			if(isAvailablePromotion(cacPromotion)){
+				saleDto = PromotionParserFactory.parsePromotion(saleDto, cacPromotion);
+			}
 		}
 		return saleDto;
 	}

@@ -63,7 +63,7 @@ public class DiscPromotionParser implements PromotionParser {
 		BigDecimal amount=(BigDecimal)map.get("amount");
 		List<SaleInfo> details=(List<SaleInfo>) map.get("details");
 		BigDecimal disc=amount.multiply(offer.getOfferContent().subtract(new BigDecimal(100))).divide(new BigDecimal(100));
-		SaleInfo saleInfo=PromotionUtil.createPromotionSaleInfo(saleDto.getSaleInfos().size());
+		SaleInfo saleInfo=PromotionUtil.createPromotionSaleInfo(promotion,saleDto.getSaleInfos().size());
 		saleInfo.setTotalPrice(disc);
 		saleInfo.setId(RandomCodeFactory.defaultGenerateMixed());
 		//计算details中的促销折扣.
@@ -88,17 +88,23 @@ public class DiscPromotionParser implements PromotionParser {
 		
 		//如果促销折扣是针对商品的信息,把数据插入到商品信息的后面.
 		if(CollectionUtils.isNotEmpty(details)){
+			boolean flag=false;
 			for(int i=saleDto.getSaleInfos().size()-1;i>=0;i--){
 				String id=saleDto.getSaleInfos().get(i).getId();
-				if(StringUtils.isNotBlank(id) && id.equals(details.get(details.size()-1).getId())){
+				if(StringUtils.isNotBlank(id) && id.equals(details.get(details.size()-1).getId()) && contents.contains(id)){
 					saleDto.getSaleInfos().add(i+1, saleInfo);
+					flag=true;
 					break;
 				}
+			}
+			if(!flag){
+				saleDto.getSaleInfos().add(saleDto.getSaleInfos().size(), saleInfo);
 			}
 			
 		}else{
 			saleDto.getSaleInfos().add(saleInfo);
 		}
+		saleDto.addPromotionAmount(saleInfo.getTotalPrice());
 		return saleDto;
 	}
 

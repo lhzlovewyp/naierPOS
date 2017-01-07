@@ -71,6 +71,9 @@ public class Promotion extends BaseModel{
 	//促销优惠
 	private List<PromotionOffer> promotionOffers;
 	
+	//促销排序，小的排在前面
+	private Integer sort;
+	
 	public List<PromotionPayment> getPromotionPayments() {
 		return promotionPayments;
 	}
@@ -179,5 +182,12 @@ public class Promotion extends BaseModel{
 	public void setOfferRelation(String offerRelation) {
 		this.offerRelation = offerRelation;
 	}
+	public Integer getSort() {
+		return sort;
+	}
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+	
 	
 }

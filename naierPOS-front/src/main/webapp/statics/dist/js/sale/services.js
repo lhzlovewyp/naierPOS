@@ -321,6 +321,28 @@ app.factory('SaleService',['$q','$location','$http','BaseService',function($q,$l
             });
 			return deferred.promise;
 		},
+		autoJoinPromotions:function(condition){
+			showMask();
+            var t=setTimeout(function(){
+            	closeMask();
+            	alert('连接超时,请稍后重试.');
+            },10000);
+			var token=$.cookie("token");
+			if(!condition){
+				return;
+			}
+			condition.token=token;
+			var deferred = $q.defer();
+			var info={};
+			BaseService.post('/rest/sale/autoJoinPromotions',condition).then(function(obj){
+				closeMask();
+            	if(t){
+            		clearTimeout(t);
+            	}
+				deferred.resolve(obj);
+            });
+			return deferred.promise;
+		},
 		submit:function(pay){
 			showMask();
             var t=setTimeout(function(){

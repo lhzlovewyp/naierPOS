@@ -300,51 +300,61 @@ app.controller("routeSaleCtl",['$scope','$location','SaleService','ngDialog','Pa
 	
 	//结算
 	$scope.checkout = function(){
-		SaleService.getPromotions($scope.info).then(function(data){
-			var effPromotions=data.data.effPromotions;
-			//如果没有可以参加的促销活动.
-			if(!effPromotions){
-				 $scope.value = true;
-				 if($scope.payments){
-					 ngDialog.open({
-				            template: '/front/view/template/pay.html',
-				            scope: $scope,
-				            closeByDocument: false,
-				            width:700,
-				            controller: 'payCtrl',
-				            showClose:false
-				        });
-				 }else{
-					 PayService.initPay().then(function(data){
-							$scope.payments=data.data;
-							//打开付款浮层.
-							ngDialog.open({
-					            template: '/front/view/template/pay.html',
-					            scope: $scope,
-					            closeByDocument: false,
-					            width:700,
-					            controller: 'payCtrl',
-					            showClose:false
-					        });
-					 });
-				 }
+		SaleService.autoJoinPromotions($scope.info).then(function(obj){
+			 if(obj.data.status==Status.SUCCESS){
 				 
-				
-			}else{
-				$scope.effPromotions=effPromotions;
-				ngDialog.open({
-		            template: '/front/view/template/promotion.html',
-		            scope: $scope,
-		            closeByDocument: false,
-		            width:700,
-		            controller: 'promotionCtrl',
-		            preCloseCallback: function () {
-		            	var saleInfos = clearPromotionSaleInfos($scope.info.saleInfos);
-		            	$scope.info.saleInfos=saleInfos;
-	                }
-		        });
-			}
-		});
+                   var dto=obj.data.data;
+                   $scope.info.saleInfos=dto.saleInfos;
+                   gotoPay(ngDialog,$scope,PayService);
+            }else{
+            	alert(obj.data.msg);
+            }
+	   });
+//		SaleService.getPromotions($scope.info).then(function(data){
+//			var effPromotions=data.data.effPromotions;
+//			//如果没有可以参加的促销活动.
+//			if(!effPromotions){
+//				 $scope.value = true;
+//				 if($scope.payments){
+//					 ngDialog.open({
+//				            template: '/front/view/template/pay.html',
+//				            scope: $scope,
+//				            closeByDocument: false,
+//				            width:700,
+//				            controller: 'payCtrl',
+//				            showClose:false
+//				        });
+//				 }else{
+//					 PayService.initPay().then(function(data){
+//							$scope.payments=data.data;
+//							//打开付款浮层.
+//							ngDialog.open({
+//					            template: '/front/view/template/pay.html',
+//					            scope: $scope,
+//					            closeByDocument: false,
+//					            width:700,
+//					            controller: 'payCtrl',
+//					            showClose:false
+//					        });
+//					 });
+//				 }
+//				 
+//				
+//			}else{
+//				$scope.effPromotions=effPromotions;
+//				ngDialog.open({
+//		            template: '/front/view/template/promotion.html',
+//		            scope: $scope,
+//		            closeByDocument: false,
+//		            width:700,
+//		            controller: 'promotionCtrl',
+//		            preCloseCallback: function () {
+//		            	var saleInfos = clearPromotionSaleInfos($scope.info.saleInfos);
+//		            	$scope.info.saleInfos=saleInfos;
+//	                }
+//		        });
+//			}
+//		});
 	}
 	
 	
@@ -1028,6 +1038,8 @@ app.controller("payCtrl",['$scope','$location','printService','PayService','Sale
 		}
 		loadPayInfo();
 		ngDialog.close();
+		var saleInfos = clearPromotionSaleInfos($scope.info.saleInfos);
+    	$scope.info.saleInfos=saleInfos;
 		//销售单初始化
 //		$timeout(function(){
 //			$("#cancelSale").trigger("click");
