@@ -193,7 +193,10 @@ public class PromotionController extends AbstractController {
 		String paymentRestrict = (String) params.get("paymentRestrict");
 		String memberRestrict = (String) params.get("memberRestrict");
 		String excluded = (String) params.get("excluded");
-		String sort = (String) params.get("sort");
+		String sort = null;
+		if (params.get("sort") != null) {
+			sort = String.valueOf(params.get("sort"));
+		}
 
 		if (StringUtils.isBlank(code)) {
 			rbody.setStatus(ResponseState.FAILED);
@@ -304,7 +307,10 @@ public class PromotionController extends AbstractController {
 		String memberRestrict = (String) params.get("memberRestrictId");
 		String excluded = (String) params.get("excluded");
 		String status = (String) params.get("status");
-		String sort = (String) params.get("sort");
+		String sort = null;
+		if (params.get("sort") != null) {
+			sort = String.valueOf(params.get("sort"));
+		}
 
 		if (StringUtils.isBlank(id)) {
 			rbody.setStatus(ResponseState.FAILED);
