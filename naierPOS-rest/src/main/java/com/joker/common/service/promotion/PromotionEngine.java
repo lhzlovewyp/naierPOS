@@ -87,10 +87,14 @@ public class PromotionEngine {
 				PromotionCondition condition = conditions.get(0);
 				if (condition.getConditionType().equals(Constants.PROMOTION_CONDITION_MATAMT)){//商品金额
 					matAmtPromotions.add(promotion);
+					break;
 				}else if (condition.getConditionType().equals(Constants.PROMOTION_CONDITION_MATQTY)){//商品数量
 					matQtyPromotions.add(promotion);
+					break;
+					
 				}else if (condition.getConditionType().equals(Constants.PROMOTION_CONDITION_TTLAMT)){//整单金额
 					ttlAmtPromotions.add(promotion);
+					break;
 				}
 			}
 		}
