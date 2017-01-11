@@ -60,7 +60,7 @@ public class PromotionConditionRuleParseImpl implements PromotionConditionRulePa
 					if(CollectionUtils.isNotEmpty(promotionCondition.getPromotionConditionMatchContents())){
 						for(PromotionConditionMatchContent content:promotionCondition.getPromotionConditionMatchContents()){
 							for(SaleInfo info:saleInfos){
-								if(StringUtils.isEmpty(info.getDiscType()) && info.getMaterial().getCategory().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
+								if(StringUtils.isEmpty(info.getDiscType()) && info.getCategory().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
 									num+=info.getCount();
 								}
 							}
@@ -93,7 +93,7 @@ public class PromotionConditionRuleParseImpl implements PromotionConditionRulePa
 				if(CollectionUtils.isNotEmpty(promotionCondition.getPromotionConditionMatchContents())){
 					for(SaleInfo info:saleInfos){
 						for(PromotionConditionMatchContent content:promotionCondition.getPromotionConditionMatchContents()){
-							if(StringUtils.isEmpty(info.getDiscType()) && info.getMaterial().getCategory().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
+							if(StringUtils.isEmpty(info.getDiscType()) && info.getCategory().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
 								continue;
 							}
 						}
@@ -105,7 +105,7 @@ public class PromotionConditionRuleParseImpl implements PromotionConditionRulePa
 			if(CollectionUtils.isNotEmpty(promotionCondition.getPromotionConditionMatchContents())){
 				for(SaleInfo info:saleInfos){
 					for(PromotionConditionMatchContent content:promotionCondition.getPromotionConditionMatchContents()){
-						if(StringUtils.isEmpty(info.getDiscType()) && info.getMaterial().getBrand().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
+						if(StringUtils.isEmpty(info.getDiscType()) && info.getBrand().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
 							continue;
 						}
 					}
@@ -117,7 +117,7 @@ public class PromotionConditionRuleParseImpl implements PromotionConditionRulePa
 			if(CollectionUtils.isNotEmpty(promotionCondition.getPromotionConditionMatchContents())){
 				for(SaleInfo info:saleInfos){
 					for(PromotionConditionMatchContent content:promotionCondition.getPromotionConditionMatchContents()){
-						if(StringUtils.isEmpty(info.getDiscType()) && info.getMaterial().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
+						if(StringUtils.isEmpty(info.getDiscType()) && info.getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
 							continue;
 						}
 					}
@@ -142,7 +142,7 @@ public class PromotionConditionRuleParseImpl implements PromotionConditionRulePa
 					if(CollectionUtils.isNotEmpty(promotionCondition.getPromotionConditionMatchContents())){
 						for(PromotionConditionMatchContent content:promotionCondition.getPromotionConditionMatchContents()){
 							for(SaleInfo info:saleInfos){
-								if(StringUtils.isEmpty(info.getDiscType()) && info.getMaterial().getCategory().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
+								if(StringUtils.isEmpty(info.getDiscType()) && info.getCategory().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
 									amount=amount.add(info.getSaleInfoTotalPrice());
 								}
 							}
@@ -152,7 +152,7 @@ public class PromotionConditionRuleParseImpl implements PromotionConditionRulePa
 				if(CollectionUtils.isNotEmpty(promotionCondition.getPromotionConditionMatchContents())){
 					for(PromotionConditionMatchContent content:promotionCondition.getPromotionConditionMatchContents()){
 						for(SaleInfo info:saleInfos){
-							if(StringUtils.isEmpty(info.getDiscType()) && info.getMaterial().getBrand().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
+							if(StringUtils.isEmpty(info.getDiscType()) && info.getBrand().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
 								amount=amount.add(info.getSaleInfoTotalPrice());
 							}
 						}
@@ -175,7 +175,7 @@ public class PromotionConditionRuleParseImpl implements PromotionConditionRulePa
 				if(CollectionUtils.isNotEmpty(promotionCondition.getPromotionConditionMatchContents())){
 					for(SaleInfo info:saleInfos){
 						for(PromotionConditionMatchContent content:promotionCondition.getPromotionConditionMatchContents()){
-							if(StringUtils.isEmpty(info.getDiscType()) && info.getMaterial().getCategory().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
+							if(StringUtils.isEmpty(info.getDiscType()) && info.getCategory().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
 								continue;
 							}
 						}
@@ -187,7 +187,7 @@ public class PromotionConditionRuleParseImpl implements PromotionConditionRulePa
 				if(CollectionUtils.isNotEmpty(promotionCondition.getPromotionConditionMatchContents())){
 					for(SaleInfo info:saleInfos){
 						for(PromotionConditionMatchContent content:promotionCondition.getPromotionConditionMatchContents()){
-							if(StringUtils.isEmpty(info.getDiscType()) && info.getMaterial().getBrand().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
+							if(StringUtils.isEmpty(info.getDiscType()) && info.getBrand().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
 								continue;
 							}
 						}
@@ -199,7 +199,7 @@ public class PromotionConditionRuleParseImpl implements PromotionConditionRulePa
 				if(CollectionUtils.isNotEmpty(promotionCondition.getPromotionConditionMatchContents())){
 					for(SaleInfo info:saleInfos){
 						for(PromotionConditionMatchContent content:promotionCondition.getPromotionConditionMatchContents()){
-							if(StringUtils.isEmpty(info.getDiscType()) && info.getMaterial().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
+							if(StringUtils.isEmpty(info.getDiscType()) && info.getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
 								continue;
 							}
 						}
