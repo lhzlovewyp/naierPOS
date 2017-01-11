@@ -70,7 +70,7 @@ public class PromotionConditionRuleParseImpl implements PromotionConditionRulePa
 				if(CollectionUtils.isNotEmpty(promotionCondition.getPromotionConditionMatchContents())){
 					for(PromotionConditionMatchContent content:promotionCondition.getPromotionConditionMatchContents()){
 						for(SaleInfo info:saleInfos){
-							if(StringUtils.isEmpty(info.getDiscType()) && info.getMaterial().getBrand().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
+							if(StringUtils.isEmpty(info.getDiscType()) && info.getBrand().getId().equals(content.getMatchContent())){//折扣类型为空，标记是商品.
 								num+=info.getCount();
 							}
 						}
